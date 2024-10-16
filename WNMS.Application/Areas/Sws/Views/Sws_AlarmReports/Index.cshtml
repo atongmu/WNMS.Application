@@ -1,0 +1,544 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>单吨电耗</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <link href="~/lib/bootstrap-table1.16.0/bootstrap-table-fixed-columns.min.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap-table1.16.0/bootstrap-table-fixed-columns.min.js"></script>
+
+    <!-- 树 -->
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    @*<link rel="stylesheet" href="~/lib/ztree/zTreeStyle.css">*@
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/js/echarts.min.js"></script>
+    <style>
+        .cont {
+            height: calc(100% - 50px);
+            position: relative
+        }
+
+        .no-date {
+            position: absolute;
+            left: 0;
+            top: 45%;
+            width: 100%;
+            transform: translateY(-50%)
+        }
+
+        #tablebox > p {
+            text-align: center;
+            padding-top: 10px;
+            font-size: 16px
+        }
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+
+        .table {
+            table-layout: fixed;
+        }
+    </style>
+</head>
+<body>
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf">
+                <!-- 搜索框 -->
+                <div class="zlw_datamain_lfconsea">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search" onclick="LoadZtree()"></i>
+                        <input type="text" id="stationname" class="form-control" placeholder="搜索&quot;泵房&quot;名称" autocomplete="off" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:100%;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+            </div>
+            <div class="sl_rg">
+                <div style="border-bottom:1px solid #ddd;height:51px">
+                    <nav aria-label="Page navigation" style="width:100%">
+                        <div class="overflow pad10px" style="width:100%">
+                            <div class="left">
+                                <label class="hyl_label">统计方式：</label>
+                                <select class="hyl_select" id="timeselect">
+                                    <option value="day">按天</option>
+                                    <option value="month">按月</option>
+                                    <option value="year">按年</option>
+                                    <option value="custom">自定义</option>
+                                </select>
+                            </div>
+                            <div class="left" id="searchcontent">
+                                <label class="hyl_label ml15px">查询时段：</label>
+
+                                <div id="daytime" style="display:inline-block">
+                                    <input class=" hyl_input hyl_input-sm" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" value="@ViewBag.BeginTimeDay" />
+                                </div>
+                                <div id="monthtime" style="display:none;">
+                                    <input class=" hyl_input hyl_input-sm" onclick="WdatePicker({ dateFmt: 'yyyy-MM' })" value="@ViewBag.BeginTimeMonth" />
+                                </div>
+                                <div id="yeartime" style="display:none;">
+                                    <input class=" hyl_input hyl_input-sm" onclick="WdatePicker({ dateFmt: 'yyyy' })" value="@ViewBag.BeginTimeYear" />
+                                </div>
+                                <div id="custometime" style="display:none;">
+                                    <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" placeholder="开始时间" id="BeginDate" class=" hyl_input hyl_input-sm" value="@ViewBag.BeginTime">
+                                    <span class="pl10px pr10px">至</span>
+                                    <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" placeholder="结束时间" id="EndDate" class=" hyl_input hyl_input-sm" value="@ViewBag.EndTime">
+                                </div>
+
+                                <button class="hyl_btn" type="button" id="search_btn">
+                                    <i class="fa fa-search mr5px"></i>查询
+                                </button>
+
+
+                            </div>
+                            <div class="btn-group pull-right" id="btnlist" style="display:none">
+                                <button type="button" class="btn btn-default" id="tablebtn"><i class="fa fa-table"></i> 表格</button>
+                                <button type="button" class="btn btn-default" id="echartbtn"><i class="fa fa-line-chart"></i> 图表</button>
+                                <button type="button" class="btn btn-default" id="exportbtn"><i class="fa fa-download"></i> 导出</button>
+                            </div>
+
+
+
+                        </div>
+
+
+
+                    </nav>
+                </div>
+                <div class="cont">
+
+                    <div class="zlw_manageconrgconsan" id="tablebox" style="height:100%;position:relative">
+                      
+                    </div>
+                    <div id="echartbox" style="height:100%;position:relative;display:none">
+                    </div>
+                    <div class="no-date textCenter" style="display:none">
+                        <img src="/images/null.png" width="150" />
+                        <p>暂无数据</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+     var begintime="", endtime="";
+        var deviceid = 0;
+     var stationname = "";
+     var zTreeObj;
+       var setting = {
+            data:{
+                simpleData: {
+                    enable: true
+                }
+            },callback:{
+                onClick: zTreeOnClick
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+        };
+        var zNodes = @ViewBag.treenodes;
+     $(function () {
+         zTreeObj=$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+     })
+     //树查询
+     function LoadZtree() {
+         zTreeObj.destroy();    //清空树
+
+         if ($("#stationname").val() != "") {
+             //查询树列表数据
+             $.post("/Sws/Sws_AlarmReports/SearchTree", {
+                 stationName: $("#stationname").val()
+             }, function (data) {
+                 var aa= JSON.parse(data);   //数据转json
+                     zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                     zTreeObj.expandAll(true);     //初始化数列表展开
+
+             });
+         }
+         else {
+
+             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);   //重新初始化树
+         }
+
+     }
+      //左侧树查询回车事件
+        $("#stationname").keydown(function(e) {
+           if (e.keyCode == 13) {
+               LoadZtree();
+               return false;
+           }
+        });
+
+       //树点击事件
+     function zTreeOnClick(event, treeId, treeNode) {
+         deviceid = treeNode.id;
+         stationname = treeNode.name;
+         GetTableData();
+
+     };
+     //查询按钮
+     $("#search_btn").click(function () {
+
+         GetTableData();
+     })
+     //表格按钮
+     $("#tablebtn").click(function () {
+         GetTableData();
+     })
+        //获取表格数据
+        function GetTableData() {
+            GetSearchtime();
+            var type = $("#timeselect").val();
+            if (type == "custom") {
+                if (begintime == "" || endtime == "") {
+                    layer.alert("请选择时间");
+                    return;
+                }
+            }
+            else {
+                if (begintime == "") {
+                    layer.alert("请选择时间");
+                    return;
+                }
+            }
+            if (deviceid == 0) {
+                layer.alert("请选择选择泵房");
+                return;
+            }
+            $.post("/Sws/Sws_AlarmReports/QueryAlarmsData", {
+                type: type,
+                begindate: begintime,
+                enddate: endtime,
+                deviceid: deviceid
+            }, function (res) {
+                $("#tablebox").empty();
+                $("#tablebox").css("display", "block");
+                $("#echartbox").css("display", "none");
+                if (res.dataTable != "") {
+                    $(".no-date").css("display", "none");
+                    //if (endtime != "") {
+                    //    $("#tablebox").append('<p>' + stationname + ' ' + begintime + '至' + endtime + '吨水电耗报表</p>');
+
+                    //}
+                    //else {
+                    //    $("#tablebox").append('<p>' + stationname + ' ' + begintime + '吨水电耗报表</p>');
+                    //}
+                    $("#tablebox").append('<table id="tabledata"  class="table table-striped" data-pagination="false" data-toggle="table" data-fixed-number="1" data-height="' + ($(window).height() - 56) + '"  data-fixed-columns="true"  ' +
+                        '>' + res.dataTable + '</table > ');
+                    //$("#tablebox").append(res.dataTable);
+                    //$("#tabledata").bootstrapTable();
+                    $("#btnlist").css("display", "inline-block");
+                }
+                else {
+                    $(".no-date").css("display", "block");
+                    $("#btnlist").css("display", "none");
+                }
+            })
+
+        }
+
+
+     function GetSearchtime() {
+         var mudoleT = $("#timeselect").val();
+         if (mudoleT == "day") {
+             begintime = $("#daytime input").val();
+             endtime = "";
+         }
+         else if (mudoleT == "month") {
+             begintime = $("#monthtime input").val();
+             endtime = "";
+
+         }
+         else if (mudoleT == "year") {
+
+             begintime = $("#yeartime input").val();
+             endtime = "";
+         }
+         else {
+             begintime = $("#BeginDate").val();
+             endtime = $("#EndDate").val();
+
+         }
+     }
+     $("#timeselect").change(function () {
+         var timemudle = $(this).val();
+         if (timemudle == "day") {
+             $("#searchcontent div").css("display", "none");
+             $("#daytime").css("display", "inline-block");
+         }
+         else if (timemudle == "month") {
+             $("#searchcontent div").css("display", "none");
+             $("#monthtime").css("display", "inline-block");
+         }
+         else if (timemudle == "year") {
+             $("#searchcontent div").css("display", "none");
+             $("#yeartime").css("display", "inline-block");
+         }
+         else {
+              $("#searchcontent div").css("display", "none");
+             $("#custometime").css("display", "inline-block");
+         }
+         if (deviceid != 0) {
+             GetTableData();
+         }
+     })
+
+     //
+       // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echartbox'));
+
+        // 指定图表的配置项和数据
+     //   var option = {
+     //       title: {
+     //           text: ''+stationname+'报警报表',
+     //           subtext: '',
+     //           x: 'center'
+     //       },
+     //       tooltip: {
+     //           trigger: 'axis'
+     //       },
+     //       legend: {
+     //           top: 35,
+     //           data: ["报警次数"]
+     //       },
+
+     //       grid: {
+     //           top: 80,
+     //           bottom: 80
+     //       },
+     //       toolbox: {
+     //           show: true,
+     //           feature: {
+     //               //dataView: { show: true, readOnly: false },
+     //               magicType: { show: true, type: ['line', 'bar'] },
+     //               restore: { show: true },
+     //               saveAsImage: { show: true }
+     //           }
+     //       },
+     //       calculable: true,
+     //       xAxis: [
+     //           {
+     //               type: 'category',
+                 
+     //               axisLabel: {
+     //                   rotate: 30
+     //               },
+     //           }
+     //       ],
+     //       yAxis:  
+     //           {
+     //               type: 'value',
+     //               name: '报警次数',
+     //               nameLocation: 'center',
+     //               nameTextStyle: {
+     //                   padding: [20, 0, 30, 0]
+     //               }
+     //           } 
+     //        ,
+     //       series: [
+            
+     //       ]
+     //};
+
+        var option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: {
+                left: 10,
+                right: 15,
+                top: 20,
+                bottom: 10,
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                    lineStyle: {//线条样式
+                        color: '#ddd',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#333',
+                    },//控制x轴字体样式
+                    fontSize: 12,
+                    margin: 10,
+                },
+                data: ['11月', '12月', '1月', '2月', '3月', '4月', '5月', '6月', '7月']
+            },
+            yAxis: [{
+                type: 'value',
+                name : '报警次数',
+                nameTextStyle: {
+                    color: '#efefef',
+                    fontSize: 15
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: '#efefef' // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.5, color: '#efefef' // 100% 处的颜色
+                            },
+                            {
+                                offset: 1, color: '#efefef' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        },
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLine: {//x轴的样式控制
+                    show: true,//显示与否
+                    lineStyle: {//线条样式
+                        color: '#ddd',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#333',
+                    },//控制x轴字体样式
+                }
+            }
+
+            ],
+            series: [
+                {
+                    type: 'line',
+                    name: '报警次数',
+                    symbolSize: 5, // 设定实心点的大小
+                    data: [1620, 1472, 1571, 1356, 1210, 1140, 810, 870, 1165, 1190, 1222],
+                    smooth: true,
+                    itemStyle: {
+                        color: '#0e6c61'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(14, 108, 97, .8)'
+                        }, {
+                            offset: 1,
+                            color: 'rgba(14, 108, 97, 0)'
+                        }])
+                    }
+                }
+            ]
+        };
+
+
+     $("#echartbtn").click(function () {
+         $("#tablebox").css("display", "none");
+         $("#echartbox").css("display", "block");
+          GetSearchtime();
+        var type = $("#timeselect").val();
+        if (type == "custom") {
+            if (begintime == "" || endtime == "") {
+                alert("请选择时间");
+                return;
+            }
+        }
+        else {
+            if (begintime == "") {
+                alert("请选择时间");
+                return;
+            }
+        }
+         $.post("/Sws/Sws_AlarmReports/GetEchartData", {
+            type: type,
+            begindate: begintime,
+            enddate: endtime,
+            deviceid:deviceid
+         }, function (res) {
+                 console.log(res);
+                 if (res.xAxis.length > 0) {
+                   
+                    $(".no-date").css("display", "none");
+                     option.xAxis.data = eval(res.xAxis);
+
+
+                  
+                  
+                     option.series[0].data = res.data;
+                     myChart.resize();
+                     myChart.setOption(option);
+                    
+                  
+                }
+                else {
+                    $(".no-date").css("display","block");
+
+                    $("#echartbox").css("display", "none");
+                }
+        })
+
+     })
+     //导出
+     $("#exportbtn").click(function () {
+         GetSearchtime();
+          var type = $("#timeselect").val();
+        if (type == "custom") {
+            if (begintime == "" || endtime == "") {
+                alert("请选择时间");
+                return;
+            }
+        }
+        else {
+            if (begintime == "") {
+                alert("请选择时间");
+                return;
+            }
+        }
+         window.location.href = "/Sws/Sws_AlarmReports/ExportTable?type="+$("#timeselect").val()+"&begindate="+begintime+"&enddate="+endtime+"&deviceid="+deviceid+"";
+     })
+    </script>
+</body>
+</html>

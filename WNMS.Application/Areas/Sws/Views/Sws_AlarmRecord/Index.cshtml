@@ -1,0 +1,407 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>报警记录</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link href="~/css/anniu.css" rel="stylesheet" />
+    <link href="~/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" />
+    <!-- bootstrap -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <link rel="stylesheet" href="~/css/bootstrap-table-pagejump.css" />
+    <script src="~/js/bootstrap-table-pagejump.js"></script>
+    <!-- 树 -->
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <link href="~/lib/ztree/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <style>
+        html, body {
+            height: 100%
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_bjjl">
+        <div class="zlw_bjjlcon" style="padding-top:0">
+            <!-- star 查询字段 -->
+            <div class="">
+                <div class="clearfloat">
+                    <!-- 时间 -->
+                    <div class="zlw_datamain_rgyiyi clearfloat overflow left" id="datename">
+                        <label class="hyl_label left">查询时间：</label>
+                        <ul class="clearfloat zlw_time_con">
+                            <li value="1"><i>近1小时</i></li>
+                            <li value="2"><i>近4小时</i></li>
+                            <li value="3"><i>近12小时</i></li>
+                            <li class="zlw_bgact" value="4"><i>近24小时</i></li>
+                            <li value="5"><i>自定义</i></li>
+                        </ul>
+                    </div>
+                    <div class="left overflow selectDate hidden">
+                        <div class="mt10px left">
+                            <input id="beginTime" type="text" class="hyl_input left hyl_input-sm" onclick="WdatePicker()" value="@ViewBag.beginDate">
+                            <span class="left lh30px pl10px pr10px">至</span>
+                            <input id="endTime" type="text" class="hyl_input left hyl_input-sm" onclick="WdatePicker()" value="@ViewBag.endDate">
+                        </div>
+                        <div class="left mt10px ml5px">
+                            <input type="text" id="searchtext" class="hyl_input" placeholder="泵房名称、报警内容" />
+                            <button id="selectData" class="hyl_btn" onclick="refresh()"><i class="fa fa-search mr5px"></i>查询</button>
+                        </div>
+
+                    </div>
+                    <div style="position:absolute;right:10px;top:10px">
+                        <button type="button" class="btn btn-default" id="Envent_History"  onclick="refresh()"><i class="fa fa-download"></i> 导出</button>
+                    </div>
+                </div>
+            </div>
+            <!-- 查询字段 end -->
+            <!-- star 报警级别 -->
+            <div class="pl10px pb10px" style="border-bottom:1px solid #ddd">
+                <ul class="clearfloat">
+                    <li class="left zlw_bjjlernr">
+                        <div id="eventLevel">
+                            <b class="hyl_label left">报警级别：</b>
+                            <label class="checkbox-inline">
+                                <input onclick="refresh()" type="checkbox" id="inlineCheckbox1" name="evLevel" value="3" checked> 提示
+                            </label>
+                            <label class="checkbox-inline">
+                                <input onclick="refresh()" type="checkbox" id="inlineCheckbox2" name="evLevel" value="2" checked> 一般
+                            </label>
+                            <label class="checkbox-inline">
+                                <input onclick="refresh()" type="checkbox" id="inlineCheckbox3" name="evLevel" value="1" checked> 紧急
+                            </label>
+                        </div>
+                    </li>
+                    <li class="left zlw_bjjlernr">
+                        <div id="stationType">
+                            <b class="hyl_label left">站点类型：</b>
+                            <label class="checkbox-inline">
+                                <input onclick="refresh()" type="checkbox" id="inlineCheckbox1" name="stationType" value="option1" checked> 二供
+                            </label>
+                        </div>
+                    </li>
+                    <li class="left zlw_bjjlernr">
+                        <div id="typeEvent">
+                            <b class="hyl_label left">报警类别：</b>
+                            <label class="checkbox-inline">
+                                <input onclick="refresh()" type="checkbox" id="inlineCheckbox1" name="evType" value="0" checked> 非阈值报警
+                            </label>
+                            <label class="checkbox-inline">
+                                <input onclick="refresh()" type="checkbox" id="inlineCheckbox2" name="evType" value="1" checked> 上限报警
+                            </label>
+                            <label class="checkbox-inline">
+                                <input onclick="refresh()" type="checkbox" id="inlineCheckbox3" name="evType" value="2" checked> 上上限报警
+                            </label>
+                            <label class="checkbox-inline">
+                                <input onclick="refresh()" type="checkbox" id="inlineCheckbox4" name="evType" value="3" checked> 下限报警
+                            </label>
+                            <label class="checkbox-inline">
+                                <input onclick="refresh()" type="checkbox" id="inlineCheckbox5" name="evType" value="4" checked> 下下限报警
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- 报警级别 end -->
+            <!-- star 报警记录 -->
+            <div class="zlw_manageconrgconsan" style="height:calc(100% - 90px);margin-top:10px">
+                <table id="tabledata" class=" table-striped">
+                </table>
+            </div>
+            <!-- 报警记录 end -->
+
+        </div>
+    </div>
+    <script>
+        var $table;
+        var dateid = 4;
+        
+        // 按钮切换样式
+        $(function () {
+            $(".zlw_time_con li").click(function () {
+                $(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+            });
+            $(".zlw_time_con li:eq(0),.zlw_time_con li:eq(1),.zlw_time_con li:eq(2),.zlw_time_con li:eq(3)").click(function () {
+                $(".selectDate").addClass("hidden");
+                dateid = this.value;
+                refresh();
+            })
+            $(".zlw_time_con li:eq(4)").click(function () {
+                $(".selectDate").removeClass("hidden");
+                // dateid = 5;
+                dateid = this.value;
+                refresh();
+            });
+            InitMainTable();
+            // LoadData();
+            $('.fixed-table-loading').hide()
+
+            $("#Envent_History").click(function () {
+                var temp = {                        //页面大小
+                    pageNumber: 1,   //页码
+                };
+                $table.bootstrapTable('refresh', temp);
+                if ($table.length > 0) {
+                    ExportList1()
+                }
+                else
+                    layer.alert("无数据无法导出")
+
+
+            });
+        });
+        function refresh() {
+            var temp = {                        //页面大小
+                pageNumber: 1,   //页码
+            };
+            $table.bootstrapTable('refresh', temp);
+            
+        }
+       
+        function InitMainTable() {
+            //记录页面bootstrap-table全局变量$table，方便应用
+            var queryUrl = '/Sws/Sws_AlarmRecord/LoadEventData';
+            $table = $('#tabledata').bootstrapTable({
+                url: queryUrl,                      //请求后台的URL（*）
+                method: 'GET',                      //请求方式（*）
+                //toolbar: '#toolbar',              //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 20,                     //每页的记录行数（*）
+                pageList: [10, 15, 20],        //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索
+                strictSearch: true,
+                //paginationShowPageGo: true,
+                //showJumpto: true,
+                //showColumns: true,                  //是否显示所有的列（选择显示的列）
+                //showRefresh: true,                  //是否显示刷新按钮
+                //minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: true,                //是否启用点击选中行
+                height: $(window).height() - 60,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+                // showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+                // cardView: false,                    //是否显示详细视图
+                // detailView: false,                  //是否显示父子表
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        //pageSize: params.limit,                         //页面大小
+                        //pageIndex: (params.offset / params.limit) + 1,   //页码
+                        //sort: params.sort,      //排序列名
+                        //sortOrder: params.order, //排位命令（desc，asc）
+                        //beginTime: "2020-02-08",
+                        //endTime: "2020-02-18",
+                        //username: $("#username").val(),
+                        beginTime: $("#beginTime").val(),
+                        endTime: $("#endTime").val(),
+                        //type: getDate(),
+                        type: dateid,
+                        pageindex: (params.offset / params.limit) + 1,
+                        pagesize: params.limit,
+                        sortName: params.sort,
+                        order: params.order,
+                        eventLevel: levelEvent(),
+                        eventType: typeEvent(),
+                        stationType: stationType(),
+                        searchtext: $("#searchtext").val()
+                    };
+                    console.log(temp)
+
+                    return temp;
+                },
+                columns: [{
+                    field: 'rownumber',
+                    title: '序号',
+                    align: 'center',
+                    backgroundColor: '#449d44'
+                }, {
+                    field: 'StationName',
+                    title: '泵房'
+                }, {
+                    field: 'DeviceName',
+                    title: '设备名称'
+                }, {
+                    field: 'State1',
+                    title: '状态',
+                    formatter: function (value, row, index) {
+                        if (value == "解除") {
+                            return "<button class='btn btn-sm  btn-success'>" + value + "</button>"
+                        } else {
+                            return "<button class='btn btn-sm btn-danger'>" + value + "</button>"
+                        }
+                    }
+                }, {
+                    field: 'ItemName',
+                    title: '报警级别',
+                    formatter: function (value, row, index) {
+                        if (value == "紧急报警") {
+                            return "<button class='btn btn-sm  btn-danger' style='width:100px'>" + value + "</button>"
+                        } else if (value == "一般性报警") {
+                            return "<button class='btn btn-sm btn-warning' style='width:100px'>" + value + "</button>"
+                        } else {
+                            return "<button class='btn btn-sm btn-info' style='width:100px'>" + value + "</button>"
+                        }
+                    }
+                }, {
+                    field: 'EventMessage',
+                    title: '报警信息'
+                }, {
+                    field: 'EventTime',
+                    title: '报警时间',
+                    formatter: function (value, row, index) {
+                        return changeDateFormat(value)
+                    }
+                }, {
+                    field: 'EndDate1',
+                    title: '结束时间',
+                    formatter: function (value, row, index) {
+                        return changeDateFormat(value)
+                    }
+                }, {
+                    field: 'diffm',
+                    title: '持续时间',
+                    formatter: function (value, row, index) {
+                        return value + "分";
+                    }
+                }, {
+                    field: 'CurrentValue',
+                    title: '报警值',
+                    formatter: function (value, row, index) {
+                        if (value == "-9999") {
+                            return "无";
+                        } else {
+                            return value;
+                        }
+                    }
+                }, {
+                    field: 'LimitValue',
+                    title: '限定值',
+                    formatter: function (value, row, index) {
+                        if (value == "-9999") {
+                            return "无";
+                        } else {
+                            return value;
+                        }
+                    }
+                }],
+                responseHandler(res) {
+                    // 修改返回
+                    return {
+                        "rows": res.rows,
+                        "total": res.total
+                    };
+                },
+                onLoadSuccess: function (res) {
+                },
+                onLoadError: function () {
+                },
+                onDblClickRow: function (row, $element) {
+                    var id = row.ID;
+                },
+                onPostBody: function () {
+                    //获取渲染后的数据列td的宽度赋值给对应头部的th,固定表头和列就对齐了
+                    var header = $(".fixed-table-header table thead tr th");
+                    var body = $(".fixed-table-header table tbody tr td");
+                    var footer = $(".fixed-table-header table tr td");
+                    body.each(function () {
+                        header.width((this).width());
+                        footer.width((this).width());
+                    });
+                }
+            });
+            //console.log($table.bootstrapTable());
+        };
+        function changeDateFormat(cellval) {
+            if (cellval == "1900-01-01T00:00:00" && cellval != null) {
+                return "";
+            } else {
+                var date = cellval.replace("T", " ");
+                return date;
+            }
+        }
+        function levelEvent() {
+            var str = "";
+            var strid = $("input[name='evLevel']:checked");
+            if (strid.length == 0 || strid.length == 3) {
+                str = "";
+            } else {
+                for (var i = 0; i < strid.length; i++) {
+                    str += strid[i].value + ",";
+                }
+            }
+            if (str != "") {
+                str = str.substring(0, str.length - 1)
+            }
+            
+            return str;
+        }
+        function typeEvent() {
+            var str = "";
+            var strid = $("input[name='evType']:checked");
+            if (strid.length == 0 || strid.length == 5) {
+                str = "";
+            } else {
+                for (var i = 0; i < strid.length; i++) {
+                    str += strid[i].value + ",";
+                }
+            }
+            if (str != "") {
+                str = str.substring(0, str.length - 1)
+            }
+            console.log(str);
+            return str;
+        }
+        function stationType() {
+            var str = "";
+            var strid = $("input[name='stationType']:checked");
+            if (strid.length == 0 || strid.length == 1) {
+                str = "";
+            } else {
+                for (var i = 0; i < strid.length; i++) {
+                    str += strid[i].value + ",";
+                }
+            }
+            if (str != "") {
+                str = str.substring(0, str.length - 1)
+            }
+            return str;
+        }
+        function getDate() {
+            var list = $('#datename .zlw_bgact');
+            var id = list[0].value;
+            return id;
+        }
+        
+        function ExportList1() {
+
+           
+            window.location.href = "/Sws/Sws_AlarmRecord/ExportEventHistoryData?beginTime=" + $("#beginTime").val() + "&endTime=" + $("#endTime").val() + "&dateid=" + dateid + "&searchtext=" + $("#searchtext").val() + "&levelEvent=" + levelEvent() + "&stationType=" + stationType() + "&eventType=" + typeEvent() + "";
+                //window.location.href = "/Sws/Sws_AlarmRecord/ExportEventHistoryData?table=" + $table + "";           
+        }
+    </script>
+</body>
+</html>

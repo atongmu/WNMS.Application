@@ -1,0 +1,206 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GetStationPosition</title>
+    <script src="~/js/jquery.min.js"></script>
+    <!-- 高德地图 -->
+    @*<link href="~/4.15/esri/themes/light/main.css" rel="stylesheet" />*@
+    @*<link href="http://localhost:10044/esri/themes/light/main.css" rel="stylesheet" />
+    <script src="http://localhost:10044/init.js"></script>*@
+    <link href="~/4.22/esri/themes/light/main.css" rel="stylesheet" />
+    <script src="~/4.22/init.js"></script>
+    <style>
+        .amap-icon img,
+        .amap-marker-content img {
+            width: 25px;
+            height: 34px;
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        .amap-logo, .amap-copyright {
+            display: none !important;
+        }
+    </style>
+
+</head>
+<body style="margin:0">
+    <div id="zlw-scjkmainmitopkditu" style="height:calc(100% - 10px)"></div>
+    <script> 
+        var lng =@ViewBag.lng;
+        var lat = @ViewBag.lat;
+        var stationnum = "@ViewBag.StationNum";
+        var stationName = "@ViewBag.StationName";
+        var address = "";
+
+        require(["esri/Map", "esri/views/MapView", "esri/layers/TileLayer", "esri/Graphic",
+            "esri/layers/GraphicsLayer", "esri/geometry/Point"], function (Map, MapView, TileLayer, Graphic, GraphicsLayer, Point) {
+
+                //创建地图
+                var layer = new TileLayer({
+                    url: "@ViewBag.arcgisUrl" //自己的底图地址
+                });
+                var map = new Map({
+                    basemap: "",
+                    layers: [layer]
+                });
+                let pt = new Point({
+                    x: lng,
+                    y: lat,
+                    spatialReference: 2436
+                });
+                var view = new MapView({
+                    map: map,
+                    center: pt, // Longitude, latitude
+                    zoom: 4, // Zoom level
+                    container: "zlw-scjkmainmitopkditu",// Div element
+                    constraints: {
+                        minScale: 140000, // User cannot zoom out beyond a scale of 1:500,000
+                        maxScale: 0, // User can overzoom tiles
+                    }
+                });
+
+                //添加图层、标注点、信息框
+                //const point = { //Create a point118.338223
+                //    type: "point",
+                //    x: 520061.79607555206,
+                //    y: 2737925.6849408206,
+                //    spatialReference: 2436
+                //};
+                const graphicsLayer = new GraphicsLayer();
+                const pictureMarkerSymbol = {
+                    type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
+                    url: "../../images/定位.png",
+                    width: "32px",
+                    height: "32px"
+                };
+
+                const popupTemplate = {
+                    title: "{Name}",
+                    content: "<p style='margin-top: 10px;font-weight: bold;'><span>泵房编号 :</span><span style='color: green;'>"+stationnum+"</span></p><p style='font-weight: bold;margin-top: -5px;'><span>泵房名称 :</span><span style='color: green;'>"+stationName+"</span></p><p style='font-weight: bold;margin-top: -5px;' class='input-item'><span>泵房地址 :</span><span style='color: green;'>" + address + "</span></p>"
+                }
+                const attributes = {
+                    Name: "泵房信息",
+                }
+                const pointGraphic = new Graphic({
+                    geometry: pt,
+                    symbol: pictureMarkerSymbol,
+                    attributes: attributes,
+                    popupTemplate: popupTemplate
+                });
+                graphicsLayer.add(pointGraphic);
+                map.add(graphicsLayer);  
+
+
+                //获取详细地址
+                //const serviceUrl = "http://120.33.89.2:6080/arcgis/rest/services/LM_DXT20211216/MapServer";
+                //const params = {
+                //    location: pt
+                //};
+                //locator.locationToAddress(serviceUrl, params)
+                //    .then(function (response) { // Show the address found
+                //        const address = response.address;
+                //        //showAddress(address, evt.mapPoint);
+                //    }, function (err) { // Show no address found
+                //        //showAddress("No address found.", evt.mapPoint);
+                //    });
+                //view.on("click", function (e) {
+                //    $txtCoordinate = $("#txtCoordinate"),
+                //    $txtCoordinate[0].value = e.mapPoint.x + "," + e.mapPoint.y;
+                //});
+            });
+
+
+
+
+
+          //地图
+        //var map = new AMap.Map('zlw-scjkmainmitopkditu', {
+        //    zoom: 10, //设置地图的缩放级别
+        //    //mapStyle: 'amap://styles/4f2af56fcd0a88c79ca4c2063fcab18a', //设置地图的显示样式
+        //    center: [(lng == 0) ? 116.397428 : lng, (lat == 0) ? 39.90923 : lat],
+
+        //});
+        //var geocoder = new AMap.Geocoder({
+        //    city: "000", //城市设为北京，默认：“全国”
+        //    radius: 1000 //范围，默认：500
+        //});
+
+        //$(function () {
+        //       if (lng != 0 && lat != 0) {
+        //        var marker = new AMap.Marker({
+        //            position: new AMap.LngLat(lng, lat),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+        //            icon: "//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png",
+        //            offset: new AMap.Pixel(-10, -10),
+        //        });
+
+        //        // 将创建的点标记添加到已有的地图实例：
+        //        map.add(marker);
+
+        //           marker.on('click', clickHandler);
+        //           marker.on('mouseover', clickHandler);
+
+
+
+        //             var lnglat =new AMap.LngLat(lng, lat);
+        //    geocoder.getAddress(lnglat, function (status, result) {
+        //        if (status === 'complete' && result.regeocode) {
+        //            var address = result.regeocode.formattedAddress;
+        //            //构建信息窗体中显示的内容
+        //            var info = [];
+
+        //            info.push("<p style='margin-top: 10px;font-weight: bold;'><span>泵房编号 :</span><span style='color: green;'>"+stationnum+"</span></p>"
+        //                + "<p style='font-weight: bold;margin-top: -5px;'><span>泵房名称 :</span><span style='color: green;'>"+stationName+"</span></p>"
+        //                + "<p style='font-weight: bold;margin-top: -5px;' class='input-item'><span>泵房地址 :</span><span style='color: green;'>" + address + "</span></p>"
+        //               );
+
+        //            infoWindow = new AMap.InfoWindow({
+        //                content: info.join("")  //使用默认信息窗体框样式，显示信息内容
+        //            });
+
+        //            infoWindow.open(map, lnglat );
+
+        //        } else {
+
+        //        }
+        //    });
+        //    }
+        //})
+        //function clickHandler(e) {
+
+        //    var lnglat = [e.target.getPosition().lng, e.target.getPosition().lat];
+        //    geocoder.getAddress(lnglat, function (status, result) {
+        //        if (status === 'complete' && result.regeocode) {
+        //            var address = result.regeocode.formattedAddress;
+        //            //构建信息窗体中显示的内容
+        //            var info = [];
+
+        //          info.push("<p style='margin-top: 10px;font-weight: bold;'><span>泵房编号 :</span><span style='color: green;'>"+stationnum+"</span></p>"
+        //                + "<p style='font-weight: bold;margin-top: -5px;'><span>泵房名称 :</span><span style='color: green;'>"+stationName+"</span></p>"
+        //                + "<p style='font-weight: bold;margin-top: -5px;' class='input-item'><span>泵房地址 :</span><span style='color: green;'>" + address + "</span></p>"
+        //               );
+
+        //            infoWindow = new AMap.InfoWindow({
+        //                content: info.join("")  //使用默认信息窗体框样式，显示信息内容
+        //            });
+
+        //            infoWindow.open(map, lnglat );
+
+        //        } else {
+
+        //        }
+        //    });
+
+        //}
+    </script>
+</body>
+</html>

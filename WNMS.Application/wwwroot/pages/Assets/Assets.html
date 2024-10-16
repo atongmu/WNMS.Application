@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>资产信息</title>
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../css//iconfont.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <!-- 日历 -->
+    <script src="../../lib/My97DatePicker/WdatePicker.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <style>
+        .zlw_assets_san .bootstrap3,.fixed-height{height:100%;}
+        .zlw_assets_san .fixed-table-container{height:calc(100% - 60px) !important}
+        .zlw_assets_san  .fixed-table-body{
+            overflow:auto;
+            height:100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_assets">
+        <div class="zlw_assetscon">
+            <div class="zlw_mjkzyi clearfloat">
+                <h4>录入时间：</h4>
+                <ul class="clearfloat">
+                    <li class="sjlbxz"><span>全部</span></li>
+                    <li><span>本月</span></li>
+                    <li><span>上月</span></li>
+                    <li><span>本周</span></li>
+                    <li><span>上周</span></li>
+                    <li><span>自定义</span></li>
+                </ul>
+            </div>
+            <div class="zlw_mjkzer clearfloat">
+                <h4>快速索引：</h4>
+                <ul class="clearfloat">
+                    <li><input type="text" class="zlw_mjformbd" placeholder="请输入卡号"></li>
+                    <li><input type="submit" value="提交" class="zlw_mjformtj"></li>
+                    <li><input type="reset" value="重置" class="zlw_mjformcz"></li>
+                </ul>
+            </div>
+            <div class="zlw_assets_san">
+                <table id="tabledata" class=" table-striped">
+                </table>
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+    <script>
+        $(function () {
+            // 时间选择
+            $(".zlw_mjkzyi ul li").click(function () {
+                $(this).siblings('.zlw_mjkzyi ul li').removeClass('sjlbxz');  // 删除其他兄弟元素的样式
+                $(this).addClass('sjlbxz');                            // 添加当前元素的样式
+            });
+
+        })
+        $(window).load(function () {
+            $('#tabledata').bootstrapTable({ height: $(window).height() - 50 })
+            InitMainTable()
+        });
+        $(function () {
+            $('#tabledata').bootstrapTable({
+                // url: queryUrl,                      //请求后台的URL（*）
+                // method: 'GET',                      //请求方式（*）
+                //toolbar: '#toolbar',              //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 15,                     //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索
+                //strictSearch: true,
+                //showColumns: true,                  //是否显示所有的列（选择显示的列）
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: true,                //是否启用点击选中行
+                //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "DeviceId",                     //每一行的唯一标识，一般为主键列
+                //showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+                //cardView: false,                    //是否显示详细视图
+                //detailView: false,                  //是否显示父子表
+                //得到查询的参数
+                columns: [
+                    {
+                        checkbox: true,
+                        visible: true
+                    },
+                    {
+                        field: 'id',
+                        title: '序号',
+                        align: 'center',
+                        backgroundColor: '#449d44'
+                    }, {
+                        field: 'column0',
+                        title: '泵房名称'
+                    }, {
+                        field: 'column1',
+                        title: '资产类型'
+                    }, {
+                        field: 'column2',
+                        title: '资产名称'
+                    }, {
+                        field: 'column3',
+                        title: '品牌'
+                    }, {
+                        field: 'column4',
+                        title: '购买日期'
+                    }, {
+                        field: 'column5',
+                        title: '购买金额'
+                    },
+                    {
+                        field: 'column6',
+                        title: '保质期'
+                    },
+                    {
+                        field: 'column7',
+                        title: '操作'
+                    }
+                ],
+                data: [
+                    {
+                        id: 1,
+                        column0: 'BF1545215',
+                        column1: '固定资产',
+                        column2: '阀门',
+                        column3: '三利',
+                        column4: '2020.01.19 08:00',
+                        column5: '52',
+                        column6: '1年',
+                        column7: '',
+
+                    },
+                    {
+                        id: 2,
+                        column0: 'BF1545215',
+                        column1: '固定资产',
+                        column2: '阀门',
+                        column3: '三利',
+                        column4: '2020.01.19 08:00',
+                        column5: '52',
+                        column6: '1年',
+                        column7: '',
+
+                    },
+                    {
+                        id: 3,
+                        column0: 'BF1545215',
+                        column1: '固定资产',
+                        column2: '阀门',
+                        column3: '三利',
+                        column4: '2020.01.19 08:00',
+                        column5: '52',
+                        column6: '1年',
+                        column7: '',
+                    },
+                    
+                ]
+            });
+            $('.fixed-table-loading').hide()
+        });
+        
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>WarnReport</title>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    @*<link href="~/css/layui.css" rel="stylesheet" />*@
+
+    @*<script src="~/js/jquery.min.js"></script>*@
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.kxbdMarquee.js"></script>
+    @*<script src="~/js/layui.js"></script>*@
+    <script src="~/lib/laypage/laypage.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/js/pinterest_grid.js"></script>
+    <style>
+        html, body {
+            height: 100%
+        }
+
+        .icon-bengfang {
+            font-size: x-large;
+        }
+
+        .zlw_listyilfyi em {
+            float: left;
+            padding: 0 0 0 10px;
+        }
+
+        #tablist .ons span {
+            font-weight: bold;
+            color: #0084da;
+        }
+
+        .elembox {
+            overflow: hidden;
+            height: 30px;
+            position: relative;
+            top: 8px
+        }
+
+            .elembox ul li {
+                float: left
+            }
+
+        .sx-select {
+            height: 25px;
+            border-radius: 5px
+        }
+
+        .disableclass {
+            /*background-color: #d2d6de !important;*/
+            cursor: not-allowed !important;
+            box-shadow: none;
+            opacity: .65;
+        }
+
+        .zlw_home {
+            height: 100%
+        }
+
+        .zlw_xinxi_main {
+            height: calc(100% - 80px);
+            overflow: auto;
+            padding: 10px 10px 40px;
+        }
+
+        .zlw_list1_itemmid ul li div:nth-of-type(2) {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .removeline {
+            border-bottom: none;
+        }
+        .zlw_listyilfer {
+   
+           width: 100% !important;
+           }
+        .list_head div:nth-of-type(1), .list_body div:nth-of-type(1) {
+         width: 50%;
+         }
+    </style>
+</head>
+<body>
+    <div class="zlw_home">
+        <!-- star searchtop -->
+        <div class="zlw_home_yi clearfloat">
+            <div class="zlw_home_yi_lf left">
+                <form action="">
+                    <div class="sea_k">
+                        <i class="fa fa-search sea_tubi ml5px mr5px" id="searchbtn"></i>
+                        <input type="text" class="hyl_input" style="height:26px !important;text-indent:0.75em" id="searchtext" placeholder="设备名称或者预警规则" autocomplete="off">
+                    </div>
+                </form>
+            </div>
+            <div class="zlw_home_yi_rg right clearfloat">
+                <div class="zlw_home_yi_rg_time left">
+                    <span>刷新频率：</span>
+                    <select class="hyl_select" id="refreshtime" style="height:26px !important;">
+                        <option value="30">30秒</option>
+                        <option value="60" selected="selected">1分钟</option>
+                        <option value="300">5分钟</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+        <!-- searchtop end -->
+        <!-- sar zonglantop -->
+        <!-- zonglantop end -->
+        <!-- star 内容 -->
+        <div class="zlw_xinxi_main">
+
+
+        </div>
+        <div class="overflow pt10px" style="position:fixed;left:0;bottom:0;background:#fff;width:100%;z-index:9999">
+            <div class="left">
+                <span class="pl10px pr10px">每页显示</span>
+                <select class="mr10px" style="height:26px;line-height:26px;border-radius:2px" id="pagesize">
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
+                <span class="pr10px">条记录</span>
+            </div>
+            <div class="left" id="page_JK" style="height:30px"></div>
+        </div>
+        <!-- 内容 end -->
+    </div>
+    <script type="text/javascript">
+        var el = document.querySelector('input');
+        el.addEventListener("keydown", function (e) {
+            var keyCode = e.keyCode || e.which;
+            if (keyCode === 9) {
+                var start = el.selectionStart,
+                    end = el.selectionEnd,
+                    value = el.value;
+                var lineStart = value.lastIndexOf('\n', start),
+                    lineEnd = value.indexOf('\n', end),
+                    offset = 0;
+                if (lineStart === -1) lineStart = 0;
+                if (lineEnd === -1) lineEnd = value.length;
+                if (lineStart === lineEnd);
+                else if (lineStart !== 0) lineStart += 1;
+                lines = value.substring(lineStart, lineEnd).split('\n');
+                console.log([lineStart, lineEnd], lines);
+                if (lines.length > 1) {
+                    offset = lines.length;
+                    lines = '\t' + lines.join('\n\t');
+                    el.value = value.substring(0, lineStart) + lines + value.substring(lineEnd);
+                    el.selectionStart = start + 1;
+                    el.selectionEnd = end + offset;
+                } else {
+                    offset = 1;
+                    lines = lines[0];
+                    el.value = value.substring(0, start) + '\t' + value.substring(end);
+                    el.selectionStart = el.selectionEnd = start + offset;
+                }
+                e.preventDefault();
+            }
+        })
+    </script>
+    <script type="text/javascript">
+        var pageindex = 1;
+        var myVar = setInterval(function () { LoadDataList(pageindex); }, $("#refreshtime").val() * 1000);
+        $(function () {
+            LoadDataList(pageindex);
+
+        })
+        function LoadDataList(curr) {
+            $.post("/Sws/WarnRule/GetWarnReportData", {
+                pageindex: curr || 1,
+                pagesize: $("#pagesize").val(),
+                searchTxt:$("#searchtext").val()
+            }, function (res) {
+                    if (res.totalPage!=0) {
+                        parent.$(".badge1").css("display", "block");
+                    }
+                    else if(res.totalPage==0&&$("#searchtext").val()=="") {
+                        parent.$(".badge1").css("display", "none");
+                    }
+                    $(".zlw_xinxi_main").html(res.dataTable);
+                    var mypageindex = curr || 1;
+                    if (res.totalPage < mypageindex&&res.totalPage!=0) {
+                        pageindex = 1;
+                       
+                        LoadDataList(1);
+                    }
+                      laypage({
+                    skin: 'molv',
+                    cont: 'page_JK',
+                    pages: res.totalPage,
+                    skip: true,
+                    curr: curr || 1,
+                    jump: function (obj, first) {
+                        if (!first) {
+                            LoadDataList(obj.curr);
+                            pageindex = obj.curr;
+                        }
+                    }
+                });
+            });
+
+        }
+         $("#searchtext").keydown(function (e) {
+            if (e.keyCode == 13) {
+                pageindex = 1;
+                LoadDataList(pageindex);
+                return false;
+            }
+         });
+         $("#refreshtime").change(function () {
+
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadDataList(pageindex); }, $("#refreshtime").val() * 1000);
+        })
+    </script>
+</body>
+</html>

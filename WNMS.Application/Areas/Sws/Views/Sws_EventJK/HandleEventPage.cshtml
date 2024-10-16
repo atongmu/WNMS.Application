@@ -1,0 +1,171 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>HandleEventPage</title>
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .star {
+            position: absolute;
+            left: 58px;
+            top: -4px;
+            font-size: 25px;
+            color: red
+        }
+
+        .input-group {
+            width: 100%;
+        }
+    </style>
+
+</head>
+<body>
+    <div style="padding:20px">
+        <form>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <div class="form-group">
+                                    <label>报警信息</label>
+                                    <div class="input-group">
+
+                                        <input type="button" class="form-control" value="@ViewBag.alarmMessage" id="alarmdata">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <div class="form-group relative">
+                                    <label>反馈信息 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <textarea class="form-control" rows="2" cols="20" id="feedbackInfo" name="feedbackInfo">@ViewBag.FeedBackInfo</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (ViewBag.UserName != "")
+                    {
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>处理人</label>
+                                        <div class="input-group">
+                                            <input type="button" class="form-control" value="@ViewBag.UserName">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>转工单处理:</label>
+                                    @*<div class="input-group">*@
+                                    @if (ViewBag.IsConvertOrder == true)
+                                    {
+                                        <input type="checkbox" id="IsConvertOrder" checked="checked" style="width:15px;height:15px;vertical-align: top;">
+
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" id="IsConvertOrder" style="width:15px;height:15px;vertical-align: top;">
+                                    }
+
+                                    @*</div>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+    @*<div class="sl_baojing">
+            <ul>
+                <li><span class="col-md-3">报警信息:</span><span>@ViewBag.alarmMessage</span></li>
+                <li><span class="col-md-3">反馈信息:</span><textarea id="feedbackInfo">@ViewBag.FeedBackInfo</textarea></li>
+                @if (ViewBag.UserName != "")
+                {
+                    <li><span class="col-md-3">处理人:</span><span>@ViewBag.UserName</span></li>
+                }
+                @if (ViewBag.IsConvertOrder == true)
+                {
+                    <li><span class="col-md-3">转工单处理：</span><input type="checkbox" id="IsConvertOrder" checked="checked" disabled="disabled"></li>
+                }
+                else
+                {
+                    <li><span class="col-md-3">转工单处理：</span><input type="checkbox" id="IsConvertOrder" disabled="disabled"></li>
+                }
+            </ul>
+        </div>*@
+    <script type="text/javascript">
+        var index = parent.layer.getFrameIndex(window.name);
+        var eventtime = "@ViewBag.eventtime";
+        var rtuid = "@ViewBag.rtuid";
+        var eventsouce = "@ViewBag.eventsouce";
+        var ishandle = "@ViewBag.ishandle";
+        var isrefresh = "@ViewBag.isrefresh";
+        $(function () {
+            if (ishandle == "True") {
+                $("#IsConvertOrder").attr("disabled", "disabled");
+                $("#feedbackInfo").attr("readonly","readonly");
+            }
+            })
+        function saveForm() {
+            if ($("#feedbackInfo").val() != "") {
+                $.post("/Sws/Sws_EventJK/SetEventHandle", {
+                    eventtime: eventtime,
+                    rtuid: rtuid,
+                    eventsouce: eventsouce,
+                    feedbackInfo: $("#feedbackInfo").val(),
+                    IsConvertOrder: $("#IsConvertOrder").is(':checked'),
+                    alarminfo:$("#alarmdata").val()
+                }, function (data) {
+                        if (data == "ok") {
+                            layer.msg("操作成功");
+                            parent.layer.close(index);
+                            if (isrefresh == "True") {
+                                 parent.QueryEventJkList(parent.pageindex);
+                            } 
+                        }
+                        else {
+                            if (data == "have") {
+                                layer.msg("已通过途径进行了反馈，请刷新页面");
+                            }
+                            else {
+                                layer.msg("操作失败");
+                            }
+                        }
+                })
+            }
+            else {
+                layer.msg("请填写反馈信息");
+            }
+        }
+    </script>
+</body>
+</html>

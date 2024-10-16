@@ -1,0 +1,424 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AllotUser</title>
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/AllotRtu_User.css" rel="stylesheet" />
+   
+    <link rel="stylesheet" href="~/css/zlw.css">
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/ergongiconfont.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .r_right1 ul li {
+            left: 5px
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden
+        }
+
+        .zlw_datamain_lfconsea {
+            padding: 10px;
+            border-bottom: solid 1px #ddd;
+            position: relative !important;
+            width: 297px;
+            top: 0px;
+            left: 0;
+            box-sizing: border-box;
+            background: #fff;
+        }
+
+        .boxs {
+            height: 100%;
+        }
+
+        .r_left, .r_right1 {
+            height: 100%
+        }
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul, li {
+            list-style: none
+        }
+
+
+
+        .ml5px {
+            margin-left: 7px;
+        }
+
+        .ml15px {
+            margin-left: 15px;
+        }
+
+
+
+        .overflow {
+            overflow: hidden;
+            zoom: 1;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .tc-child {
+            border: 1px solid #dedede;
+            margin-top: 3px;
+            border-radius: 2px;
+            /*background: #f4f6f8;*/
+            width: 100%;
+            height: 460px;
+            padding: 10px 0;
+            overflow: auto
+        }
+
+
+            .tc-child li {
+                border: 1px solid #ccc !important;
+                border-radius: 2px !important;
+                height: 36px !important;
+                line-height: 36px !important;
+                box-sizing: border-box !important;
+                background: #d7edec !important;
+                box-shadow: 3px 3px 5px #ccc !important;
+                position: relative !important;
+                width: calc(33.3% - 30px) !important;
+                float: left !important;
+                margin-left: 15px !important;
+                margin-top: 10px !important;
+            }
+
+                .tc-child li .left {
+                    margin-left: 5px !important;
+                }
+
+                .tc-child li .right {
+                    padding-right: 10px !important;
+                    position: relative !important;
+                }
+
+        .name {
+            height: 36px;
+            line-height: 36px;
+            cursor: pointer;
+            display: block;
+            width: calc(100% - 40px);
+            text-align: center;
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            top: 0;
+            font-size: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+
+
+        .fa-close {
+            cursor: pointer
+        }
+
+        .fa-lg {
+            color: #0CB0B0;
+        }
+
+        .border {
+            margin: 0px;
+            border-top: 1px solid #ccc;
+            position: absolute;
+            left: 10px;
+            right: 10px;
+        }
+
+
+        .r_right1 ul {
+            position: relative;
+            list-style: none;
+        }
+
+            .r_right1 ul li {
+                float: left;
+                display: inline-block;
+                margin: 10px 10px 0 0;
+                position: relative;
+            }
+
+                .r_right1 ul li a {
+                    white-space: nowrap;
+                    -ms-text-overflow: ellipsis;
+                    -o-text-overflow: ellipsis;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    width: 120px;
+                }
+
+                .r_right1 ul li i {
+                    position: relative !important;
+                    width: 10px;
+                    height: 10px;
+                    /*line-height: 0;*/
+                    right: 0;
+                    bottom: 0;
+                    z-index: 99;
+                }
+
+        .r_right1 {
+            position: absolute;
+            right: 0px;
+            /*width: 100%;*/
+            /*border: 1px solid green;*/
+            left: 302px;
+            border-left: 1px solid #bbb;
+            /*height: 403px;*/
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="boxs">
+        
+        <div class="r_layout" style="border:none;border-top: 1px solid #bbb;border-bottom:1px solid #ddd;height:calc(100% - 50px) !important">
+            <div class="r_left">
+                
+                <section style="height: calc(100% - 26px); overflow: hidden">
+                    <div class="zlw_datamain_lfconsea ">
+                        <form action="">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" id="SearchBtn_Tree" class="form-control" placeholder="搜索&quot;人员&quot;名称" autocomplete="off" />
+                        </form>
+                    </div>
+                    <ul id="treeDemo" class="ztree" style="height:calc(100% - 50px);overflow:auto"></ul>
+                </section>
+            </div>
+            <div class="r_right1">
+                <header>
+                    <span>已选人员</span>
+
+                </header>
+                <section style="height: calc(100% - 30px); overflow: hidden">
+                    <ul id="userlist" class="tc-child">
+
+                        @{
+                            if (ViewBag.allotUser != null)
+                            {
+                                IEnumerable<dynamic> userlist = ViewBag.allotUser as IEnumerable<dynamic>;
+                                if (userlist.Count() > 0)
+                                {
+                                    foreach (var item in userlist)
+                                    {
+                                        <li class="ml15px overflow" id="@item.UserID" data-value="@item.NickName">
+                                            <span class="left">
+                                                <i class="fa fa-user fa-lg"></i>
+                                                <span class="name" title="@item.NickName">@item.NickName</span>
+                                            </span>
+                                            <span class="right"><i class="fa fa-close"></i></span>
+                                        </li>
+                                    }
+                                }
+                            }
+
+                        }
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var zTreeObj;
+        var teamid = @ViewBag.TeamID;
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }, callback: {
+                onCheck: zTreeOnCheck
+            },
+            check: {
+                enable: true,
+                chkboxType: { 'Y': 's', 'N': 's' }
+
+            },
+            view: {
+               showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            },
+
+        };
+        var zNodes = @ViewBag.ztreenode;
+        $(function () {
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+
+            zTreeObj.expandAll(true);     //初始化数列表展开
+
+        })
+        function zTreeOnCheck(event, treeId, treeNode) {
+           var stringappend = "";
+          
+            if (treeNode.isUser == true) {
+                var treeid = treeNode.id.substring(0, treeNode.id.length - 1);
+                if (treeNode.checked == true) {
+
+                    stringappend = '<li class="mar15px overflow" id="' + treeid + '" data-value="'+treeNode.inspectName+'">' +
+                        '<span class="left">' +
+                        '<i class="fa fa-user fa-lg"></i>' +
+                        '<span class="name">' + treeNode.inspectName + '</span>' +
+                        '</span>' +
+                        '<span class="right"><i class="fa fa-close"></i></span>' +
+                        '</li>';
+                }
+                else {
+                   
+                    $("#" + treeid + "").remove();
+                }
+            }
+            else {
+                if (treeNode.checked == true) {
+                    var nodes = zTreeObj.getNodesByParam("isUser", true, treeNode);
+                    for (var i = 0; i < nodes.length; i++) {
+                        var nodeid = nodes[i].id.substring(0, nodes[i].id.length - 1);
+                        if ($("#" + nodeid + "").length == 0) {//不存在
+                            stringappend += '<li class="mar15px overflow" id="' + nodeid + '" data-value="'+nodes[i].inspectName+'">' +
+                                '<span class="left">' +
+                                '<i class="fa fa-user fa-lg"></i>'+
+                               /* '<em class="left" style="display: inline-block;width:26px;height:26px;background:#FA9C3E;border-radius:100%;"></em>'*/
+                                '<span class="name" title='+ nodes[i].inspectName +'>' + nodes[i].inspectName + '</span>' +
+                                '</span>' +
+                                '<span class="right"><i class="fa fa-close"></i></span>' +
+                                '</li>';
+                        }
+                    }
+                }
+                else {
+                    var nodes = zTreeObj.getNodesByParam("isUser", true, treeNode);
+                    for (var i = 0; i < nodes.length; i++) {
+                        var nodeid = nodes[i].id.substring(0, nodes[i].id.length - 1);
+                        if ($("#" + nodeid + "").length>0) {//存在
+                            $("#" + nodeid + "").remove();
+                        }
+                    }
+                }
+            }
+            if (stringappend != "") {
+                $("#userlist").append(stringappend);
+            }
+        }
+          //删除已选设备
+        $(document).on("click", '#userlist .right', function () {
+            var iddata = $(this).parent()[0].id + "u";
+
+            var node = zTreeObj.getNodeByParam("id", iddata, null);
+            if (node != null) {
+                zTreeObj.checkNode(node, false, false);
+                $(this).parent()[0].remove();
+            }
+            else {
+                 $(this).parent()[0].remove();
+            }
+        })
+         //树查询
+            $("#SearchBtn_Tree").bind("keypress", function (event) {
+                if (event.keyCode != 13) {
+                    if (event.keyCode < 48 || event.keyCode > 57) {
+                        console.log("1");
+                    }
+                } else {
+                    event.preventDefault();
+                    LoadZtree();
+                }
+            });
+
+         //树查询
+        function LoadZtree() {
+            if ($("#searchtext").val() != "") {
+                 
+                 var userids = GetAllotUserID();  
+                $.post("/Wo/Wo_TeamInfo/GetTreeNodes", { searchtxt: $("#SearchBtn_Tree").val(),teamid:teamid, userids: userids }, function (data) {
+                    zTreeObj.destroy();    //清空树
+                    var aa = JSON.parse(data);   //数据转json8
+                  
+                        zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                        zTreeObj.expandAll(true);     //初始化数列表展开
+                   
+                })
+            }
+            else {
+                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);   //重新初始化树
+            }
+        }
+
+        function saveForm(func) {
+              var ulist = $("#userlist li");
+              var userids = "",username="";
+
+              for (var i = 0; i < ulist.length; i++) {
+
+                  userids += ulist[i].id + ',';
+                  username += ulist[i].getAttribute("data-value") + ",";
+                }
+            if (userids != "") {
+                userids = userids.substring(0, userids.length - 1);
+                username = username.substring(0, username.length-1);
+            }
+            if (userids != "") {
+                func(userids,username);
+            }
+            else {
+                layer.alert("至少选一个人员");
+            }
+
+        }
+        function GetAllotUserID() {
+             var ulist = $("#userlist li");
+             var userids = "";
+             for (var i = 0; i < ulist.length; i++) {
+                    userids += ulist[i].id + ',';
+             }
+            if (userids != "") {
+                userids = userids.substring(0, userids.length - 1);
+            }
+            return userids;
+        }
+    </script>
+</body>
+</html>

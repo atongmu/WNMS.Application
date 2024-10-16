@@ -1,0 +1,408 @@
+﻿@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>运行日志</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+
+    <style>
+        html, body {
+            height: 100%
+        }
+
+        /*.zlw_manageconrgconsan .bootstrap3 {
+            height: calc(100% - 10px)
+        }*/
+
+        .sl_chioce {
+            height: 50px
+        }
+
+        .no-date {
+            position: absolute;
+            width: 100%;
+            height: 100%
+        }
+
+            .no-date img {
+                margin-top: 12%
+            }
+
+        .sl_list {
+            height: calc(100% - 40px)
+        }
+
+
+
+        .fixed-table-container {
+            height: calc(100% - 130px) !important;
+            overflow: hidden;
+        }
+
+        .sl_chioce {
+            border-bottom: 0
+        }
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf">
+                <!-- 搜索框 -->
+                <div class="zlw_datamain_lfconsea">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" id="pumname" class="form-control" placeholder="搜索&quot;泵房&quot;名称" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:100%;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+            </div>
+            <div class="sl_rg">
+                <div class="sl_chioce relative" style="border-bottom:1px solid #ddd;height:51px">
+                    <nav aria-label="Page navigation" style="margin-left: 10px;margin-top: 10px;display: inline-block;">
+                        <ul class="paginations sl_chioDate">
+                            <li>
+                                <label class="hyl_label">器件启用日期：</label>
+                                <input class=" hyl_input hyl_input-sm" readonly="readonly" id="creaTime" value="" />
+                                <label class="hyl_label ml15px">器件已运行天数：</label>
+                                <input class=" hyl_input hyl_input-sm" readonly="readonly" id="days"  value="" />                               
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="btn-group pull-right" role="group" aria-label="..." style="position:absolute;right:10px;top:10px">
+                        @*<button type="button" class="btn btn-default" id="Btn_Template"><i class="fa fa-cogs"></i> 模板配置</button>
+        <button type="button" class="btn btn-default" id="CorrectData"><i class="fa fa-paper-plane"></i> 数据矫正</button>*@
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-reorder"></i>&nbsp导入数据
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <button class="btn btn-sm btn-success fileinput-button" style="background-color:#428bca;border-color:#428bca">
+                                    <form id="upfile" enctype="multipart/form-data" method="POST">
+                                        <input type="file" name="excelfile" onchange="ChartsImport()" />
+                                    </form>
+                                </button>
+                            </li>
+                            <li><a id="cycleExport">下载器件模板</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="sl_list" style="margin-top:0px"> 
+                    <div class="zlw_manageconrgconsan mt10px" id="tablebox" style="height:calc(100% - 11px);position:relative">
+                        <div id="echartbox" style="height:100%;position:relative;display:none">
+                        </div>
+                        <div class="no-date textCenter" id="imge">
+                            <img src="~/images/null.png" width="150" />
+                            <p>暂无数据</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/DataV/js/echarts.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script type="text/javascript">
+		var setting = {
+            check: {
+                enable: false,
+			},callback: {
+                onClick: zTreeOnClick
+            },
+			data: {
+				simpleData: {
+					enable: true
+				}
+            },
+            view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            },
+            //异步加载配置
+            async: {
+                enable: true,
+                url: "/Com/AccessoriesChart/LoadAccessoriesTree",
+                autoParam: ["id","type"],
+                dataType: 'json',
+                type: "post",
+            }
+        };
+
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echartbox'));
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: '器件生命周期趋势图',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                }
+            },
+            grid: {
+                left: '2%',
+                right: '2%',
+                top: 70,   
+                bottom: '5%',
+                containLabel: true
+            },
+            calculable: true,
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                    lineStyle: {//线条样式
+                        color: '#2c345c',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: { color: '#333' },//控制x轴字体样式
+                    fontSize: 15
+                },
+                axisPointer: {
+                    type: 'line',
+                    lineStyle: {
+                        color: '#C64542',
+                        type: 'deshed'
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: {
+                    lineStyle: {
+                        color: '#666'
+                    }
+
+                },
+                axisTick: {
+                    show: true
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: '#999',
+                        width: 1,
+                        type: 'deshed'
+                    }
+                },
+                boundaryGap: [0, '20%']
+            },
+            visualMap: {
+                show: false,
+                dimension: 0,
+                pieces: []
+            },
+            series: [{
+                data: [],
+                type: 'line',
+                symbol: 'circle',   //实心圆，默认空心
+                symbolSize: 8,
+                smooth: 0.6,
+                areaStyle: {}
+            }]
+        };
+
+
+        var zNodes =@ViewBag.TreeNodes;
+        var zTreeObj;
+         
+        $(document).ready(function () {
+			zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+             //初次加载数据
+            //var options = $table.bootstrapTable('getOptions');
+            $('.fixed-table-loading').hide();
+            $('.fixed-table-pagination').hide();
+            ////查询
+            //$("#btnSelect").click(function () {
+            //    searchData();
+            //});
+
+            //树查询
+            $("#pumname").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    LoadZtree();
+                }
+            });
+
+            //导出器件生命周期趋势数据模板
+            $("#cycleExport").click(function () {
+                window.location.href = "/Com/AccessoriesChart/CycleImportExport";
+            })
+        });
+
+        //树点击事件
+        function zTreeOnClick(event, treeId, treeNode) {
+            if (treeNode.isDevice == true) {
+                var nodes = treeNode.children;
+                for (i = 0; i < nodes.length; i++) {
+                    zTreeObj.expandNode(nodes[i], true, false, true);
+                }
+                //deviceid = treeNode.id;
+            } else {
+                if (treeNode.isSave == true) {
+                    $.post("/Com/AccessoriesChart/LoadChartData", { accid: treeNode.id }, function (data) {
+                        if (eval(data.yAxis).length>0) {
+                            $("#echartbox").css("display", "block");
+                            $("#imge").css("display", "none");
+                            //var jsondata = JSON.parse(data);
+                            $("#creaTime").val(data.date);
+                            $("#days").val(data.days);
+                            myChart.clear();
+                            option.series[0].data = eval(data.yAxis);
+                            option.xAxis.data = eval(data.xAxis);
+                            if (data.count2 > data.count) {
+                                option.visualMap.pieces = [{
+                                    lte: data.count,
+                                    color: 'grey'
+                                }, {
+                                    gt: data.count,
+                                    lte: data.count2,
+                                    color: 'green'
+                                }, {
+                                    gt: data.count2, 
+                                    color: "red"
+                                }
+                                ];
+                            } else {
+                                option.visualMap.pieces = [{
+                                    lte: data.count2,
+                                    color: 'grey'
+                                }, {
+                                        gt: data.count2,
+                                        lte: data.count,
+                                        color: 'orange'
+                                    }, { 
+                                        gt: data.count,
+                                    color: "red"
+                                }
+                                ];
+                            }
+
+                            option.series[0].markPoint = {
+                                symbol: data.symbol,
+                                data: [
+                                    { 
+                                        value: data.value,
+                                        coord: [data.count, data.tdata]                                        
+                                    }
+                                ]
+                            };
+
+                            var height = $("#echartbox").height();
+                            var width = $("#echartbox").width();
+                            myChart.resize({
+                                width: width,
+                                height: height
+                            });
+                            myChart.setOption(option);
+                        } else {
+                            $("#echartbox").css("display", "none");
+                            $("#imge").css("display", "block");
+                            $("#creaTime").val(data.date);
+                            $("#days").val(data.days);
+                        }
+                    });
+                }
+            }            
+        }
+
+        //泵房选择
+        function LoadZtree() {
+            //查询树列表数据
+            $.post("/Com/AccessoriesChart/SearchTree",{
+                stationName:$("#pumname").val()
+            },function(data){
+                zTreeObj.destroy();    //清空树
+                var aa= JSON.parse(data);   //数据转json
+                if($("#pumname").val()!=""){
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                    zTreeObj.expandAll(true);     //初始化数列表展开
+                }else{
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                }
+            });
+        }
+
+        //导入数据
+        function ChartsImport() {
+            var formData = new FormData($("#upfile")[0]);
+            $.ajax({
+                url: '/Com/AccessoriesChart/Import',
+                type: 'POST',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (res) {
+                if (res == "ok") {
+                    layer.alert("导入成功！");
+                } else
+                    if (res == "error"||res=="no") {
+                        removeFile();
+                        layer.alert("导入失败！");
+                    } else
+                        if (res == "typeno") {
+                            removeFile();
+                            layer.alert("文件类型不对！");
+                        } else
+                            if (res == "not") {
+                                removeFile();
+                                layer.alert("文件不存在！");
+                            } else
+                                if (res == "exception") {
+                                    removeFile();
+                                    layer.alert("请检查数据格式！");
+                                } else {
+                                    removeFile();
+                                    layer.alert(res);
+                                }
+            });
+        }
+
+        //删除数据
+        function removeFile() {
+            var file = $('input[name="excelfile"]');
+            file.after(file.clone().val(""));
+            file.remove();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+﻿
+@using WNMS.Application.Areas.Sws.Controllers;
+@model IEnumerable<EventTotal>
+@{
+    int totalcount = Model.Sum(r => r.Count);
+    <div class="sl_Aa_top_item">
+        <div class="sl_Aa_top_item_l">
+            <i class="fa fa-tachometer"></i>
+        </div>
+        <div class="sl_Aa_top_item_r relative" >
+            <p>报警总数   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>@totalcount</span></p>
+            <div class="progress mt10px pros">
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="@totalcount" aria-valuemin="0" aria-valuemax="@totalcount" style="width: 100%">
+                </div>
+
+            </div>
+            <span class="left pos-nb">100%</span>
+        </div>
+    </div>
+    int i = 1;
+    foreach (var item in Model)
+    {
+        if (i < 5)
+        {
+            <div class="sl_Aa_top_item">
+                <div class="sl_Aa_top_item_l">
+                    <i class="fa fa-tachometer"></i>
+                </div>
+                <div class="sl_Aa_top_item_r relative">
+                    <p>@item.Name   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>@item.Count</span></p>
+                    @{
+                        double avgcount = Math.Ceiling(((double)item.Count / totalcount) * 100);
+                    }
+                    <div class="progress mt10px pros">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="@item.Count" aria-valuemin="0" aria-valuemax="@totalcount" style="width: @avgcount%">
+                        </div>
+
+                    </div>
+                    <span class="left pos-nb">@avgcount%</span>
+                </div>
+            </div>
+        }
+        i++;
+    }
+
+
+    if (Model.Count() > 4)
+    {
+        <div class="dropdown mores">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                更多 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu zlwccxz" style="width:336px;padding:0 5px;overflow:auto;"> 
+                @{
+                    int j = 1;
+                    foreach (var item in Model)
+                    {
+                        if (j > 4)
+                        {
+                            double asgcount = Math.Ceiling(((double)item.Count / totalcount) * 100);
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="#" class="overflow relative">
+                                    <span class="drop1"><i class="fa fa-tachometer"></i></span>
+                                    <span class="drop2">
+                                        <p>@item.Name   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>@item.Count</span></p>
+                                        <div class="progress mt10px pros" style="width:100%">
+                                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="@item.Count" aria-valuemin="0" aria-valuemax="@totalcount" style="width: @asgcount%">
+                                            </div>
+                                        </div>
+                                        <span class="left pos-nb" style="bottom:15px">@asgcount%</span>
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                        j++;
+                    }
+                }
+            </ul>
+        </div>
+
+    }
+
+}
+@*<span class="mores" style=""><i class="fa fa-ellipsis-v"></i></span>*@
+
+
+<script>
+    $(".mores").click(function () {
+        $(".sl_Aa_top_item").removeClass("hidden");
+    });
+
+    $(function () {
+        var vh = $('.sl_alarmAnalysis').height() - 100 + 'px';
+        $('.zlwccxz').css('height',vh)
+    })
+
+</script>
+
+

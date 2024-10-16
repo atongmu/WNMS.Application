@@ -1,0 +1,144 @@
+﻿@model string;
+<link rel="stylesheet" href="~/css/font-awesome.css">
+<link rel="stylesheet" href="~/css/hyl.css">
+<link href="~/css/AllotRtu_User.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/css//iconfont.css">
+<!-- bootstrap -->
+<link rel="stylesheet" href="~/css/bootstrap.min.css">
+<link rel="stylesheet" href="~/css/zlw.css">
+<link href="~/lib/layer/layer.css" rel="stylesheet" />
+<style>
+    html, body {
+        height: 100%
+    }
+
+    .a_box {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: #eee
+    }
+
+    .a_left {
+        width: 210px;
+        margin-right: 5px;
+        height: 100%;
+        overflow: auto;
+        float: left;
+        background: #fff
+    }
+
+    .a_right {
+        width: calc(100%);
+        float: right;
+        height: 100%;
+        background: #fff;
+        position: relative
+    }
+
+    .a_seach {
+        padding: 5px 10px;
+        position: relative;
+        border-bottom: solid 1px #c5c5c5;
+        width: 100%;
+        background: #fff;
+    }
+
+        .a_seach i {
+            position: absolute;
+            top: 16px;
+            left: 19px;
+            color: #999;
+        }
+
+        .a_seach input {
+            text-indent: 1em
+        }
+
+    .listcont {
+        width: 100%;
+        color: #666
+    }
+
+        .listcont .on span {
+            color: #666 !important;
+            font-weight: 400;
+        }
+
+        .listcont .on {
+            border: 1px solid #4A5B79;
+            background: url(data:image/gif;base64,R0lGODlhCgAKAKIAAP////7+/v39/fr7+/n6+0xde0pbef///yH5BAEHAAcALAAAAAAKAAoAAAMdeLprzMa9EyWsr8ZbQ9OBRxkDYITFGIVEUWiRUCUAOw==) no-repeat right bottom;
+        }
+
+        .listcont li {
+            border: 1px solid #ccc;
+            cursor: pointer;
+            float: left;
+            margin-right: 10px;
+            border-radius: 3px;
+            height: 80px;
+            width: 250px;
+            margin-bottom: 10px
+        }
+
+            .listcont li > span, .listcont p {
+                float: left;
+                height: 80px
+            }
+
+            .listcont li > span {
+                width: 70px;
+                height: 77px;
+                text-align: center;
+                background: #eee
+            }
+
+                .listcont li > span img {
+                    display: inline-block;
+                    padding-top: 15px
+                }
+
+        .listcont p {
+            padding-top: 10px;
+            text-indent: 1em;
+            width: calc(100% - 75px)
+        }
+
+            .listcont p span {
+                display: block
+            }
+
+    .ul-over {
+        overflow: auto;
+        margin: 10px;
+        position: absolute;
+        top: 50px;
+        width: calc(100% - 20px);
+        height: calc(100% - 70px)
+    }
+</style>
+<div style="margin-top: 10px;">
+    <ul class="listcont" >
+        @{ if (Model != "")
+            {
+                var datalist = Newtonsoft.Json.JsonConvert.DeserializeObject(Model) as IEnumerable<dynamic>;
+                foreach (var item in datalist)
+                {
+                    string headurl = Convert.ToString(item.HeadIcon);
+
+                <li data-id="@item.UserID" data-name="@item.UserFullName">
+                  
+                    <span><img src="../../../images/man.png" /></span>
+                       
+                    <p>
+                        <span class="ellipsis1 name">姓名：@item.UserFullName</span>
+                        <span class="ellipsis1">微信：@item.WeChatID</span>
+                        <span class="ellipsis1">电话：@item.Phone</span>
+                    </p>
+                </li>
+
+                }
+            } }
+
+    </ul>
+</div>

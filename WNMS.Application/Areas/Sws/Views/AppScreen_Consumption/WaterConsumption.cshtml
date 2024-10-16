@@ -1,0 +1,435 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="keywords" content="智慧供水平台">
+    <meta name="description" content="智慧供水平台">
+    <title>数据分析</title>
+    <link href="~/mobile/css/reset.css" rel="stylesheet" />
+    <link href="~/mobile/css/common.css" rel="stylesheet" />
+    <link href="~/mobile/css/theme1.css" rel="stylesheet" />
+    <script src="~/mobile/js/plugins/adaption.js"></script>
+</head>
+<body>
+    <div class="window-height fixed">
+        <div class="tab-primary full-height">
+            <div class="tab-nav">
+                <a href="javascript:;" class="item active">图表分析</a>
+                <a href="javascript:;" class="item">数据报表</a>
+            </div>
+            <div class="tab-content">
+                <div class="tab-content-item filter">
+                    <div class="filter-container">
+                        <form id="formFilter1" class="form form-filter clearfix">
+                            <div class="form-group">
+                                <div class="label">统计方式：</div>
+                                <input type="text" id="searchType1" name="searchType1" value="按天" class="form-control select searchType" data-id="searchType1" readonly="" style="width: 1rem;">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="timeInterval1" value="@ViewBag.BeginTimeDay" name="timeInterval1" class="form-control advanceDate time-dhm-range" data-datetype="date" data-dateformat="yy-mm-dd" placeholder="选择时间">
+                            </div>
+                            <div class="btn-group fr">
+                                <button type="submit" class="btn btn-primary">查询</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-content-wrap full-height">
+                        <!-- 1、图表分析 -->
+                        <div id="echarts1" class="echarts"></div>
+
+                        <div class="nothing absolute" id="eno">
+                            <div class="nothing-content">
+                                <div class="icon"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content-item filter">
+                    <div class="filter-container">
+                        <form id="formFilter2" class="form form-filter clearfix">
+                            <div class="form-group">
+                                <div class="label">统计方式：</div>
+                                <input type="text" id="searchType2" name="searchType2" value="按天" class="form-control select searchType" data-id="searchType2" readonly="" style="width: 1rem;">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="timeInterval2" name="timeInterval2" value="@ViewBag.BeginTimeDay" class="form-control advanceDate time-dhm-range" data-datetype="date" data-dateformat="yy-mm-dd" placeholder="选择时间">
+                            </div>
+                            <div class="btn-group fr">
+                                <button type="submit" class="btn btn-primary">查询</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-content-wrap full-height">
+                        <table id="table2" class="table table-data">
+                        </table>
+
+                        <div class="nothing absolute" id="tno">
+                            <div class="nothing-content">
+                                <div class="icon"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设置时间框宽度，仅供占位使用 -->
+    <div class="time-value-content time-width-dhm-range">2021-01-01 00:00 ~ 2021-07-05 21:00</div>
+    <div class="time-value-content time-width-d-range">2021-01-01 ~ 2021-07-05</div>
+
+    <script src="~/mobile/js/libs/jquery-1.12.4/jquery-1.12.4.min.js"></script>
+    <script src="~/mobile/js/libs/layer/layer.js"></script>
+
+    <script src="~/mobile/js/plugins/echarts/echarts.js"></script>
+    <script src="~/mobile/js/plugins/echarts/customed.js"></script>
+
+    <link rel="stylesheet" href="~/mobile/js/plugins/mobiscroll-date/mobiscroll.min.css">
+    <script src="~/mobile/js/plugins/mobiscroll-date/mobiscroll.js"></script>
+
+    <link rel="stylesheet" href="~/mobile/js/plugins/mobileSelect/mobileSelect.css">
+    <script src="~/mobile/js/plugins/mobileSelect/mobileSelect.min.js"></script>
+
+    <script src="~/mobile/js/common.js"></script>
+
+
+    <script>
+        var stationId = '@ViewBag.StationID';
+        /**
+         * 图表配置
+         */
+        var echartsApp = [],
+            // 1、图表曲线
+            option = {
+                color: ['#ff8a8a', '#75b1ff'],
+                tooltip: {
+                    trigger: 'axis',
+                    position: function (point, params, dom) {
+                        return [point[0], 0];
+                    },
+                    formatter: function (params) {
+                        var html = params[0].name + '<br />';
+                        for (var i = 0; i < params.length; i++) {
+                            html += params[i].marker + params[i].seriesName + '：' + params[i].value + '<br>'
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    top: 35,
+                    left: .14 * baseSize,
+                    right: .28 * baseSize,
+                    bottom: .14 * baseSize,
+                    containLabel: true
+                },
+                dataZoom: [
+                    {
+                        show: true,
+                        height: 20,
+                        xAxisIndex: [0],
+                        bottom: 5,
+                        "start": 0,
+                        "end": 100,
+                        handleStyle: {
+                            color: "#5B3AAE",
+                        },
+                    }, {
+                        type: "inside",
+                        show: true,
+                        height: 15,
+                        start: 1,
+                        end: 35
+                    },
+                ],
+                legend: {
+                    right: .14 * baseSize,
+                    top: 0,
+                    type: 'scroll',
+                    data: []
+                },
+                xAxis: [{
+                    type: 'category',
+                    axisLabel: {
+                        formatter: function (value) {
+                            value = value.replace(' ', '\n');
+                            return value;
+                        }
+                    },
+                    data: [],
+                }],
+                yAxis: [{
+                    type: 'value',
+                }],
+                series: []
+            };
+
+        $(function () {
+            /**
+             * 设置时间输入框宽度
+             */
+            var $formFilter = $('.form-filter'),
+                advanceDateMaxWidth = $formFilter.outerWidth() - $formFilter.children('.form-group').eq(0).outerWidth() - .1 * baseSize - .1 * baseSize - $formFilter.children('.btn-group').outerWidth();
+            timeWidthDhmRange = (timeWidthDhmRange > advanceDateMaxWidth) ? advanceDateMaxWidth : timeWidthDhmRange;
+            $('.time-dhm-range').outerWidth(timeWidthDhmRange + .42 * baseSize);
+
+            /**
+             * 选项卡切换
+             */
+            tabNavClick();
+
+            /**
+             * 日期选择插件
+             */
+            advanceDateInit();
+
+            /**
+             * 查询类型
+             */
+            $('.searchType').each(function () {
+                var id = $(this).data('id');
+                new MobileSelect({
+                    trigger: '#' + id,
+                    title: '',
+                    wheels: [
+                        {
+                            data: ['按天', '按月', '按年', '自定义'],
+                        }
+                    ],
+                    callback: function (indexArr, data) {
+                        // 赋值输入框
+                        $('#' + id).val(data[0]);
+
+                        switch (id) {
+                            case 'searchType1':
+                                // 表单1，统计方式切换
+                                switch (data[0]) {
+                                    case '按天':
+                                        console.log('按天');
+                                        $('#timeInterval1').attr('data-datetype', 'date');
+                                        $('#timeInterval1').attr('data-dateformat', 'yy-mm-dd');
+                                        $('#timeInterval1').val("@ViewBag.BeginTimeDay");
+                                        break;
+                                    case '按月':
+                                        console.log('按月');
+                                        $('#timeInterval1').attr('data-datetype', 'date');
+                                        $('#timeInterval1').attr('data-dateformat', 'yy-mm');
+                                         $('#timeInterval1').val("@ViewBag.BeginTimeMonth");
+                                        break;
+                                    case '按年':
+                                        console.log('按年');
+                                        $('#timeInterval1').attr('data-datetype', 'date');
+                                        $('#timeInterval1').attr('data-dateformat', 'yy');
+                                         $('#timeInterval1').val("@ViewBag.BeginTimeYear");
+                                        break;
+                                    case '自定义':
+                                        console.log('自定义');
+                                        $('#timeInterval1').attr('data-datetype', 'range');
+                                        $('#timeInterval1').attr('data-dateformat', 'yy-mm-dd');
+                                         $('#timeInterval1').val("@ViewBag.BeginTime"+" - "+"@ViewBag.EndTime");
+                                        break;
+                                }
+
+                                //$('#timeInterval1').val('');
+                                advanceDateInit();
+                                break;
+
+                            case 'searchType2':
+                                // 表单2，统计方式切换
+                                switch (data[0]) {
+                                    case '按天':
+                                        console.log('按天');
+                                        $('#timeInterval2').attr('data-datetype', 'date');
+                                        $('#timeInterval2').attr('data-dateformat', 'yy-mm-dd');
+                                        $('#timeInterval2').val("@ViewBag.BeginTimeDay");
+                                        break;
+                                    case '按月':
+                                        console.log('按月');
+                                        $('#timeInterval2').attr('data-datetype', 'date');
+                                        $('#timeInterval2').attr('data-dateformat', 'yy-mm');
+                                        $('#timeInterval2').val("@ViewBag.BeginTimeMonth");
+                                        break;
+                                    case '按年':
+                                        console.log('按年');
+                                        $('#timeInterval2').attr('data-datetype', 'date');
+                                        $('#timeInterval2').attr('data-dateformat', 'yy');
+                                        $('#timeInterval2').val("@ViewBag.BeginTimeYear");
+                                        break;
+                                    case '自定义':
+                                        console.log('自定义');
+                                        $('#timeInterval2').attr('data-datetype', 'range');
+                                        $('#timeInterval2').attr('data-dateformat', 'yy-mm-dd');
+                                        $('#timeInterval2').val("@ViewBag.BeginTime"+" - "+"@ViewBag.EndTime");
+                                        break;
+                                }
+
+                                //$('#timeInterval2').val('');
+                                advanceDateInit();
+                                break;
+                        }
+                    }
+                });
+            });
+
+            /**
+             * 搜索表单
+             */
+            // 图表分析搜索
+            $('#formFilter1').submit(function () {
+                // 1、图表曲线
+                getData1();
+                return false;
+            });
+
+            // 数据报表搜索
+            $('#formFilter2').submit(function () {
+                // 2、数据报表
+                getData2();
+                return false;
+            });
+
+            /**
+             * 初始化图表
+             */
+            // 1、图表曲线
+            echartsApp[1] = echarts.init($('#echarts1')[0], 'customed');
+            echartsApp[1].setOption(option);
+
+            // 1、图表曲线
+            getData1();
+
+            // 2、数据报表
+            getData2();
+        });
+
+        /**
+         * ***** 数据绑定 *****
+         */
+        /**
+         * 1、实时曲线
+         */
+        function getData1() {
+
+            var $timeInterval = $('input[name="timeInterval1"]'),
+                $searchType = $('input[name="searchType1"]');
+
+            if ($timeInterval.val() == '') {
+                $timeInterval.trigger('click');
+                return false;
+            }
+            else if ($searchType.val() == '') {
+                $searchType.trigger('click');
+                return false;
+            }
+
+            var timeIntervalArr = $timeInterval.val().split(' - ');
+            var begintime = timeIntervalArr[0];
+            var endtime = "";
+            var aa = $searchType.val();
+            if ($searchType.val() == "自定义") {
+                endtime = timeIntervalArr[1];
+            }
+
+            $.post("/Sws/AppScreen_Consumption/GetWaterEchartData", {
+                type: $searchType.val(),
+                begindate: begintime,
+                enddate: endtime,
+                stationid: stationId
+            }, function (res) {
+                    if (res.timelist.length > 0) {
+                        $('#echarts1').show().next().hide();
+                    option.xAxis[0].data = eval(res.timelist);
+                    option.legend.data = eval(res.lengnds);
+                    var series = [];
+                    debugger;
+
+                    for (var i = 0; i < res.seriesList.length; i++) {
+                        var opt = {
+                            name: '',
+                            data: [],
+                            type: 'line',
+                            smooth: true,
+                            yAxisIndex: 0
+                        };
+                        opt.name = res.seriesList[i].name;
+                        opt.data = eval(res.seriesList[i].data);
+                        series.push(opt);
+                    }
+                    option.series = series;
+
+                    //var indexLength = stationname.indexOf("</em>")
+                    //var name = stationname.substring(indexLength + 5);
+                    //option.title.text = '' + name + '电耗曲线';
+                    echartsApp[1].clear();
+                    var height = $("#echarts1").height();
+                    var width = $("#echarts1").width();
+                    echartsApp[1].resize({
+                        width: width,
+                        height: height
+                    });
+                        echartsApp[1].setOption(option, true);
+                }
+                else {
+                    // 空数据提示
+                    $('#echarts1').hide().next().show();
+                }
+            });
+        }
+
+        /**
+         * 数据报表
+         */
+        function getData2() {
+            /**
+             * 模拟获取到的数据
+             */
+
+            var $timeInterval = $('input[name="timeInterval2"]'),
+                $searchType = $('input[name="searchType2"]');
+
+            if ($timeInterval.val() == '') {
+                $timeInterval.trigger('click');
+                return false;
+            }
+            else if ($searchType.val() == '') {
+                $searchType.trigger('click');
+                return false;
+            }
+
+            var timeIntervalArr = $timeInterval.val().split(' - ');
+            var begintime = timeIntervalArr[0];
+            var endtime = "";
+            var aa = $searchType.val();
+            if ($searchType.val() == "自定义") {
+                endtime = timeIntervalArr[1];
+            }
+
+            $.post("/Sws/AppScreen_Consumption/QueryWaterConsumpData", {
+                type: $searchType.val(),
+                begindate: begintime,
+                enddate: endtime,
+                stationid: stationId
+            }, function (res) {
+                if (res.dataTable != "") {
+                    $('#table2').show().next().hide();
+                    var html = res.dataTable;
+                    $('#table2').html(html);
+                }
+                else {
+                    // 空数据提示
+                    $('#table2').hide().next().show();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

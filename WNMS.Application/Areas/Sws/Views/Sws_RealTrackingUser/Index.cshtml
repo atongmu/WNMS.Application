@@ -1,0 +1,382 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>轨迹跟踪</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+        <link rel="stylesheet" href="~/css/sl.css">
+        <link rel="stylesheet" href="~/css/hyl.css">
+    @*<link href="~/css/font-awesome.min.css" rel="stylesheet" />*@
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <!-- 树 -->
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/gdmap.css">
+    <link href="~/css/ergongiconfont.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script> 
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <!-- 高德地图 -->
+    <script src="https://webapi.amap.com/maps?v=2.0&key=28068084e71b4dac1344e8d5c9451629&plugin=AMap.PolylineEditor"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=28068084e71b4dac1344e8d5c9451629&plugin=AMap.Geocoder"></script>
+
+    <style>
+        .cont {
+            height: calc(100% - 50px);
+            position: relative
+        }
+
+        .no-date {
+            position: absolute;
+            left: 0;
+            top: 45%;
+            width: 100%;
+            transform: translateY(-50%)
+        }
+
+        #tablebox > p {
+            text-align: center;
+            padding-top: 10px;
+            font-size: 16px
+        }
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+
+        .table {
+            table-layout: fixed;
+        }
+
+        /**
+         * 地图弹窗样式
+        */
+        .amap-info-content {
+            box-shadow: 0 0 10px rgba(0,0,0,.6);
+        }
+
+        .map-info-card {
+            width: 320px;
+            background-color: rgba(255, 255, 255, .7);
+        }
+
+            .map-info-card .title {
+                padding: 0 10px;
+                font-size: 14px;
+                line-height: 40px;
+                color: #fff;
+                background-color: #00adff;
+            }
+
+            .map-info-card .content {
+                padding: 10px;
+            }
+
+            .map-info-card .item {
+                position: relative;
+                margin-top: 0;
+                padding: 3px 0 3px 55px;
+                font-size: 14px;
+                line-height: 24px;
+            }
+
+                .map-info-card .item:first-child {
+                    margin-top: 0;
+                }
+
+                .map-info-card .item .label {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    padding: 0;
+                    font-size: 14px;
+                    line-height: 30px;
+                    color: #00adff;
+                    font-weight: normal;
+                }
+
+            .map-info-card .name .iconfont {
+                float: left;
+                margin-right: 5px;
+                font-size: 18px;
+                color: #00adff;
+            }
+    </style>
+</head>
+<body>
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf">
+                <!-- 搜索框 -->
+                <div class="zlw_datamain_lfconsea">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search" onclick="LoadZtree()"></i>
+                        <input type="text" id="userName" class="form-control" placeholder="搜索客服名称" autocomplete="off" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:100%;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+            </div>
+            <div class="sl_rg">
+                <div class="zlw_map_layer">
+                    <div id="map_monitor"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        /*--------------------------------------   树 ---------------------------------------------------------------*/
+         var userId = 0;
+         var userName = "";
+         var zTreeObj;
+           var setting = {
+                data:{
+                    simpleData: {
+                        enable: true
+                    }
+                },callback:{
+                    onClick: zTreeOnClick
+                },view: {
+                    showTitle:false,
+                    showLine: true,
+                    nameIsHTML: true,
+                    showIcon: false
+                }
+            };
+            var zNodes = @ViewBag.treenodes;
+        $(function () {
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        zTreeObj.expandAll(true);     //初始化数列表展开
+            initMap();
+        });
+         //树查询
+         function LoadZtree() {
+             zTreeObj.destroy();    //清空树
+
+             if ($("#userName").val() != "") {
+                 //查询树列表数据
+                 $.post("/Sws/Sws_RealTrackingUser/SearchUser", {
+                     userName: $("#userName").val()
+                 }, function (data) {
+                     var aa= JSON.parse(data);   //数据转json
+                         zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                         zTreeObj.expandAll(true);     //初始化数列表展开
+                 });
+             }
+             else {
+                 zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);   //重新初始化树
+             }
+         }
+          //左侧树查询回车事件
+            $("#userName").keydown(function(e) {
+               if (e.keyCode == 13) {
+                   LoadZtree();
+                   return false;
+               }
+            });
+
+           //树点击事件
+         function zTreeOnClick(event, treeId, treeNode) {
+             userId = treeNode.id;
+             userName = treeNode.name.replace(/<i.*?i>/, '');
+                 GetMakerData();
+         };
+
+        /*-------------------------------------------------------------------------------------------------------------*/
+
+
+        /*----------------------------------------------- 地图 ---------------------------------------------------------------*/
+        var map;
+        var patharry = [];
+        var marker;
+        var infoWindow;
+        var geocoder = new AMap.Geocoder({
+            radius: 1000 //范围，默认：500
+        });
+        //地图初始化
+        function initMap() {
+            map = new AMap.Map('map_monitor', {
+                resizeEnable: true,
+                zoom: @ViewBag.Zoom,
+                //mapStyle: 'amap://styles/4f2af56fcd0a88c79ca4c2063fcab18a', //设置地图的显示样式
+                mapStyle: 'amap://styles/d363428cd7ab3d540fc2e80d22c5ea80', //设置地图的显示样式
+                center: ["@ViewBag.lng", "@ViewBag.lat"],
+                layers: [//使用多个图层
+                    //  new AMap.TileLayer.Satellite(),
+                    //  new AMap.TileLayer.RoadNet()
+                ],
+                zooms: [6, 16],//设置地图级别范围
+            });
+        }
+        var int;
+        //添加起点
+        function GetMakerData() {
+            $.post("/Sws/Sws_RealTrackingUser/GetGPSMarkerDatas", { userid: userId }, function (data) {
+                if (data.gs != null) {
+                    var res = data.gs;
+                    var lnglat = [res.lng, res.lat];
+                    //坐标转换
+                    var m2 = new AMap.Marker({
+                        position: lnglat,
+                        icon: '../../images/937a5eeb21e6a3a1331d2cd3e5c1418f_start.png'
+                    });
+                    map.add(m2);
+                    // 调整视野达到最佳显示区域
+                    map.setFitView();
+                    window.clearInterval(int);
+                    GetGPSData();
+                    int=setInterval(GetGPSData, 1000 * 10);
+                } else {
+                    window.clearInterval(int);
+                    layer.alert("暂未上传数据");
+                }
+            });
+        }
+
+        var num = 1;
+        //绘制轨迹
+        function GetGPSData() {
+            $.post("/Sws/Sws_RealTrackingUser/GetGPSDatas", { userid: userId,num:num }, function (data) {
+
+                var path = [];
+                var res = data.gs;
+                if (res.length > 0) {
+                    for (var i = 0; i < res.length; i++) {
+                        var lnglat = [res[i].lng, res[i].lat];
+                        path.push(lnglat);
+                    }
+
+                    //绘制轨迹
+                    var routeLine = new AMap.Polyline({
+                        path: path,
+                        isOutline: true,
+                        outlineColor: '#ffeeee',
+                        borderWeight: 2,
+                        strokeWeight: 5,
+                        strokeColor: '#0091ff',
+                        lineJoin: 'round'
+                    });
+
+                    routeLine.setMap(map);
+
+                    //添加终点
+                    clearMarker();
+
+                    marker = new AMap.Marker({
+                        position: path[0],
+                        offset: new AMap.Pixel(-25, -50),
+                        icon: new AMap.Icon({
+                            size: new AMap.Size(50, 50),
+                            imageSize: new AMap.Size(50, 50),
+                            image: '/images/mark_user2.png'
+                        }),
+                    });
+                    map.add(marker);
+
+                    //获取地址
+                    var address;
+                    geocoder.getAddress(path[0], function (status, result) {
+                        if (status === 'complete' && result.regeocode) {
+                            address = result.regeocode.formattedAddress;
+                        } else {
+                            address = "未获取到";
+                        }
+                        map.clearInfoWindow();
+                        var info = [];
+                        var time = res[0].updateTime;
+                        //info.push("<div class='input-card content-window-card'><div></div> ");
+                        var html = "";
+
+                        html = '';
+                        html += '<div class="map-info-card">';
+                        html += '<div class="title">模块信息</div>';
+                        html += '<div class="content">';
+                        html += '<div class="item name">';
+                        html += '<div class="label">使用人：</div>' + userName;
+                        html += '</div>';
+                        html += '<div class="item">';
+                        html += '<div class="label">时间：</div>' + time.replace("T", " ");
+                        html += '</div>';
+                        html += '<div class="item">';
+                        html += '<div class="label">地址：</div>' + address;
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+
+                        info.push(html);
+
+                        infoWindow = new AMap.InfoWindow({
+                            content: info.join(""),  //使用默认信息窗体框样式，显示信息内容
+                            offset: new AMap.Pixel(0, -55)
+                        });
+                        infoWindow.open(map, marker.getPosition());
+                    });
+
+
+                    //// 设置标签
+                    //maker.setLabel({
+                    //    offset: new AMap.Pixel(20, 20),
+                    //    content: userName
+                    //});
+
+                    // 调整视野达到最佳显示区域
+                    if (num == 1) {
+                        map.setFitView();
+                    }
+                    if (num > 59) {
+                        num = 1;
+                    }
+                    if (res.length > 1) {
+                        num = 1;
+                    } else {
+                        num++
+                    }
+                } else {
+                    if (num > 59) {
+                        num = 1;
+                    }
+                    num++;
+                }
+            });
+        }
+
+        // 清除 marker
+        function clearMarker() {
+
+            if (marker) {
+                marker.setMap(null);
+                marker = null;
+            }
+        }
+
+        //在指定位置打开信息窗体
+        function openInfo(name,time,address) {
+            //构建信息窗体中显示的内容
+            var info = [];
+            info.push("<div style=\"padding:7px 0px 0px 0px;\"><h4>人员信息</h4>");
+            info.push("<p class='input-item'>姓名 : "+name+"   时间 : "+time+"</p>");
+            info.push("<p class='input-item'>地址 :" + address+"</p></div></div>");
+
+            infoWindow = new AMap.InfoWindow({
+                content: info.join("")  //使用默认信息窗体框样式，显示信息内容
+            });
+
+            infoWindow.open(map, map.getCenter());
+        }
+        /*-------------------------------------------------------------------------------------------------------------*/
+    </script>
+</body>
+</html>

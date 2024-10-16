@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+*/
+import{b as e}from"../core/lang.js";import{b as n}from"./unitUtils.js";import{e as t}from"../geometry/SpatialReference.js";function r(r,o,i){if(e(o)||e(i)||i.vcsWkid||t(o,i))return null;const s=n(o)/n(i);if(1===s)return null;switch(r){case"point":case"esriGeometryPoint":return e=>{return t=s,void((n=e)&&null!=n.z&&(n.z*=t));var n,t};case"polyline":case"esriGeometryPolyline":return e=>function(e,n){if(!e)return;for(const t of e.paths)for(const e of t)e.length>2&&(e[2]*=n)}(e,s);case"polygon":case"esriGeometryPolygon":return e=>function(e,n){if(!e)return;for(const t of e.rings)for(const e of t)e.length>2&&(e[2]*=n)}(e,s);case"multipoint":case"esriGeometryMultipoint":return e=>function(e,n){if(!e)return;for(const t of e.points)t.length>2&&(t[2]*=n)}(e,s);case"extent":case"esriGeometryExtent":return e=>function(e,n){if(!e)return;null!=e.zmin&&null!=e.zmax&&(e.zmin*=n,e.zmax*=n)}(e,s);default:return null}}export{r as g};

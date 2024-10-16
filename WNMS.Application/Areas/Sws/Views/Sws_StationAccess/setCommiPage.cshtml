@@ -1,0 +1,517 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>setCommiPage</title>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        html, body, .zbdiv {
+            height: 100%;
+        }
+
+        .zb-left {
+            width: 300px;
+            height: 100%;
+            float: left;
+            border: 1px solid #ccc;
+            overflow: auto
+        }
+
+        .zb-center {
+            width: 40px;
+            height: 100%;
+            float: left;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc
+        }
+
+            .zb-center i {
+                cursor: pointer
+            }
+
+                .zb-center i:hover {
+                    color: #999
+                }
+
+        .zb-list:hover {
+            background: #f5f5f5
+        }
+
+        .zb-list li {
+            margin-bottom: 10px;
+        }
+
+            .zb-list li .hyl_label {
+                width: 90px;
+                text-align: right
+            }
+
+            .zb-list li .hyl_input {
+                width: 160px;
+            }
+
+            .zb-list li:last-child {
+                margin-bottom: 0
+            }
+
+        .zb-left .on {
+            border: none;
+            border: 1px solid #4A5A78;
+            background-color: #eee;
+            background: url(data:image/gif;base64,R0lGODlhCgAKAKIAAP////7+/v39/fr7+/n6+0xde0pbef///yH5BAEHAAcALAAAAAAKAAoAAAMdeLprzMa9EyWsr8ZbQ9OBRxkDYITFGIVEUWiRUCUAOw==) no-repeat right bottom;
+        }
+
+        .list-div {
+            width: 275px;
+            background: #eee;
+            cursor: pointer;
+            border-radius: 2px
+        }
+
+        .zb-tablebox {
+            height: calc(100% - 53px)
+        }
+
+        .zb-list {
+            border: 1px solid #ccc;
+            background: #eee
+        }
+
+        .zb-right {
+            width: calc(100% - 350px);
+            height: 100%;
+            float: left;
+            border: 1px solid #ccc
+        }
+    </style>
+</head>
+<body>
+    <div class="pad10px zbdiv">
+        <div class="zb-left">
+            @{
+                var stationDevice = ViewBag.stationDevice as IEnumerable<dynamic>;
+                foreach (var item in stationDevice)
+                {
+                    <div class="mar10px list-div">
+                        <ul class="zb-list  pt15px pb15px" id="@item.DeviceID">
+                            <li>
+                                <label class="hyl_label">设备名称：</label>
+                                <input type="text" class="hyl_input" value="@item.RegionName" />
+                            </li>
+                            <li>
+                                <label class="hyl_label">通讯编号：</label>
+                                <input type="text" class="hyl_input" value="@item.comiID" />
+                            </li>
+                            <li>
+                                <label class="hyl_label">端口号：</label>
+                                <input type="text" class="hyl_input" value="@item.ComAddress"/>
+                            </li>
+                        </ul>
+                    </div>
+
+                }
+            }
+
+           
+        </div>
+        <div class="zb-center textCenter relative">
+            <div style="position:absolute;width:100%;top:50%;transform: translateY(-50%)">
+                <p>
+                    <i class="fa f24px fa-arrow-circle-left" id="SetRtu"></i>
+                </p>
+                <p>
+                    <i class="fa f24px fa-arrow-circle-right" id="cancelRtu"></i>
+                </p>
+            </div>
+        </div>
+        <div class="zb-right">
+            <div class="pad10px overflow">
+                <div class="left">
+                    <input type="text" class="hyl_input" id="searchtext" placeholder="输入通讯编号" autocomplete="off"/>
+                    <button class="hyl_btn" id="searchbtn"><i class="fa fa-search mr5px"></i>查询</button>
+                </div>
+                <div class="right btn-group">
+                    <button type="button" class="btn btn-default" id="addRtu"><i class="fa fa-plus"></i> 添加</button>
+                    <button type="button" class="btn btn-default" id="editeRtu"><i class="fa fa-pencil-square-o"></i> 修改</button>
+                    <button type="button" class="btn btn-default" id="deleteRtu"><i class="fa fa-trash-o"></i> 删除</button>
+                    <button type="button" class="btn btn-default" id="dpc_btn"><i class="fa fa-cogs"></i> DPC配置</button>
+                </div>
+            </div>
+            <div class="zb-tablebox" style="padding-left:10px;padding-right:10px">
+                <table id="table">
+                </table>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var pageindex = 1;
+        var stationid = @ViewBag.stationid;
+        var intype = @ViewBag.intype;
+         $(function () {
+            var $table = $("#table");
+            $table.bootstrapTable({
+
+                method: "post",
+                url: "/Sws/Sws_StationAccess/QuerySwsRtuTable_Access",
+                contentType: "application/x-www-form-urlencoded",
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                height: $(window).height() - 80,
+                singleSelect: true, 
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                striped: true,
+                sidePagination: 'server',
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        pagesize: params.limit,   //每页条数
+                        pageindex: (params.offset / params.limit) + 1, //页码
+                        deviceid: $("#searchtext").val(),
+                        order: params.order,
+                        sort: params.sort == undefined ? "DeviceID" : params.sort,
+                        stationid:stationid
+
+                    };
+                    pageindex = (params.offset / params.limit) + 1;
+                    return temp;
+                },//传递参数（*）
+                responseHandler: function (res) {
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+
+                },
+                columns: [
+                    {
+                       
+                        checkbox: true
+                    }, {
+                        field: 'DeviceID',
+                        title: '通讯编号',
+                        sortable: true
+                    },
+                    {
+                        field: 'ComAddress',
+                        title: '通讯地址',
+                        sortable: true
+                    },
+                    {
+                        field: 'ComType',
+                        title: '通讯类型',
+                        sortable: true
+                    },
+                    {
+                        field: 'DeviceType',
+                        title: '设备类型',
+                        sortable: true
+                    },
+                    {
+                        field: 'Priority',
+                        title: '优先级',
+                        sortable: true
+                    },
+                    {
+                        field: 'ActivelySent',
+                        title: '发送方式',
+                        formatter:changeDataFormat
+                    },
+                    {
+                        field: 'IPPort',
+                        title: 'IP端口',
+                        sortable: true
+                    },
+                    {
+                        field: 'StationName',
+                        title: '泵房#设备',
+                        sortable: true
+                    }
+                ]
+
+            });
+
+             $(document).on("click", ".zb-left ul", function () {
+                  if ($(this).hasClass("on")) {
+                     $(this).removeClass('on');
+                 }
+                 else {
+                     $(this).addClass('on');
+                   }
+
+             })
+            
+             
+         })
+         function changeDataFormat(cellval) {
+            if (cellval == false) {
+                return "被动";
+            }
+            else {
+                return "主动";
+            }
+        }
+         function refreshTable() {
+            var opt = {
+                pageNumber: pageindex
+            };
+            $("#table").bootstrapTable('refresh',opt);
+
+        }
+         $("#searchtext").keydown(function(e) {  
+           if (e.keyCode == 13) {  
+               pageindex = 1;
+               refreshTable();
+               return false;
+           }  
+        });  
+         $("#searchbtn").click(function () {
+            //$("#table").bootstrapTable('refresh');
+            pageindex = 1;
+            refreshTable();
+
+         })
+        //设备取消通讯挂接
+        $("#cancelRtu").click(function () {
+            var selects = $(".zb-left .on");
+            if (selects.length > 0) {
+                var deviceid = "";
+                for (var i = 0; i < selects.length; i++) {
+                    deviceid += selects[i].id + ",";
+                }
+                if (deviceid != "") {
+                    deviceid = deviceid.substring(0, deviceid.length-1);
+                }
+               
+                    $.post("/Sws/Sws_StationAccess/CancleRtu", { Deviceid: deviceid, Intype: intype }, function (data) {
+                        if (data == "ok") {
+                            var deviceidArray = deviceid.split(",");
+                            for (var i = 0; i < deviceidArray.length; i++) {
+                                $("#" + deviceidArray[i] + " input")[1].value = "";
+                                $("#" + deviceidArray[i] + " input")[2].value = "";
+                            }
+
+                            refreshTable();
+                            parent.refreshTable();
+                        }
+                        else {
+                            layer.msg("操作失败");
+                        }
+                    })
+                
+            }
+        })
+        //设备通讯挂接
+        $("#SetRtu").click(function () {
+            var selects = $(".zb-left .on");
+            var lenthcheck = $("#table").bootstrapTable('getSelections');
+            if (selects.length > 0 && lenthcheck.length > 0) {
+                var deviceid = "";
+                for (var i = 0; i < selects.length; i++) {
+                    deviceid += selects[i].id + ",";
+                }
+                if (deviceid != "") {
+                    deviceid = deviceid.substring(0, deviceid.length-1);
+                }
+                $.post("/Sws/Sws_StationAccess/SetDevice_Rtu", {rtuid:lenthcheck[0].RTUID,deviceID:deviceid,intype:intype}, function (data) {
+                    if (data == "ok") {
+                        var deviceidArray = deviceid.split(",");
+                        for (var i = 0; i < deviceidArray.length; i++) {
+
+                        $("#" +deviceidArray[i] + " input")[1].value=lenthcheck[0].DeviceID;
+                        $("#" +deviceidArray[i] + " input")[2].value=lenthcheck[0].ComAddress;
+                        }
+                        
+                        refreshTable();
+                        parent.refreshTable();
+                    }
+                    else {
+                        layer.msg("操作失败");
+                    }
+                })
+
+            }
+        })
+        //添加通讯信息
+        $("#addRtu").click(function () {
+            iframe("添加通讯", "800px", "600px", "/Sws/Sws_StationAccess/AddRtuPage");
+        })
+        //修改通讯信息
+        $("#editeRtu").click(function () {
+            var lenthcheck = $("#table").bootstrapTable('getSelections');
+            if (lenthcheck.length == 1) {
+                var RTUID = lenthcheck[0].RTUID;
+
+                iframe("编辑通讯", "800px", "600px", "/Sws/Sws_StationAccess/EditeRtuPage/" + RTUID);
+            }
+            else {
+                alert("请选中一行");
+            }
+        })
+        //删除通讯信息
+        $("#deleteRtu").click(function () {
+             var lenthcheck = $("#table").bootstrapTable('getSelections');
+            if (lenthcheck.length <= 0) {
+                layer.msg("请至少选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                var id = "";
+                for (i = 0; i < lenthcheck.length; i++) {
+                    id += lenthcheck[i].RTUID + ",";
+                }
+                id = id.substring(0, id.length - 1);
+                layer.confirm("确定要删除通讯？", {
+                    btn: ["确定", "取消"]
+                },
+                    function () {
+                        deleteRtu(id);
+                    },
+                    function () { }
+                );
+            }
+        })
+        function deleteRtu(id) {
+            $.ajax({
+                url: '/Sws/Sws_RTUInfo/DeleteRtu',
+                type: 'POST',
+                datatype: "json",
+                data: { "": id },
+                success: function (data) {
+                    if (data.flag == "no") {
+                        layer.msg("删除失败");
+                    }
+                    else {
+                        layer.msg("删除成功");
+                        pageindex = 1;
+                        refreshTable();
+                        QueryDeviceAndRtu();
+                        GetNotice(data.data, data.deviceids, data.comadress);
+                        parent.refreshTable();
+                        
+                    }
+                },
+                error: function (data) {
+                    layer.msg("删除失败");
+                }
+            })
+        }
+         //dpc配置
+        $("#dpc_btn").click(function () {
+
+            var row = $("#table").bootstrapTable('getAllSelections');
+            if (row.length != 1) {
+                layer.msg("请选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                //iframe("编辑DPC", "800px", "720px", "/Sws/Sws_RTUInfo/DPCInfoPage/" + row[0].RTUID);
+                parent.iframeWithBtns("编辑DPC", "800px", "720px", "/Sws/Sws_StationAccess/DPCInfoPage/" + row[0].RTUID, false, function (formIndex, formLayer) {
+                var currentIframe =parent.window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm(function (data) {
+
+                     if (data.flag == "ok") {
+                            parent.layer.close(formIndex);
+                            
+                              GetNotice(data.data,"","");
+                           } else if (data.flag == "no") {
+                              layer.alert("指令集为空或保存失败");
+                       }
+                });
+            });
+            }
+        })
+        //刷新左侧设备框
+        function QueryDeviceAndRtu() {
+           
+            $.post("/Sws/Sws_StationAccess/GetDeviceAndRtu", {stationid:stationid,intype:intype}, function (data) {
+                if (data != "") {
+                   
+                    var arrayid = [];
+                    var selectedLi = $(".zb-left .on");
+                    if (selectedLi.length > 0) {
+                        for (var i = 0; i < selectedLi.length; i++) {
+                            arrayid.push(parseInt(selectedLi[i].id));
+                        }
+                        
+                    }
+                    var json = JSON.parse(data);
+                    var devices = "";
+                    for (var i = 0; i < json.length; i++) {
+                        devices += '<div class="mar10px list-div">';
+                        if (arrayid.indexOf(json[i].DeviceID)>-1) {
+                            devices += '<ul class="zb-list pt15px pb15px on" id="'+json[i].DeviceID+'">';
+                        }
+                        else {
+                             devices += '<ul class="zb-list pt15px pb15px" id="'+json[i].DeviceID+'">';
+                        }
+                           devices += '<li>'+
+                                '<label class="hyl_label">设备名称：</label>'+
+                                '<input type="text" class="hyl_input" value="'+json[i].RegionName+'" />'+
+                            '</li>'+
+                            '<li>'+
+                                '<label class="hyl_label">通讯编号：</label>'+
+                                '<input type="text" class="hyl_input" value="'+(json[i].comiID==null?"":json[i].comiID)+'" />'+
+                            '</li>'+
+                            '<li>'+
+                                '<label class="hyl_label">端口号：</label>'+
+                                '<input type="text" class="hyl_input" value="'+(json[i].ComAddress==null?"":json[i].ComAddress)+'"/>'+
+                            '</li>'+
+                        '</ul>'+
+                    '</div>';
+                    }
+                    $(".zb-left").empty();
+                    $(".zb-left").append(devices);
+                }
+            })
+        }
+        function GetNotice(rtuid,deviceids,comadress) {
+           
+           $.post("/Sws/Sws_RTUInfo/GetNotice", { rtuid: rtuid,deviceids:deviceids,comadress:comadress }, function (data) {
+              
+               layer.msg(data);
+
+            })
+        }
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+
+                    window.frames[0].saveForm();
+                },
+                cancel: function (index) {
+
+                }
+            });
+        }
+    </script>
+</body>
+</html>

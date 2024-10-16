@@ -1,0 +1,424 @@
+@charset "utf-8";
+
+/*! normalize.css v3.0.1 | MIT License | git.io/normalize */
+
+/**
+ * 1. Set default font family to sans-serif.
+ * 2. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+html,body,ul,li,dl,dd,p,h1,h2,h3,h4,h5,h6,form,input,textarea,table,tbody,tfoot,tr,td,th,select,option,header,article,section,footer,nav,aside,hgroup,summary
+{margin:0;padding:0;-webkit-tap-highlight-color:rgba(150,203,255,0);tap-highlight-color:rgba(150,203,255,0);}
+*html{_background-image:url(about:blank);_background-attachment:fixed;}
+header,article,section,footer,nav,aside,hgroup,summary{display:block;}
+a{color:#323232;outline:none;text-decoration:none;-webkit-tap-highlight-color:rgba(150,203,255,0);}
+/**
+ * 1. Correct `inline-block` display not defined in IE 8/9.
+ * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.
+ */
+
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+/**
+ * Address `[hidden]` styling not present in IE 8/9/10.
+ * Hide the `template` element in IE 8/9/11, Safari, and Firefox < 22.
+ */
+
+[hidden],
+template {
+  display: none;
+}
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+
+a:active,
+a:hover {
+  outline: 0;
+}
+
+/**
+ * Address styling not present in Safari and Chrome.
+ */
+
+em,i,b{
+    font-style: normal;
+}
+
+/* Embedded content
+   ========================================================================== */
+
+/**
+ * Remove border when inside `a` element in IE 8/9/10.
+ */
+
+img {
+  border: 0;
+}
+
+/**
+ * Correct overflow not hidden in IE 9/10/11.
+ */
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+/* Forms
+   ========================================================================== */
+
+/**
+ * Known limitation: by default, Chrome and Safari on OS X allow very limited
+ * styling of `select`, unless a `border` property is set.
+ */
+
+/**
+ * 1. Correct color not being inherited.
+ *    Known issue: affects color of disabled elements.
+ * 2. Correct font properties not being inherited.
+ * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
+ */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+}
+
+button,input[type="button"]{
+	outline:none;
+	appearance:none;
+	-webkit-appearance:none;
+}
+
+select{ background-color:#fff; outline:none}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ */
+
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  cursor: pointer; /* 3 */
+}
+
+/**
+ * Remove inner padding and border in Firefox 4+.
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/**
+ * Address Firefox 4+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+input {
+  line-height: normal;
+  border:medium;
+}
+
+/**
+ * It's recommended that you don't attempt to style these elements.
+ * Firefox's implementation doesn't respect box-sizing, padding, or width.
+ *
+ * 1. Address box sizing set to `content-box` in IE 8/9/10.
+ * 2. Remove excess padding in IE 8/9/10.
+ */
+
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+
+input[type="text"],input[type="tel"],input[type="password"],input[type="email"],textarea,input[type="submit"]
+{
+	-webkit-appearance:none;
+	appearance:none;
+}
+
+/**
+ * Fix the cursor style for Chrome's increment/decrement buttons. For certain
+ * `font-size` values of the `input`, it causes the cursor style of the
+ * decrement button to change from `default` to `text`.
+ */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+
+/**
+ * Remove default vertical scrollbar in IE 8/9/10/11.
+ */
+
+textarea {
+  overflow: auto;
+}
+
+body
+{
+	margin:0 auto;
+	color:#323232;
+	min-width: 320px;
+	background-color:#fff;
+	font:16px Microsoft Yahei,Arial,sans-serif;
+	line-height:1.5625em;/*25px*/
+}
+ul,li {list-style:none;}
+b,h1,h2,h3,h4,h5,h6{font-weight:normal;font-size:100%}
+img{border:0;}
+.fb{font-weight:bold;}
+.hidden{display:none;}
+.block{display:block;}
+.inline{display:inline;}
+.inline-block{display:inline-block;}
+.nowrap-ellipsis{white-space:nowrap;text-overflow:ellipsis;overflow:hidden;}
+.relative{position:relative;}
+.text-indent{text-indent:2em;}
+.letter{letter-spacing:1px;}
+.textCenter{text-align:center;}
+.textright{text-align:right;}
+.overflow{overflow:hidden;zoom:1;}
+.clearfix:after{content:"\200b";display: block;height: 0;clear: both;}/*\200b >Unicode零宽度空格*/
+.clearfix{zoom:1;}/*IE/7/6/*/
+.right{float:right;}
+.left{float:left;}
+.clear{clear: both;}
+.auto{margin:auto}
+.autoleft{margin-left:auto}
+.indent{text-indent:2em;}
+.ellipsis1{overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+.ellipsis2{
+		display: -webkit-box !important;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+		}
+.ellipsis3{
+		display: -webkit-box !important;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		overflow: hidden;
+		}
+/*******padding top******/
+
+.pt5px{padding-top:5px;}
+.pt10px{padding-top:10px;}
+.pt15px{padding-top:15px;}
+.pt20px{padding-top:20px;}
+.pt25px{padding-top:25px;}
+.pt30px{padding-top:30px;}
+.pt35px{padding-top:35px;}
+.pt40px{padding-top:40px;}
+.pt45px{padding-top:45px;}
+.pt50px{padding-top:50px;}
+.pt55px{padding-top:55px;}
+.pt60px{padding-top:60px;}
+/*******padding top******/
+
+/*******padding bottom******/
+
+.pb5px{padding-bottom:5px;}
+.pb10px{padding-bottom:10px;}
+.pb15px{padding-bottom:15px;}
+.pb20px{padding-bottom:20px;}
+.pb25px{padding-bottom:25px;}
+.pb30px{padding-bottom:30px;}
+.pb35px{padding-bottom:35px;}
+.pb40px{padding-bottom:40px;}
+.pb45px{padding-bottom:45px;}
+.pb50px{padding-bottom:50px;}
+.pb55px{padding-bottom:55px;}
+.pb60px{padding-bottom:60px;}
+/*******padding bottom******/
+
+/*******padding left******/
+.pl5px{padding-left:5px;}
+.pl10px{padding-left:10px;}
+.pl15px{padding-left:15px;}
+.pl20px{padding-left:20px;}
+.pl25px{padding-left:25px;}
+.pl30px{padding-left:30px;}
+.pl35px{padding-left:35px;}
+.pl40px{padding-left:40px;}
+.pl45px{padding-left:45px;}
+.pl50px{padding-left:50px;}
+.pl55px{padding-left:55px;}
+.pl60px{padding-left:60px;}
+/*******padding left******/
+
+/*******padding right******/
+
+.pr5px{padding-right:5px;}
+.pr10px{padding-right:10px;}
+.pr15px{padding-right:15px;}
+.pr20px{padding-right:20px;}
+.pr25px{padding-right:25px;}
+.pr30px{padding-right:30px;}
+.pr35px{padding-right:35px;}
+.pr40px{padding-right:40px;}
+.pr45px{padding-right:45px;}
+.pr50px{padding-right:50px;}
+.pr55px{padding-right:55px;}
+.pr60px{padding-right:60px;}
+/*******padding right******/
+
+/*******margin top******/
+
+/***上为相对值 下绝对值***/
+.mt5px{margin-top:5px;}
+.mt10px{margin-top:10px;}
+.mt15px{margin-top:15px;}
+.mt20px{margin-top:20px;}
+.mt25px{margin-top:25px;}
+.mt30px{margin-top:30px;}
+.mt35px{margin-top:35px;}
+.mt40px{margin-top:40px;}
+.mt45px{margin-top:45px;}
+.mt50px{margin-top:50px;}
+.mt55px{margin-top:55px;}
+.mt60px{margin-top:60px;}
+.mt100px{margin-top:100px;}
+/*******margin top******/
+
+/*******margin bottom******/
+/***上为相对值 下绝对值***/
+.mb5px{margin-bottom:5px;}
+.mb10px{margin-bottom:10px;}
+.mb15px{margin-bottom:15px;}
+.mb20px{margin-bottom:20px;}
+.mb25px{margin-bottom:25px;}
+.mb30px{margin-bottom:30px;}
+.mb35px{margin-bottom:35px;}
+.mb40px{margin-bottom:40px;}
+.mb45px{margin-bottom:45px;}
+.mb50px{margin-bottom:50px;}
+.mb55px{margin-bottom:55px;}
+.mb60px{margin-bottom:60px;}
+.mb150px{margin-bottom:150px;}
+/*******margin bottom******/
+
+/*******margin left******/
+
+.ml5px{margin-left:5px;}
+.ml10px{margin-left:10px;}
+.ml15px{margin-left:15px;}
+.ml20px{margin-left:20px;}
+.ml25px{margin-left:25px;}
+.ml30px{margin-left:30px;}
+.ml35px{margin-left:35px;}
+.ml40px{margin-left:40px;}
+.ml45px{margin-left:45px;}
+.ml50px{margin-left:50px;}
+.ml55px{margin-left:55px;}
+.ml60px{margin-left:60px;}
+/*******margin left******/
+
+/*******margin right******/
+.mr5px{margin-right:5px;}
+.mr10px{margin-right:10px;}
+.mr15px{margin-right:15px;}
+.mr20px{margin-right:20px;}
+.mr25px{margin-right:25px;}
+.mr30px{margin-right:30px;}
+.mr35px{margin-right:35px;}
+.mr40px{margin-right:40px;}
+.mr45px{margin-right:45px;}
+.mr50px{margin-right:50px;}
+.mr55px{margin-right:55px;}
+.mr60px{margin-right:60px;}
+/*******margin right******/
+
+/*******margin ↑ ↓ ← →******/
+.mar20px{margin:20px;}
+/*******padding ↑ ↓ ← →******/
+.pad10px{padding:10px;}
+.pad15px{padding:15px;}
+.pad20px{padding:20px;}
+
+/*******line height******/
+
+.lh21px{line-height:21px;}
+.lh23px{line-height:23px;}
+.lh25px{line-height:25px;}
+.lh30px{line-height:30px;}
+.lh35px{line-height:35px;}
+.lh40px{line-height:40px;}
+.lh45px{line-height:45px;}
+.lh50px{line-height:50px;}
+.lh55px{line-height:55px;}
+.lh60px{line-height:60px;}
+/*******line height******/
+
+/******* font-size ********/
+.f12px{font-size:12px}
+.f16px{font-size:16px}
+.f24px{font-size:24px !important}
+.f48px{font-size:48px}
+/**********************************************以下根据项目修改 ↓***********************************************/
+/**********bg***********/
+.bgWhite{background-color:#fff !important;}
+.bgOrange{background-color:#FA9C3E;}
+.bgOrange2{background-color:#FE6F42}
+.bgGray{background-color:#E8F0FD;}
+.bgGray2{background-color:#D8E6FF;}
+.bglightRed{background-color:#E84E40;}
+.bgBlue{background-color:#1E9FFF;}
+.bgRed{background-color:#D7524E;}
+/*********color********/
+.gray{color:#999;}
+.darkGray{color:#333} /*深灰*/
+.lightGray{color:#bbb} /*浅灰*/
+.white{color:#fff}
+.red{color:#E84E40}
+.blue{color:#258ffc;}
+/*********border-radius********/
+
+/****** box-shadow *******/
+.shadow{box-shadow:0 0 1px #ccc}
+.shadow2{box-shadow:0px 2px 2px #d8d8d8;}

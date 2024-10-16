@@ -1,0 +1,170 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+@model GdTeamInfo
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_SetTeamInfo</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .star {
+            font-size: 25px;
+            color: red;
+            position: absolute;
+            top: -4px;
+            left: 60px
+        }
+
+        .form-group {
+            position: relative
+        }
+
+
+
+        .zlw_gs label {
+            /*line-height: 35px;*/
+            margin-bottom: 2px;
+        }
+
+            .zlw_gs label span {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                padding-top: 5px;
+                float: left;
+                margin-left: 5px;
+            }
+
+            .zlw_gs label i {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                float: left;
+                font-weight: bold;
+            }
+    </style>
+</head>
+<body>
+    <div class="xiugai" style="padding:20px 30px">
+        <form action="/Wos/TeamInfo/SetTeamInfo" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body zlw_gs">
+                <input id="TeamId" name="TeamId" type="hidden" value="@Model.TeamId" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group relative">
+                                    <label>班组名称 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="TeamName" name="TeamName" value="@Model.TeamName" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group relative">
+                                    <label>班组成员 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="button" class="form-control" id="UserNames" name="UserNames" value="@ViewBag.UserNames" autocomplete="off" onclick="SelectUser(@Model.TeamId)">
+                                        <input type="hidden" class="form-control" id="UserIDs" name="UserIDs" value="@ViewBag.UserIDs">
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>备注</label>
+                                    <textarea id="Remark" name="Remark" rows="2" cols="20" class="form-control">@Model.Remark</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+          validateForm();
+        })
+        var myfunc;
+        function saveForm(func) {
+            $("form").submit();
+            myfunc = func;
+        }
+        function _addFun(data) {
+            myfunc(data);
+        }
+        //表单验证
+         function validateForm() {
+            $("#MFForm").validate({
+                ignore: "",
+                rules: {
+                    TeamName: "required",
+                    UserNames:"required"
+                  
+                },
+                messages: {
+                    TeamName: "请输入班组名称",
+                    UserNames:"请选择班组成员"
+                  
+                }
+            });
+        }
+        //选择人员
+        function SelectUser(teamid) {
+            parent.iframeWithBtns("人员选择", "850px", "700px", "/Wos/TeamInfo/SelectUsers?id="+teamid+"&selectUserids="+$("#UserIDs").val()+"", false, function (formIndex, formLayer) {
+                var currentIframe = parent.window[formLayer.find('iframe')[0]['name']];
+                currentIframe.saveFormChirld(function (userids, usernames) {
+                    $("#UserNames").val(usernames);
+                    $("#UserIDs").val(userids);
+                    parent.layer.close(formIndex);
+                    
+                    if ($('#UserNames-error').length > 0 && usernames!="") {
+                        $('#UserNames-error').css("display", "none");
+                        $('#UserNames').removeClass("error");
+                    }
+                })
+                });
+        }
+    </script>
+</body>
+</html>

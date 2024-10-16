@@ -1,0 +1,331 @@
+﻿@charset "utf-8";
+
+body {
+	font-size: .2rem;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+	border-radius: 5px;
+}
+/* 滚动槽 */
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(255,255,255,1);
+	border-radius: 5px;
+	margin: 5px 0;
+}
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+	border-radius: 5px;
+	background: rgba(191,191,191, 1);
+	-webkit-box-shadow: inset 0 0 6px rgba(155,155,155,0.6);
+}
+
+/* 设置浮动 */
+.fl {
+	float: left;
+}
+
+.fr {
+	float: right;
+}
+
+ul:after,
+dl:after,
+ol:after,
+.clearfix:after,
+.row:after {
+	content: "\200B";
+	display: block;
+	height: 0;
+	clear: both;
+}
+
+.clearfix {
+	*zoom: 1;
+}
+
+/* 控制显示 */
+.visible-xs,
+.hidden {
+	display: none;
+}
+
+/* 文本对齐 */
+.text-center {
+	text-align: center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+/* layout */
+.container-lg {
+	padding: .12rem
+}
+
+	.container-lg.simple {
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+
+.position-relative {
+	position: relative;
+}
+
+.pt-108 {
+	padding-top: 1.08rem !important;
+}
+
+.pb-10 {
+	padding-bottom: .1rem;
+}
+
+.pb-62 {
+	padding-bottom: .62rem !important;
+}
+
+/* 列宽栅格，总数12 */
+.row {
+	margin-left: -.05rem;
+	margin-right: -.05rem;
+}
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col-1-5 {
+	float: left;
+	padding-left: .05rem;
+	padding-right: .05rem;
+}
+
+.col-1 {
+	width: 8.33%;
+}
+
+.col-2 {
+	width: 16.66%;
+}
+
+.col-3 {
+	width: 25%;
+}
+
+.col-4 {
+	width: 33.33%;
+}
+
+.col-5 {
+	width: 41.66%;
+}
+
+.col-6 {
+	width: 50%;
+}
+
+.col-7 {
+	width: 58.33%;
+}
+
+.col-8 {
+	width: 66.66%;
+}
+
+.col-9 {
+	width: 75%;
+}
+
+.col-10 {
+	width: 83.33%;
+}
+
+.col-11 {
+	width: 91.66%;
+}
+
+.col-12 {
+	width: 33.33%;
+}
+
+.col-1-5 {
+	width: 20%;
+}
+
+/* 高度栅格，总栅格12 */
+.height-1 {
+	height: 8.33%;
+}
+
+.height-2 {
+	height: 16.66%;
+}
+
+.height-3 {
+	height: 25%;
+}
+
+.height-4 {
+	height: 33.33%;
+}
+
+.height-5 {
+	height: 41.66%;
+}
+
+.height-6 {
+	height: 50%;
+}
+
+.height-7 {
+	height: 58.33%;
+}
+
+.height-8 {
+	height: 66.66%;
+}
+
+.height-9 {
+	height: 75%;
+}
+
+.height-10 {
+	height: 83.33%;
+}
+
+.height-11 {
+	height: 91.66%;
+}
+
+.height-12 {
+	height: 33.33%;
+}
+
+/* table */
+body .layui-table,
+body .layui-table-view {
+	margin: 0;
+}
+
+/* 垂直居中 */
+.middle-box {
+	display: table;
+	margin: 0 auto;
+	position: relative;
+}
+
+.middle-inner {
+	display: table-cell;
+	vertical-align: middle;
+	*position: absolute;
+	*top: 50%;
+	*left: 50%;
+	width: 100%;
+	text-align: center;
+}
+
+	.middle-inner p {
+		position: relative;
+		*top: -50%;
+		*left: -50%;
+	}
+
+/*日期-时间*/
+.time-value-content {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	z-index: 0;
+	display: inline-block;
+	padding: 0 .12rem;
+	font-size: .12rem;
+	line-height: 0;
+	opacity: 0;
+}
+
+/*空空如也*/
+.nothing {
+	display: none;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+	.nothing.absolute {
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+
+.nothing-content {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	transform: translateY(-50%);
+	width: 100%;
+}
+
+.nothing .icon {
+	display: block;
+	width: 100%;
+	height: 1.5rem;
+	background: url(../images/nothing_box.png) no-repeat center / auto 100%;
+}
+
+.nothing .text {
+	margin-top: 40px;
+	font-size: 16px;
+	line-height: 30px;
+	color: #bec0c0;
+}
+
+/**
+ * ***** main *****
+ */
+.window-height {
+	overflow: hidden;
+}
+
+.full-height {
+	height: 100%;
+}
+
+.border-box,
+.border-box .content {
+	overflow: hidden;
+}
+
+	.overflow-y-auto,
+	.border-box .overflow-y-auto {
+		overflow-y: auto;
+	}
+
+/**
+ * echarts
+ */
+.echarts {
+	width: 100%;
+	height: 100%;
+}
+
+/**
+ * ***** layer *****
+ */
+body .layui-layer-page .layui-layer-title {
+	color: #fff;
+	background: #006fff;
+	background: -moz-linear-gradient(left, #006fff, #1cc3f5);
+	background: -webkit-gradient(linear, left top, right bottom, from(#006fff), to(#1cc3f5));
+	background: -o-linear-gradient(left, #006fff, #1cc3f5);
+}
+
+body .layui-layer-page .layui-layer-setwin .layui-layer-min cite {
+	background-color: #fff;
+}

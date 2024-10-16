@@ -1,0 +1,378 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+
+</head>
+<body>
+    <div class="zlw_manage">
+        <div class="zlw_managecon" style="padding-left:0px">
+            <div class="zlw_manageconrgcon zlw_bfxx">
+                <div class="zlw_mjkzyi clearfloat" style="padding-left:10px;padding-top:10px">
+                    <label class="hyl_label left">时间列表：</label>
+                    <ul class="clearfloat">
+                        <li class="sjlbxz" id=""><span>全部</span></li>
+                        <li id="本月"><span>本月</span></li>
+                        <li id="上月"><span>上月</span></li>
+                        <li id="本周"><span>本周</span></li>
+                        <li id="上周"><span>上周</span></li>
+                        <li id="自定义"><span>自定义</span></li>
+                        <li id="detailType" style="display:none" class="clearfloat">
+                            <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" placeholder="开始时间" id="BeginDate" class="hyl_input hyl_input-sm" value="" autocomplete="off">
+                            <span class="pl10px pr10px" style="cursor: text;margin:0">至</span>
+                            <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" placeholder="结束时间" id="EndDate" class="hyl_input hyl_input-sm" value="" autocomplete="off">
+                        </li>
+                    </ul>
+                </div>
+                <div class="" style="height:51px;border-bottom:1px solid #ddd">
+                    <div class="btn-group pull-left" style="margin-top:10px;margin-left:10px">
+                        <input type="text" id="searchtext" class="hyl_input" style="width: 260px;" placeholder="输入器件名称、器件编号、设备名称" autocomplete="off" />
+                        <button class="hyl_btn" id="searchbtn"> <i class="fa fa-search"></i> 查询</button>
+                    </div>
+                    <div class="btn-group mar10px  pull-right">
+                        @await Component.InvokeAsync("ModuleButtons")
+                        @*<button type="button" class="btn btn-default" id="addbtn"><i class="fa fa-plus"></i> 添加</button>
+        <button type="button" class="btn btn-default" id="editebtn"><i class="fa fa-pencil-square-o"></i> 编辑</button>
+        <button type="button" class="btn btn-default" id="deletebtn"><i class="fa fa-trash-o"></i> 删除</button>*@
+                        @*<div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-reorder"></i>&nbsp更多
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                               
+                                
+                                <li><a id="AccessoryMudelExport">下载器件模板</a></li>
+                                
+                            </ul>
+                        </div>*@
+
+                    </div>
+                </div>
+
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan" style="height:calc(100% - 90px);margin-top:10px">
+                    <table id="table" class="table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var pageindex = 1;
+        var order = "", sort = "";
+        $(function () {
+            // 时间选择
+            $(".zlw_mjkzyi ul li").not("#detailType").click(function () {
+                $(this).siblings('.zlw_mjkzyi ul li').removeClass('sjlbxz');  // 删除其他兄弟元素的样式
+                $(this).addClass('sjlbxz');// 添加当前元素的样式
+
+                if ($(this)[0].id == "自定义") {
+                    $("#detailType").css("display", "block");
+                }
+                else {
+                    $("#detailType").css("display", "none");
+                    pageindex = 1;
+                    refreshTable();
+                }
+
+            })
+
+
+            var $table = $("#table");
+            $table.bootstrapTable({
+                method: "post",
+                url: "/Com/AccessoriesEqu/QueryAccess_EquTable",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                height: $(window).height() - 60,
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 15, 20],        //可供选择的每页的行数（*）
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        pagesize: params.limit,   //每页条数
+                        pageindex: (params.offset / params.limit) + 1, //页码
+                        SearchText: $("#searchtext").val(),
+                        order: params.order,
+                        sort: params.sort == undefined ? "Name" : params.sort,
+                        time: $('.zlw_mjkzyi ul .sjlbxz')[0].id,
+                        beginDate: $("#BeginDate").val(),
+                        endDate: $("#EndDate").val()
+                    };
+                    order = params.order;
+                    sort = params.sort == undefined ? "Name" : params.sort;
+                    pageindex = (params.offset / params.limit) + 1;
+                    return temp;
+                },//传递参数（*）
+                uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+
+                responseHandler: function (res) {
+                    var aa = JSON.parse(res.rows);
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+                },
+                columns: [
+                    {
+                        checkbox: true
+                    },
+                    {
+                        sortable: true,
+                        field: 'Name',
+                        title: '器件名称'
+                    }, {
+                        sortable: true,
+                        field: 'AccessoriesNo',
+                        title: '器件编号'
+                    },
+                    {
+                        sortable: true,
+                        field: 'Type',
+                        title: '器件型号'
+                    },
+                    {
+                        sortable: true,
+                        field: 'DeviceName',
+                        title: '设备名称'
+                    },
+                    {
+                        sortable: true,
+                        field: 'MchanicalDate',
+                        title: '机械安装日期',
+                        formatter: changeDateFormat
+                    },
+                    {
+                        sortable: true,
+                        field: 'ElectricalDate',
+                        title: '电气安装日期',
+                        formatter: changeDateFormat
+                    },
+                    {
+                        sortable: true,
+                        field: 'GuaranteePeriod',
+                        title: '质保日期',
+                        formatter: changeDateFormat
+                    },
+
+                   {
+                        sortable: true,
+                        field: 'CommissioningDate',
+                        title: '调试日期',
+                        formatter: changeDateFormat
+                    },
+                    {
+                        sortable: true,
+                        field: 'DeliveryDate',
+                        title: '交付日期',
+                        formatter: changeDateFormat
+                    },
+                    {
+                        sortable: true,
+                        field: 'EndDate',
+                        title: '结束日期',
+                        formatter: changeDateFormat
+                    },
+                    {
+                        sortable: true,
+                        field: 'Reason',
+                        title: '更换原因'
+                       
+                    },
+                    {
+                        sortable: true,
+                        field: 'Cost',
+                        title: '费用'
+                    },
+                   {
+                        sortable: true,
+                        field: 'quantity',
+                        title: '数量'
+                    }
+                ]
+
+            });
+
+
+        })
+        
+        function changeDateFormat(cellval) {
+            if (cellval != null) {
+                var date = cellval.replace("T", " ").substring(0, 10);
+                return date;
+            }
+        }
+        function changeDateFormat1(cellval) {
+
+            if (cellval != null) {
+                var date = cellval.replace("T", " ");
+                return date;
+            }
+        }
+        $("#searchbtn").click(function () {
+            pageindex = 1;
+            refreshTable();
+
+        })
+         $("#searchtext").keydown(function(e) {  
+           if (e.keyCode == 13) {  
+               pageindex = 1;
+               refreshTable();
+               return false;
+           }  
+        });  
+        function refreshTable() {
+            var opt = {
+                pageNumber: pageindex
+            };
+            $("#table").bootstrapTable('refresh', opt);
+
+        }
+        //添加
+        $("#addbtn").click(function () {
+
+            iframe("添加记录", "935px", "740px", "/Com/AccessoriesEqu/AddAccessEquPage");
+
+        })
+        //修改
+        $("#editebtn").click(function () {
+            var lenthcheck = $("#table").bootstrapTable('getSelections');
+            if (lenthcheck.length == 1) {
+                var ID = lenthcheck[0].ID;
+
+                iframe("编辑记录", "935px", "740px", "/Com/AccessoriesEqu/EditeAccessEquPage/" + ID);
+            }
+            else {
+                alert("请选中一行");
+            }
+        })
+        //删除
+        //删除器件更换记录方法
+        $("#deletebtn").click(function () {
+            var lenthcheck = $("#table").bootstrapTable('getSelections');
+            if (lenthcheck.length <= 0) {
+                layer.msg("请至少选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                var id = "";
+                for (i = 0; i < lenthcheck.length; i++) {
+                    id += lenthcheck[i].ID + ",";
+                }
+                id = id.substring(0, id.length - 1);
+                layer.confirm("确定要删除器件更换记录？", {
+                    btn: ["确定", "取消"]
+                },
+                    function () {
+                        deleteRecord(id);
+                    },
+                    function () { }
+                );
+            }
+        })
+
+        //删除器件更换记录
+        function deleteRecord(id) {
+            $.ajax({
+                url: '/Com/AccessoriesEqu/DeleteAcc_Equ',
+                type: 'POST',
+                datatype: "json",
+                //contentType: 'application/json',
+                data: { "": id },
+                success: function (data) {
+                    if (data == "ok") {
+                        layer.msg("删除成功");
+                        pageindex = 1;
+                        refreshTable();
+                    }
+                    else {
+                        
+                            layer.msg("删除失败");
+                       
+                    }
+                },
+                error: function (data) {
+                    layer.msg("删除失败");
+                }
+            })
+        }
+          //导出关键数据
+        $("#AccessoryMudelExport").click(function () {
+            window.location.href = "/Com/AccessoriesEqu/AccessImportExport?SearchText=" + $("#searchtext").val() + "&order=" + order + "&sort=" + sort + "&time=" + $('.zlw_mjkzyi ul .sjlbxz')[0].id + "&beginDate=" + $("#BeginDate").val() + "&endDate=" + $("#EndDate").val() + "";
+
+        })
+        
+        
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+                     var currentIframe =  $(layero).find("iframe")[0].contentWindow;
+                     currentIframe.saveForm();
+                },
+                cancel: function (index) {
+
+                }
+            });
+        }
+          function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+    </script>
+</body>
+</html>

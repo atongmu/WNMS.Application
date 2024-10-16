@@ -1,0 +1,53 @@
+﻿
+@using WNMS.Model.CustomizedClass;
+@model List<MaxValue>
+
+<div class="btsbdbfxer" id="marquee1">
+    <ul>
+        <li class="clearfloat">
+            <span>压力波动次数</span>
+            <span id="pressFlucNum1">@Model[0].FlucNum</span>
+            <span id="pressFlucNum2">@Model[1].FlucNum</span>
+        </li>
+        <li class="clearfloat">
+            <span>高频运行时长</span>
+            <span id="timeHigh1">@Model[0].HighHour 小时</span>
+            <span id="timeHigh2">@Model[1].HighHour 小时</span>
+        </li>
+        <li class="clearfloat">
+            <span>低频运行时长</span>
+            <span id="timeLow1">@Model[0].LowHour 小时</span>
+            <span id="timeLow2">@Model[1].LowHour 小时</span>
+        </li>
+        <li class="clearfloat">
+            <span>单吨能耗</span>
+            <span id="consump1">@Model[0].consump kW·h/m³</span>
+            <span id="consump2">@Model[1].consump kW·h/m³</span>
+        </li>
+        <li class="clearfloat">
+            <span>最大流量</span>
+            <span id="maxFlow1">@Model[0].maxFlow m³</span>
+            <span id="maxFlow2">@Model[1].maxFlow m³</span>
+        </li>
+        <li class="clearfloat">
+            <span>最小流量</span>
+            <span id="minFlow1">@Model[0].minFlow m³</span>
+            <span id="minFlow2">@Model[1].minFlow m³</span>
+        </li>
+        <li class="clearfloat">
+            <span>最大能耗</span>
+            <span id="maxPower1">@Model[0].maxPower kW·h</span>
+            <span id="maxPower2">@Model[1].maxPower kW·h</span>
+        </li>
+        <li class="clearfloat">
+            <span>最小能耗</span>
+            <span id="minPower1">@Model[0].minPower kW·h</span>
+            <span id="minPower2">@Model[1].minPower kW·h</span>
+        </li>
+    </ul>
+</div>
+
+
+<script type="text/javascript">
+    $("#marquee1").kxbdMarquee({ direction: "up", isEqual: false, scrollDelay: 80 });
+</script>

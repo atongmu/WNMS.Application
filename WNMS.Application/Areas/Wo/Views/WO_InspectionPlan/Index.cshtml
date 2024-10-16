@@ -1,0 +1,478 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-switch.min.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/js/bootstrap-switch.min.js"></script>
+    <style>
+        .hyl_input {
+            width: 140px;
+         }
+    </style>
+</head>
+<body>
+    @{
+        IEnumerable<dynamic> userList = ViewBag.inspectors as IEnumerable<dynamic>;
+    }
+    <div class="zlw_manage">
+        <div class="zlw_managecon" style="padding-left:0px">
+            <div class="zlw_manageconrgcon zlw_bfxx">
+                <div class="zlw_mjkzyi clearfloat" style="padding-left:10px;padding-top:10px">
+                    <label class="hyl_label left">计划状态：</label>
+                    <ul class="clearfloat" id="planSate">
+                        <li class="sjlbxz" id=""><span>全部</span></li>
+                        <li id="1"><span>执行中</span></li>
+                        <li id="0"><span>停用</span></li>
+
+                    </ul>
+                </div>
+                <div class="zlw_mjkzyi clearfloat" style="padding-left:10px;padding-top:10px">
+                    <label class="hyl_label left">执行时间：</label>
+                    <ul class="clearfloat" id="timelist">
+                        <li class="sjlbxz" id=""><span>全部</span></li>
+                        <li id="本月"><span>本月</span></li>
+                        <li id="上月"><span>上月</span></li>
+                        <li id="本周"><span>本周</span></li>
+                        <li id="上周"><span>上周</span></li>
+                        <li id="自定义"><span>自定义</span></li>
+                        <li id="detailType" style="display:none" class="clearfloat">
+                            <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" placeholder="开始时间" id="BeginDate" class="hyl_input hyl_input-sm" value="" autocomplete="off">
+                            <span class="pl10px pr10px" style="cursor: text;margin:0">至</span>
+                            <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" placeholder="结束时间" id="EndDate" class="hyl_input hyl_input-sm" value="" autocomplete="off">
+                        </li>
+                    </ul>
+                </div>
+                <div class="" style="height:51px;border-bottom:1px solid #ddd">
+                    <div class="btn-group pull-left" style="margin-top:10px;margin-left:10px">
+                        <label>创建人:</label>
+                        <select id="creater" class="hyl_input">
+                            <option value="0">全部</option>
+                            @{
+                                if (userList != null)
+                                {
+                                    var creaters = userList.Where(r => r.type == 1);
+                                    foreach (var item in creaters)
+                                    {
+                                        <option value="@item.UserID">@item.NickName</option>
+                                    }
+                                }
+                            }
+                        </select>
+                        <label>巡检员：</label>
+                        <select id="inspector" class="hyl_input">
+                            <option value="0">全部</option>
+                            @{
+                                if (userList != null)
+                                {
+                                    var inspectors = userList.Where(r => r.type == 2);
+                                    foreach (var item in inspectors)
+                                    {
+                                        <option value="@item.UserID">@item.NickName</option>
+                                    }
+                                }
+                            }
+                        </select>
+                        <input type="text" id="searchtext" class="hyl_input" style="width: 260px;" placeholder="计划名称、分区名称、模板名称" autocomplete="off" />
+                        <button class="hyl_btn" id="searchbtn"> <i class="fa fa-search"></i> 查询</button>
+                    </div>
+                    <div class="btn-group mar10px  pull-right">
+                        @await Component.InvokeAsync("ModuleButtons")
+                        @*<button type="button" class="btn btn-default" id="addbtn"><i class="fa fa-plus"></i> 添加</button>
+                        <button type="button" class="btn btn-default" id="editebtn"><i class="fa fa-pencil-square-o"></i> 编辑</button>
+                        <button type="button" class="btn btn-default" id="deletebtn"><i class="fa fa-trash-o"></i> 删除</button>
+                        <button type="button" class="btn btn-default" id="templatebtn"><i class="fa fa-trash-o"></i> 模板管理</button>*@
+
+                    </div>
+                </div>
+
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan" style="height:calc(100% - 150px);margin-top:10px">
+                    <table id="table" class="table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var pageindex = 1;
+        var order = "", sort = "";
+        $(function () {
+            // 时间选择
+            $(".zlw_mjkzyi ul li").not("#detailType").click(function () {
+                $(this).siblings('.zlw_mjkzyi ul li').removeClass('sjlbxz');  // 删除其他兄弟元素的样式
+                $(this).addClass('sjlbxz');// 添加当前元素的样式
+
+                if ($(this)[0].id == "自定义") {
+                    $("#detailType").css("display", "block");
+                }
+                else {
+                    $("#detailType").css("display", "none");
+                    pageindex = 1;
+                    refreshTable();
+                }
+
+            })
+             var $table = $("#table");
+            $table.bootstrapTable({
+                method: "post",
+                url: "/Wo/WO_InspectionPlan/QueryInspectPlanTable",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                height: $(window).height() - 60,
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 15, 20],        //可供选择的每页的行数（*）
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        pagesize: params.limit,   //每页条数
+                        pageindex: (params.offset / params.limit) + 1, //页码
+                        SearchText: $("#searchtext").val(),
+                        order: params.order,
+                        sort: params.sort == undefined ? "CreateDate" : params.sort,
+                        time: $('#timelist .sjlbxz')[0].id,
+                        beginDate: $("#BeginDate").val(),
+                        endDate: $("#EndDate").val(),
+                        creater: $("#creater").val(),
+                        inspector: $("#inspector").val(),
+                        isEnabled:$('#planSate .sjlbxz')[0].id
+                    };
+                    order = params.order;
+                    sort = params.sort == undefined ? "Name" : params.sort;
+                    pageindex = (params.offset / params.limit) + 1;
+                    return temp;
+                },//传递参数（*）
+                uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+
+                responseHandler: function (res) {
+                    var aa = JSON.parse(res.rows);
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+                },
+                columns: [
+                    {
+                        checkbox: true
+                    },
+                    {
+                        sortable: true,
+                        field: 'ID',
+                        title: '工单编号'
+                    },
+                    {
+                        sortable: true,
+                        field: 'PlanName',
+                        title: '计划名称'
+                    }, {
+                        sortable: true,
+                        field: 'AreaName',
+                        title: '分区名称'
+                    },
+                    {
+                       
+                        field: 'TravelName',
+                        title: '行进方式'
+                    },
+                    {
+                      
+                        field: 'CycleName',
+                        title: '巡检周期'
+                    },
+                    {
+                        
+                        field: 'InspectorName',
+                        title: '巡检员',
+                        
+                    },
+                    {
+                        
+                        field: 'Creater',
+                        title: '创建人',
+                        
+                    },
+                     {
+                        sortable: true,
+                        field: 'TemplateName',
+                        title: '模板名称',
+                        
+                    },
+                    {
+                        sortable: true,
+                        field: 'BeginTime',
+                        title: '开始日期',
+                        formatter: changeDateFormat
+                    },
+
+                   {
+                        sortable: true,
+                        field: 'EndTime',
+                        title: '结束日期',
+                        formatter: changeDateFormat
+                    },
+                    {
+                        sortable: true,
+                        field: 'CreateDate',
+                        title: '创建日期',
+                        formatter: changeDateFormat_all
+                    },
+                    {
+                       
+                        field: 'EnabledMark',
+                        title: '启用/停止',
+                        formatter: EnabledFormat
+                    },
+                    
+                   {
+                      
+                        field: 'beingNum',
+                       title: '操作',
+                        formatter:operateFormat
+                    }
+                ],
+                onLoadSuccess: function (res) {
+                    initSwitch();
+                },
+
+            });
+        })
+         function initSwitch() {
+           
+            $("[name='project_status_switch']").bootstrapSwitch({
+                onText: "启用",      // 设置ON文本
+                offText: "禁用",    // 设置OFF文本
+                onColor: "success",// 设置ON文本颜色(info/success/warning/danger/primary)
+                offColor: "warning",  // 设置OFF文本颜色 (info/success/warning/danger/primary)
+                size: "mini",    // 设置控件大小,从小到大  (mini/small/normal/large)
+                // 当开关状态改变时触发
+                onSwitchChange: function (event, state) {
+                    UpdateStatus(this.value, state);
+                }
+            })
+        }
+         function UpdateStatus(planid, state) {
+            $.post("/Wo/WO_InspectionPlan/UpdateEnable", { planid: planid, state: state }, function (data) {
+                if (data == "ok") {
+                    layer.alert("更改状态成功");
+                } else {
+                    layer.alert("更改状态失败");
+                    refreshTable();
+                }
+            })
+        }
+         function changeDateFormat(cellval) {
+            if (cellval != null) {
+                /*var date = cellval.replace("T", " ").substring(0, 10);*/
+                var date = cellval.replace("T", " ");
+                return date;
+            }
+        }
+         function changeDateFormat_all(cellval) {
+            if (cellval != null) {
+                var date = cellval.replace("T", " ");
+                return date;
+            }
+        }
+        function operateFormat(value, row, index) {
+            var str;
+            if (value == null) {
+                value = 0;
+                str = " <button type='button' class='hyl_btn'>历史(" + value + ")</button>";
+            }
+            else {
+                str = " <button type='button' class='hyl_btn' onclick='HistoryAssign(" + row.ID + ")'>历史(" + value + ")</button>";
+            }
+           
+            return str;
+        }
+        function HistoryAssign(planid) {
+
+            iframe("生成的任务列表", "1200px", "600px", "/Wo/WO_InspectionPlan/QueryAssignTable/" + planid + "",false);
+        }
+        function EnabledFormat(value, row, index) {
+            if (value == true) {
+                var value1 = '<input value="' + row.ID + '" type="checkbox" name="project_status_switch" id="switch'+row.ID+'" name="my-checkbox1" checked/>';
+                return value1;
+            }
+            else {
+                return '<input value="' + row.ID + '" type="checkbox" name="project_status_switch" name="my-checkbox1" id="switch'+row.ID+'"/>';
+            }
+        }
+        //模板管理
+        $("#templatebtn").click(function () {
+            TemplateInfo();
+        })
+        function TemplateInfo() {
+            iframe("模板管理", "900px", "600px", "/Wo/WO_InspectionPlan/SetTemplate/",true);
+            // iframeWithBtns("模板管理", "900px", "600px", "/Wo/WO_InspectionPlan/SetTemplate/", false, function (formIndex, formLayer) {
+            //    var currentIframe = window[formLayer.find('iframe')[0]['name']];
+            //    currentIframe.saveForm(function () {
+            //        parent.layer.close(formIndex);
+            //    });
+            //});
+        }
+        //查询
+        $("#searchbtn").click(function () {
+            
+            //if ($("#timelist .sjlbxz")[0].id == "自定义") {
+            //    if (($("#BeginDate").val() != "" && $("#EndDate").val() == "") || ($("#BeginDate").val() == "" && $("#EndDate").val() != "")) {
+            //        layer.alert("把开始时间或结束时间补全");
+            //        return;
+            //    }
+            //}
+            pageindex = 1;
+            refreshTable();
+        })
+        //添加巡检计划
+        $("#addbtn").click(function () {
+             iframe1("添加计划", "90%", "90%", "/Wo/WO_InspectionPlan/AddPlan/");
+
+        })
+        //修改
+        $("#editebtn").click(function () {
+             var lenthcheck = $("#table").bootstrapTable('getSelections');
+            if (lenthcheck.length == 1) {
+                var ID = lenthcheck[0].ID;
+                iframe1("修改计划", "90%", "90%", "/Wo/WO_InspectionPlan/EditePlan/"+ID);
+                
+            }
+            else {
+                layer.alert("请选中一行");
+            }
+             
+        })
+        //删除
+        $("#deletebtn").click(function () {
+             var lenthcheck = $("#table").bootstrapTable('getSelections');
+            if (lenthcheck.length <= 0) {
+                layer.msg("请至少选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                var id = "";
+                for (i = 0; i < lenthcheck.length; i++) {
+                    id += lenthcheck[i].ID + ",";
+                }
+                id = id.substring(0, id.length - 1);
+                layer.confirm("确定要删除巡检计划？", {
+                    btn: ["确定", "取消"]
+                },
+                    function () {
+                        deletePlan(id);
+                    },
+                    function () { }
+                );
+            }
+        })
+        function deletePlan(ids) {
+            $.post("/Wo/WO_InspectionPlan/DeletePlan", {ids:ids}, function (res) {
+                if (res == "ok") {
+                    layer.alert("删除成功");
+                    pageindex = 1;
+                    refreshTable();
+                }
+                else {
+                    layer.alert("删除失败");
+                }
+            })
+        }
+        function iframe(title, width, height, url, flag) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["关闭"],
+
+                cancel: function (index) {
+
+                }
+            };
+            if (flag == false) {
+                options = {
+                    type: 2,
+                    title: title,
+                    shadeClose: true,
+                    shade: 0.7,
+                    area: [width, height],
+                    content: url
+                };
+            }
+            layer.open(options);
+        }
+        function iframe1(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                end: function () {
+                    pageindex = 1;
+                    refreshTable();
+            }
+               
+            });
+        }
+        function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+       
+         function refreshTable() {
+            var opt = {
+                pageNumber: pageindex
+            };
+            $("#table").bootstrapTable('refresh', opt);
+
+        }
+    </script>
+</body>
+</html>

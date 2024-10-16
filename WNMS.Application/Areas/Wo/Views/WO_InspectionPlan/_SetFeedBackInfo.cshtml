@@ -1,0 +1,152 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+@model WoFeedBackInfo
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_SetFeedBackInfo</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+          .star {
+            font-size: 25px;
+            color: red;
+            position: absolute;
+            top: -4px;
+            left: 30px
+        }
+
+        .form-group {
+            position: relative
+        }
+
+    </style>
+</head>
+<body>
+    <div class="xiugai" style="padding:20px 30px">
+        <form action="/Wo/WO_InspectionPlan/SetFeedBackInfo" data-ajax="true" data-ajax-method="post" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body zlw_gs">
+                <input id="Id" name="Id" type="hidden" value="@Model.Id" />
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group relative">
+                                    <label>参数名称 <em class="star" style="left:60px;">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="FeedBackName" name="FeedBackName" value="@Model.FeedBackName" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group relative">
+                                    <label>单位 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Unit" name="Unit" value="@Model.Unit" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group relative">
+                                    <label>类型 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="Type" name="Type">
+                                            @{
+                                                var feedbackType = ViewBag.feedbackType as IEnumerable<SysDataItemDetail>;
+                                                foreach (var item in feedbackType)
+                                                {
+                                                    if (Model.Type.ToString() == item.ItemValue)
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script type="text/javascript">
+          var myfunc;
+        $(function () {
+           
+           })
+          function saveForm1(func) {
+             validateForm();
+             $("form").submit();
+             myfunc = func;
+           
+        }
+        function _addFun(data) {
+            myfunc(data);
+        }
+        function validateForm() {
+             $("#MFForm").validate({
+                    ignore: "",
+                    rules: {
+                        FeedBackName: "required",
+                        Unit:"required",
+                        Type: "required"
+                        
+                    },
+                    messages: {
+                        FeedBackName: "请输入参数名称",
+                        Unit:"请输入单位",
+                        Type: "请选择反馈项类型",
+                       
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+html,body{height:100%;}
+.hide{display:none;}
+@keyframes water{
+    0%{
+        stroke-dashoffset: 100;       
+    }
+   100%{
+        stroke-dashoffset: 0;
+    }
+}
+.path1 {
+	animation: water 5s infinite linear;
+}
+@keyframes water2 {
+	0% {
+		stroke-dashoffset: 0;
+	}
+
+	100% {
+		stroke-dashoffset: 100;
+	}
+}
+.path2 {
+	animation: water2 5s infinite linear;
+}
+
+
+.shanye_1{
+	-webkit-animation:xuanzhan 5s linear infinite;
+	animation:xuanzhan 5s linear infinite;
+	
+	}
+@-webkit-keyframes xuanzhan{
+	0%{-webkit-transform:rotate(0deg);}
+	100%{-webkit-transform:rotate(360deg);}
+}
+@keyframes xuanzhan{
+	0%{transform:rotate(0deg);}
+	100%{transform:rotate(360deg);}
+}
+
+.aside-info {position: fixed;bottom: 5px;left: 5px;z-index: 100;font-size: 14px;line-height: 22px;color: #666;}
+.aside-info .item {padding-top: 5px;}
+.aside-info .item::after {content:"\200B";display:block;height:0;clear:both; }
+.aside-info .item .name {float: left;}
+.aside-info .item .value {float: left;}

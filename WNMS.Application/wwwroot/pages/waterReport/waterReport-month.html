@@ -1,0 +1,387 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>水质分析-月报</title>
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/sl.css">
+    <link rel="stylesheet" href="../../css/hyl.css">
+    <link href="../../css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <!--<link href="../../css/bootstrap-table.min.css" rel="stylesheet" />-->
+    <!--<script src="../../js/jquery.min.js"></script>-->
+    <script src="../../js/jquery-3.3.1.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <!--<script src="../../js/bootstrap-table.min.js"></script>-->
+    <!--table固定列 bootstrap-table-fixed-columns-->
+    <!--<link href="../../css/bootstrap-table-fixed-columns.css" rel="stylesheet" />-->
+    <!--<script src="../../js/bootstrap-table-fixed-columns.js"></script>-->
+
+
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <link href="~/lib/bootstrap-table1.16.0/bootstrap-table-fixed-columns.min.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap-table1.16.0/bootstrap-table-fixed-columns.min.js"></script>
+
+    <!--echart-->
+    <script src="../../js/echarts.min.js"></script>
+    <!-- 树 -->
+    <link rel="stylesheet" href="../../lib/ztree/zTreeStyle.css">
+    <script src="../../lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="../../lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="../../lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="../../lib/layer/layer.js"></script>
+    <style>
+        .table {
+            table-layout: fixed;
+        }
+
+        .nav-tab li {
+            float: left;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 5px 10px;
+            color: #999;
+            margin-left: 10px;
+            cursor: pointer
+        }
+
+        #mychart {
+            width: 100%;
+            height: 100%
+        }
+
+        .tab-chart {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            z-index: 9
+        }
+
+            .nav-tab .on, .tab-chart .on {
+                background: #3c8dbc;
+                color: #fff;
+                border: 1px solid #3c8dbc;
+            }
+
+            .tab-chart li {
+                cursor: pointer;
+                border: 1px solid #fff;
+                border-radius: 3px;
+                margin-right: 10px;
+                padding: 5px 10px;
+                color: #999;
+                float: left
+            }
+
+            .tab-chart .on:hover {
+                border: 1px solid #3c8dbc;
+            }
+
+            .tab-chart li:hover {
+                border: 1px solid #999
+            }
+    </style>
+    <script type="text/javascript">
+        var setting = {
+            check: {
+                enable: true,
+                chkDisabledInherit: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }
+        };
+
+        var zNodes = [
+            { id: 1, pId: 0, name: "湛江自来水骏景花园高区", open: true },
+            { id: 11, pId: 1, name: "湛江自来水骏景花园高区#低区", open: true },
+            { id: 111, pId: 11, name: "出水压力", },
+            { id: 112, pId: 11, name: "进水压力" },
+            { id: 113, pId: 11, name: "累计电量" },
+            { id: 114, pId: 11, name: "瞬时流量" },
+            { id: 115, pId: 11, name: "累计电量" },
+            { id: 12, pId: 1, name: "湛江自来水骏景花园高区#中区区", open: true },
+            { id: 121, pId: 12, name: "进水压力", },
+            { id: 122, pId: 12, name: "出水压力", },
+            { id: 123, pId: 12, name: "设定压力", },
+            { id: 124, pId: 12, name: "1#瞬时流量", },
+            { id: 125, pId: 12, name: "PH", },
+            { id: 126, pId: 12, name: "余氯", },
+            { id: 127, pId: 12, name: "液位", },
+            { id: 2, pId: 0, name: "日照港烟小区", open: true },
+            { id: 21, pId: 2, name: "日照港烟小区#低区" },
+            { id: 211, pId: 21, name: "出水压力", },
+            { id: 212, pId: 21, name: "进水压力" },
+            { id: 213, pId: 21, name: "累计电量" },
+            { id: 214, pId: 21, name: "瞬时流量" },
+            { id: 215, pId: 21, name: "累计电量" },
+            { id: 22, pId: 2, name: "日照港烟小区#中区", },
+            { id: 221, pId: 22, name: "出水压力", },
+            { id: 222, pId: 22, name: "进水压力" },
+            { id: 223, pId: 22, name: "累计电量" },
+            { id: 224, pId: 22, name: "瞬时流量" },
+            { id: 225, pId: 22, name: "累计电量" },
+            { id: 226, pId: 22, name: "新罗区", },
+            { id: 227, pId: 22, name: "延平区" },
+            { id: 23, pId: 2, name: "日照港烟小区#高区" },
+            { id: 231, pId: 23, name: "出水压力", },
+            { id: 232, pId: 23, name: "进水压力" },
+            { id: 233, pId: 23, name: "累计电量" },
+            { id: 234, pId: 23, name: "瞬时流量" },
+            { id: 235, pId: 23, name: "累计电量" },
+            { id: 236, pId: 23, name: "新罗区", },
+            { id: 237, pId: 23, name: "延平区" }
+        ];
+
+        function disabledNode(e) {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                disabled = e.data.disabled,
+                nodes = zTree.getSelectedNodes(),
+                inheritParent = false, inheritChildren = false;
+            if (nodes.length == 0) {
+                alert("请先选择一个节点");
+            }
+            if (disabled) {
+                inheritParent = $("#py").attr("checked");
+                inheritChildren = $("#sy").attr("checked");
+            } else {
+                inheritParent = $("#pn").attr("checked");
+                inheritChildren = $("#sn").attr("checked");
+            }
+
+            for (var i = 0, l = nodes.length; i < l; i++) {
+                zTree.setChkDisabled(nodes[i], disabled, inheritParent, inheritChildren);
+            }
+        }
+
+        $(document).ready(function () {
+            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            $("#disabledTrue").bind("click", { disabled: true }, disabledNode);
+            $("#disabledFalse").bind("click", { disabled: false }, disabledNode);
+
+        });
+        //-->
+    </script>
+</head>
+<body>
+    
+
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf">
+                <!-- 搜索框 -->
+                <div class="zlw_datamain_lfconsea">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search" onclick="LoadZtree()"></i>
+                        <input type="text" id="stationname" class="form-control" placeholder="搜索&quot;泵房&quot;名称" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:100%;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+            </div>
+            <div class="sl_rg">
+                <!--头部-->
+                <div class="pad10px overflow" style="border-bottom:5px solid #f6f4fc">
+                    <div class="pull-left">
+                        <label class="hyl_label">日期：</label>                      
+                        <input type="text" class="hyl_input hyl_input-sm" onclick="WdatePicker({dateFmt:'yyyy-MM-dd', isShowToday: false, isShowClear: false })" />
+                        <span class="pl10px pr10px lh30px">至</span>
+                        <input type="text" class="hyl_input hyl_input-sm" onclick="WdatePicker({dateFmt:'yyyy-MM-dd', isShowToday: false, isShowClear: false })" />
+                        <label class="hyl_label ml10px">间隔：</label>
+                        <select class="hyl_select">
+                            <option value="1">1小时</option>
+                            <option value="2">2小时</option>
+                        </select>
+                        <button class="hyl_btn"><i class="fa fa-search mr5px"></i>查询</button>
+                        <button class="hyl_btn"><i class="fa fa-download mr5px"></i>导出</button>
+                    </div>
+                    <div class="btn-group pull-right" role="group" aria-label="...">
+                        <button type="button" class="btn btn-default on" id="OverlayTimeSearch"><i class="fa fa-table" style="color:#333 !important"></i> 表格</button>
+                        <button type="button" class="btn btn-default" id="overrefresh"><i class="fa fa-bar-chart" style="color:#333 !important"></i> 图表</button>
+                    </div>
+                </div><!--/头部-->
+                <div id="tab-chart"  style="height:calc(100% - 100px)">
+                    <section class="pad10px" style="height:100%;box-sizing:border-box">
+                        <table id="tableData" class="table-striped">
+                            <thead>
+                                <tr>
+                                    <th rowspan="3" colspan="1" data-field="number" data-valign="middle" data-align="center">序号</th>
+                                    <th rowspan="3" colspan="1" data-field="time" data-valign="middle" data-align="center">时间</th>
+                                    <th rowspan="1" colspan="9" data-field="bfname" data-valign="middle" data-align="center">青山泵房</th>
+                                </tr>
+                                <tr>
+                                    <th rowspan="1" colspan="3" data-valign="middle" data-align="center">PH</th>
+                                    <th rowspan="1" colspan="3" data-valign="middle" data-align="center">余氯(mg/l)</th>
+                                    <th rowspan="1" colspan="3" data-valign="middle" data-align="center">浊度(NTU)</th>
+                                </tr>
+                                <tr>
+                                    <th rowspan="1" colspan="1" data-field="phpjz" data-valign="middle" data-align="center">平均值</th>
+                                    <th rowspan="1" colspan="1" data-field="phzdz" data-valign="middle" data-align="center">最大值</th>
+                                    <th rowspan="1" colspan="1" data-field="phzxz" data-valign="middle" data-align="center">最小值</th>
+                                    <th rowspan="1" colspan="1" data-field="ylpjz" data-valign="middle" data-align="center">平均值</th>
+                                    <th rowspan="1" colspan="1" data-field="ylzdz" data-valign="middle" data-align="center">最大值</th>
+                                    <th rowspan="1" colspan="1" data-field="ylzxz" data-valign="middle" data-align="center">最小值</th>
+                                    <th rowspan="1" colspan="1" data-field="zdpjz" data-valign="middle" data-align="center">平均值</th>
+                                    <th rowspan="1" colspan="1" data-field="zdzdz" data-valign="middle" data-align="center">最大值</th>
+                                    <th rowspan="1" colspan="1" data-field="zdzxz" data-valign="middle" data-align="center">最小值</th>
+                                </tr>
+                            </thead>   
+                        </table>
+                    </section>
+                    <section class="hidden relative" style="height:calc(100% - 10px);">
+                        <ul class="tab-chart">
+                            <li class="on">余氯</li>
+                            <li>浊度</li>
+                            <li>PH</li>
+                        </ul>
+                        <div id="mychart" style="width:500px;height:600px"></div>
+                    </section>
+                </div>
+                <ul class="nav-tab">
+                    <a href="waterReport.html"><li class="on">日报</li></a>
+                    <a href="waterReport-month.html"><li>月报</li></a>
+                    <a href="waterReport-year.html"><li>年报</li></a>
+</ul>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        $(function () {
+            //切换表格图表模式
+            $(".btn-group button").click(function () {
+                $(this).addClass("on").siblings("button").removeClass("on");
+                var $indx = $(this).index();
+                $("#tab-chart section").eq($indx).removeClass("hidden").siblings("section").addClass("hidden");
+            });
+            //日月年
+            $(".nav-tab li").click(function () {
+                $(this).addClass("on").siblings("li").removeClass("on");
+                var indx = $(this).index();
+                alert(indx);
+            });
+            //余氯 浊度 PH 切换
+            $(".tab-chart li").click(function () {
+                $(this).addClass("on").siblings("li").removeClass("on");
+                var indx = $(this).index();
+                alert(indx);
+            })
+
+     
+           
+            var data = [
+                { "number": "1", "time": "12:00", "phpjz": "1", "phzdz": "2", "phzxz": "1", "ylpjz": "1", "ylzdz": "1", "ylzxz": "1", "zdpjz": "1", "zdzdz": "1", "zdzxz": "1" },
+                ]
+        $('#tableData').bootstrapTable('destroy').bootstrapTable({
+            // url: '/json/data.json',        // 表格数据来源
+            // showColumns:true,
+            height:$(window).height() - 150,
+           // columns: columns,      
+            data: data,
+            fixedNumber: 2,         //固定前列数
+            clickToSelect: true,
+            fixedColumns: true,
+            //fixedNumber: 2,
+            //fixedRightNumber: 2
+          
+        });
+            $('.fixed-table-loading').hide();
+            //$("#tableData").colResizable();
+	}); 
+    </script>
+    <script>
+        var w = $("#tab-chart").width();
+        var h = $("#tab-chart").height() - 10;
+        console.log("======>" + w);
+        console.log("======>" + h);
+        $("#mychart").css({ "width":w ,"height":h });
+        var myChart = echarts.init(document.getElementById("mychart"));
+       
+        var option = {
+        title: {
+                left: '15px',
+                top:"15px",
+                text: '标题标题',
+            },
+         grid:{
+	        left:'5%',    //左上角x轴距盒子边框的距离
+	        right:'5%',    //左上角Y轴距盒子边框的距离
+	        top:'12%',    //右下角x轴距盒子边框的距离
+	        bottom:'8%',     //右下角Y轴距盒子边框的距离
+	        borderWidth:1
+	    },        
+        tooltip: {
+            trigger: 'axis'
+        },
+         legend: {
+            orient: 'vertical',
+            
+            bottom:'bottom',
+
+            data: ['公司1二氧化氯', '公司2二氧化氯']
+        },
+ 
+        calculable: true,
+ 
+ 
+        xAxis: [{
+            axisLabel: {
+               // rotate: 30,
+                interval: 0
+            },
+            axisLine: {
+                lineStyle: {
+                    color: '#CECECE'
+                }
+            },
+            type: 'category',
+            boundaryGap: false,
+            data: function() {
+                var list = [];
+                for (var i = 10; i < 18; i++) {
+                    if (i <= 12) {
+                        list.push('2019-' + i + '-01');
+                    } else {
+                        list.push('2020-' + (i - 12) + '-01');
+                    }
+                }
+                return list;
+            }()
+        }],
+        yAxis: [{
+            name:"余氯(mg/l)",
+            type: 'value',
+            axisLine: {
+                lineStyle: {
+                    color: '#CECECE'
+                }
+            }
+        }],
+        series: [{
+            name: '公司1二氧化氯',
+            type: 'line',
+             symbol: 'none',
+             smooth: 0.3,
+             color: ['#66AEDE'],
+            data: [800, 300, 500, 800, 300, 600, 500, 600]
+        }, {
+            name: '公司2二氧化氯',
+            type: 'line',
+             symbol: 'none',
+             smooth: 0.3,
+             color: ['#90EC7D'],
+            data: [600, 300, 400, 200, 300, 300, 200, 400]
+        }]
+    };
+     
+    myChart.setOption(option);
+    </script>
+</body>
+</html>

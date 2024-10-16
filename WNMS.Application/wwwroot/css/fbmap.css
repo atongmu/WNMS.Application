@@ -1,0 +1,364 @@
+﻿body {
+}
+.zlw_ss {
+    background-image: url('../../images/收缩-触发-白色.svg');
+}
+
+.amap-info-content {
+    padding: 10px
+}
+
+.amap-info-close {
+    top: 10px;
+    right: 10px !important
+}
+
+.mapbox {
+    width: 500px;
+    /*height: 400px;*/
+    padding: 1px 0;
+    background-color: #fff;
+}
+
+.tablist {
+    background: #eee;
+    width: 100%
+}
+
+    .tablist li {
+        float: left;
+        line-height: 30px;
+        height: 30px;
+        padding: 0 15px;
+        cursor: pointer;
+        color: #999
+    }
+
+        .tablist li span {
+            height: 30px;
+            line-height: 30px;
+            display: inline-block;
+            float: left
+        }
+
+        .tablist li i {
+            font-size: 24px;
+            line-height: 30px;
+            color: #999;
+            margin: 0 3px;
+            float: left
+        }
+
+    .tablist .on {
+        border-bottom: 2px solid #008AFF;
+    }
+
+        .tablist .on span {
+            font-weight: 500
+        }
+
+        .tablist .on i {
+            color: #008AFF
+        }
+
+.tabcont {
+    position: relative;
+    height: 310px;
+    margin-top: 5px;
+}
+
+    .tabcont section {
+        height: 310px;
+    }
+
+    .tabcont section::after {content:"\200B";display:block;height:0;clear:both;}
+
+.lunbo {
+    width: calc(50% - 20px);
+    float: left;
+    margin-right: 20px;
+    line-height: 310px;
+    text-align: center;
+    background: #f5f5f5
+}
+
+.lb_wz {
+    width: 50%;
+    float: left;
+    color: #666;position:absolute;right:0;top:0
+}
+
+    .lb_wz p {
+        width: 100%
+    }
+
+        .lb_wz p span {
+            display: inline-block;
+            float: left;
+            line-height: 30px
+        }
+
+            .lb_wz p span:first-child {
+                width: 45%
+            }
+
+            .lb_wz p span:last-child {
+                width: 55%
+            }
+
+.zq_wz {
+    width: 100%;
+    height: 100%
+}
+
+    .zq_wz p {
+        width: 50%;
+        float: left;
+        line-height: 30px;
+        color: #666;
+    }
+
+    .leaflet-popup-content .zq_wz p {margin: 0;}
+
+        .zq_wz p span {
+            width: 50%;
+            text-indent: 0.5em;
+            float: left;
+            display: inline-block
+        }
+
+        /*参数列表第一个名称标题右对齐*/
+        .zq_wz p span:first-child {text-align: right;}
+
+.zc_table, .zc_table2 {
+    color: #666
+}
+
+    .zc_table p, .zc_table2 > p {
+        width: 100%;
+        height: 30px;
+        background: #ebf6fe
+    }
+
+        .zc_table p span {
+            width: 25%;
+            float: left;
+            text-align: center;
+            line-height: 30px
+        }
+
+    .zc_table2 p span:first-child {
+        width: 25%;
+        float: left;
+        text-align: center;
+        line-height: 30px
+    }
+
+    .zc_table2 p span:last-child {
+        width: 75%;
+        float: left;
+        text-align: center;
+        line-height: 30px
+    }
+
+.zc_cont, .zc_cont2 {
+    height: 280px;
+    overflow: auto;
+}
+
+    .zc_cont li, .zc_cont2 li {
+        width: 100%;
+        height: 30px;
+        border-bottom: 1px solid #eee
+    }
+
+        .zc_cont li span {
+            width: 25%;
+            line-height: 30px;
+            float: left;
+            text-align: center
+        }
+
+        .zc_cont2 li span:first-child {
+            width: 25%;
+            line-height: 30px;
+            float: left;
+            text-align: center
+        }
+
+        .zc_cont2 li span:last-child {
+            width: 75%;
+            line-height: 30px;
+            float: left;
+            text-align: center
+        }
+/*  直饮水泵房  */
+.zysbf {
+    padding: 13px;
+}
+
+    .zysbf div {
+        background: #eea000;
+    }
+
+        .zysbf div:first-child {
+            width: 30px;
+            height: 30px;
+        }
+
+        .zysbf div:nth-child(2) {
+            width: 30px;
+            height: 30px;
+        }
+
+        .zysbf div:last-child {
+            width: 40px;
+            height: 40px;
+        }
+
+
+/*  无负压泵房 */
+.wfybf {
+    padding: 13px;
+}
+
+    .wfybf div {
+        background: #00CED1;
+    }
+
+        .wfybf div:first-child {
+            width: 30px;
+            height: 30px;
+        }
+
+        .wfybf div:nth-child(2) {
+            width: 30px;
+            height: 30px;
+        }
+
+        .wfybf div:last-child {
+            width: 40px;
+            height: 40px;
+        }
+
+/*  万能泵房 */
+.wnbf {
+    padding: 13px;
+}
+
+    .wnbf div {
+        background: #8700dc;
+    }
+
+        .wnbf div:first-child {
+            width: 30px;
+            height: 30px;
+        }
+
+        .wnbf div:nth-child(2) {
+            width: 30px;
+            height: 30px;
+        }
+
+        .wnbf div:last-child {
+            width: 40px;
+            height: 40px;
+        }
+
+
+
+.circle a {
+    font-size: 18px;
+    line-height: 100px;
+    color: #000735;
+    font-weight: bold;
+}
+
+.circle {
+    background: #3a96e1;
+    border-radius: 100%;
+    width: 100px;
+    height: 100px;
+    z-index: 999;
+    text-align: center;
+    top: 18px;
+    left: 18px;
+    position: absolute;
+}
+
+.circle_bottom {
+    background: rgba(58,150,225,0.4);
+    border-radius: 100%;
+    width: 100px;
+    height: 100px;
+    filter: alpha(opacity=40);
+    z-index: -100;
+    position: absolute;
+    top: 18px;
+    left: 18px;
+}
+
+.circle_bottom2 {
+    background: rgba(58,150,225,0.2);
+    border-radius: 100%;
+    width: 110px;
+    height: 110px;
+    filter: alpha(opacity=20);
+    z-index: -110;
+    position: relative;
+}
+
+.animation {
+    -webkit-animation: twinkling 2.1s infinite ease-in-out;
+    animation: twinkling 2.1s infinite ease-in-out;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.animation2 {
+    -webkit-animation: twinkling 2.1s infinite ease-in-out;
+    animation: twinkling 2.1s infinite ease-in-out;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+@-webkit-keyframes twinkling {
+    0% {
+        opacity: 0.2;
+        filter: alpha(opacity=20);
+        -webkit-transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        -webkit-transform: scale(1.12);
+    }
+
+    100% {
+        opacity: 0.2;
+        filter: alpha(opacity=20);
+        -webkit-transform: scale(1);
+    }
+}
+
+@keyframes twinkling {
+    0% {
+        opacity: 0.2;
+        filter: alpha(opacity=20);
+        -webkit-transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        -webkit-transform: scale(1.12);
+    }
+
+    100% {
+        opacity: 0.2;
+        filter: alpha(opacity=20);
+        -webkit-transform: scale(1);
+    }
+}
+
+

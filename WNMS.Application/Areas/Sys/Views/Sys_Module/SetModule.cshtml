@@ -1,0 +1,687 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加权限</title>
+    @*<link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <link href="~/lib/scroll/scroll.css" rel="stylesheet" />
+    <link href="~/lib/grid/select/lr-select.css" rel="stylesheet" />
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/lib/grid/jfgrid.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/lib/grid/lr-base.js"></script>
+    <script src="~/lib/scroll/mousewheel.js"></script>
+    <script src="~/lib/scroll/scroll.js"></script>
+    <script src="~/lib/grid/select/lr-select.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/grid/jfgrid.js"></script>
+    <style>
+        .form2 {
+            display: none
+        }
+
+        /*.form1 .col-sm-6 {
+            width: calc(50% - 20px);
+            margin-right: 20px
+        }*/
+
+        html, body {
+            height: 98% !important
+        }
+
+        .stepbox {
+            height: calc(100% - 30px)
+        }
+
+        label.error {
+            position: absolute;
+            z-index: 9;
+            top: 37px;
+            background-position: 2px;
+            text-indent: .5em
+        }
+
+        .btnss:hover, .btnss2:hover {
+            opacity: 0.8
+        }
+
+        .btnss {
+            height: 28px;
+            outline: none;
+            line-height: 28px;
+            padding: 0 15px;
+            border-radius: 2px;
+            font-weight: 400;
+            border-color: #4898d5;
+            background: none;
+            border: 1px #2e8ded solid;
+            background-color: #2e8ded;
+            margin: 0 0 0 6px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .btnss2 {
+            height: 28px;
+            outline: none;
+            line-height: 28px;
+            margin: 0 6px;
+            padding: 0 15px;
+            border-radius: 2px;
+            font-weight: 400;
+            border: 1px solid #dedede;
+            background-color: #f1f1f1;
+            color: #333;
+            cursor: pointer;
+        }
+        /*.menuBtn {
+            width: 120px;
+            background: #0094ff;
+            color: #fff;
+            line-height: 32px;
+            border: 1px solid #0094ff;
+            border-radius: 3px;
+            text-align: center;
+            margin-top: 24px
+        }*/
+
+        .tremenu {
+            width: calc(100% - 37px);
+            height: 145px;
+            background: #f5f5f5;
+            overflow: auto;
+            display: none;
+            position: absolute;
+            top: 34px;
+            z-index: 999
+        }
+
+        .jfgrid-layout {
+            overflow: unset;
+        }
+
+        .jfgrid-head {
+            overflow: unset;
+        }
+    </style>
+</head>
+<body>
+    <ul class="steplist">
+        <li class="on">① 步骤一</li>
+        <li>② 步骤二</li>
+    </ul>
+    @model SysModule
+    <div class="stepbox pad20px">
+        <div style="height:calc(100% - 40px);overflow:hidden">
+            <!-- form start -->
+            <form class="pl10px pr10px form1" id="ModuleForm" style="overflow-x:hidden;overflow-y:auto">
+                @Html.HiddenFor(model => model.IsEnable)
+                <div class="box-body ">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="ModuleNum">编号</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-gears"></i></span>
+
+                                            @{
+                                                if (ViewBag.KeyValue == 1)
+                                                {
+                                                    @Html.TextBoxFor(model => model.ModuleNum, new { id = "ModuleNum", name = "ModuleNum", @class = "form-control", @readonly = "true" })
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" id="ModuleNum" , name="ModuleNum" onblur="myFunction()" class="form-control" />
+                                                }
+                                            }
+                                        </div>
+                                        <div id="actionNumTip"></div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="ModuleName">名称</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                            @Html.TextBoxFor(model => model.ModuleName, new { id = "ModuleName", name = "ModuleName", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Url">地址</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-home"></i></span>
+                                            @Html.TextBoxFor(model => model.Url, new { id = "Url", name = "Url", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="HttpMethod">Http方式</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-internet-explorer"></i></span>
+                                            @Html.TextBoxFor(model => model.HttpMethod, new { id = "HttpMethod", name = "HttpMethod", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Icon">是否为菜单权限</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-tag"></i></span>
+                                            <select id="IsMenu" name="IsMenu" class="form-control">
+                                                @{
+                                                    if (!Model.IsMenu)
+                                                    {
+                                                        <option value="false" selected="selected">否</option>
+                                                        <option value="true">是</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="false">否</option>
+                                                        <option value="true" selected="selected">是</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="PNum">父编号</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-cog"></i></span>
+
+                                                @Html.TextBoxFor(model => model.Pnum, new { id = "PNum", placeholder = "(*父级等于0为最高级别，可直接输入)", name = "PNum", @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>*@
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Pnum">上级</label>
+                                        <div class="input-group relative">
+                                            <span class="input-group-addon"><i class="fa fa-cog"></i></span>
+                                            <input type="text" id="Pnum" name="Pnum" value="@Model.Pnum" class="form-control menuBtn" style="border-radius:4px;border-top-left-radius:0;border-bottom-left-radius: 0;" />
+                                            <div id="treemenu" class="tremenu" style="">
+                                                <ul id="tree" class="ztree" style="width:100%; "></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="col-sm-6">
+                                        <div class="form-group">
+                                            <p class="menuBtn">请选择</p>
+                                        </div>
+                                        <div class="col-sm-12">
+
+                                            <div id="treemenu" class="tremenu">
+                                                <ul id="tree" class="ztree" style="width:100%; "></ul>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Target">打开方式</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-exchange"></i></span>
+
+                                            <select id="Target" name="Target" class="form-control select2" style="width: 100%;">
+                                                @{
+                                                    var target = Enum.GetValues(typeof(WNMS.Model.CustomizedClass.Target));
+                                                    foreach (var item in target)
+                                                    {
+                                                        if ((int)item == (int)Model.Target)
+                                                        {
+                                                            <option value="@((int)item)" selected="selected">@item.ToString()</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@((int)item)">@item.ToString()</option>
+                                                        }
+
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Sort">排序</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-sort-amount-desc"></i></span>
+
+                                            @Html.TextBoxFor(model => model.Sort, new { id = "Sort", name = "Sort", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Icon">图标</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-picture-o"></i></span>
+                                            @Html.TextBoxFor(model => model.Icon, new { id = "Icon", name = "Icon", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.box-body -->
+            </form>
+
+            <!-- form start -->
+            <div class="form2" style="height:100%;overflow:scroll">
+                <div class="box-body" style="width:1325px">
+                    <div style="border:1px solid #ccc;">
+                        <div id="btns_girdtable"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box-footer mt25px">
+            <!--<button type="submit" class="btn btn-default">Cancel</button>-->
+            <button type="button" id="module_Btn" class="btnss pull-right">完成</button>
+            <button type="submit" class="btnss2 mr15px pull-right" onclick="next()">下一步</button>
+            <button type="submit" class="btnss2 mr15px pull-right" onclick="prev()">上一步</button>
+        </div>
+        <!-- /.box-footer -->
+
+    </div>
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/adminlte.lite.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script>
+        var index = parent.layer.getFrameIndex(window.name);
+        keyvalue =@ViewBag.KeyValue;
+
+        var zTreeObj;
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "id",
+                    pIdKey: "pId",
+                    rootPId: 0
+                }
+            }, callback: {
+                onClick: zTreeOnClick
+            },
+            view: {
+                showTitle: false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false,
+            }
+
+        };
+        var ZtreeNodes =@ViewBag.TreeNodes;
+
+        $(function () {
+
+            initGrid();
+            if (keyvalue == 1) {
+                 $('#btns_girdtable').jfGridSet('refreshdata', @Html.Raw(ViewBag.ButtonList));
+            }
+            @*if (@Model.ModuleNum!= 0) {
+                $('#btns_girdtable').jfGridSet('refreshdata', @ViewBag.moduleButtonData);
+            }*@
+            $(".steplist li:eq(1)").click(function () {
+                //$(".steplist li").eq(1).addClass("on");
+                //$(".form1").addClass("hide");
+                //$(".form2").css("display", "block");
+                next();
+            });
+            $(".steplist li:eq(0)").click(function () {
+                $(".steplist li").eq(0).addClass("on");
+                $(".steplist li").eq(1).removeClass("on");
+                $(".form1").removeClass("hide");
+                $(".form2").css("display", "none");
+            });
+
+            $(document).click(function () {
+                $("#treemenu").css("display", "none");
+            })
+            $("#treemenu").click(function (e) {
+                e.stopPropagation();
+            })
+            $(".menuBtn").click(function (e) {
+                e.stopPropagation();
+                if ($("#treemenu").css("display") == "none") {
+                    $("#treemenu").css("display", "block");
+                    zTreeObj = $.fn.zTree.init($("#tree"), setting, ZtreeNodes);
+                }
+                else {
+                    $("#treemenu").css("display", "none");
+                }
+            });
+            $("#module_Btn").click(function () {
+                SaveForm();
+            });
+            validateForm();
+        });
+
+        function zTreeOnClick(event, treeId, treeNode) {
+            $("#Pnum").val(treeNode.id);
+             $("#treemenu").css("display", "none");
+        }
+
+        function next() {
+            if ($("form").valid()) {
+                $(".steplist li").eq(1).addClass("on");
+                $(".steplist li").eq(0).removeClass("on");
+                $(".form1").addClass("hide");
+                $(".form2").css("display", "block");
+            }
+        }
+
+        function prev() {
+            $(".steplist li").eq(0).addClass("on");
+            $(".steplist li").eq(1).removeClass("on");
+            $(".form1").removeClass("hide");
+            $(".form2").css("display", "none");
+        }
+        $(".ModuleNum").blur(function () {
+            $("#actionNumTip").text("");
+        })
+
+        function myFunction() {
+             if (@Model.ModuleNum==0) {
+                 $.post("/Sys/Sys_Module/CheckID", { id: $("#ModuleNum").val() }, function (data) {
+                     if (data == "no") {
+                         $("#ModuleNum").focus();
+                         $("#actionNumTip").text("编号已存在").css("color", "red");
+                     } else {
+                         $("#actionNumTip").html("");
+                     }
+                 })
+             }
+        }
+        function initGrid(){
+            $('#btns_girdtable').jfGrid({
+                headData: [
+                    {
+                        label: "编号", name: "ModuleButtonId", width: 120, align: "left",
+                        edit: {
+                            type: 'input'
+                        }
+                    },
+                    {
+                        label: "名称", name: "ButtonName", width: 160, align: "left",
+                        edit: {
+                            type: 'input'
+                        }
+                    },
+
+                    {
+                        label: "上级按钮", name: "Pid", width: 160, align: "left",
+                        formatter: function (value, row, op, $cell) {
+                            if (value == '0' || value == '') {
+                                row.Pid = '';
+                                return '';
+                            }
+                            var res = '';
+                            $.each(op.rowdatas, function (_index, _item) {
+                                if (value == _item.ModuleButtonId) {
+                                    res = _item.ButtonName;
+                                    return false;
+                                }
+                            });
+                            return res;
+                        },
+                        edit: {
+                            type: 'select',
+                            init: function (row, $self) {// 选中单元格后执行
+                                // 获取当前列表数据
+                                var rowdatas = $('#btns_girdtable').jfGridGet('rowdatas');
+                                var res = [];
+                                $.each(rowdatas, function (_index, _item) {
+                                    if (row.ModuleButtonId != _item.ModuleButtonId) {
+                                        res.push(_item);
+                                    }
+                                });
+
+                                $self.lrselectRefresh({
+                                    data: res
+                                });
+                            },
+                            op: {
+                                value: 'ModuleButtonId',
+                                text: 'ButtonName',
+                                title: 'ButtonName'
+                            },
+                            change: function (rowData, rowIndex, item) {
+                                setTimeout(function () {
+                                    $('#btns_girdtable').jfGridSet('refreshdata');
+                                }, 300);
+                            }
+                        }
+                    },
+                    {
+                        label: "地址", name: "Url", width: 200, align: "left",
+                        edit: {
+                            type: 'input'
+                        }
+                    },
+                    {
+                        label: "Http方法", name: "HttpMethod", width: 70, align: "left",
+                        edit: {
+                            type: 'input'
+                        }
+                    },
+                    {
+                        label: "样式", name: "ButtonClass", width: 150, align: "left",
+                        edit: {
+                            type: 'input'
+                        }
+                    },
+                    {
+                        label: "图标", name: "ButtionIcon", width: 150, align: "left",
+                        edit: {
+                            type: 'input'
+                        }
+                    },
+                    {
+                        label: "标签ID", name: "ButtonId", width: 150, align: "left",
+                        edit: {
+                            type: 'input'
+                        }
+                    },
+                    {
+                        label: "", name: "btn1", width: 53, align: "center",
+                        formatter: function (value, row, op, $cell) {
+                            $cell.on('click', function () {
+                                var rowindex = parseInt($cell.attr('rowindex'));
+                                var res = $('#btns_girdtable').jfGridSet('moveUp', rowindex);
+                                return false;
+                            });
+                            return '<span class=\"label label-info\" style=\"cursor: pointer;\">上移</span>';
+                        }
+                    },
+                    {
+                        label: "", name: "btn2", width: 52, align: "center",
+                        formatter: function (value, row, op, $cell) {
+                            $cell.on('click', function () {
+                                var rowindex = parseInt($cell.attr('rowindex'));
+                                var res = $('#btns_girdtable').jfGridSet('moveDown', rowindex);
+                                return false;
+                            });
+                            return '<span class=\"label label-success\" style=\"cursor: pointer;\">下移</span>';
+                        }
+                    },
+                ],
+                isTree: true,
+                mainId: 'ModuleButtonId',
+                parentId: 'Pid',
+                isMultiselect: true,
+                isEdit: true,
+                onAddRow: function (row, rows) {
+                    row.ModuleButtonId = "";
+                    row.Pid = '';
+                }
+            });
+        }
+
+        function validateForm() {
+            $("#ModuleForm").validate({
+                ignore:"",
+                rules: {
+                    ModuleName: "required",
+                    Url: "required",
+                    HttpMethod: "required",
+                    Icon: "required",
+                    ModuleNum: {
+                        required: true,
+                        digits: true
+                    },
+                    PNum: {
+                        required: true,
+                        digits: true
+                    },
+                    Sort: {
+                        required: true,
+                        digits: true
+                    }
+                }, messages: {
+                    ModuleName: "请输输入模块名称",
+                    Url: "请输入地址",
+                    HttpMethod: "请输入Http方式",
+                    Icon:"请输入图标",
+                    ModuleNum: {
+                        required: "请输入编号",
+                        digits: "请输入数字"
+                    },
+                    PNum: {
+                        required: "请输入父编号",
+                        digits: "请输入数字"
+                    },
+                    Sort: {
+                        required: "请输入序号",
+                        digits: "请输入数字"
+                    }
+                }
+            })
+        }
+        function SaveForm() {
+            if ($("form").valid()) {
+                var x = $("form").serializeArray();
+                var obj = {};
+
+                $.each(x, function (i, v) {
+                    obj[v.name] = v.value;
+                });
+                var moduleData = JSON.stringify(obj);
+                var _btns = $('#btns_girdtable').jfGridGet('rowdatas');
+                var btns = [];
+                //校验
+                var regPos = /^\d+$/;
+                var flag = true;
+                $.each(_btns, function (_index, _item) {
+                    var point = {
+                        ModuleButtonId: _item.ModuleButtonId,
+                        Pid: _item.Pid || '0',
+                        ModuleId: $("#ModuleNum").val(),
+                        ButtonName: _item.ButtonName,
+                        ButtonClass: _item.ButtonClass,
+                        ButtionIcon: _item.ButtionIcon,
+                        ButtonId: _item.ButtonId,
+                        IsEnable: true,
+                        Url: _item.Url,
+                        HttpMethod: _item.HttpMethod,
+                        Sort: _index
+                    };
+
+                    if (!regPos.test(point.ModuleButtonId) || !regPos.test(point.Pid) || point.ButtonName == "" ||
+                        point.ButtonClass == "" || point.ButtionIcon == "" || point.ButtonId == "" || point.Url == ""||point.ModuleButtonId.length>8) {
+                        flag = false;
+                    }
+
+                    btns.push(point);
+                });
+
+                var modulebuttonData = JSON.stringify(btns);
+                if (flag) {
+                    
+                    $.ajax({
+                        url: '/Sys/Sys_Module/SetModuleInfo',
+                        type: 'post',
+                        data: { module: moduleData, moduleBtn: modulebuttonData, key: keyvalue },
+                        success: function (data) {
+                            if (data == "ok") {
+                                window.parent.LoadData(window.parent.options.pageNumber, window.parent.options.pageSize, "", "");
+                                window.parent.LoadZtree();
+                                parent.layer.close(index);
+                            } else {
+                                if (data == "false") {
+                                    layer.alert("所编辑模块已不存在，请刷新重试")
+                                } else {
+                                    layer.alert("提交失败");
+                                }
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            layer.alert(errorThrown);
+                        }
+                    });
+                } else {
+                    layer.alert("列表所有选项不能为空，编号必须为小于9位的数字，请重新输入");
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
+

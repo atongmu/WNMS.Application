@@ -1,0 +1,216 @@
+﻿
+@model IEnumerable<dynamic>
+@using Newtonsoft.Json;
+<thead>
+    <tr>
+        <th>序号</th>
+        <th>工单编号</th>
+        <th>紧急程度</th>
+        <th>处理级别</th>
+        @*<th>状态</th>*@
+        <th>设备名称</th>
+        <th>发布时间</th>
+        <th>接收人</th>
+        <th>事件内容</th>
+        <th>事件类型</th>
+        <th>是否审核</th>
+        <th>交办意见</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach (var item in Model)
+    {
+        var ss = JsonConvert.SerializeObject(item);
+        var json = JsonConvert.DeserializeObject(ss);
+        <tr>
+            <td rowspan="2" class="zlw_xh">
+                @json["rownum"]
+            </td>
+            <td style="text-align: center" title="1">
+                @json["Num"]
+            </td>
+            <td>
+                @(Enum.GetName(typeof(WNMS.Model.CustomizedClass.EmergencyDegree), int.Parse(json["Degree"].ToString())))
+            </td>
+            <td>
+                @(Enum.GetName(typeof(WNMS.Model.CustomizedClass.ProcessingLevel), int.Parse(json["HandleLevel"].ToString())))
+            </td>
+            @*<td>
+                    @(Enum.GetName(typeof(WNMS.Model.CustomizedClass.WoState), int.Parse(json["CurrentState"].ToString())))
+                </td>*@
+            <td>
+                @json["DeviceName"]
+            </td>
+            <td>
+                @json["ReleaseTime"]
+            </td>
+            <td>
+                @json["Account"]
+            </td>
+            <td>
+                @json["IncidentContent"]
+            </td>
+            <td>
+                @(Enum.GetName(typeof(WNMS.Model.CustomizedClass.IncidentType), int.Parse(json["IncidentType"].ToString())))
+            </td>
+            <td>
+                @(Enum.GetName(typeof(WNMS.Model.CustomizedClass.WOExtensionReview), int.Parse(json["IsAuditing"].ToString())))
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" style="text-align: left; color: Gray" class="zlw_sblc">
+                @*<span style="background:#1E9FFF;">上报</span>*@
+                @*<span style="background:#1E9FFF;">分派</span>*@
+                @if (int.Parse(json["CurrentState"].ToString()) >= 0 && int.Parse(json["CurrentState"].ToString()) <= 5)
+                {
+                    <span style="background:#1E9FFF;">分派</span>
+                }
+                else
+                {
+                    <span style="background:#adadad;">分派</span>
+                }
+                @if (int.Parse(json["CurrentState"].ToString()) >= 1 && int.Parse(json["CurrentState"].ToString()) <= 5)
+                {
+                    <span style="background:#1E9FFF;">接受</span>
+                }
+                else
+                {
+                    <span style="background:#adadad;">接受</span>
+                }
+                @if (int.Parse(json["CurrentState"].ToString()) >= 2 && int.Parse(json["CurrentState"].ToString()) <= 5)
+                {
+                    <span style="background:#1E9FFF;">到场</span>
+                }
+                else
+                {
+                    <span style="background:#adadad;">到场</span>
+                }
+                @if (int.Parse(json["CurrentState"].ToString()) >= 3 && int.Parse(json["CurrentState"].ToString()) <= 5)
+                {
+                    <span style="background:#1E9FFF;">处理</span>
+                }
+                else
+                {
+                    <span style="background:#adadad;">处理</span>
+                }
+                @if (int.Parse(json["CurrentState"].ToString()) >= 4 && int.Parse(json["CurrentState"].ToString()) <= 5)
+                {
+                    <span style="background:#1E9FFF;">完工</span>
+                }
+                else
+                {
+                    <span style="background:#adadad;">完工</span>
+                }
+                @if (int.Parse(json["CurrentState"].ToString()) == 5)
+                {
+                    <span style="background:#1E9FFF;">审核</span>
+                }
+                else
+                {
+                    <span style="background:#adadad;">审核</span>
+                }
+
+            </td>
+            @{
+                if (int.Parse(json["IsAuditing"].ToString()) == 1)
+                {
+                    <td colspan="1" style="color: Gray" class="zlw_jxz">
+                        <span style="background:#449d44;">已审核</span>
+                    </td>
+                }
+                else if (int.Parse(json["CurrentState"].ToString()) == -1)
+                {
+                    <td colspan="1" style="color:green" class="zlw_jxz">
+                        <span style="background:#1E9FFF;">未分派</span>
+                    </td>
+                }
+                else if (int.Parse(json["CurrentState"].ToString()) == 0)
+                {
+                    <td colspan="1" style="color:green" class="zlw_jxz">
+                        <span style="background:#c9302c;">待接收</span>
+                    </td>
+                }
+                else if (int.Parse(json["CurrentState"].ToString()) == 4)
+                {
+                    <td colspan="1" style="color:green" class="zlw_jxz">
+                        <span style="background:#c9302c;">待审核</span>
+                    </td>
+                }
+                else if (int.Parse(json["CurrentState"].ToString()) == 6)
+                {
+                    <td colspan="1" style="color:green" class="zlw_jxz">
+                        <span style="background:#642100;">已撤回</span>
+                    </td>
+                }
+                else if (int.Parse(json["CurrentState"].ToString()) == 7)
+                {
+                    <td colspan="1" style="color:green" class="zlw_jxz">
+                        <span style="background:#642100;">已退单</span>
+                    </td>
+                }
+                else if (int.Parse(json["CurrentState"].ToString()) == 8)
+                {
+                    <td colspan="1" style="color:green" class="zlw_jxz">
+                        <span style="background:#642100;">已移交</span>
+                    </td>
+                }
+                else if (int.Parse(json["CurrentState"].ToString()) == 9)
+                {
+                    <td colspan="1" style="color:green" class="zlw_jxz">
+                        <span style="background:#642100;">已驳回</span>
+                    </td>
+                }
+                else
+                {
+                    <td colspan="1" style="color: Gray" class="zlw_jxz">
+                        <span>进行中</span>
+                    </td>
+                }
+
+
+
+
+                DateTime dt = DateTime.Parse(json["ReleaseTime"].ToString());
+                TimeSpan midTime = new TimeSpan();
+                DateTime nodt = DateTime.Now;
+                if (int.Parse(json["CurrentState"].ToString()) >= 4)
+                {
+                    DateTime comdt = json["OperationTime"] == null ? nodt : DateTime.Parse(json["OperationTime"].ToString());
+                    midTime = comdt - dt;
+                }
+                else
+                {
+                    midTime = nodt - dt;
+                }
+
+                DateTime comTime = DateTime.Parse(json["CompleteTime"].ToString());
+                int compNum = DateTime.Compare(nodt, comTime);
+
+
+                <td style="text-align: center; color: Gray">
+                    @midTime.Days 天 @midTime.Hours 小时  @midTime.Minutes 分钟 @midTime.Seconds 秒
+                </td>
+                <td style="text-align: center; color: Gray">
+                    @if (int.Parse(json["decount"].ToString()) > 0)
+                    {
+                        <i class="labelsc">延</i>
+                    }
+
+                    @if (int.Parse(json["diffTime"].ToString()) > 0 && int.Parse(json["CurrentState"].ToString()) <= 4)
+                    {
+                        <i class="labels">超</i>
+                    }
+                </td>
+
+
+            }
+
+            <td colspan="1" style="color: Gray" class="zlw_bl">
+                <span onclick="Deal(@json["WOID"])">办理</span>
+            </td>
+        </tr>
+    }
+
+</tbody>

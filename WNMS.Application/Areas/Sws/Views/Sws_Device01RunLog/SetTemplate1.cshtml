@@ -1,0 +1,291 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>配置模版</title>
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/hyl.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <style>
+        html, body, .tab-pane {
+            height: 100%
+        }
+
+        .sel {
+            height: 30px;
+            border: 1px solid #999;
+            min-width: 120px;
+            border-radius: 5px;
+            float: left
+        }
+
+        .tab-child {
+            height: calc(100% - 20px);
+            margin: 15px;
+            overflow: auto
+        }
+
+        .tab-cslist {
+            overflow: hidden;
+            zoom: 1
+        }
+
+            .tab-cslist li {
+                width: calc(25% - 10px);
+                color: #666;
+                position: relative;
+                padding: 0 10px;
+                border-radius: 5px;
+                line-height: 40px;
+                height: 40px;
+                margin: 5px;
+                float: left;
+                border: 1px solid #ddd
+            }
+
+            .tab-cslist label {
+                font-weight: 400;
+                cursor: pointer;
+                margin: 0;
+                display: inline-block;
+                width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                text-indent: 20px
+            }
+
+                .tab-cslist label:hover {
+                    color: #999
+                }
+
+            .tab-cslist input[type="checkbox"] {
+                position: absolute;
+                top: 10px
+            }
+    </style>
+</head>
+<body>
+    <div class="pt15px mb15px pl10px overflow">
+        <form id="tempform" action="">
+            @*<select class="sel mr10px">
+                    <option value="value">供水设备</option>
+                </select>*@
+            <select id="Selectmoban" class="sel mr10px">
+                @*<option value="value">无负压数据模版</option>*@
+                <option value="0">请选择报表模板</option>
+                @{
+                    IEnumerable<SwsTemplate> templateList = ViewBag.Template as IEnumerable<SwsTemplate>;
+                    foreach (var item in templateList)
+                    {
+                        <option value="@item.Id">@item.TemplateName</option>
+                    }
+                }
+            </select>
+            <input id="templatename" type="text" class="zlw_bmsrmc" placeholder="" />
+            <button id="SaveBtn_Template" type="submit" class="zlw_bmcx inline-block">保存</button>
+            <button id="cancelban" type="button" class="zlw_bmcx inline-block">删除</button>
+        </form>
+    </div>
+
+    <!-- Custom Tabs -->
+    <div class="nav-tabs-custom ml15px mr15px" style="height:calc(100% - 60px)">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1" data-toggle="tab">基本参数</a></li>
+            <li><a href="#tab_2" data-toggle="tab">其他量</a></li>
+        </ul>
+        @{
+            IEnumerable<SwsDataInfo> listdata = ViewBag.Sws_DataInfo as IEnumerable<SwsDataInfo>;
+            if (listdata.Count() > 0)
+            {
+                <div class="tab-content" style="height:calc(100% - 60px)">
+                    <div class="tab-pane active" id="tab_1">
+                        <div class="tab-child">
+                            <ul class="tab-cslist" id="dataList">
+                                @*@foreach (var item in listdata)
+                                {
+                                    <li>
+                                        <input type="checkbox" name="ckItem" id="ck" value="@item.DataId" />
+                                        <label for="ck">@item.Cnname</label>
+                                    </li>
+                                }*@
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2">
+                        <div class="tab-child">
+                            <ul class="tab-cslist">
+                                <li>
+                                    <input type="checkbox" name="name" id="sck" />
+                                    <label for="sck">通讯状态0</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" name="name" id="sck2" />
+                                    <label for="sck2">通讯状态1</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" name="name" id="sck3" />
+                                    <label for="sck3">通讯状态222222222222222222</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" name="name" id="sck4" />
+                                    <label for="sck4">通讯状态</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /.tab-pane -->
+
+                </div>
+            }
+        }
+
+        <!-- /.tab-content -->
+    </div>
+    <!-- nav-tabs-custom -->
+    <script>
+         var tempid =@ViewBag.tempid;
+        var typeID=@ViewBag.TypeID;
+        $(function () {
+             ClickPum(tempid);
+            //模板保存点击事件
+            $("#SaveBtn_Template").click(function () {
+                validation()
+                AddTemplate();
+            });
+        })
+        //模板选择列表更改选项时事件
+        $("#Selectmoban").change(function () {
+            $("[name = 'ckItem']:checkbox").each(function () {
+                $(this).prop('checked', false);
+            });
+            var selectban = $("#Selectmoban").val();
+            if (selectban == 0)
+                $("#templatename").val("");
+            else {
+                //document.getElementById("templateID").readOnly=true;
+                var selecttext = $("#Selectmoban").find("option:selected");
+                $("#templatename").val(selecttext.text());
+                //$("#templateID").val(selecttext.val());
+                $.post('/Sws/Sws_Device01RunLog/edittemplate', { id: selectban }, function (data) {
+                    var json = JSON.parse(data);
+                    var jsonlengh = json.length;
+                    for (var i = 0; i < jsonlengh; i++) {
+                        $("input:checkbox[value=" + json[i] + "]").prop('checked', true);
+                    }
+                });
+            }
+        });
+        //表单验证
+        function validation() {
+            $("#tempform").validate({
+                rules: {
+                    templatename: "required"
+                },
+                messages: {
+                    templatename: "请输入模板名称"
+                }
+            });
+        }
+        //点击加载模板内容
+        function ClickPum(pum) {
+            tempid = pum;
+            $("#dataList").empty();
+            $.post("/Sws/Sws_Device01RunLog/LoadTempData", { id: pum,type:typeID }, function (data) {
+                if (data != "") {
+                    var jsonstr = JSON.parse(data);
+                var has = jsonstr.endhasData;
+                var nohas = jsonstr.nohasData; 
+                var html = "";
+                for (var i = 0; i < has.length; i++) {
+                    html += "<li data-id=" + has[i].DataId + " class='on'>";
+
+                    html += "<p>";
+                    html += "<span class='ellipsis1'>" + has[i].Cnname + "</span>";
+                    html += "</p>";
+                    html += "</li>";
+                } 
+                for (var i = 0; i < nohas.length; i++) {
+                    html += "<li data-id=" + nohas[i].DataId + ">";
+
+                    html += "<p>";
+                    html += "<span class='ellipsis1'>" + nohas[i].Cnname + "</span>";
+                    html += "</p>";
+                    html += "</li>";
+                }
+                $("#dataList").append(html);
+                }
+
+            })
+        }
+        //模板保存方法
+        function AddTemplate() {
+            if ($("#templatename").val() != "") {
+                var m_ids = "";
+                var $ckItems = $("input[name='ckItem']:checked");
+                $ckItems.each(function () {
+                    m_ids += $(this).val() + ",";
+                });
+                m_ids = m_ids.substring(0, m_ids.length - 1);
+                $.post('/Sws/Sws_Device01RunLog/TemplateIndex', { flag: $("#Selectmoban").val(), templatename: $("#templatename").val(), ids: m_ids, type: 1 }, function (data) {
+                    if (data == "ok") {
+                        alert("操作成功");
+                        listrefresh();
+                    }
+                    else {
+                        alert("操作失败");
+                    }
+                });
+            }
+        }
+        //刷新模板集合
+        function listrefresh() {
+            $("#templatename").val("");
+            $("#Selectmoban").empty();
+            var $ckItems = $("input[name='ckItem']");
+            $ckItems.each(function () {
+                $(this).prop('checked', false);
+            });
+            $.post('/Sws/Sws_Device01RunLog/datarefresh', { type: 1 }, function (data) {
+                $("#Selectmoban").append("<option value='0'>请选择报表模板</option>");
+                var json = JSON.parse(data);
+                if (json.Datacount != 0) {
+                    for (var i = 0; i < json.Datacount; i++) {
+                        var aaa = json.Templates[i].Id;
+                        var bbb = json.Templates[i].TemplateName;
+                        $("#Selectmoban").append("<option value=" + aaa + ">" + bbb + "</option>");
+                    }
+                }
+            });
+        }
+        //删除模板
+        $("#cancelban").click(function () {//删除模板
+            if ($("#Selectmoban").val() != 0) {
+                $.post('/Sws/Sws_Device01RunLog/Deletetemp', { id: $("#Selectmoban").val() }, function (data) {
+                    if (data == "ok") {
+                        alert("删除成功");
+                        listrefresh();
+                    }
+                    else {
+                        alert("删除失败");
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

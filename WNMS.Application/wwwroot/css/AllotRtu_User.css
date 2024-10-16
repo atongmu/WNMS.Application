@@ -1,0 +1,127 @@
+﻿body {
+}
+
+.r_right ul {
+    position: relative;
+    list-style: none;
+}
+
+    .r_right ul li {
+        float: left;
+        display: inline-block;
+        margin: 10px 10px 0 0;
+        position: relative;
+    }
+
+        .r_right ul li a {
+            white-space: nowrap;
+            -ms-text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 120px;
+        }
+
+        .r_right ul li i {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            font-size: 0;
+            line-height: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/gif;base64,R0lGODlhCgAKAKIAAP////7+/v39/fr7+/n6+0xde0pbef///yH5BAEHAAcALAAAAAAKAAoAAAMdeLprzMa9EyWsr8ZbQ9OBRxkDYITFGIVEUWiRUCUAOw==') /*../../Content/newself/img/sys_item_selected.gif*/ no-repeat right bottom;
+            z-index: 99;
+        }
+
+
+.prompt {
+    font-size: 12px;
+    height: 40px;
+    line-height: 40px;
+    background: #FFFDCD url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAk9JREFUeNpsU01oE1EQ/t7upvnZNG211ghJo6YaAkalKl48Ve9WjwZEEYr07klqEfHkRfAgCLZSqBehVCh4id5ERE3FFrVFE9PUpFHpitiYbLL7nH3Jxphk2GHnzffNN++9nWWcc1jGGBPv5IPTIW5U7nNDP8m5UcdkMLnrKZMdl4YvPM5YuUZds8DbmdFzMKuzg5EI+o5fp6QqMPAtaC8nsbayAkhK/PD5+YdtAkuzZ4/S4tVQtB+u6BUiOkFiNQFJsTqgtHwDnz78AGfsWCw+99qCFDTMnAqEA3B63OC6Bm6UqbNZg5hEj5OwXgTCTmRT61OUPfifgMx4rGcgAKNSglxcp4bcOmhdgAkxg47UM7AduXQ2ZtdJduB0u0nFA+bwgpUyeL6UAqtqwkVc+iowiyO4rQJV/Q+4rNJte7GQ/IkTERWJdwXhVryQ1ARmcSyubY0j6AZf/b35bb9vRwgeH4lJXowcqn0FDkY5HVKXD7++ZwS3bQdPXuQmNr8koZd1BP1+mJIbJqs7xUH/LoFZHItr1zXPgXr14oHRy2f23dsZHfE4tu359xUkGYaWxsb7Z8W7c6tjN6eX56luq22QyDzkkck7j5ISL9PGTZGXZQUf0xpmbo0PE07ThKJd1zQHworki8HBfvT5euFxeVEoFJDPb6DbJXaz2MJvExCm5bPQcmvi+iRZhupUoEhmJ2pnAZeqJkK7h0553d3YoB3kcnlUysVEJ27rHdi2Nz4+8Vmh7kxiApu+fS1M+ZRN6Pg3ttiRlvWb5oVd91eAAQB6avm+/a/a/gAAAABJRU5ErkJggg==') /*../../Content/newself/img/lightbulb.png*/ no-repeat scroll 7px 12px;
+    border: 1px solid #ccc;
+    padding-left: 30px;
+    color: #8F5700;
+}
+
+.r_layout {
+    border: 1px solid #bbb;
+    margin: 1px;
+    height: 405px;
+    position: relative;
+    overflow: hidden;
+}
+
+.r_left {
+    position: absolute;
+    width: 300px;
+    left: 0px;
+    border-right: 1px solid #bbb;
+    height: 403px;
+}
+
+.r_layout header {
+    font-size: 10px;
+    border-bottom: #ccc 1px solid;
+    padding-bottom: 1px;
+    background-color: #F2F2F2;
+    background: -webkit-linear-gradient(top,#ffffff 0,#F2F2F2 100%);
+    background: -moz-linear-gradient(top,#ffffff 0,#F2F2F2 100%);
+    background: -o-linear-gradient(top,#ffffff 0,#F2F2F2 100%);
+    background: linear-gradient(to bottom,#ffffff 0,#F2F2F2 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff,endColorstr=#F2F2F2,GradientType=0);
+    height: 26px;
+    line-height: 26px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #666;
+    font-weight: bold;
+}
+
+.r_right {
+    position: absolute;
+    right: 0px;
+    /*width: 100%;*/
+    /*border: 1px solid green;*/
+    left: 302px;
+    border-left: 1px solid #bbb;
+    height: 403px;
+    overflow-y: auto;
+}
+
+.unCheck {
+    display: none;
+}
+
+.checkAllOff {
+    height: 26px;
+    line-height: 26px;
+    margin-right: 5px;
+    padding-left: 20px;
+    background: url('data:image/gif;base64,R0lGODlhDQANAJEDAAACAQEBAQAAAP///yH5BAEAAAMALAAAAAANAA0AAAIqFCwow7PdHpMwPQDjwC5Pd1BNMJCJ1y2np4KWEFgpQ3rmlMR5O6LUCywAADs=') /*../../Content/newself/img/checkAllOff.gif*/ no-repeat scroll 4px 6px;
+    cursor: pointer;
+    float: right;
+    margin-bottom: 0;
+}
+
+
+.checkAllOn {
+    height: 26px;
+    line-height: 26px;
+    margin-right: 5px;
+    padding-left: 20px;
+    background: url('data:image/gif;base64,R0lGODlhDQANAKIEAAEAAAACAQEBAQAAAP///wAAAAAAAAAAACH5BAEAAAQALAAAAAANAA0AAAMwOKHDQ5C8GCe0UMgGA+WPJxGApI3OZmkaN1YoBj9OIzT0e1JEe9m42yvDu3xwyEECADs=') /*../../Content/newself/img/checkAllOn.gif*/ no-repeat scroll 4px 6px;
+    cursor: pointer;
+    float: right;
+    margin-bottom: 0;
+}
+
+section {
+    overflow-y: auto;
+}
+
+#treeDemo li span {
+    color: #333;
+}

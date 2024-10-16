@@ -1,0 +1,408 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>setDoorPage</title>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        html, body {
+            height: 100%
+        }
+
+        .table-box {
+            width: calc(100% - 10px);
+            height: calc(100% - 50px);
+        }
+
+        .kz-left {
+            border: 1px solid #ccc;
+            width: calc(100% - 360px);
+            height: 100%
+        }
+
+        .kz-box {
+            width: 350px;
+            background: #eeeeee7d;
+            border: 1px #ccc solid;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            height: calc(100% - 20px);
+
+        }
+
+            .kz-box .hyl_label {
+                width: 120px;
+                display: inline-block;
+                text-align: right
+            }
+
+            .kz-box .hyl_input, .kz-box .hyl_select {
+                width: 180px;
+                display: inline-block
+            }
+
+            .kz-box .hyl_btn {
+                height: 26px;
+                line-height: 26px;
+                background: #3c8cbb;
+                border: 1px solid #ccc;
+                color: #fff
+            }
+
+           .kz-box .hyl_btn:hover {
+                    color:#fff;
+                    background:#1989cc
+           }
+        label.error {
+            position: absolute;
+            top: 28px;
+            left: 130px;
+        }
+      
+    </style>
+</head>
+<body>
+    <div class="pad10px relative" style="height: 100%">
+        <div class="pt10px pl10px kz-left">
+            <input type="text" class="hyl_input" id="searchtext" placeholder="请输入门禁编号、门禁名称" autocomplete="off" />
+            <button class="hyl_btn" id="searchbtn"><i class="fa fa-search mr5px"></i>查询</button>
+            <div class="table-box mt10px">
+                <table id="table" style="width:100%"></table>
+            </div>
+        </div>
+
+        <div class="kz-box pt15px pb15px">
+            <form id="myform">
+                <input type="text" style="width:0px;height:0px;position:absolute;z-index:-1;opacity:0" />
+                <input type="password" style="width:0px;height:0px;position:absolute;z-index:-1;opacity:0" />
+                <div class="mb15px relative">
+                    <label class="hyl_label">门禁编号(*)：</label>
+                    <input type="text" class="hyl_input" id="Num" name="Num"  autocomplete="off"/>
+                    <input type="hidden" class="hyl_input" id="DoorID" name="DoorID" value="0" />
+                    <input type="hidden" class="hyl_input" id="StationID" name="StationID" value="0"/>
+                </div>
+                <div class="mb15px relative">
+                    <label class="hyl_label">门禁名称(*)：</label>
+                    <input type="text" class="hyl_input" id="AccessName" name="AccessName" autocomplete="off" />
+                </div>
+                <div class="mb15px relative">
+                    <label class="hyl_label">门禁品牌(*)：</label>
+                    <select class="hyl_select" id="Brand" name="Brand">
+                        @{
+                            var brandlist = ViewBag.brandList as IEnumerable<SysDataItemDetail>;
+                            if (brandlist.Count() > 0)
+                            {
+                                foreach (var item in brandlist)
+                                {
+                                    <option value="@item.ItemValue">@item.ItemName</option>
+
+                                }
+                            }
+                        }
+
+                    </select>
+                </div>
+                <div class="mb15px relative">
+                    <label class="hyl_label">门禁IP：</label>
+                    <input type="text" class="hyl_input" id="IP" name="IP" autocomplete="off"/>
+                </div>
+                <div class="mb15px relative">
+                    <label class="hyl_label">门禁端口：</label>
+                    <input type="text" class="hyl_input" id="Port" name="Port" autocomplete="off" />
+                </div>
+
+                <div class="mb15px relative">
+                    <label class="hyl_label">用户名：</label>
+                    <input type="text" class="hyl_input" id="UserName" name="UserName" autocomplete="off" />
+                </div>
+                <input type="text" style="width:0px;height:0px;position:absolute;z-index:-1;opacity:0" />
+                <input type="password" style="width: 0px;height: 0px;position: absolute;z-index: -1;opacity: 0" />
+                <div class="mb15px relative">
+                    <label class="hyl_label">密码：</label>
+                    <input type="password" class="hyl_input" id="PassWord" name="PassWord" />
+                </div>
+                <div class="textCenter">
+                    <button class="hyl_btn" type="button" id="saveform">提交</button>
+                    <button class="hyl_btn" type="button" id="clear">重置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        var pageindex = 1;
+        var stationid=@ViewBag.stationid;
+        $(function () {
+            validateForm();
+            //ip验证
+            jQuery.validator.addMethod("isIP", function(value, element) {    
+              var tel = /^(?=(\b|\D))(((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))\.){3}((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))(?=(\b|\D))$/;    
+              return this.optional(element) || (tel.test(value));    
+            }, "请正确填写的IP。");
+            jQuery.validator.addMethod("isPort", function(value, element) {    
+              var tel = /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/;    
+              return this.optional(element) || (tel.test(value));    
+              }, "请正确填写的端口号。");
+             var $table = $("#table");
+            $table.bootstrapTable({
+
+                method: "post",
+                url: "/Sws/Sws_StationAccess/QueryDoorTable",
+                contentType: "application/x-www-form-urlencoded",
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                height: $(".table-box").height(),
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                striped: true,
+                sidePagination: 'server',
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        pagesize: params.limit,   //每页条数
+                        pageindex: (params.offset / params.limit) + 1, //页码
+                        searchtext: $("#searchtext").val(),
+                        stationid:stationid
+                        //order: params.order,
+                        //sort: params.sort == undefined ? "AccessName" : params.sort
+
+                    };
+                    pageindex = (params.offset / params.limit) + 1;
+                    return temp;
+                },//传递参数（*）
+                responseHandler: function (res) {
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+
+                },
+                columns: [
+                    {
+                    field:"State",
+                    checkbox: true,
+                    visible: true,
+                     formatter: function (value, row, index) {
+                        return changeCheckboxFormat(value)
+                    }
+                    }, {
+                        field: 'Num',
+                        title: '编号',
+                        sortable: true
+                    },
+                    {
+                        field: 'AccessName',
+                        title: '名称',
+                        sortable: true
+                    },
+                    {
+                        field: 'brandName',
+                        title: '品牌'
+                        
+                    },
+                    {
+                        field: 'IP',
+                        title: 'IP',
+                        sortable: true,
+
+                    },
+                    {
+                        field: 'Port',
+                        title: '端口',
+                        sortable: true
+                    },
+                    {
+                        field: 'Brand',
+                        title: '操作',
+                         formatter: function (value, row, index) {
+                             return '<button class="hyl_btn" onclick="EditeDoorInfo('+row.DoorID+')">修改</button>';
+                    }
+                    }
+                ]
+
+            });
+
+        })
+         $("#searchbtn").click(function () {
+            pageindex = 1;
+            refreshTable();
+
+        })
+         $("#searchtext").keydown(function(e) {
+           if (e.keyCode == 13) {
+               pageindex = 1;
+               refreshTable();
+               return false;
+           }
+         });
+        function refreshTable() {
+            var opt = {
+                pageNumber: pageindex,
+            };
+            $("#table").bootstrapTable('refresh', opt);
+
+        }
+        function changeCheckboxFormat(cellval) {
+            if (cellval == 1) {
+                return {
+                    checked:true
+                }
+            }
+        }
+        //点修改按钮表单填充
+        function EditeDoorInfo(doorid) {
+            $.post("/Sws/Sws_StationAccess/GetDoorInfoByDoorID", { doorid: doorid }, function (data) {
+                if (data.data != null && data.data != undefined) {
+                    var res = data.data;
+                    $("#DoorID").val(res.doorId);
+                    $("#Brand").val(res.brand);
+                    $("#Num").val(res.num);
+                    $("#AccessName").val(res.accessName);
+                    $("#IP").val(res.ip);
+                    $("#Port").val(res.port);
+                    $("#UserName").val(res.userName);
+                    $("#PassWord").val(res.passWord);
+                    $("#StationID").val(res.stationId);
+                }
+            })
+        }
+        $("#saveform").click(function () {
+            $("#myform").submit();
+
+        })
+        function validateForm() {
+             $("#myform").validate({
+                 ignore: "",
+                  submitHandler: function (form) {
+                    executeSave();
+                },
+                 rules: {
+                     Num: "required",
+                     AccessName: "required",
+                     Brand:"required",
+                     IP: {
+                         required: true,
+                         isIP: true
+                     },
+                     Port: {
+                         required: true,
+                         isPort: true
+                     },
+                     UserName: "required",
+                     PassWord: "required"
+                    
+                     //StationName:"required"
+                },
+                messages: {
+                    Num: "请输入门禁编号",
+                    AccessName: "请输入门禁名称",
+                    Brand: "请选择门禁品牌",
+                    IP: {
+                         required: "请输入IP",
+                         isIP: "请输入正确的IP"
+                     },
+                    Port: {
+                         required: "请输入端口号",
+                         isIP: "请输入正确的端口号"
+                    },
+                    UserName: "请输入用户名",
+                    PassWord: "请输入密码"
+                   
+                    //StationName:"请选择泵房"
+                   
+                }
+            });
+        }
+        //提交
+        function executeSave() {
+            var accessInfo = JSON.stringify($("#myform").serializeObject());
+            $.post("/Sws/Sws_StationAccess/SetAccessInfo", {
+                aInfo: accessInfo,
+                stationid:stationid
+            }, function (data) {
+                    if (data == "ok") {
+                        if ($("#DoorID").val() == 0) {//添加
+                            parent.refreshTable();
+                        }
+                        refreshTable();
+                        layer.msg("操作成功");
+                        ClearForm();
+                       
+                    }
+                    else {
+                        if (data == "has") {
+                            layer.msg("门禁编号重复");
+                        }
+                        else {
+                            layer.msg("操作失败");
+                        }
+                    }
+            })
+        }
+        //重置
+        $("#clear").click(function () {
+            ClearForm();
+        })
+        function ClearForm() {
+            $("#DoorID").val(0);
+            $("#Brand").val("1");
+            $("#Num").val("");
+            $("#AccessName").val("");
+            $("#IP").val("");
+            $("#Port").val("");
+            $("#UserName").val("");
+            $("#PassWord").val("");
+            $("#StationID").val(0);
+        }
+        //表单提交
+        function saveForm(func) {
+            var lenthcheck = $("#table").bootstrapTable('getSelections');
+            var doorids = "";
+            if (lenthcheck.length > 0) {
+                for (i = 0; i < lenthcheck.length; i++) {
+                    doorids += lenthcheck[i].DoorID + ",";
+                }
+                doorids=doorids.substring(0, doorids.length - 1);
+            }
+            $.post("/Sws/Sws_StationAccess/SetStationAccess_Door", {doorids:doorids,stationid:stationid}, function (data) {
+                func(data);
+            })
+        }
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>报警监控</title>
+    <link rel="stylesheet" href="../../css/sl.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/hyl.css">
+    <link rel="stylesheet" href="../../css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../../css/iconfont.css">
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../js/sl_main.js"></script>
+
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            color: #636366;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+        }
+
+        .form-control {
+            box-shadow: none;
+        }
+
+        .pagination > li > a {
+            color: #636366;
+        }
+
+        .nav-tabs li a:hover {
+            color: #333333;
+        }
+        .sl_warning_block_item>div{position:relative;}
+        .col2{position:absolute;top:0;right:10px}
+    </style>
+
+</head>
+<body>
+    <div class="sl_warning_main">
+        <div class="overflow bgWhite">
+            <div class="sl_warning_top_l left">
+                <p>
+                    <var class="pl15px pr15px" >报警级别:</var>
+                    <label for="ptCheck"><input id="ptCheck" type="checkbox" /><span style="color:#636366">&nbsp;普通&nbsp;&nbsp;&nbsp;</span></label>
+                    <label for="gjCheck"><input id="gjCheck" type="checkbox" /><span style="color:#636366">&nbsp;高级&nbsp;&nbsp;&nbsp;</span></label>
+                    <label for="jjCheck"><input id="jjCheck" type="checkbox" /><span style="color:#636366">&nbsp;紧急&nbsp;&nbsp;&nbsp;</span></label>
+                    <var style="margin-right: 20px;margin-left: 40px;">站点类型:</var>
+                    <label for="egCheck"><input id="egCheck" type="checkbox" /><span style="color:#636366">&nbsp;二供&nbsp;&nbsp;&nbsp;</span></label>
+                </p>
+            </div>
+            <div class="sl_warning_top_r right">
+                <p><span class="sl_jj">紧急</span><span class="sl_gj">高级</span><span class="sl_pt">普通</span></p>
+            </div>
+        </div>
+        <ul class="nav nav-tabs" style="background:#fff;">
+			<li class="active"><a href="" data-toggle="tab">全部</a></li>
+			<li><a href="" data-toggle="tab"><i class=" fa fa-star" style="color: #ffc107;" ></i>&nbsp;我的关注(3)</a></li>
+			<li><a href="" data-toggle="tab"><i class=" fa fa-bell" style="color: #f00;" ></i>&nbsp;阈值报警(1)</a></li>
+			<li><a href="" data-toggle="tab"><i class=" fa fa-bolt" style="color: #f00;font-size: large;" ></i>&nbsp;硬件警报(1)</a></li>
+            <li><a href="" data-toggle="tab"><i class=" fa fa-exclamation-triangle" style="color: #f00" ></i>&nbsp;突变警报(1)</a></li>
+            <li><a href="" data-toggle="tab"><i class=" fa fa-history" style=" color: #f00; font-size: large;" ></i>&nbsp;超时警报(1)</a></li>
+		</ul>
+		<div id="mytab-content" class="tab-content">
+			<div class="sl_warning_block tab-pane fade in active" id="sl_all">
+                <ul class="clearfloat zlw_slxg">
+                    <li>
+                        <div class="sl_warning_block_item zlw_jjbj" style="width:100%;margin:0;">
+                            <div class="top">
+                                <p class="col">
+                                    <i class="iconfont ml5px icon-fangzidaiquan" style="color: #f00;"></i>力高国际城#低区
+                                </p>
+                                <p class="col2">
+                                    <i class="fa fa-edit right" style="margin-left: 17px;line-height: 35px;"></i>
+                                    <i class="fa fa-star-o right xing" style="line-height: 35px;margin-left: 10px;color: #ffc107;"></i>
+                                </p>
+                            </div>
+                            <div class="main">
+                                <div class="clearfloat sl_pressure">
+                                    <p class="left" style="padding-left: 3px 0px;"><span style="color: #f00;font-size: 16px;">&nbsp;&nbsp;</span><span>/&nbsp;&nbsp;</span></p>
+                                    <p class="right" style="padding: 3px 12px;background-color: #f6f4fc;">二供</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                   <span>报警内容</span>
+                                   <p class="right chaochu" style="color: #f00;">设备掉线(紧急)</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>报警时间</span>
+                                    <p class="right chaochu" style="color: #f00;">2019-12-12 00:54:00</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>持续时间  </span>
+                                    <p class="right chaochu" style="color: #f00;">35天8时65分</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="sl_warning_block_item zlw_gjbj" style="width:100%;margin:0;">
+                            <div class="top">
+                                <p class="col">
+                                    <i class="iconfont ml5px icon-fangzidaiquan" style="color: #ff8800;"></i>力高国际城#低区#中区
+                                </p>
+                                <p class="col2">
+                                    <i class="fa fa-edit right" style="margin-left: 17px;line-height: 35px;"></i>
+                                    <i class="fa fa-star-o xing right" style="line-height: 35px;margin-left: 10px;color: #ffc107;"></i>
+                                </p>
+                            </div>
+                            <div class="main">
+                                <div class="clearfloat sl_pressure">
+                                    <p class="left" style="padding-left: 3px 0px;"><span style="color: #ff8800;font-size: 16px;">&nbsp;&nbsp;</span><span>/&nbsp;&nbsp;</span></p>
+                                    <p class="right" style="padding: 3px 12px;background-color: #f6f4fc;">二供</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                   <span>报警内容</span>
+                                   <p class="right chaochu" style="color: #ff8800;">设备掉线(紧急)</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>报警时间</span>
+                                    <p class="right chaochu" style="color: #ff8800;">2019-12-12 00:54:00</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>持续时间  </span>
+                                    <p class="right chaochu" style="color: #ff8800;">35天8时65分</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="sl_warning_block_item zlw_ptbj" style="width:100%;margin:0;">
+                            <div class="top">
+                                <p class="col">
+                                    <i class="iconfont ml5px icon-fangzidaiquan" style="color: #00bfe2;"></i>力高国际城#低区
+                                </p>
+                                <p class="col2">
+                                    <i class="fa fa-edit right" style="margin-left: 17px;line-height: 35px;"></i>
+                                    <i class="fa fa-star-o xing right" style="line-height: 35px;margin-left: 10px;color: #ffc107;"></i>
+                                </p>
+                            </div>
+                            <div class="main">
+                                <div class="clearfloat sl_pressure">
+                                    <p class="left" style="padding-left: 3px 0px;"><span style="color: #00bfe2;font-size: 16px;">1.21MPa&nbsp;&nbsp;</span><span>/&nbsp;&nbsp;1.21MPa</span></p>
+                                    <p class="right" style="padding: 3px 12px;background-color: #f6f4fc;">二供</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                   <span>报警内容</span>
+                                   <p class="right chaochu" style="color: #00bfe2;">出水实际压力过高(紧急)</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>报警时间</span>
+                                    <p class="right chaochu" style="color: #00bfe2;">2019-12-12 00:54:00</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>持续时间  </span>
+                                    <p class="right chaochu" style="color: #00bfe2;">35天8时65分</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="sl_warning_block_item zlw_ptbj" style="width:100%;margin:0;">
+                            <div class="top">
+                               <p class="col">
+                                    <i class="iconfont ml5px icon-fangzidaiquan" style="color: #00bfe2;"></i>力高国际城#低区
+                                </p>
+                                <p class="col2">
+                                    <i class="fa fa-edit right" style="margin-left: 17px;line-height: 35px;"></i>
+                                    <i class="fa fa-star-o xing right" style="line-height: 35px;margin-left: 10px;color: #ffc107;"></i>
+                                </p>
+                            </div>
+                            <div class="main">
+                                <div class="clearfloat sl_pressure">
+                                    <p class="left" style="padding-left: 3px 0px;"><span style="color: #00bfe2;font-size: 16px;">1.21MPa&nbsp;&nbsp;</span><span>/&nbsp;&nbsp;1.21MPa</span></p>
+                                    <p class="right" style="padding: 3px 12px;background-color: #f6f4fc;">二供</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                   <span>报警内容</span>
+                                   <p class="right chaochu" style="color: #00bfe2;">出水实际压力过高(紧急)</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>报警时间</span>
+                                    <p class="right chaochu" style="color: #00bfe2;">2019-12-12 00:54:00</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>持续时间  </span>
+                                    <p class="right chaochu" style="color: #00bfe2;">35天8时65分</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="sl_warning_block_item zlw_jjbj" style="width:100%;margin:0;">
+                            <div class="top">
+                               <p class="col">
+                                    <i class="iconfont ml5px icon-fangzidaiquan" style="color: #f00;"></i>力高国际城#低区
+                                </p>
+                                <p class="col2">
+                                    <i class="fa fa-edit right" style="margin-left: 17px;line-height: 35px;"></i>
+                                    <i class="fa fa-star-o right xing" style="line-height: 35px;margin-left: 10px;color: #ffc107;"></i>
+                                </p>
+                            </div>
+                            <div class="main">
+                                <div class="clearfloat sl_pressure">
+                                    <p class="left" style="padding-left: 3px 0px;"><span style="color: #f00;font-size: 16px;">1.21MPa&nbsp;&nbsp;</span><span>/&nbsp;&nbsp;1.21MPa</span></p>
+                                    <p class="right" style="padding: 3px 12px;background-color: #f6f4fc;">二供</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                   <span>报警内容</span>
+                                   <p class="right chaochu" style="color: #f00;">出水实际压力过高(紧急)</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>报警时间</span>
+                                    <p class="right chaochu" style="color: #f00;">2019-12-12 00:54:00</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>持续时间  </span>
+                                    <p class="right chaochu" style="color: #f00;">35天8时65分</p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                
+            </div>
+		</div>
+	
+    </div>
+
+    <div class="modal fade" id="feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="font-size:20px;color:#000;opacity:1;">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">报警反馈</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="sl_baojing">
+                        <ul>
+                            <li><span class="col-md-3">报警信息:</span><span>力高国际城#低区/出水实际压力过高/1.12(MPa)</span></li>
+                            <li><span class="col-md-3">反馈信息:</span><textarea ></textarea></li>
+                            <li><span class="col-md-3">转工单处理：</span><input type="checkbox"></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="btn_submit" class="btn btn-info" data-dismiss="modal">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            $('#myTab a').click(function(){
+                $(this).tab('show')
+            })
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+﻿@model List<WNMS.Model.DataModels.SysModuleButton>
+@*<div class="btn-group mar15px pull-right mr10px">*@
+
+@if (Model.Count > 0)
+{
+    var btns = Model.Where(a => a.Pid == 0).OrderBy(a => a.Sort).ToList();
+
+    foreach (var item in btns)
+    {
+        var children = Model.Where(a => a.Pid == item.ModuleButtonId).OrderBy(a => a.Sort).ToList();
+        if (children.Count > 0)
+        {
+            <div class="btn-group">
+                <button type="button" class="@item.ButtonClass" data-toggle="dropdown">
+                    <i class="@item.ButtionIcon"></i>
+                    @item.ButtonName
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    @{
+                        foreach (var cItem in children)
+                        {
+                            if (cItem.ButtionIcon == "export")
+                            {
+                                <button class="@item.ButtonClass" style="background-color:#428bca;border-color:#428bca">
+                                    <form id="@cItem.ButtonId" enctype="multipart/form-data" method="POST">
+                                        <input type="file" name="excelfile" onchange="@cItem.Url" />
+                                    </form>
+                                </button>
+                            }
+                            else
+                            {
+                                <li><a id="@cItem.ButtonId">@cItem.ButtonName</a></li>
+                            }
+                        }
+                    }
+                </ul>
+            </div>
+        }
+        else
+        {
+            <button type="button" id="@item.ButtonId" class="@item.ButtonClass"><i class="@item.ButtionIcon"></i> @item.ButtonName</button>
+        }
+    }
+}
+@*</div>*@

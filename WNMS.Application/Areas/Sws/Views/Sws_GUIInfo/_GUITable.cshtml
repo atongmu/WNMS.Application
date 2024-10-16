@@ -1,0 +1,49 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Model.CustomizedClass;
+@model IEnumerable<GUIInfo>
+<thead>
+    <tr>
+        <th data-checkbox="true"></th>
+        <th data-field="Num" data-visible="false"></th>
+        <th data-sortable="true" data-field="GUIName">工艺图名称</th>
+        <th data-field="DeviceType">设备分类</th>
+        <th data-field="DeviceTypeName">设备类型</th>
+        <th data-field="PumpNum">泵数量</th>
+        <th data-field="PageURL">页面地址</th>
+        <th data-field="ImageURL">图片</th>
+
+    </tr>
+</thead>
+<tbody>
+    @{
+        foreach (var item in Model)
+        {
+        <tr>
+            <td data-checkbox="true"></td>
+            <td data-visible="false">@item.Num</td>
+            <td>@item.GUIName</td>
+            @if (item.DeviceType == 1)
+            {
+                <td>二供设备</td>
+            }
+            else
+            {
+                if (item.DeviceType == 2)
+                {
+                    <td>直饮水设备</td>
+                }
+                else
+                {
+                    <td>--</td>
+                }
+            }
+            <td>@item.DeviceTypeName</td>
+            <td>@item.PumpNum</td>
+            <td>@item.PageURL</td>
+            <td><img  src="@item.ImageURL" style="height:100px;width:200px;"/></td>
+        </tr>
+        }
+    }
+</tbody>

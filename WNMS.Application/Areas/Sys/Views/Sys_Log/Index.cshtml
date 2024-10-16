@@ -1,0 +1,313 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>日志管理</title>
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    @*<link href="~/css/AdminLTE.min.css" rel="stylesheet" />*@
+    <script src="~/js/jquery.min.js"></script>
+
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link href="~/css/anniu.css" rel="stylesheet" />
+    <link href="~/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .zlw_manageconrgconsan .bootstrap3, .fixed-height {
+            height: 100%;
+        }
+
+        .zlw_manageconrgconsan .fixed-table-container {
+            height: calc(100% - 60px) !important
+        }
+
+        .clearfloat {
+            position: absolute;
+            left: 0px;
+            top: 0;
+            height: 100%;
+            margin: 10px;
+        }
+    </style>
+    <!-- bootstrap -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- 树 -->
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <link href="~/lib/ztree/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript">
+        var $table;
+        $(window).load(function () {
+            $('#tabledata').bootstrapTable({ height: $(window).height() - 50 })
+            InitMainTable()
+        });
+        function InitMainTable() {
+            //记录页面bootstrap-table全局变量$table，方便应用
+            var queryUrl = '/Sys/Sys_Log/LoadInfosList';
+            $table = $('#tabledata').bootstrapTable({
+                url: queryUrl,                      //请求后台的URL（*）
+                method: 'GET',                      //请求方式（*）
+                //toolbar: '#toolbar',              //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 20,                     //每页的记录行数（*）
+                pageList: [10, 15, 20],        //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索
+                strictSearch: true,
+                //showColumns: true,                  //是否显示所有的列（选择显示的列）
+                //showRefresh: true,                  //是否显示刷新按钮
+                //minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: true,                //是否启用点击选中行
+                height: $(window).height() - 50,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+                // showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+                // cardView: false,                    //是否显示详细视图
+                // detailView: false,                  //是否显示父子表
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        pageSize: params.limit,                         //页面大小
+                        pageIndex: (params.offset / params.limit) + 1,   //页码
+                        sort: params.sort == undefined ? "LogDate" : params.sort,      //排序列名
+                        sortOrder: params.order, //排位命令（desc，asc）
+                        beginTime: $("#BeginDate").val(),
+                        endTime: $("#EndDate").val(),
+                        username: $("#username").val(),
+                    };
+                    return temp;
+                },
+                columns: [
+                    //{
+                    //checkbox: true,
+                    //visible: true
+                    //},
+                    {
+                        field: 'ID',
+                        title: 'ID',
+                        //sortable: true
+                    }, {
+                        field: 'LogDate',
+                        title: '日期',
+                        sortable: true,
+                        width: 200,
+                        formatter: function (value, row, index) {
+                            return changeDateFormat(value)
+                        }
+                    }, {
+                        field: 'LogLevel',
+                        title: '级别',
+                        formatter: function (value, row, index) {
+                            if (value == "Info") {
+                                return "<button class='btn btn-sm  btn-info'>" + value + "</button>"
+                            } else if (value == "Warn") {
+                                return "<button class='btn btn-sm btn-warning'>" + value + "</button>"
+                            } else {
+                                return "<button class='btn btn-sm btn-danger'>" + value + "</button>"
+                            }
+                        }
+                        //sortable: true
+                    },
+                    {
+                        field: 'LogMessage',
+                        title: '内容',
+                        //sortable: true
+                    },
+                    {
+                        field: 'NickName',
+                        title: '用户名',
+                        //sortable: true
+                    },
+                    {
+                        field: 'IP',
+                        title: '用户IP',
+                        //sortable: true
+                    }],
+                responseHandler(res) {
+                    // 修改返回
+                   var aa = JSON.parse(res.rows);
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+                },
+                onLoadSuccess: function (res) {
+                },
+                onLoadError: function () {
+                },
+                onDblClickRow: function (row, $element) {
+                    var id = row.ID;
+                    //EditViewById(id, 'view');
+                },
+                onPostBody: function () {
+                    //获取渲染后的数据列td的宽度赋值给对应头部的th,固定表头和列就对齐了
+                    var header = $(".fixed-table-header table thead tr th");
+                    var body = $(".fixed-table-header table tbody tr td");
+                    var footer = $(".fixed-table-header table tr td");
+                    body.each(function () {
+                        header.width((this).width());
+                        footer.width((this).width());
+                    });
+                }
+            });
+        };
+        $(function () {
+            //初始化bootstrap-table的内容
+            InitMainTable();
+            $("#btnSelect").click(function () {
+                if ($("#BeginDate").val() > $("#EndDate").val()) {
+                    layer.msg("开始日期不能大于结束日期");
+                    return;
+                }
+                var temp = {                        //页面大小
+                    pageNumber: 1,   //页码
+                };
+                $table.bootstrapTable('refresh', temp);
+            })
+        })
+
+        //固定表头
+        $(window).resize(function () {
+            $('#tabledata').bootstrapTable('resetView');
+        });
+        function changeDateFormat(cellval) {
+            if (cellval != null) {
+                var date = cellval.replace("T", " ");
+                return date;
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="zlw_manage">
+        <!-- star right -->
+        <div class="zlw_manageconrg" style="width:100%">
+            <div class="zlw_manageconrgcon">
+                <!-- star 查询 -->
+                <div class="zlw_manageconrgconyi" style="border-bottom:1px solid #ddd">
+                    <ul class="clearfloat">
+                        <li>
+                            <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" placeholder="开始时间" id="BeginDate" class="hyl_input hyl_input-sm" style="display:inline" value="@ViewBag.beginDate">
+                            <span class="pl10px pr10px">至</span>
+                            <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" placeholder="结束时间" id="EndDate" class="hyl_input hyl_input-sm mr10px" value="@ViewBag.endDate">
+                            <input type="text" id="username" class="hyl_input" placeholder="用户名查询" />
+                            <button id="btnSelect" class="hyl_btn"> <i class="fa fa-search"></i> 查询</button>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- 查询 end -->
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan" style="height:calc(100% - 50px);margin-top:10px">
+                    <table id="tabledata" class=" table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- right end -->
+    </div>
+    <script>
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+    </script>
+    <script>
+        // 按钮切换样式
+        $(function () {
+            $(".zlw_time_con li").click(function () {
+                $(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+            });
+            // 数据
+
+            $('.fixed-table-loading').hide()
+        });
+    </script>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        模态框（Modal）标题
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    在这里添加一些文本
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</body>
+</html>

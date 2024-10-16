@@ -1,0 +1,39 @@
+﻿<table class="table table-striped table-bordered" id="User">
+    <thead>
+        <tr>
+            <th data-field="rownumber"   width="50px">排名</th>
+            <th data-field="DeviceName">设备名称</th>
+            <th data-sortable="true" data-field="pre">同比</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var item in Model)
+            {
+                <tr>
+
+                    @{
+                        if (item.rownumber == 1)
+                        {
+                            <td class="textCenter"  width="50px"><span class="top1">@item.rownumber</span></td>
+                        }
+                        else if (item.rownumber == 2)
+                        {
+                            <td class="textCenter"  width="50px"><span class="top2">@item.rownumber</span></td>
+                        }
+                        else if (item.rownumber == 3)
+                        {
+                            <td class="textCenter" width="50px"><span class="top3">@item.rownumber</span></td>
+                        }
+                        else
+                        {
+                            <td class="textCenter" width="50px"><span class="top-c">@item.rownumber</span></td>
+                        }
+                    }
+                    <td>@item.DeviceName</td>
+                    <td>@(Math.Round((double)(item.pre == null ? 0.0 : item.pre), 2))</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

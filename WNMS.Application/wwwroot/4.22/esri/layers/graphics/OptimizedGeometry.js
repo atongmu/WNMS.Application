@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define(["../../chunks/_rollupPluginBabelHelpers"],function(h){return function(){function c(a=[],b=[],d=!1){this.lengths=null!=a?a:[];this.coords=null!=b?b:[];this.hasIndeterminateRingOrder=d}var f=c.prototype;f.forEachVertex=function(a){let b=0;this.lengths.length||a(this.coords[0],this.coords[1]);for(let d=0;d<this.lengths.length;d++){const g=this.lengths[d];for(let e=0;e<g;e++)a(this.coords[2*(e+b)],this.coords[2*(e+b)+1]);b+=g}};f.clone=function(a){return a?(a.set(this.coords),new c(this.lengths.slice(),
+a,this.hasIndeterminateRingOrder)):new c(this.lengths.slice(),this.coords.slice(),this.hasIndeterminateRingOrder)};h._createClass(c,[{key:"isPoint",get:function(){return 0===this.lengths.length}},{key:"maxLength",get:function(){return Math.max(...this.lengths)}},{key:"size",get:function(){return this.lengths.reduce((a,b)=>a+b)}}]);return c}()});

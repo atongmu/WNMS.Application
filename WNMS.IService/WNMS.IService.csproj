@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName></SccProjectName>
+    <SccProvider></SccProvider>
+    <SccAuxPath></SccAuxPath>
+    <SccLocalPath></SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WNMS.Model\WNMS.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="t4IBLL.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>t4IBLL.cs</LastGenOutput>
+    </None>
+    <None Update="t4IBLL.txt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>t4IBLL.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="t4IBLL.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>t4IBLL.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

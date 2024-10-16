@@ -1,0 +1,67 @@
+﻿
+@using WNMS.Model.DataModels;
+<style>
+    th td {
+        text-align: center;
+    }
+</style>
+<table class="table table-striped table-bordered" id="User">
+    @{ SwsDataInfo datainfo = ViewBag.DataInfo as SwsDataInfo;}
+    <thead>
+        <tr>
+            <th style="display:none" id="_id">id</th>
+            <th style="text-align:center">更新时间</th>
+            <th style="text-align:center">@(datainfo.Cnname)</th>
+            <th style="text-align:center">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            //var ss = JsonConvert.SerializeObject(item);
+            //var json = JsonConvert.DeserializeObject(ss);
+            <tr>
+                <td style="display:none">@item["_id"]</td>
+                <td style="width:43%;text-align:center">@item["UpdateTime"].AsDateTime.ToString()</td>
+                @if (item["AnalogValues"].ToString() == "{ }")
+                {
+                    <td style="width:43%;text-align:center">-- </td>
+                }
+                else
+                {
+                    <td style="width:43%;text-align:center">@item["AnalogValues"][datainfo.DataId.ToString()].ToDouble() </td>
+                }
+                <td style="text-align:center"><a style="cursor: pointer;width: 80px;padding:3px 18px;background:#0094ff;border-radius:10px;color:#fff;">矫正</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script src="~/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $("td").click(function () {
+
+        var time = $(this).parent("tr").find("td").eq(1).text();
+        var id = $(this).parent("tr").find("td").eq(0).text();
+        var value = $(this).parent("tr").find("td").eq(2).text();
+        var Equid = @(ViewBag.EquipmentId);
+        var DataID = @(datainfo.DataId);
+        if (value.indexOf("--")>-1) {
+            alert("该数据不存在");
+        } else {
+            iframeLay("矫正数据", "30%", "60%", "/Sws/Sws_Device02RunLog/Update?Time=" + time + "&Value=" + value + "&EquipmentID=" + Equid + "&DataID=" + DataID + "&id=" + id);
+        }
+    })
+    function iframeLay(title, width, height, url) {
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: true,
+            shade: 0.7,
+            area: [width, height],
+            content: url,
+            btn: ["关闭"],
+            end: function () {
+            }
+        });
+    }
+</script>

@@ -1,0 +1,4 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define(["exports"],function(b){b.ResourceType=void 0;var a=b.ResourceType||(b.ResourceType={});a[a.Texture=0]="Texture";a[a.Buffer=1]="Buffer";a[a.VAO=2]="VAO";a[a.VertexShader=3]="VertexShader";a[a.FragmentShader=4]="FragmentShader";a[a.Program=5]="Program";a[a.Framebuffer=6]="Framebuffer";a[a.Renderbuffer=7]="Renderbuffer";a[a.COUNT=8]="COUNT";b.BASE_TEXTURE_UNIT=33984;b.DepthStencilAttachment=33306;Object.defineProperty(b,"__esModule",{value:!0})});

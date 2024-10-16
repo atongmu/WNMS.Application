@@ -1,0 +1,231 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>延期申请</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap-table.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../lib/layer/layer.js"></script>
+    <style>
+        .zlw_manage, .zlw_managecon {
+            background: #fff
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_manage">
+        <div class="zlw_managecon" style="padding-left:0px">
+            <div class="zlw_manageconrgcon">
+                <div class="overflow" style="border-bottom:1px solid #ddd;">
+                    <div class="btn-group pull-left mt10px ml10px mb10px">
+                        <input type="text" id="searchtext" class="hyl_input" placeholder="输入工单编号" autocomplete="off">
+                        <button class="hyl_btn" id="searchbtn"> <i class="fa fa-search"></i> 查询</button>
+                    </div>
+                </div>
+
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan" style="height:calc(100% - 50px);margin-top:10px">
+                    <table id="table" class="table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var pageindex = 1;
+        var order = "", sort = "";
+        $(function () {
+            var $table = $("#table");
+            $table.bootstrapTable({
+                method: "post",
+                url: "/Wo/WorkExtension/QueryTable",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                smartDisplay: false,
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 15, 20],        //可供选择的每页的行数（*）
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        pagesize: params.limit,   //每页条数
+                        pageindex: (params.offset / params.limit) + 1, //页码
+                        SearchText: $("#searchtext").val(),
+                        order: params.order,
+                        sort: params.sort == undefined ? "ExtensionTime" : params.sort
+
+                    };
+                    order = params.order;
+                    sort = params.sort == undefined ? "ExtensionTime" : params.sort;
+                    pageindex = (params.offset / params.limit) + 1;
+                    return temp;
+                },//传递参数（*）
+                uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+
+                responseHandler: function (res) {
+                    var aa = JSON.parse(res.rows);
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+                },
+                columns: [
+                    {
+                        field: 'rownumber',
+                        title: '序号'
+                    }, {
+                        sortable: true,
+                        field: 'Num',
+                        title: '工单编号',
+                        width: 250,
+                        formatter: function (value, row, index) {
+                            return '<a href="#" style="color: blue" onclick="LoadWoDetalits(\'' + row.WOID + '\' )">' + value + '</a>';
+                        }
+                    },
+                    {
+                        sortable: true,
+                        field: 'Account',
+                        title: '申请人',
+                        width: 250,
+                    },
+
+                    {
+                        sortable: true,
+                        field: 'ExtensionTime',
+                        title: '申请时间',
+                        width: 250,
+                        formatter: function (value, row, index) {
+                            return changeDateFormat(value)
+                        }
+                    },
+                    {
+                        field: 'CompleteTime',
+                        title: '预期完成时间',
+                        width: 250,
+                        formatter: function (value, row, index) {
+                            return changeDateFormat(value)
+                        }
+                    },
+                    {
+                        field: 'AuditorName',
+                        title: '审核人'
+                    },
+                    {
+                        field: 'State',
+                        title: '审核状态',
+                        formatter: Auditstatus
+                    },
+                    {
+                        field: 'Reason',
+                        title: '申请原因',
+                        width: 350,
+                    },
+                    {
+                        field: 'ID',
+                        title: '操作',
+                        width: 150,
+                        formatter: project_status
+                    }
+
+                ]
+
+            });
+        })
+        $("#searchtext").keydown(function (e) {
+            if (e.keyCode == 13) {
+                pageindex = 1;
+                refreshTable();
+                return false;
+            }
+        });
+        function changeDateFormat(cellval) {
+            if (cellval != null) {
+                var date = cellval.replace("T", " ");
+                return date;
+            }
+        }
+        function project_status(value, row, index) {
+            if (row.State == "1" || row.State == "2") {
+                var html = "<button disabled class='btn btn-sm  btn-success' onclick='Audit(" + value + ",1)'>通过</button>  <button disabled class='btn btn-sm   btn-danger' onclick='Audit(" + value + ",2)'>驳回</button>";
+            } else {
+                var html = "<button class='btn btn-sm  btn-success' onclick='Audit(" + value + ",1)'>通过</button>  <button class='btn btn-sm   btn-danger' onclick='Audit(" + value + ",2)'>驳回</button>";
+            }
+
+            return html;
+        }
+        //审核
+        function Audit(woid, state) {
+            layer.confirm("确定审核？", {
+                btn: ['确定', '取消']
+            }, function () {
+                $.post("/Wo/WorkExtension/ReviewExtension", { ID: woid, State: state }, function (data) {
+                    if (data == "ok") {
+                        layer.msg("审核成功");
+                        pageindex = 1;
+                        refreshTable();
+                    } else if (data == "Exit") {
+                        layer.msg("该申请已审核");
+                    } else {
+                        layer.msg("审核失败");
+                    }
+                })
+            }, function () {
+
+            });
+        }
+        function Auditstatus(value, row, index) {
+            if (value == 1) {
+                return "<span class='label label-success'>审核通过</span>";
+            } else if (value == 2) {
+                return "<span class='label label-danger'>审核未通过</span>";
+            } else {
+                return "<span class='label label-warning'>未审核</span>";
+            }
+        }
+        $("#searchbtn").click(function () {
+            pageindex = 1;
+            refreshTable();
+        })
+        function refreshTable() {
+            var opt = {
+                pageNumber: pageindex,
+            };
+            $("#table").bootstrapTable('refresh', opt);
+        }
+         //工单详情
+        function LoadWoDetalits(id) {
+            iframes(['工单详情'], "90%", "90%", "/Wo/WorkHandle/LoadWODetails/" + id);
+        }
+        function iframes(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.8,
+                area: [width, height],
+                content: url
+            });
+        }
+    </script>
+</body>
+</html>

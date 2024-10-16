@@ -1,0 +1,1602 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WNMS.Application</name>
+    </assembly>
+    <members>
+        <member name="M:WNMS.Application.Areas.Com.Controllers.AccessoriesChartController.CycleImportExport">
+            <summary>
+            导出器件生命周期数据导入模板
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Com.AccessoriesController.QueryAccessoriesTable(System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            数据查询
+            </summary>
+            <param name="pagesize">条数</param>
+            <param name="pageindex">页码</param>
+            <param name="SearchText">查询条件</param>
+            <param name="order">排序</param>
+            <param name="sort"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Com.MaintenanceController.QueryMaintenanceTable(System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            数据查询
+            </summary>
+            <param name="pagesize">条数</param>
+            <param name="pageindex">页码</param>
+            <param name="SearchText">查询条件</param>
+            <param name="order">排序</param>
+            <param name="sort"></param>
+            <param name="time">时间</param>
+            <param name="beginDate">开始时间</param>
+            <param name="endDate">结束时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_AcessDoorJKController.ConvertObject``1(System.Object)">
+            <summary>
+            将object对象转换为实体对象
+            </summary>
+            <typeparam name="T">实体对象类名</typeparam>
+            <param name="asObject">object对象</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_AlarmReportsController.GetEchartData(System.String,System.String,System.String,System.String)">
+            <summary>
+            图表
+            </summary>
+            <param name="type"></param>
+            <param name="begindate"></param>
+            <param name="enddate"></param>
+            <param name="deviceid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_AlarmReportsController.ExportTable(System.String,System.String,System.String,System.String)">
+            <summary>
+            导出
+            </summary>
+            <param name="type"></param>
+            <param name="begindate"></param>
+            <param name="enddate"></param>
+            <param name="deviceid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_CameraController.GetCameraList(System.Int32)">
+            <summary>
+            点击泵房后，获取泵房下的摄像头列表
+            </summary>
+            <param name="stationID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_CameraController.GetCameraDetail(System.Int32)">
+            <summary>
+            获取摄像头信息，返回获取视频流url
+            </summary>
+            <param name="cameraID">摄像头ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_CameraController.GetDSSCameraList(System.Int32)">
+            <summary>
+            点击泵房后，获取泵房下的摄像头列表
+            </summary>
+            <param name="stationID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_CameraController.GetDSSCameraDetail(System.Int32)">
+            <summary>
+            获取摄像头信息，返回获取视频流url
+            </summary>
+            <param name="cameraID">摄像头ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_ConsumptionAnalysisController.ConsumptionAnalysis(System.String,System.Int32)">
+            <summary>
+            近七天以及月能耗分析
+            </summary>
+            <param name="type">七天或是一个月</param>
+            <param name="stationid">泵房ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_ConsumptionAnalysisController.ConsumptionDate(System.String,System.Int32)">
+            <summary>
+            单吨能耗表 日周月
+            </summary>
+            <param name="type">月周日</param>
+            <param name="stationid">泵房ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_ConsumptionAnalysisController.ConsumptionByDate(System.String,System.String,System.Int32)">
+            <summary>
+            能耗表单
+            </summary>
+            <param name="beginTime">开始时间</param>
+            <param name="endTime">结束时间</param>
+            <param name="stationid">泵房ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_DataCompareChartController.GetMongoDBHistorychart(System.String,System.String,System.String,System.String)">
+            <summary>
+            历史曲线点叠加数据查询（mongodb）
+            </summary>
+            <param name="date">区分小时，日值，月值</param>
+            <param name="beginDate">开始时间</param>
+            <param name="endDate">结束时间</param>
+            <param name="dataIDs">参数ID</param>
+            <param name="equID">设备ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_DataMonitoringController.GetMongoDBHistorychart(System.String,System.String,System.String,System.String)">
+            <summary>
+            历史曲线点叠加数据查询（mongodb）
+            </summary>
+            <param name="date">区分小时，日值，月值</param>
+            <param name="beginDate">开始时间</param>
+            <param name="endDate">结束时间</param>
+            <param name="dataIDs">参数ID</param>
+            <param name="equID">设备ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_DetailController.ShowDetail(System.Int32,System.Int32)">
+            <summary>
+            showTab=1显示泵站详情、showTab=2显示报警监控、showTab=3远程控制
+            /// </summary>
+            <param name="id"></param>
+            <param name="showTab"></param>
+            <returns></returns>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_DetailController.Pump.PState">
+            <summary>
+            运行方式
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_DetailController.Pump.PFault">
+            <summary>
+            运行状态
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_DetailController.Pump.Electric">
+            <summary>
+            电流
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_DetailController.Pump.Frequency">
+            <summary>
+            频率
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_DetailController.Pump.PumpName">
+            <summary>
+            泵的名称
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_DetailController.Pump.RunHour">
+            <summary>
+            运行时间
+            </summary>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_DeviceInfo01Controller.AddPage">
+            <summary>
+            添加
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_DeviceInfo01Controller.EditPage(System.Int64)">
+            <summary>
+            修改
+            </summary>
+            <param name="id">设备ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_DPCInfoController.LoadInfoList(System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            查询DPC数据
+            </summary>
+            <param name="pageSize"></param>
+            <param name="pageIndex"></param>
+            <param name="sort"></param>
+            <param name="sortOrder"></param>
+            <param name="dpcName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_DPCInfoController.DpcToNodes(DPC.Config.DPCConfig)">
+            <summary>
+            dpc转ztree节点
+            </summary>
+            <param name="dpc">dpc实体类</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_DPCInfoController.addAnalogsNode(System.Collections.Generic.List{DPC.Config.Resource.AnalogRes},System.Int32,System.Collections.Generic.List{WNMS.Application.Areas.Sws.Controllers.Sws_DPCInfoController.Node})">
+            <summary>
+            添加X指令集下的模拟量
+            </summary>
+            <param name="analogRes">X指令集下模拟量集合</param>
+            <param name="queryInsID">X指令集ID</param>
+            <param name="nodes">总节点集合</param>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_DPCInfoController.addDigitalsNode(System.Collections.Generic.List{DPC.Config.Resource.DigitalRes},System.Int32,System.Collections.Generic.List{WNMS.Application.Areas.Sws.Controllers.Sws_DPCInfoController.Node})">
+            <summary>
+            添加X指令集下的开关量
+            </summary>
+            <param name="digitalRes">X指令集下开关量集合</param>
+            <param name="parQueryInsID">X指令集ID</param>
+            <param name="nodes">总节点集合</param>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventAnalysisController.GetEventDetailData(System.String,System.String,System.String,System.Int32,System.String,System.Int32,System.Int32)">
+            <summary>
+            获取报警详情数据
+            </summary>
+            <param name="beginDate">报警开始时间</param>
+            <param name="endDate">报警结束时间</param>
+             <param name="type">时间类型</param>
+            <param name="detailType">详情的类型（1报警内容排序详情，2设备排序详情）</param>
+            <param name="content">筛选条件（1报警内容，2rtuid）</param>
+            <param name="limit">每页条数</param>
+            <param name="page">页数</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventDataController.LoadEventCount">
+            <summary>
+            报警数量
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventDataController.LoadEventPre">
+            <summary>
+            报警信息占比分析
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventDataController.LoadVendorEvent">
+            <summary>
+            各厂家报警占比
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventDataController.LoadEqEvent">
+            <summary>
+            设备报警排名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventDataController.GetEventData">
+            <summary>
+            获取报警信息频度排名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventDataController.LoadVendorRank">
+            <summary>
+            各厂家报警排名
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventDataController.GetRtuID(WNMS.Model.DataModels.SysUser)">
+            <summary>
+            获取用户下的设备
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventDataController.GetTimeStartByType(System.String,System.DateTime)">
+            <summary>
+            获取结束时间
+            </summary>
+            <param name="TimeType">Week、Month、Season、Year</param>
+            <param name="now"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventDataController.GetTimeEndByType(System.String,System.DateTime)">
+            <summary>
+            获取结束时间
+            </summary>
+            <param name="TimeType">Week、Month、Season、Year</param>
+            <param name="now"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventJKController.SendWo(System.Int64,System.Int16)">
+            <summary>
+            报警生成工单  先查看在报警方案中是否存在解决方案， 如果有则生成工单，如果没有则不生成，可以在报警监控中手动派发工单
+            工单派发人员，先看是否存在身份是客服的设备所属人员，有即可直接生成工单推送，没有则生成无人员工单
+            </summary>
+            <param name="rtuid">设备id</param>
+            <param name="eventSource">报警来源</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventSchemeController.DpcToNodes(DPC.Config.DPCConfig)">
+            <summary>
+            dpc转ztree节点
+            </summary>
+            <param name="dpc">dpc实体类</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventSchemeController.addAnalogsNode(System.Collections.Generic.List{DPC.Config.Resource.AnalogRes},System.Int32,System.Collections.Generic.List{WNMS.Application.Areas.Sws.Controllers.Sws_EventSchemeController.Node})">
+            <summary>
+            添加X指令集下的模拟量
+            </summary>
+            <param name="analogRes">X指令集下模拟量集合</param>
+            <param name="queryInsID">X指令集ID</param>
+            <param name="nodes">总节点集合</param>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_EventSchemeController.addDigitalsNode(System.Collections.Generic.List{DPC.Config.Resource.DigitalRes},System.Int32,System.Collections.Generic.List{WNMS.Application.Areas.Sws.Controllers.Sws_EventSchemeController.Node})">
+            <summary>
+            添加X指令集下的开关量
+            </summary>
+            <param name="digitalRes">X指令集下开关量集合</param>
+            <param name="parQueryInsID">X指令集ID</param>
+            <param name="nodes">总节点集合</param>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_FlowAnalysisController.GetTimeStartByType(System.String,System.DateTime)">
+            <summary>
+            获取结束时间
+            </summary>
+            <param name="TimeType">Week、Month、Season、Year</param>
+            <param name="now"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_FlowAnalysisController.GetTimeEndByType(System.String,System.DateTime)">
+            <summary>
+            获取结束时间
+            </summary>
+            <param name="TimeType">Week、Month、Season、Year</param>
+            <param name="now"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_FullViewController.GetTimeStartByType(System.String,System.DateTime)">
+            <summary>
+            获取结束时间
+            </summary>
+            <param name="TimeType">Week、Month、Season、Year</param>
+            <param name="now"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_FullViewController.GetTimeEndByType(System.String,System.DateTime)">
+            <summary>
+            获取结束时间
+            </summary>
+            <param name="TimeType">Week、Month、Season、Year</param>
+            <param name="now"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_RTUInfoController.DpcToNodes(DPC.Config.DPCConfig)">
+            <summary>
+            dpc转ztree节点
+            </summary>
+            <param name="dpc">dpc实体类</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_RTUInfoController.addAnalogsNode(System.Collections.Generic.List{DPC.Config.Resource.AnalogRes},System.Int32,System.Collections.Generic.List{WNMS.Application.Areas.Sws.Controllers.Sws_RTUInfoController.Node})">
+            <summary>
+            添加X指令集下的模拟量
+            </summary>
+            <param name="analogRes">X指令集下模拟量集合</param>
+            <param name="queryInsID">X指令集ID</param>
+            <param name="nodes">总节点集合</param>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_RTUInfoController.addDigitalsNode(System.Collections.Generic.List{DPC.Config.Resource.DigitalRes},System.Int32,System.Collections.Generic.List{WNMS.Application.Areas.Sws.Controllers.Sws_RTUInfoController.Node})">
+            <summary>
+            添加X指令集下的开关量
+            </summary>
+            <param name="digitalRes">X指令集下开关量集合</param>
+            <param name="parQueryInsID">X指令集ID</param>
+            <param name="nodes">总节点集合</param>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_RunEvaluationController.weekrange(System.DateTime,System.String@,System.String@)">
+            <summary>
+            本周起止时间
+            </summary>
+            <param name="dt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_StationAccessController.DpcToNodes(DPC.Config.DPCConfig)">
+            <summary>
+            dpc转ztree节点
+            </summary>
+            <param name="dpc">dpc实体类</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_StationAccessController.addAnalogsNode(System.Collections.Generic.List{DPC.Config.Resource.AnalogRes},System.Int32,System.Collections.Generic.List{WNMS.Application.Areas.Sws.Controllers.Sws_StationAccessController.Node})">
+            <summary>
+            添加X指令集下的模拟量
+            </summary>
+            <param name="analogRes">X指令集下模拟量集合</param>
+            <param name="queryInsID">X指令集ID</param>
+            <param name="nodes">总节点集合</param>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_StationAccessController.addDigitalsNode(System.Collections.Generic.List{DPC.Config.Resource.DigitalRes},System.Int32,System.Collections.Generic.List{WNMS.Application.Areas.Sws.Controllers.Sws_StationAccessController.Node})">
+            <summary>
+            添加X指令集下的开关量
+            </summary>
+            <param name="digitalRes">X指令集下开关量集合</param>
+            <param name="parQueryInsID">X指令集ID</param>
+            <param name="nodes">总节点集合</param>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_StationController.UpLoad(Microsoft.AspNetCore.Http.IFormFile,System.String,System.String,System.String)">
+            <summary>
+            文件上传（项目中所有文件上传都用这个）
+            </summary>
+            <param name="file">需要上传的文件</param>
+            <param name="paramID">添加页面，模块的ID（例如公告管理模块，为noticeID的值）</param>
+            <param name="idName">id的名称（例如notice模块，id的值为“NoticeID”）</param>
+            <param name="ControllerName">模块的名称（例如公告管理模块，值为“OA_Notice”）</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_StationController.MergeFile(System.Int64,System.String,System.String)">
+            <summary>
+            合并文件碎片（大文件上传时，先分片上传，临时存储，然后合并文件碎片）
+            </summary>
+            <param name="paramID">模块ID，通过公告ID获取文件路径</param>
+            <param name="fileName">文件名称，通过文件名称获取文件路径</param>
+            <param name="ControllerName">模块名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_StationController.GetFileInfo(System.Int32,System.String)">
+            <summary>
+            获取各功能模块下 上传的文件信息（包括问文件名称、大小、地址、类型等）
+            </summary>
+            <param name="id">模块ID</param>
+            <param name="classifyName">类型名称（枚举获取类型值时使用，例如公告管理模块，类型值为“通知公告”）</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_StationController.DeleteFile(System.String)">
+            <summary>
+            删除文件
+            </summary>
+            <param name="fileId">文件ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_StationController.DownloadFile(System.Int32)">
+            <summary>
+            下载文件
+            </summary>
+            <param name="fileId">文件ID</param>
+            <returns></returns>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_StationJKController.Pump.PState">
+            <summary>
+            运行方式
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_StationJKController.Pump.PFault">
+            <summary>
+            运行状态
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_StationJKController.Pump.Electric">
+            <summary>
+            电流
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_StationJKController.Pump.Frequency">
+            <summary>
+            频率
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_StationJKController.Pump.PumpName">
+            <summary>
+            泵的名称
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_StationJKController.Pump.RunHour">
+            <summary>
+            运行时间
+            </summary>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_TemplateController.LoadInfoList(System.Int32,System.Int32,System.String,System.String,System.String,System.Int32)">
+            <summary>
+            查询信息
+            </summary>
+            <param name="pageSize">分页</param>
+            <param name="pageIndex"></param>
+            <param name="sort">排序字段</param>
+            <param name="sortOrder">排序方式</param>
+            <param name="templateName">模板名称</param>
+            <param name="templateType">模板类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_UserPositionController.LoadUserPositionInfo">
+            <summary>
+            获取用户定位数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_UserPositionController.GetUserPositionInfoById(System.Int64)">
+            <summary>
+            
+            </summary>
+            <param name="mid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_UserPosition_gpsController.LoadUserPositionInfo">
+            <summary>
+            获取用户定位数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_UserPosition_gpsController.GetUserPositionInfoById(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="mid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sws.Controllers.Sws_ZDataMonitoringController.GetMongoDBHistorychart(System.String,System.String,System.String,System.String)">
+            <summary>
+            历史曲线点叠加数据查询（mongodb）
+            </summary>
+            <param name="date">区分小时，日值，月值</param>
+            <param name="beginDate">开始时间</param>
+            <param name="endDate">结束时间</param>
+            <param name="deviceID">参数ID</param>
+            <returns></returns>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_ZStationJKController.Pump.PState">
+            <summary>
+            运行方式
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_ZStationJKController.Pump.PFault">
+            <summary>
+            运行状态
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_ZStationJKController.Pump.Electric">
+            <summary>
+            电流
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_ZStationJKController.Pump.Frequency">
+            <summary>
+            频率
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_ZStationJKController.Pump.PumpName">
+            <summary>
+            泵的名称
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Areas.Sws.Controllers.Sws_ZStationJKController.Pump.RunHour">
+            <summary>
+            运行时间
+            </summary>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sys.Controllers.Sys_ModuleController.SetModuleInfo(System.String,System.String,System.Int32)">
+            <summary>
+            表单提交
+            </summary>
+            <param name="module">菜单权限数据  json</param>
+            <param name="moduleBtn">按钮权限数据 json</param>
+            <param name="key">判断添加还是编辑 0添加，1编辑</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sys.Controllers.Sys_RoleController.LoadInfoList(System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            查询信息
+            </summary>
+            <param name="pageSize">分页</param>
+            <param name="pageIndex"></param>
+            <param name="sort">排序字段</param>
+            <param name="sortOrder">排序方式</param>
+            <param name="roleName">角色名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sys.Controllers.Sys_RoleController.UpdateStatus(System.Int32,System.Boolean)">
+            <summary>
+            修改角色是否可用
+            </summary>
+            <param name="roleid">角色id</param>
+            <param name="status">状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sys.Controllers.Sys_RoleController.RoleAction(System.Int32)">
+            <summary>
+            获取第一步的权限 加载视图
+            </summary>
+            <param name="id">角色ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sys.Controllers.Sys_RoleController.SetRoleAction(System.Int32,System.String,System.String)">
+            <summary>
+            提交选中的权限数据
+            </summary>
+            <param name="roleId">角色ID</param>
+            <param name="actionids">模块权限</param>
+            <param name="btnActions">按钮权限</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sys.Controllers.UserController.UserAction(System.Int32)">
+            <summary>
+            获取第一步的权限 加载视图
+            </summary>
+            <param name="id">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sys.Controllers.UserController.SetUserAction(System.Int32,System.String,System.String)">
+            <summary>
+            提交选中的权限数据
+            </summary>
+            <param name="userId">用户ID</param>
+            <param name="actionids">模块权限</param>
+            <param name="btnActions">按钮权限</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sys.Sys_EarlyWarningPlanController.QueryPlansTable(System.Int32,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            数据查询
+            </summary>
+            <param name="pagesize">条数</param>
+            <param name="pageindex">页码</param>
+            <param name="SearchText">查询条件</param>
+            <param name="order">排序</param>
+            <param name="sort"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Sys.Sys_EarlyWarningPlanController.UpdateStatus(System.Int64,System.Boolean)">
+            <summary>
+            修改是否可用
+            </summary>
+            <param name="id">id</param>
+            <param name="status">状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wos.Controllers.EventsController.TreatEvent(System.Int64)">
+            <summary>
+            派发页面 数据获取
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wos.Controllers.EventsController.LoadAudio(System.Int64)">
+            <summary>
+            事件/工单获取音频
+            </summary>
+            <param name="id">事件或者工单ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wos.Controllers.FeedBackInfoController.GetFileInfo(System.Int32,System.String)">
+            <summary>
+            获取各功能模块下 上传的文件信息（包括问文件名称、大小、地址、类型等）
+            </summary>
+            <param name="id">模块ID</param>
+            <param name="classifyName">类型名称（枚举获取类型值时使用，例如公告管理模块，类型值为“通知公告”）</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wos.Controllers.FeedBackInfoController.DeleteFile(System.String)">
+            <summary>
+            删除文件
+            </summary>
+            <param name="fileId">文件ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wos.Controllers.FeedBackInfoController.DownloadFile(System.Int64)">
+            <summary>
+            下载文件
+            </summary>
+            <param name="fileId">文件ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wos.Controllers.WorkHandleController.LoadAudio(System.Int64,System.Int16,System.Int16)">
+            <summary>
+            加载音频文件
+            </summary>
+            <param name="id">事件/工单ID</param>
+            <param name="ResourceType">音频来源</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.AssignmentPlanController.AuditEq(System.Int64)">
+            <summary>
+            审核设备
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.AssignmentPlanController.AuditAssFinish(System.Int64)">
+            <summary>
+            标记巡检完成
+            </summary>
+            <param name="planid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.InsForwardController.Notice(System.Int64,System.Int16)">
+            <summary>
+            提醒客服接收工单
+            </summary>
+            <param name="ID">转发ID</param>
+            <param name="State">状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkForwardController.Notice(System.Int64)">
+            <summary>
+            提醒客服接收工单
+            </summary>
+            <param name="ID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkHandleController.LoadAudio(System.Int64,System.Int16,System.Int16)">
+            <summary>
+            加载音频文件
+            </summary>
+            <param name="id">事件/工单ID</param>
+            <param name="ResourceType">音频来源</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkHandleController.ChargebackWO(System.Int64)">
+            <summary>
+            退单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkHandleController.TurnDown(System.Int64)">
+            <summary>
+            驳回重做
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkHandleController.ReviewWO(System.Int64)">
+            <summary>
+            审核工单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkHandleController.WorkOrderAudit(System.Int64)">
+            <summary>
+            工单审核页面
+            </summary>
+            <param name="id"></param> 
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkHandleController.SetOrderAudit(System.Int64,System.Byte,System.String)">
+            <summary>
+            工单审核操作
+            </summary>
+            <param name="woID"></param>
+            <param name="state"></param>
+            <param name="treatidea"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkHandleController.AddDispatchWo(System.Int64,System.Int32,System.String,System.String)">
+            <summary>
+            派工单
+            </summary>
+            <param name="WOID"></param>
+            <param name="mid"></param>
+            <param name="CompDate"></param>
+            <param name="Description"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkHandleController.WoIsDispatch(System.Int64)">
+            <summary>
+            查询工单是否已经分派
+            </summary>
+            <param name="WOID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkHandleController.ManualDispatch">
+            <summary>
+            手动派发工单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkHandleController.LoadEq(System.Int64)">
+            <summary>
+            根据泵房ID
+            </summary>
+            <param name="id">泵房ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkHandleController.AddManualDispatch(System.Int32,System.String,System.String,System.Int16,System.Int16,System.Int32,System.Int64,System.String)">
+            <summary>
+             手动派工单
+            </summary>
+            <param name="mid">接收人</param>
+            <param name="CompDate">完成时间</param>
+            <param name="Description">备注</param>
+            <param name="level">处理级别</param>
+            <param name="degree">紧急程度</param>
+            <param name="stationid">泵房ID</param>
+            <param name="eqid">设备ID</param>
+            <param name="eventContent">事件描述</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Areas.Wo.Controllers.WorkTrunController.ChargebackWO(System.Int64)">
+            <summary>
+            退单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WNMS.Application.Services.BasicAuthorize">
+            <summary>
+            API权限验证
+            </summary>
+        </member>
+        <member name="T:WNMS.Application.Services.CustomAllowAnonymousAttribute">
+            <summary>
+            跟以前一样，可以支持匿名的
+            </summary>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.GetToken">
+            <summary>
+            获取Token
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LogIn(System.String,System.String,System.String)">
+            <summary>
+            登录
+            </summary>
+            <param name="Name">用户名</param>
+            <param name="Password">密码</param>
+            <param name="IMEI">手机IMEI</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.EditPassWord(System.Int32,System.String,System.String,System.String)">
+            <summary>
+            修改用户密码
+            </summary>
+            <param name="UserID">用户ID</param>
+            <param name="OldPwd">旧密码</param>
+            <param name="NewPwd">新密码</param>
+            <param name="ConfirmPwd">确认密码</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadUserInfo(System.Int32)">
+            <summary>
+            加载个人信息
+            </summary>
+            <param name="UserID">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.EditUserInfo(System.Int32,System.String,System.String,System.String)">
+            <summary>
+            编辑个人信息
+            </summary>
+            <param name="UserID">用户ID</param>
+            <param name="UserFullName">用户全名</param>
+            <param name="Phone">手机号</param>
+            <param name="WeChatID">微信号</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.IsAdmin(System.String,System.String)">
+            <summary>
+            是否是管理员
+            </summary>
+            <param name="UserName">用户名</param>
+            <param name="UserPwd">密码</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadTurnOn(System.String)">
+            <summary>
+            远程开灯
+            </summary>
+            <param name="Id">设备ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadTurnOff(System.String)">
+            <summary>
+            远程关灯
+            </summary>
+            <param name="Id">设备ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadVFDReset(System.String)">
+            <summary>
+            远程开门
+            </summary>
+            <param name="Id">设备ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadAllStationsOnMap(System.Int32)">
+            <summary>
+            获取地图显示泵房信息
+            </summary>
+            <param name="UserID">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadStationAndCameraInfo(System.Int32)">
+            <summary>
+            获取带视频监控的泵房配置信息
+            </summary>
+            <param name="UserID">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadAllStations">
+            <summary>
+            获取所有的泵站信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadRealTimeData(System.Int32)">
+            <summary>
+             获取总瞬时流量/昨日同期瞬时流量/增长率/总供水量/总用电量/平均吨水电耗
+            </summary>
+            <param name="StationID">泵房ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadWaterQualityData(System.Int32)">
+            <summary>
+            获取水质信息---泵房实时数据模块
+            </summary>
+            <param name="StationID">泵房ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadZNStationData(System.Int32)">
+            <summary>
+            获取智能泵房水质信息 
+            </summary>
+            <param name="StationID">泵房ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadDeviceJKDataByStationID(System.Int32,System.String)">
+            <summary>
+            获取设备实时数据信息---实时数据模块
+            </summary>
+            <param name="StationID"></param>
+            <param name="EquipID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadDeviceJKDataByStationID_Z(System.Int32,System.String)">
+            <summary>
+            获取设备实时数据信息---实时数据模块
+            </summary>
+            <param name="StationID"></param>
+            <param name="EquipID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadShowDataInfo(System.Int32)">
+            <summary>
+            加载手机端模拟量显示模板
+            </summary>
+            <param name="EquipmentType">设备类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadDayReportData(System.Int32)">
+            <summary>
+            获取每日用水量数据列表
+            </summary>
+            <param name="StationID">泵房ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadWeekReportData(System.Int32)">
+            <summary>
+            获取每周用水量数据列表
+            </summary>
+            <param name="StationID">泵房ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadMonthReportData(System.Int32)">
+            <summary>
+            获取每月用水量数据列表
+            </summary>
+            <param name="StationID">泵房ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadHistoryDataByFilter(System.Int32,System.String,System.DateTime,System.DateTime)">
+            <summary>
+            获取设备某一时间段内的历史数据
+            </summary>
+            <param name="StationID">泵房ID</param>
+            <param name="EquipID">设备ID</param>
+            <param name="BeginDate">查询开始时间</param>
+            <param name="EndDate">查询结束时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.IsFocusOnStation(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            添加泵房关注及取消关注
+            </summary>
+            <param name="UserID"></param>
+            <param name="StationID"></param>
+            <param name="IsAttention"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadAllStationsByUserID(System.Int32)">
+            <summary>
+            获取该用户下所有的泵站信息
+            </summary>
+            <param name="UserID">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadAllFocusOnStations(System.Int32)">
+            <summary>
+            获取该用户下所有关注的泵站信息
+            </summary>
+            <param name="UserID">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadAllOfflineStations(System.Int32)">
+            <summary>
+            获取该用户下所有的掉线设备信息
+            </summary>
+            <param name="UserID">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadAllFilterStations(System.Int32,System.String)">
+            <summary>
+            根据设备名称/通讯编号/泵房名称查询相关泵房信息
+            </summary>
+            <param name="UserID">用户ID</param>
+            <param name="StrFilter">查询条件</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadDeviceInfoByID(System.String,System.Int32)">
+            <summary>
+            设备详情
+            </summary>
+            <param name="EquipID">设备ID</param>
+            <param name="EquipmentType">设备类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadStationInfoByID(System.Int32)">
+            <summary>
+            泵房详情
+            </summary>
+            <param name="StationID">泵房ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadEventHistoryInfoByEquipID(System.String)">
+            <summary>
+            获取某套设备的报警历史记录
+            </summary>
+            <param name="EquipID">设备ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadEventHistoryInfoByPage(System.String,System.Int32)">
+            <summary>
+            获取某套设备的报警历史记录分页
+            </summary>
+            <param name="EquipID">设备ID</param>
+            <param name="pageIndex">分页</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadEventHistoryInfoByFilter(System.String,System.String,System.String)">
+            <summary>
+            获取某个时间段内设备的报警历史记录
+            </summary>
+            <param name="EquipID">设备ID</param>
+            <param name="BeginDate">查询开始时间</param>
+            <param name="EndDate">查询结束时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadEventCountByEquipID(System.String,System.DateTime,System.DateTime)">
+            <summary>
+            获取某套设备某个时间段内的报警次数及报警级别所在百分比
+            </summary>
+            <param name="EquipID">设备ID</param>
+            <param name="BeginDate">查询开始时间</param>
+            <param name="EndDate">查询结束时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadAllAlarmDevices(System.Int32)">
+            <summary>
+            获取该用户下所有发生报警的设备信息
+            </summary>
+            <param name="UserID">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadCurrentEventInfo">
+            <summary>
+            获取所有存在报警的设备信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadCutOffMessageInfo">
+            <summary>
+            获取停水消息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadPumpRealTimeData(System.Int32,System.String)">
+            <summary>
+            设备动画模块
+            </summary>
+            <param name="StationID"></param>
+            <param name="EquipID"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.ConvertDateTimeInt(System.DateTime)">
+            <summary>
+            时间戳
+            </summary>
+            <param name="time"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadWosByUserID(System.Int64)">
+            <summary>
+            获取用户需要处理的工单
+            </summary>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadWoByID(System.Int64)">
+            <summary>
+            根据工单ID获取用户需要处理的工单
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadResource(System.Int64,System.Int32)">
+            <summary>
+            获取工单事件的图片，音频
+            </summary>
+            <param name="eventId">事件ID</param>
+            <param name="type">类型（1图片，2音频，3视频）</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.AddOpInfo(System.String)">
+            <summary>
+            添加工单操作信息
+            </summary>
+            <param name="info">工单操作信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.AddWOExtensionInfo(System.String)">
+            <summary>
+            延期申请
+            </summary>
+            <param name="info">申请信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.AddApplyInfo(System.String,System.String)">
+            <summary>
+            延期、转发、退单申请
+            </summary>
+            <param name="info">申请信息</param>
+            <param name="type">申请类型 1退单2转发3延期</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadWOExtensionByUserID(System.Int64)">
+            <summary>
+            我的延期申请
+            </summary>
+            <param name="userId">申请人</param> 
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadWOForwardCount(System.Int64)">
+            <summary>
+            转发工单  查询已转发次数
+            </summary>
+            <param name="id">工单ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadMyForwardWO(System.Int32)">
+            <summary>
+            我的转发
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.ForwardWO(System.String)">
+            <summary>
+            转发或退单申请
+            </summary>
+            <param name="woForward">申请信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.ForwardWOOk(System.Int64,System.Int32)">
+            <summary>
+            同意/不同意接受转发工单
+            </summary>
+            <param name="id">转发申请的id</param>
+            <param name="isOk">是否同意</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadUserTeamByUserID(System.Int32)">
+            <summary>
+            转发接收人员
+            </summary>
+            <param name="userId">转发者</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadAllWoByUserId(System.Int64)">
+            <summary>
+            获取所有处理工单
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadHisWoByUserId(System.Int64)">
+            <summary>
+            获取历史工单
+            </summary>
+            <param name="userId">用户ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadWoByWOID(System.Int64)">
+            <summary>
+            根据工单ID获取用户需要处理的工单
+            </summary>
+            <param name="id">工单ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadWoOpByWOID(System.Int64)">
+            <summary>
+            根据工单ID 获取工单反馈信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.AddEventInfo(System.String,System.String,System.String)">
+            <summary>
+            事件上报
+            </summary>
+            <param name="eventInfo">事件信息</param>
+            <param name="woInfo">工单信息</param>
+            <param name="resourceInfo">资源信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.AddEventsInfo(System.String,System.String,System.String)">
+            <summary>
+            事件上报
+            </summary>
+            <param name="eventInfo">事件信息</param>
+            <param name="Degree">紧急程度</param>
+            <param name="HandleLevel">处理级别</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.AddResourceInfo(System.String)">
+            <summary>
+            事件上报的资源（图片，音频） 弃
+            </summary>
+            <param name="info">资源信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadStationInfo(System.Int64)">
+            <summary>
+            获取泵房信息
+            </summary>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.UploadFileInfo(System.String)">
+            <summary>
+            文件上传
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.UploadFiles">
+            <summary>
+            文件上传
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.EarlyWarningPlan(System.String)">
+            <summary>
+            获取解决方案
+            </summary>
+            <param name="id">工单中解决方案字段</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadHisByEqId(System.Int64)">
+            <summary>
+            设备历史维修记录
+            </summary>
+            <param name="eqId">设备ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadTempLateByID(System.Int64)">
+            <summary>
+            根据巡检任务ID，获取巡检项内容
+            </summary>
+            <param name="planID">巡检任务ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.AddInspectPlanCheckInfo(System.String,System.Boolean)">
+            <summary>
+            添加反馈信息
+            </summary>
+            <param name="info">json字符串</param>
+            <param name="isFinish">是否完成</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadConditionByID(System.Int64)">
+            <summary>
+            查询巡检情况
+            </summary>
+            <param name="planID">巡检ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadAssignList(System.Int32)">
+            <summary>
+            根据用户id查询巡检列表
+            </summary>
+            <param name="userid">用户id</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.LoadAssinByPlanid(System.Int64)">
+            <summary>
+            根据巡检ID获取巡检详情
+            </summary>
+            <param name="planid">巡检详情</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.InsForward(System.Int64,System.String,System.Int32,System.String)">
+            <summary>
+            巡检转发
+            </summary>
+            <param name="planid">移交的ID</param>
+            <param name="eqids">移交的设备</param>
+            <param name="userid">移交接收人</param>
+            <param name="content">移交原因</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.PlanTurn(System.String,System.String)">
+            <summary>
+            巡检退单申请
+            </summary>
+            <param name="planinfo">申请信息</param>
+            <param name="type">申请类型1-退单 2-延期</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.RevokeFB(System.Int64,System.Int64)">
+            <summary>
+            撤销反馈
+            </summary>
+            <param name="planid">巡检单ID</param>
+            <param name="eqid">巡检设备ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.PushWarnInfo">
+            <summary>
+            预警接口
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Services.WMNS_APIController.UpdatePosition(System.Int64,System.Double,System.Double)">
+            <summary>
+            上传坐标
+            </summary>
+            <param name="uerid">用户ID</param>
+            <param name="lat">纬度</param>
+            <param name="lng">经度</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Utility.Cache.ICache.Get``1(System.String)">
+            <summary>
+            读取缓存
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Utility.Cache.ICache.Add``1(System.String,``0,WNMS.Application.Utility.Cache.ObsloteType,System.Int32)">
+            <summary>
+            设置缓存
+            </summary>
+            <param name="key"></param>
+            <param name="data"></param>
+            <param name="cachetime"></param>
+        </member>
+        <member name="M:WNMS.Application.Utility.Cache.ICache.Contains(System.String)">
+            <summary>
+            是否包含
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Utility.Cache.ICache.Remove(System.String)">
+            <summary>
+            清除缓存
+            </summary>
+            <param name="key"></param>
+        </member>
+        <member name="M:WNMS.Application.Utility.Cache.ICache.Upate``1(System.String,``0,WNMS.Application.Utility.Cache.ObsloteType,System.Int32)">
+            <summary>
+            更新缓存
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="F:WNMS.Application.Utility.Cache.MemoryCacheExtensions._memoryCacheEntryOptions">
+            <summary>
+            缓存配置项
+            </summary>
+        </member>
+        <member name="M:WNMS.Application.Utility.Cache.MemoryCacheExtensions.Add``1(System.String,``0,WNMS.Application.Utility.Cache.ObsloteType,System.Int32)">
+            <summary>
+            添加
+            </summary>
+            <param name="key"></param>
+            <param name="data"></param>
+            <param name="cacheMin"></param>
+            <param name="obsloteType"></param>
+        </member>
+        <member name="M:WNMS.Application.Utility.Cache.MemoryCacheExtensions.Contains(System.String)">
+            <summary>
+            是否存在
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WNMS.Application.Utility.Cache.ObsloteType">
+            <summary>
+            Cache策略类型  永久/绝对过期/滑动过期
+            </summary>
+        </member>
+        <member name="F:WNMS.Application.Utility.Cache.ObsloteType.Never">
+            <summary>
+            永久
+            </summary>
+        </member>
+        <member name="F:WNMS.Application.Utility.Cache.ObsloteType.Absolutely">
+            <summary>
+            绝对过期
+            </summary>
+        </member>
+        <member name="F:WNMS.Application.Utility.Cache.ObsloteType.Relative">
+            <summary>
+            滑动过期 如果期间查询或更新，就再次延长
+            </summary>
+        </member>
+        <member name="T:WNMS.Application.Utility.Filters.IgonreLoginFilter">
+            <summary>
+            忽略登录 Filter
+            </summary>
+        </member>
+        <member name="T:WNMS.Application.Utility.Filters.IgonreActionFilter">
+            <summary>
+            忽略 Action Filter
+            </summary>
+        </member>
+        <member name="M:WNMS.Application.Utility.JsonHelper.JsonFileHelper.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="jsonName">根目录的相对途径包含文件名</param>
+        </member>
+        <member name="M:WNMS.Application.Utility.JsonHelper.JsonFileHelper.Read``1">
+            <summary>
+            读取Json返回实体对象
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Utility.JsonHelper.JsonFileHelper.Read``1(System.String)">
+            <summary>
+            根据节点读取Json返回实体对象
+            </summary>
+            <param name="section">根节点</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Utility.JsonHelper.JsonFileHelper.ReadList``1">
+            <summary>
+            读取Json返回集合
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Utility.JsonHelper.JsonFileHelper.ReadList``1(System.String)">
+            <summary>
+            根据节点读取Json返回集合
+            </summary>
+            <param name="section">根节点</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Utility.JsonHelper.JsonFileHelper.Write``1(``0)">
+            <summary>
+            写入文件
+            </summary>
+            <typeparam name="T">自定义对象</typeparam>
+            <param name="t"></param>
+        </member>
+        <member name="M:WNMS.Application.Utility.JsonHelper.JsonFileHelper.Write``1(System.String,``0)">
+            <summary>
+            写入指定section文件
+            </summary>
+            <typeparam name="T">自定义对象</typeparam>
+            <param name="t"></param>
+        </member>
+        <member name="M:WNMS.Application.Utility.JsonHelper.JsonFileHelper.Remove(System.String)">
+            <summary>
+            删除指定section节点
+            </summary>
+            <param name="section">根节点</param>
+        </member>
+        <member name="M:WNMS.Application.Utility.JsonHelper.JsonFileHelper.ReadSingleNode(System.String)">
+            <summary>
+            获取单个节点内容
+            </summary>
+            <param name="section">根节点</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Utility.SignalRChat.Hubs.ChatHub.Pushmessage(System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="eventinfo">rtuid,eventSource   两者用逗号隔开</param>
+            <param name="CancleEvent">报警消失还是发生，true 代表报警消失，false代表报警发生</param>
+            <returns></returns>
+        </member>
+        <member name="P:WNMS.Application.Utility.ValidateCode.ValidateCode.MaxLength">
+            <summary>
+            验证码的最大长度
+            </summary>
+        </member>
+        <member name="P:WNMS.Application.Utility.ValidateCode.ValidateCode.MinLength">
+            <summary>
+            验证码的最小长度
+            </summary>
+        </member>
+        <member name="M:WNMS.Application.Utility.ValidateCode.ValidateCode.CreateValidateCode(System.Int32)">
+            <summary>
+            生成验证码
+            </summary>
+            <param name="length">指定验证码的长度</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Utility.ValidateCode.ValidateCode.GetImageWidth(System.Int32)">
+            <summary>
+            得到验证码图片的长度
+            </summary>
+            <param name="validateNumLength">验证码的长度</param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Utility.ValidateCode.ValidateCode.GetImageHeight">
+            <summary>
+            得到验证码的高度
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Application.Utility.ValidateCode.ValidateCode.CreateValidateGraphic(System.String)">
+            <summary>
+            创建验证码的图片
+            </summary>
+            <param name="containsPage">要输出到的page对象</param>
+            <param name="validateNum">验证码</param>
+        </member>
+        <member name="M:WNMS.Utility.PanGu.SplitContent.cutWords(System.String)">
+            <summary>
+            分词方法
+            </summary>
+            <param name="words">待分词内容</param>
+            <param name="analyzer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WNMS.Utility.PanGu.SplitContent.HightLight(System.String,System.String)">
+            <summary>
+            搜索结果高亮显示
+            </summary>
+            <param name="keyword"> 关键字 </param>
+            <param name="content"> 搜索结果 </param>
+            <returns> 高亮后结果 </returns>
+        </member>
+        <member name="M:Common.WebApiActions.WebApiActions.GetSumData(WNMS.Model.CustomizedClass.DeviceJK,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            计算数据总和
+            </summary>
+            <param name="deviceJK"></param>
+            <param name="dataid"></param>
+            <returns></returns>
+            
+        </member>
+        <member name="M:Common.WebApiActions.WebApiActions.GetWaterQualityData(WNMS.Model.CustomizedClass.DeviceJK,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            获取水质信息
+            </summary>
+            <param name="deviceJK"></param>
+            <param name="dataid"></param>
+            <returns></returns>
+            
+        </member>
+        <member name="M:Common.WebApiActions.WebApiActions.GetDataByDataIDMongo(WNMS.Model.CustomizedClass.DeviceJK,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            设备动画---无负压泵数据处理方式
+            </summary>
+            <param name="deviceJK"></param>
+            <param name="dataid"></param>
+            <returns></returns>
+            
+        </member>
+        <member name="M:Common.WebApiActions.WebApiActions.GetYDataMongo(WNMS.Model.CustomizedClass.DeviceJK,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            设备动画---直饮水数据处理方式
+            </summary>
+            <param name="deviceJK"></param>
+            <param name="dataid"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

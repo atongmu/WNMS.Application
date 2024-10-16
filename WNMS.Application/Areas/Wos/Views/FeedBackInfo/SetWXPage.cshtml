@@ -1,0 +1,549 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+@model GdRepair
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SetWXPage</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/webuploader/webuploader.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <link href="~/lib/ztree/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <!--图片上传-->
+    <script src="~/lib/webuploader/webuploader.min.js"></script>
+    <link href="~/lib/image-upload/css/helper.css" rel="stylesheet" />
+    <link href="~/lib/image-upload/style.css" rel="stylesheet" />
+    <script src="~/lib/image-upload/upload_mergion.js"></script>
+
+    <script src="~/js/bootstrap.js"></script>
+    <style>
+        .star {
+            font-size: 25px;
+            color: red;
+            position: absolute;
+            top: -4px;
+            left: 60px
+        }
+
+        .form-group {
+            position: relative
+        }
+
+
+
+        .zlw_gs label {
+            /*line-height: 35px;*/
+            margin-bottom: 2px;
+        }
+
+            .zlw_gs label span {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                padding-top: 5px;
+                float: left;
+                margin-left: 5px;
+            }
+
+            .zlw_gs label i {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                float: left;
+                font-weight: bold;
+            }
+
+        .z-indx .col-sm-6 {
+            position: relative;
+            z-index: 1
+        }
+
+        .rowself {
+            background-color: #eee;
+            line-height: 30px;
+            margin-left: -20px;
+            margin-bottom: 15px;
+        }
+
+        /*#filePicker div:nth-child(2) {
+            width: 100% !important;
+            height: 100% !important;
+        }*/
+
+        #filePicker2 div:nth-child(1) {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        #uploader .queueList {
+            margin: 10px;
+        }
+
+        .upload_box {
+            padding: 0px;
+            max-height: 240px;
+            overflow-y: auto;
+            margin: 0;
+        }
+
+            .upload_box .upload_list {
+                padding: 10px 5px;
+                border-bottom: 1px solid #ddd;
+                position: relative;
+            }
+
+                .upload_box .upload_list:last-child {
+                    border: none;
+                }
+
+                .upload_box .upload_list img {
+                    width: 25px;
+                    height: 35px;
+                    margin-right: 10px;
+                    cursor: pointer;
+                }
+
+                .upload_box .upload_list label {
+                    cursor: pointer;
+                    font-weight: 500;
+                    color: #242424;
+                    font-size: 14px;
+                }
+
+                .upload_box .upload_list span {
+                    float: right;
+                }
+
+                    .upload_box .upload_list span i {
+                        font-size: 22px;
+                        cursor: pointer;
+                        line-height: 37px;
+                    }
+
+                        .upload_box .upload_list span i.fa-check-circle {
+                            color: #5cb95c;
+                            margin-right: 5px;
+                        }
+
+                        .upload_box .upload_list span i.fa-cloud-download {
+                            color: #3499db;
+                            margin-right: 5px;
+                        }
+
+                        .upload_box .upload_list span i.fa-minus-circle {
+                            color: #bb4a48;
+                            margin-right: 5px;
+                        }
+
+        .lr-uploader-progress {
+            position: absolute;
+            bottom: 2px;
+            left: 60px;
+            height: 4px;
+            width: 500px;
+            width: calc(100% - 90px);
+        }
+
+        .lr-uploader-progress-bar {
+            position: relative;
+            height: 100%;
+            background-color: #039cfd;
+            border-radius: 4px;
+        }
+        .bgWhites{background:#fff;border:1px solid #66afe9;border-top:none}
+        .bgWhites li{line-height:23px;text-align:center;cursor:pointer}
+        .bgWhites li:hover{background:#eee}
+        /*.webuploader-pick + div {
+            display: none;
+        }*/
+    </style>
+</head>
+<body>
+    <div class="xiugai" style="padding:20px 30px">
+        <form action="/Wos/FeedBackInfo/SetWXInfo" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body zlw_gs">
+
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>泵房名称 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="button" class="form-control" id="StationName" name="StationName" value="@ViewBag.StationName" autocomplete="off">
+                                        <input type="hidden" class="form-control" id="StationId" name="StationId" value="@Model.StationId">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>维修编号 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="hidden" class="form-control" id="Edite_Num" name="Edite_Num" value="@Model.Num">
+                                        <input type="text" class="form-control" id="Num" name="Num" value="@Model.Num" autocomplete="off">
+                                        <div class="treeslide opacity0">
+                                            <div id="treeWXNum" class="ztree">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>维修人员 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="RepairUserName" name="RepairUserName" value="@ViewBag.RepairUserName" autocomplete="off">
+                                        <input type="hidden" class="form-control" id="RepairUser" name="RepairUser" value="@Model.RepairUser">
+                                        <div class="treeslide opacity0">
+                                            <div id="treeWXUser" class="ztree">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>处理情况 </label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="RepairState" name="RepairState">
+                                            @{
+                                                var stateList = ViewBag.handleState as IEnumerable<SysDataItemDetail>;
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.RepairState == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>维修设备</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+
+                                        <input type="text" class="form-control" id="DeviceName" name="DeviceName" value="@ViewBag.DeviceName" autocomplete="off">
+                                        <input type="hidden" class="form-control" id="DeviceId" name="DeviceId" value="@Model.DeviceId">
+                                        <div class="treeslide bgWhites opacity0">
+                                           <ul id="deviceList">
+                                           </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="RepairDescription">维修说明</label>
+                                    <textarea id="RepairDescription" name="RepairDescription" rows="2" cols="20" class="form-control">@Model.RepairDescription</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group" id="filelist">
+                                    <label for="RepairDescription">附件信息</label>
+                                    <div id="wrapper" style="border-radius:3px;">
+                                        <div id="container">
+                                            <!--头部，相册选择和格式选择-->
+                                            <div id="uploader">
+                                                <div class="queueList">
+                                                    <div id="dndArea" class="placeholder">
+                                                        <div id="filePicker" style="display:block;width:100%;z-index:999"></div>
+                                                        <p style="margin-bottom:25px;">或将照片拖到这里，单次最多可选300张</p>
+                                                    </div>
+                                                </div>
+                                                <div class="statusBar" style="display:none;">
+                                                    <div class="progress">
+                                                        <span class="text">0%</span>
+                                                        <span class="percentage"></span>
+                                                    </div><div class="info"></div>
+                                                    <div class="btns">
+                                                        <div id="filePicker2"></div><div class="uploadBtn" style="position:relative;left:10px">开始上传</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         
+    </form>
+    </div>
+    <script type="text/javascript">
+         var index = parent.layer.getFrameIndex(window.name);
+        var id=@Model.RepairId;
+        var ControllerName = "/Wos/FeedBackInfo";
+        var positionName = "GD_Repair";
+        var classifyName = "3";
+        var areaName = "Wos";
+         var setting_Num = {
+            data:{
+                simpleData: {
+                    enable: true
+                    
+                }
+            },callback:{
+                onClick: zTreeOnClick_Num
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: false
+                
+            }
+        };
+        var zNodes_Num;
+        var treeObj_Num;
+
+        var setting_User = {
+            check: {
+		      enable: true,
+                   chkStyle: "radio",
+                radioType: "all"
+	        },
+			data: {
+				simpleData: {
+					enable: true
+				}
+            }
+            , callback: {
+                onCheck: zTreeOnCheck_User
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: false
+                
+            }
+        };
+        var zNodes_User = @ViewBag.treenodes;
+        var treeObj_User;
+        $(function () {
+            $(".treeslide").click(function (e) {
+                e.stopPropagation();
+            })
+
+            $(document).click(function () {
+                $(".treeslide").addClass("opacity0").css("z-index", "999");;
+            })
+            treeObj_User = $.fn.zTree.init($("#treeWXUser"), setting_User, zNodes_User);
+            if (@Model.RepairId!= 0) {//编辑页面
+                $("#StationName").attr("disabled", "disabled");
+                $("#Num").attr("disabled","disabled");
+            }
+            validateForm();
+
+
+           
+        })
+      
+        function zTreeOnClick_Num(event, treeId, treeNode) {
+            $("#Num").val(treeNode.name);
+        }
+        function zTreeOnCheck_User(event, treeId, treeNode) {
+            if (treeNode.checked == true) {
+                $("#RepairUserName").val(treeNode.name);
+                $("#RepairUser").val(treeNode.iddata);
+            }
+            else {
+                 treeNode.checked == true
+                 treeObj_User.checkNode(treeNode, true, true);
+            }
+        }
+         $("#RepairUserName").click(function (e) {
+
+             $(this).siblings(".treeslide").removeClass("opacity0").parents(".col-sm-6").css("z-index", "1000");
+             e.stopPropagation();
+         });
+           $("#StationName").click(function () {
+              parent.iframeWithBtns("泵房选择", "80%", "70%", "/Wos/FeedBackInfo/SelectStationInfo", false, function (formIndex, formLayer) {
+                    var currentIframe =parent.window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm1(function (stationid,stationname) {
+                        $("#StationId").val(stationid);
+                        $("#StationName").val(stationname);
+                        $("#Edite_Num").val("");
+                        $("#Num").val("");
+                        $("#DeviceName").val("");
+                        $("#DeviceId").val("");
+                        parent.layer.close(formIndex);
+                        if ($('#StationName-error').length > 0) {
+
+                            $('#StationName-error').css("display", "none");
+                            $('#StationName').removeClass("error");
+                        }
+                       
+                    });
+                });
+        })
+        $("#Num").click(function (e) {
+            if ($("#StationName").val() == "") {
+                layer.msg("请先选择泵房");
+            }
+            else {
+                $.post("/Wos/FeedBackInfo/GetWXNumListByStationid", { id: $("#StationId").val() }, function (res) {
+                    zNodes_Num = JSON.parse(res);
+                    treeObj_Num = $.fn.zTree.init($("#treeWXNum"), setting_Num, zNodes_Num);   //重新初始化树
+                    $("#Num").siblings(".treeslide").removeClass("opacity0").parents(".col-sm-6").css("z-index", "1000");
+                    e.stopPropagation();
+                })
+            }
+
+        })
+        //选择设备
+        $("#DeviceName").click(function (e) {
+           
+            if ($("#StationName").val() == "") {
+                layer.msg("请先选择泵房");
+            }
+            else {
+                 $.post("/Wos/FeedBackInfo/GetDeviceList_ByStationid", { id: $("#StationId").val() }, function (res) {
+                     var devicelist = JSON.parse(res);
+                     
+                     var appends = "";
+                     for (var i = 0; i < devicelist.length; i++) {
+                         appends += "<li id='"+devicelist[i].DeviceID+"' onclick='DeviceNameLi("+devicelist[i].DeviceID+")'>"+devicelist[i].deviceName+"</li>";
+                     }
+                     $("#deviceList").empty().append(appends);
+                     $("#DeviceName").siblings(".treeslide").removeClass("opacity0").parents(".col-sm-6").css("z-index", "1000");
+                     e.stopPropagation();
+                })
+            }
+        })
+        function DeviceNameLi(deviceid) {
+           
+            $("#DeviceId").val(deviceid);
+            $("#DeviceName").val($("#"+deviceid+"").text());
+
+        }
+        function validateForm() {
+              $("#MFForm").validate({
+                 ignore: "",
+                 rules: {
+                     StationName: "required",
+                     Num:"required",
+                     RepairUserName:"required"
+                },
+                messages: {
+                    StationName: "请选择泵房",
+                    Num: "请选择维修编号",
+                    RepairUserName:"请选择维修人员"
+                }
+            });
+        }
+        var myfunc;
+        function saveForm(func) {
+            $("form").submit();
+            myfunc = func;
+        }
+        function _addFun(data) {
+            myfunc(data);
+        }
+        function DeleteFiles() {
+            alert("");
+        }
+         //上传后立即删除
+        function deleteFileLocal_only(fileid, path) {
+            var localpath = "\\UploadFile\\" + positionName + "\\" + path;
+            $.post("/Wos/FeedBackInfo/DeleteFileLocal", { path: localpath }, function (data) {
+                if (data == "ok") {
+                     $("." + fileid + "").remove();
+                }
+            })
+        }
+        //上传后取消表单
+        function DeleteFlie_Cancle(funcClose) {
+            var urls = $("#filelist").find("[name='url']");
+            var urlstring = "";
+            for (var i = 0; i < urls.length; i++) {
+                urlstring+= urls[i].value+"|";
+            }
+            if (urlstring != "") {
+                urlstring = urlstring.substring(0, urlstring.length - 1);
+                $.post("/Wos/FeedBackInfo/DeleteFileLocal_cancle", { urlstring: urlstring }, function (data) {
+                    funcClose(data);
+                })
+            }
+            else {
+                 funcClose("ok");
+            }
+
+        }
+    </script>
+</body>
+</html>

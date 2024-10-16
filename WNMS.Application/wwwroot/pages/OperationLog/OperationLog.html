@@ -1,0 +1,274 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>运行日志</title>
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/sl.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css"> 
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../js/sl_main.js"></script>
+    <!-- 树 -->
+    <link rel="stylesheet" href="../../lib/ztree/zTreeStyle.css">
+    <script src="../../lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="../../lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script type="text/javascript">
+		var setting = {
+			check: {
+				enable: true,
+				chkDisabledInherit: true
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			}
+		};
+
+		var zNodes =[
+			{ id:1, pId:0, name:"湛江自来水骏景花园",open:true},
+			{ id:11, pId:1, name:"低区", open:true},
+			{ id:12, pId:1, name:"中区区",open:true},
+			{ id:2, pId:0, name:"日照港烟小区",  open:true},
+			{ id:21, pId:2, name:"日照港烟小区#低区"},
+			{ id:22, pId:2, name:"日照港烟小区#中区", },
+			{ id:23, pId:2, name:"日照港烟小区#高区"},
+		];
+
+		function disabledNode(e) {
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+			disabled = e.data.disabled,
+			nodes = zTree.getSelectedNodes(),
+			inheritParent = false, inheritChildren = false;
+			if (nodes.length == 0) {
+				alert("请先选择一个节点");
+			}
+			if (disabled) {
+				inheritParent = $("#py").attr("checked");
+				inheritChildren = $("#sy").attr("checked");
+			} else {
+				inheritParent = $("#pn").attr("checked");
+				inheritChildren = $("#sn").attr("checked");
+			}
+
+			for (var i=0, l=nodes.length; i<l; i++) {
+				zTree.setChkDisabled(nodes[i], disabled, inheritParent, inheritChildren);
+			}
+		}
+
+		$(document).ready(function(){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			$("#disabledTrue").bind("click", {disabled: true}, disabledNode);
+			$("#disabledFalse").bind("click", {disabled: false}, disabledNode);
+			
+		});
+		//-->
+	</script>
+</head>
+<body>
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf" >
+            <!-- 搜索框 -->
+            <div class="zlw_datamain_lfconsea">
+                <form action="">
+                    <i class="glyphicon glyphicon-search"></i>
+                    <input type="text" class="form-control" placeholder="搜索&quot;泵房&quot;名称" />
+                </form>
+            </div>
+            <div id="treeDemo" class="ztree">
+                <!-- tree渲染区域 -->
+            </div>
+        </div>
+        <div class="sl_rg">
+            <div class="sl_chioce">
+                <nav aria-label="Page navigation" style="margin-left: 30px;margin-top: 13px;display: inline-block;">
+                    <ul class="pagination sl_chioDate">
+                        <li>
+                        <a href="#" aria-label="Previous" onclick="sl_Left()">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                        </li>
+                        <li><a href="#" style="border-left: none;">今天</a></li>
+                        <li>
+                        <a href="#" aria-label="Next" style="border-left: none;" onclick="sl_Right()">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                        </li>
+                    </ul>
+                </nav>
+                <span class="sl_chioce_span">指标选择：</span>
+                <div class="dropdown sl_chioce_sele" style="display: inline-block;">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                      进水实际压力，出水实际压力
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                     
+                    </ul>
+                  </div>
+            </div>
+            <div class="sl_list">
+                <div class="sl_sjbg">
+                    <table id="tabledata" class=" table-striped">
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>
+        
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">指标选择</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="sl_zhibiao clearfloat"> 
+                        <li>		
+                            <label>
+                                <input type="checkbox"> <span>请打勾</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox"> <span>请打勾</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox"> <span>请打勾</span>
+                            </label>
+                        </li>
+                        <li>		
+                            <label>
+                                <input type="checkbox"> <span>请打勾</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox"> <span>请打勾</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="checkbox"> <span>请打勾</span>
+                            </label>
+                        </li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="btn_submit" class="btn btn-info" data-dismiss="modal">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // table数据
+        // 数据
+        $('#tabledata').bootstrapTable({
+            // url: '/json/data.json',        // 表格数据来源
+            // showColumns:true,
+            columns: [{
+                field: 'id',
+                title: '序号',
+                align: 'center',
+                backgroundColor:'#449d44'
+            }, {
+                field: 'name',
+                title: '采集时间'
+            }, {
+                field: 'price',
+                title: '进水实际压力'
+            },{
+                field: 'column1',
+                title: '泵一电流'
+            },{
+                field: 'column2',
+                title: '泵二电流' 
+            },{
+                field: 'column3',
+                title: '累计电量'
+            },{
+                field: 'column4',
+                title: '变频器工率'
+            },{
+                field: 'column5',
+                title: '泵1瞬时流量'
+            },{
+                field: 'column6',
+                title: '泵2瞬时流量'
+            },{
+                field: 'column7',
+                title: '累计电量'
+            }  ],
+            data:[
+            {
+                id:1,
+                name:'2020.01.10',
+                price:'0.33',
+                column1:'0.54',
+                column2:'0.45',
+                column3:'0.55',
+                column4:'0',
+                column5:'0.6',
+                column6:'0.45',
+                column7:'200',
+
+            },
+            {
+                id:2,
+                name:'2020.01.10',
+                price:'0.43',
+                column1:'0.44',
+                column2:'0.45',
+                column3:'0.55',
+                column4:'0',
+                column5:'0.26',
+                column6:'0.55',
+                column7:'180',
+
+            },
+            {
+                id:3,
+                name:'2020.01.10',
+                price:'0.33',
+                column1:'0.44',
+                column2:'0.25',
+                column3:'0.65',
+                column4:'0.2',
+                column5:'0.26',
+                column6:'0.55',
+                column7:'180',
+
+            }
+            ]
+        });
+        $('.fixed-table-loading').hide()
+    
+    </script>
+
+
+
+
+
+</body>
+</html>

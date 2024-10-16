@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define("exports ../../../../../Color ../../Manipulator3D ../../manipulatorUtils ../../editingTools/manipulatorUtils ../../../webgl-engine/lib/GeometryUtil".split(" "),function(d,f,g,h,k,l){function c(a,b,m){return{geometry:l.createSphereGeometry(a,32,32),material:h.createManipulatorMaterial(f.toUnitRGBA(b)),stateMask:m}}function e(a){const b=[];a.customColor1&&b.push(c(a.size,a.customColor1,16));a.customColor2&&b.push(c(a.size,a.customColor2,32));a.customColor3&&b.push(c(a.size,a.customColor3,64));
+a.color&&b.push(c(a.size,a.color));return b}d.createSphereManipulator=function(a,b){b=e(b);a=new g.Manipulator3D({view:a,renderObjects:b,elevationInfo:{mode:"absolute-height",offset:0}});k.disableDisplayOnGrab(a);return a};d.createSphereManipulatorRenderObject=c;d.createSphereManipulatorRenderObjects=e;Object.defineProperty(d,"__esModule",{value:!0})});

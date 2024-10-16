@@ -1,0 +1,535 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_AssignmentPlan</title>
+    <link href="~/css/AdminLTE.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/lib/ztree/zTreeStyle.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.all.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="//a.amap.com/jsapi_demos/static/china.js"></script>
+    <!--加载鼠标绘制工具-->
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=28068084e71b4dac1344e8d5c9451629&plugin=AMap.PolyEditor"></script>
+    <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+    <style>
+        html, body, #mapDiv {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #listBtn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        #formbox {
+            width: 450px;
+            /*   height: 580px;*/
+            position: absolute !important;
+            left: 80px;
+            top: 10px;
+        }
+
+        .badge {
+            border-radius: unset;
+            padding: 5px 10px;
+            margin-top: 7px;
+            cursor: pointer;
+        }
+
+            .badge:hover {
+                opacity: 0.8;
+            }
+
+        .form-control {
+            border-radius: 0;
+        }
+
+        /*#DMAName:focus + .DMAName_div {
+            display: block;
+        }*/
+
+        .DMAName_div {
+            position: absolute;
+            width: 300px;
+            z-index: 999;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        label.error {
+            position: unset;
+        }
+    </style>
+</head>
+<body>
+
+    @model WoAssignmentPlan
+    @{
+        var dictory_data = ViewBag.dictory_data as IEnumerable<SysDataItemDetail>;
+    }
+
+    <div id="mapDiv" style="z-index:-1"></div>
+    <div class="text-center" id="listBtn">
+        <a id="openList" class="btn btn-block btn-info btn-sm"><i class="fa fa-edit"></i></a>
+    </div>
+
+    <div class="box box-info" id="formbox">
+        <div class="box-header with-border">
+            <h3 class="box-title">任务添加</h3>
+
+            <div class="box-tools pull-right">
+                @*<button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>*@
+                <button type="button" class="btn btn-box-tool" id="boxid" data-widget="remove"><i class="fa fa-times"></i></button>
+            </div>
+        </div>
+        <div class="box-body">
+            <form class="form-horizontal" action="/Wo/AssignmentPlan/SetAssignmentInfo" data-ajax="true" data-ajax-method="post" data-ajax-success="_addFun" id="MFForm">
+                <input id="PlanId" name="PlanId" type="hidden" value="@Model.PlanId" />
+                <input id="CreateTime" name="CreateTime" type="hidden" value="@Model.CreateTime" />
+                <input id="Creater" name="Creater" type="hidden" value="@Model.Creater" />
+                <input id="Type" name="Type" type="hidden" value="@Model.Type" />
+                <input id="PlanType" name="PlanType" type="hidden" value="@Model.PlanType" />
+                <input id="InspectCycle" name="InspectCycle" type="hidden" value="@Model.InspectCycle" />
+                <input id="State" name="State" type="hidden" value="@Model.State" />
+                <input id="TemplatePlanId" name="TemplatePlanId" type="hidden" value="@Model.TemplatePlanId" />
+                <input id="UniqueTime" name="UniqueTime" type="hidden" value="@Model.UniqueTime" />
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="" class="col-sm-3 control-label">区域名称</label>
+
+                        <div class="col-sm-9">
+                            <input id="Dmaid" name="Dmaid" class="form-control" type="hidden" value="@Model.Dmaid" />
+                            <input type="text" class="form-control" id="DMAName" name="DMAName" value="@ViewBag.DmaArea" autocomplete="off" placeholder="区域名称" />
+                            <div class="DMAName_div">
+                                <ul id="treeArea" class="ztree"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="col-sm-3 control-label">巡检对象</label>
+
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" placeholder="点击选择或查看相关设备" id="InspectObject" name="InspectObject" value="@ViewBag.DeviceNames">
+                            <input type="hidden" class="form-control" id="InspectObjectID" name="InspectObjectID" value="@ViewBag.planObjects">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="InspectorName" class="col-sm-3 control-label">巡检员</label>
+
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control selse_input" id="InspectorName" name="InspectorName" value="@ViewBag.inspector" autocomplete="off">
+                            <input id="Inspector" name="Inspector" class="form-control" type="hidden" value="@Model.Inspector" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Travel" class="col-sm-3 control-label">行走方式</label>
+
+                        <div class="col-sm-9">
+                            <select class="form-control" id="Travel" name="Travel">
+                                @{
+                                    var travels = dictory_data.Where(r => r.FItemId == 25);
+                                    foreach (var item in travels)
+                                    {
+                                        var num = Convert.ToByte(item.ItemValue);
+                                        if (Model.Travel == num)
+                                        {
+                                            <option value="@num" selected="selected">@item.ItemName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@num">@item.ItemName</option>
+                                        }
+                                    }
+                                }
+
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="col-sm-3 control-label">开始时间</label>
+
+                        <div class="col-sm-9">
+                            <input id="BeginDate" name="BeginDate" class="form-control" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" value="@Model.BeginDate" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="col-sm-3 control-label">结束时间</label>
+
+                        <div class="col-sm-9">
+                            <input id="EndDate" name="EndDate" class="form-control" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd 18:00:00' })" value="@Model.EndDate" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="PlanName" class="col-sm-3 control-label">计划名称</label>
+
+                        <div class="col-sm-9">
+                            <input id="PlanName" name="PlanName" class="form-control" value="@Model.PlanName" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="col-sm-3 control-label">巡检模板</label>
+
+                        <div class="col-sm-9">
+                            <select class="form-control" id="TemplateID" name="TemplateID">
+                                <option selected="selected" value=''></option>
+
+                                @{
+                                    IEnumerable<WoTemplateInfo> templatelist = ViewBag.templateinfo as IEnumerable<WoTemplateInfo>;
+                                    if (templatelist != null)
+                                    {
+                                        foreach (var item in templatelist)
+                                        {
+                                            if (Model.TemplateId == item.Id)
+                                            {
+                                                <option value="@item.Id" selected="selected">@item.TemplateName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Id"> @item.TemplateName </option>
+                                            }
+                                        }
+
+                                    }
+
+                                    <option value="0">自定义</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Remark" class="col-sm-3 control-label">备注</label>
+
+                        <div class="col-sm-9">
+
+                            <textarea id="Remark" name="Remark" rows="2" cols="20" class="form-control" autocomplete="off">@Model.Remark</textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="box-footer">
+            <a id="plansubmit" href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-right">提交</a>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+          //树
+            var zTreeObj;
+            var setting = {
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                }, callback: {
+                    onClick: zTreeOnClick
+                }, view: {
+                    showTitle: false,
+                    showLine: true,
+                    nameIsHTML: true
+                }
+
+            };
+        var zNodes = @ViewBag.TreeNode;
+        $(function () {
+            if (@Model.PlanId== 0) {
+                $("#BeginDate").val("");
+                $("#EndDate").val("");
+            }
+            else {
+                showpolygon($("#Dmaid").val());
+            }
+            zTreeObj = $.fn.zTree.init($("#treeArea"), setting, zNodes);
+            zTreeObj.expandAll(true);
+        });
+        //关闭表单
+        $("#boxid").click(function () {
+            $("#formbox").css("display", "none");
+        });
+        $("#openList").click(function () {
+            if ($("#formbox").css("display") == "none") {
+                $("#formbox").css("display", "block");
+            }
+        });
+        $("#DMAName").click(function () {
+            $(".DMAName_div").css("display", "block");
+        });
+        //自定义模板
+        $("#TemplateID").change(function () {
+            var templateValue = $("#TemplateID").val();
+            if (templateValue == 0) {
+
+                iframeWithBtns("新建模板", "900px", "600px", "/Wo/WO_InspectionPlan/NewTemplate", false, function (formIndex, formLayer) {
+                    var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm(function (templateid) {
+                        $.post("/Wo/WO_InspectionPlan/TemplateRefresh", {}, function (res) {
+                            var appendstr = "";
+                            var json = JSON.parse(res);
+                            for (var i = 0; i < json.length; i++) {
+                                if (templateid == json[i].Id) {
+                                    appendstr += "<option value='" + json[i].Id + "' selected='selected'>" + json[i].TemplateName + " </option>";
+                                }
+                                else {
+                                    appendstr += "<option value='" + json[i].Id + "'>" + json[i].TemplateName + " </option>";
+                                }
+
+                            }
+                            appendstr += "<option value='0'>自定义</option>";
+                            $("#TemplateID").empty().append(appendstr);
+                        })
+                        layer.close(formIndex);
+                    });
+                });
+            }
+        });
+          //选择区域后地图展示所选区域
+          function showpolygon(ids) {
+              $.post("/Wo/WO_InspectionPlan/GetAreaInfoByID", { areaid: ids }, function (result) {
+                  if (result != "") {
+                      var data = JSON.parse(result);
+                      for (var i = 0; i < data.length; i++) {
+                          var points = data[i].GISPoints;
+                          if (points != null && points != "") {
+
+                              var pts = [];
+                              var start = points.lastIndexOf('(') + 1;
+                              var end = points.indexOf(')');
+                              var pointarray = points.substring(start, end).split(", ");
+                              var centlng = 0, centerlat = 0;
+                              for (var j = 0; j < pointarray.length; j++) {
+                                  var dp = pointarray[j].split(" ");
+                                  var pt1 = [dp[0], dp[1]];
+                                  pts.push(pt1);
+                                  centlng += parseFloat(dp[0]);
+                                  centerlat += parseFloat(dp[1])
+                              }
+                              centlng = centlng / pointarray.length;
+                              centerlat = centerlat / pointarray.length;
+                              //将多边形添加到地图上
+                              var fillcolor = "red";
+                              if (data[i].FillColor != null && data[i].FillColor != "") {
+                                  fillcolor = "#" + data[i].FillColor;
+                              }
+
+                              text = new AMap.Text({
+                                  text: "<div style='font:bold'>名称：<span style='color:red'>" + data[i].AreaName + "</span></div><div>设备数量：<span style='color:red'>" + data[i].countnum + "</span></div>",
+                                  anchor: 'center', // 设置文本标记锚点
+                                  cursor: 'pointer',
+                                  style: {
+                                      'background-color': '#f3eded26',
+                                      'border-width': 0,
+                                      'color': 'black',
+                                      'font-weight': 'bold'
+                                  },
+                                  position: [centlng, centerlat]
+                              });
+
+                              text.setMap(map);
+                              var styleOptions = new AMap.Polygon({
+                                  path: pts,
+                                  strokeColor: "#FF33FF",
+                                  strokeWeight: 6,
+                                  strokeOpacity: 0.2,
+                                  fillOpacity: 0.4,
+                                  fillColor: "" + fillcolor + "",
+                                  //zIndex: 50
+                              });
+                              map.add(styleOptions);
+                              map.setFitView(styleOptions);//自适应显示
+                          }
+                      }
+                  }
+              });
+        }
+
+        function zTreeOnClick(event, treeId, treeNode) {
+              if (treeNode.level != 0) {
+                    clearAll();
+                    $("#DMAName").val(treeNode.name);
+                    $("#Dmaid").val(treeNode.id);
+                   $(".DMAName_div").css("display","none");
+                    showpolygon(treeNode.id);
+              }
+            else {
+                layer.alert("请选中一条区域或线路");
+            }
+        }
+        function validateForm() {
+             $("#MFForm").validate({
+                    rules: {
+                        DMAName: "required",
+                        InspectObjectID: "required",
+                        InspectorName: "required",
+                        Travel: "required",
+                        BeginDate: "required",
+                        EndDate: "required",
+                        PlanName: "required",
+                        Remark: "required",
+                        TemplateID: {
+                            required: true,
+                            digits:true,
+                            min: 1
+                         }
+
+                    },
+                    messages: {
+                        DMAName: "请输入分区名称",
+                        InspectObjectID: "请选择巡检对象",
+                        InspectorName: "请选择巡检员",
+                        Travel: "请选择行走方式",
+                        BeginDate: "请输入开始时间",
+                        EndDate: "请输入结束时间",
+                        PlanName: "请输入计划名称",
+                        Remark: "请输入备注",
+                        TemplateID: "请选择巡检模板"
+                    }
+            });
+        }
+
+        //设备分配
+         $("#InspectObject").click(function () {
+            if ($("#DMAName").val() == "") {
+                layer.msg("请先选择区域");
+            }
+            else {
+                if ($("#InspectObjectID").val() != "") {
+                   var devicelist = $("#InspectObjectID").val();
+                   iframeWithBtns("设备分配", "900px", "600px", "/Wo/WO_InspectionPlan/AllotDevice?areaid=" + $("#Dmaid").val() + "&devicelist_Sel=" +devicelist+"", false, function (formIndex, formLayer) {
+                     var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                       currentIframe.saveForm(function (deviceids, deviceName) {
+                           $("#InspectObjectID").val(deviceids);
+                           $("#InspectObject").val(deviceName);
+                            layer.close(formIndex);
+                       });
+                   });
+                }
+                else {
+                     iframeWithBtns("设备分配", "900px", "600px", "/Wo/WO_InspectionPlan/AllotDevice?areaid=" + $("#Dmaid").val() + "", false, function (formIndex, formLayer) {
+                     var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                         currentIframe.saveForm(function (deviceids, deviceName) {
+                             $("#InspectObjectID").val(deviceids);
+                             $("#InspectObject").val(deviceName);
+                          layer.close(formIndex);
+                       });
+                   });
+                }
+            }
+         })
+        //选择巡检员
+        $("#InspectorName").click(function () {
+            if ($("#DMAName").val() == "") {
+                layer.msg("请先选择区域");
+            }
+            else {
+
+                iframeWithBtns("选择巡检人员", "900px", "600px", "/Wo/WO_InspectionPlan/SelectInspector?areaid=" + $("#Dmaid").val() + "&userID=" + $("#Inspector").val() + "", false, function (formIndex, formLayer) {
+                    var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm(function (inspectorID, inspectorName) {
+                    });
+                });
+            }
+        });
+
+        //提交表单
+        $("#plansubmit").click(function () {
+            validateForm();
+            $("#MFForm").submit();
+        });
+        //提交表单返回值
+        function _addFun(res) {
+            if (res == "ok") {
+                var index = parent.layer.getFrameIndex(window.name);
+                 parent.layer.close(index);
+                parent.layer.msg("巡检分派成功");
+                parent.refresh();
+            }
+            else {
+                layer.msg("巡检分派失败");
+            }
+        }
+         function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+
+    </script>
+    <script type="text/javascript">
+        var map;
+        var text;
+
+        map = new AMap.Map('mapDiv', {
+            resizeEnable: true,
+
+            zoom: 5,
+            mapStyle: 'amap://styles/8d723b70ba3f078f5fb4c35f177c05e3', //设置地图的显示样式
+            //center: ["118.380003", "35.198453"],
+            center: [116.376979, 39.904374],
+            layers: [//使用多个图层
+                //  new AMap.TileLayer.Satellite(),
+                //  new AMap.TileLayer.RoadNet()
+            ],
+            zooms: [6, 14],//设置地图级别范围
+        });
+        //拖动获取设备信息
+        AMap.event.addListener(map, "zoomchange", function (e) {
+
+        });
+        //拖动获取设备信息
+        AMap.event.addListener(map, "moveend", function (e) {
+
+        });
+
+        function clearAll() {
+            map.clearMap();
+        }
+    </script>
+</body>
+</html>

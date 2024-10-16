@@ -1,0 +1,301 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>配置模板</title>
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link rel="stylesheet" href="~/css//iconfont.css">
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/AllotRtu_User.css" rel="stylesheet" />
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        html, body {
+            height: 100%
+        }
+
+        .a_box {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #eee
+        }
+
+
+        .a_right {
+            width: calc(100%);
+            float: right;
+            height: 100%;
+            background: #fff;
+            position: relative
+        }
+
+        .a_seach {
+            padding: 5px 10px;
+            position: relative;
+            border-bottom: solid 1px #c5c5c5;
+            width: 100%;
+            background: #fff;
+        }
+
+            .a_seach i {
+                position: absolute;
+                top: 16px;
+                left: 19px;
+                color: #999;
+            }
+
+            .a_seach input {
+                text-indent: 1em
+            }
+
+        .listcont {
+            width: 100%;
+            color: #666
+        }
+
+            .listcont .on span {
+                color: #333 !important;
+                font-weight: 400;
+            }
+
+            .listcont .on {
+                background: url(data:image/gif;base64,R0lGODlhCgAKAKIAAP////7+/v39/fr7+/n6+0xde0pbef///yH5BAEHAAcALAAAAAAKAAoAAAMdeLprzMa9EyWsr8ZbQ9OBRxkDYITFGIVEUWiRUCUAOw==) no-repeat right bottom;
+            }
+
+                .listcont li:hover, .listcont .on:hover {
+                    color: #333;
+                    background-color: #d4d4d4;
+                    border-color: #8c8c8c;
+                }
+
+                .listcont li:active, .listcont .on:active, .listcont li:focus, .listcont .on:focus {
+                    color: #333;
+                    background-color: #d4d4d4;
+                    border-color: #8c8c8c;
+                }
+
+            .listcont li {
+                color: #333;
+                border: 1px solid #ccc;
+                cursor: pointer;
+                float: left;
+                margin-right: 10px;
+                border-radius: 3px;
+                padding: 6px 12px;
+                width: 160px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                margin-bottom: 10px
+            }
+
+                .listcont li > span, .listcont p {
+                    float: left;
+                }
+
+                .listcont li > span {
+                    width: 70px;
+                    height: 77px;
+                    text-align: center;
+                    background: #eee
+                }
+
+            .listcont p {
+                width: 100%;
+                text-align: center
+            }
+
+                .listcont p span {
+                    display: block;
+                }
+
+        .ul-over {
+            overflow: auto;
+            margin: 10px 10px 10px 15px;
+            position: absolute;
+            top: 90px;
+            width: calc(100% - 20px);
+            height: calc(100% - 120px)
+        }
+    </style>
+    <script type="text/javascript">
+
+        //-->
+    </script>
+</head>
+<body>
+    <div class="a_box">
+        <div class="a_right">
+            <div class="pad10px">
+                <select id="Selectmoban" class="hyl_select mr10px">
+                    <option value="0">请选择报表模板</option>
+                    @{
+                        IEnumerable<SwsTemplate> templateList = ViewBag.Template as IEnumerable<SwsTemplate>;
+                        foreach (var item in templateList)
+                        {
+                            <option value="@item.Id">@item.TemplateName</option>
+                        }
+                    }
+                </select>
+                <input id="templatename" type="text" class="hyl_input" placeholder="" />
+                <button id="SaveBtn_Template" class="hyl_btn inline-block">保存</button>
+                <button id="cancelban" type="button" class="hyl_btn inline-block">删除</button>
+            </div>
+            <div class="prompt" style="margin:0px 5px 4px">温馨提示：选中即可添加模板字段，取消选中则删除。</div>
+            <div class="ul-over">
+                <ul class="listcont" id="dataList">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        var index = parent.layer.getFrameIndex(window.name);
+        var tempid =@ViewBag.tempid;
+        var typeID='@ViewBag.TypeID';
+        $(function () {
+            $(document).on("click", ".listcont li", function () {
+                var $this = $(this);
+                if ($this.hasClass("on")) {
+                    $this.removeClass("on");
+                } else {
+                    $this.addClass("on");
+                }
+            })
+            //loadTem();
+            ClickPum($("#Selectmoban").val());
+            $("#SaveBtn_Template").click(function () {
+                //validation()
+                UpdateForm();
+            });
+        })
+        function UpdateForm() {
+            //修改添加模板内容
+            var dataArr = "";
+            var list = $('#dataList .on');
+            for (var i = 0; i < list.length; i++) {
+                var id = $(list[i]).data('id');
+                dataArr += id + ",";
+            }
+            if (dataArr != "") {
+                dataArr = dataArr.substring(0, dataArr.length - 1)
+            }
+            $.post("/Sws/Sws_Template/UpdateTep", { dataArr: dataArr, tempid: $("#Selectmoban").val(), type: typeID, temName: $("#templatename").val() }, function (data) {
+                if (data == "ok") {
+                    layer.msg("配置成功");
+                    window.parent.Refresh();
+                } else if (data == "nonull") {
+                    layer.msg("请勿输入空值");
+                } else {
+                    layer.msg("配置失败");
+                }
+            })
+        }
+        //模板选择列表更改选项时事件
+        $("#Selectmoban").change(function () {
+            var selecttext = $("#Selectmoban").find("option:selected");
+            if (selecttext.val() == 0) {
+                $("#templatename").val("");
+            } else {
+                $("#templatename").val(selecttext.text());
+            } 
+            ClickPum($("#Selectmoban").val());
+        });
+        //加载模板数据
+        function loadTem() {
+            $("#listtem").empty();
+            $.post("/Sws/Sws_Device01RunLog/LoadTemp", { type: typeID }, function (data) {
+                var jsonstr = JSON.parse(data);
+                var html = "";
+                for (var i = 0; i < jsonstr.length; i++) {
+                    html += "<li>";
+                    html += '<span class="chaochu" onclick="ClickPum(' + jsonstr[i].Id + ')">' + jsonstr[i].TemplateName + '</span>';
+                    if (jsonstr[i].FocusOn == true) {
+                        html += '<i class="fa fa-star orange f14px mr10px lh40px" onclick="Attention(' + jsonstr[i].Id + ',' + jsonstr[i].FocusOn + ')"></i>'
+                    } else {
+                        html += '<i class="fa fa-star f14px mr10px lh40px" onclick="Attention(' + jsonstr[i].Id + ',' + jsonstr[i].FocusOn + ')"></i>'
+                    }
+                    html += "</li>";
+                }
+
+                $("#listtem").append(html);
+            })
+        }
+        //点击加载模板内容
+        function ClickPum(pum) {
+            tempid = pum;
+            $("#dataList").empty();
+            $.post("/Sws/Sws_Template/LoadTempData", { id: pum,type:typeID }, function (data) {
+                if (data != "") {
+                    var jsonstr = JSON.parse(data);
+                var has = jsonstr.endhasData;
+                var nohas = jsonstr.nohasData;
+                var html = "";
+                for (var i = 0; i < has.length; i++) {
+                    html += "<li data-id=" + has[i].DataId + " class='on'>";
+
+                    html += "<p>";
+                    html += "<span class='ellipsis1'>" + has[i].Cnname + "</span>";
+                    html += "</p>";
+                    html += "</li>";
+                }
+                for (var i = 0; i < nohas.length; i++) {
+                    html += "<li data-id=" + nohas[i].DataId + ">";
+
+                    html += "<p>";
+                    html += "<span class='ellipsis1'>" + nohas[i].Cnname + "</span>";
+                    html += "</p>";
+                    html += "</li>";
+                }
+                $("#dataList").append(html);
+                }
+
+            })
+        }
+        //删除模板
+        $("#cancelban").click(function () {//删除模板
+            if ($("#Selectmoban").val() != 0) {
+                $.post('/Sws/Sws_Template/Deletetemp', { id: $("#Selectmoban").val() }, function (data) {
+                    if (data == "ok") {
+                        parent.layer.close(index);
+                        parent.Refresh();
+                        alert("删除成功");
+                    }
+                    else {
+                        if (data == "fail") {
+                            alert("该模板被占用");
+                        }
+                        else {
+                            alert("删除失败");
+                        }
+                    }
+                });
+            }
+        });
+        //关注
+        function Attention(pum, focusOn) {
+            $.post("/Sws/Sws_Device01RunLog/UpdateFocusOn", { id: pum, focusOn: focusOn,type: typeID}, function (data) {
+                if (data == "no") {
+                    layer.msg("关注失败");
+                } else {
+                    loadTem();
+                    ClickPum(pum);
+                }
+            })
+        }
+    </script>
+</body>
+</html>

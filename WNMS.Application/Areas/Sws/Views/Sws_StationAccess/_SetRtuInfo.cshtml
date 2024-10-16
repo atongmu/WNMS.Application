@@ -1,0 +1,312 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+@model SwsRtuinfo
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_SetRtuInfo</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .star {
+            position: absolute;
+            left: 59px;
+            top: -4px;
+            font-size: 25px;
+            color: red
+        }
+
+        .xiugai label.error {
+            top: 39px;
+        }
+    </style>
+</head>
+<body>
+    <div style="padding:20px" class="xiugai">
+        <form action="/Sws/Sws_StationAccess/SetRtuControl" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body">
+                <input id="Rtuid" name="Rtuid" type="hidden" value="@Model.Rtuid" />
+
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>通讯编号 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="DeviceId" name="DeviceId" value="@Model.DeviceId" autocomplete="off">
+                                        <input id="StationId" type="hidden" name="StationId" value="@Model.StationId" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6 relative">
+                                <div class="form-group relative">
+                                    <label>通讯地址 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-sitemap"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="ComAddress" name="ComAddress" value="@Model.ComAddress" autocomplete="off">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group" style="position:relative;">
+                                    <label>通讯类型 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-connectdevelop"></i>
+                                        </div>
+                                        <select class="form-control" id="ComType" name="ComType">
+                                            @{
+                                                var comtypes = ViewBag.comtypes as IEnumerable<SwsComTypes>;
+
+                                                foreach (var item in comtypes)
+                                                {
+                                                    if (Model != null && Model.ComType == item.ComTypeName)
+                                                    {
+                                                        <option value="@item.ComTypeName" selected="selected">@item.ComTypeName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ComTypeName">@item.ComTypeName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>设备类型 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-cogs"></i>
+                                        </div>
+                                        <select class="form-control" id="DeviceType" name="DeviceType">
+                                            @{
+                                                if (ViewBag.deviceTypes != null)
+                                                {
+                                                    var devicetypes = ViewBag.deviceTypes as IEnumerable<dynamic>;
+
+                                                    foreach (var item in devicetypes)
+                                                    {
+                                                        if (Model != null && Model.DeviceType == item)
+                                                        {
+                                                            <option value="@item" selected="selected">@item</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item">@item</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>优先级 <span class="star" style="left: 44px">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-sort-numeric-asc"></i>
+                                        </div>
+                                        <select class="form-control" id="Priority" name="Priority">
+                                            @{
+                                                var prioritys = new List<string>() { "A", "B", "C", "D", "E" };
+
+                                                foreach (var item in prioritys)
+                                                {
+                                                    if (Model != null && Model.Priority == item)
+                                                    {
+                                                        <option value="@item" selected="selected">@item</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item">@item</option>
+                                                    }
+                                                }
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>发送方式 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-random"></i>
+                                        </div>
+                                        <select class="form-control" id="ActivelySent" name="ActivelySent">
+                                            @{
+                                                if (Model != null && Model.ActivelySent == false)
+                                                {
+                                                    <option value="True">主动</option>
+                                                    <option value="False" selected="selected">被动</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="True" selected="selected">主动</option>
+                                                    <option value="False">被动</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                           
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>IP端口</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-share-alt"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Ipport" name="Ipport" value="@Model.Ipport" autocomplete="off">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script type="text/javascript">
+        var index = parent.layer.getFrameIndex(window.name);
+        $(function () {
+            validateForm();
+            //ip验证
+            jQuery.validator.addMethod("isIP", function (value, element) {
+                var tel = /^(?=(\b|\D))(((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))\.){3}((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))(?=(\b|\D))$/;
+                return this.optional(element) || (tel.test(value));
+            }, "请正确填写的IP。");
+            jQuery.validator.addMethod("isPort", function (value, element) {
+                var tel = /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/;
+                return this.optional(element) || (tel.test(value));
+            }, "请正确填写的端口号。");
+        })
+        function saveForm() {
+            $("form").submit();
+        }
+        function Noticetest(rtuid) {
+            parent.GetNotice(rtuid, "", "");
+
+        }
+        function validateForm() {
+            $("#MFForm").validate({
+                ignore: "",
+                rules: {
+                    ComAddress: {
+                        required: true,
+                        digits: true,
+                        min: 0,
+                        max: 127
+                    },
+                    Ipport: {
+                        digits: true,
+                        min: 0,
+                    },
+                    DeviceId: "required",
+                    ComType: "required",
+                    DeviceType: "required",
+                    Priority: "required",
+                    ActivelySent: "required"
+                    //StationDeviceName:"required"
+                },
+                messages: {
+                    ComAddress: {
+                        required: "请输入通讯地址",
+                        digits: "请输入大于等于0小于128的数",
+                        min: "请输入大于等于0小于128的数",
+                        max: "请输入大于等于0小于128的数"
+                    },
+                    Ipport: "请输入正确的ip端口号",
+                    DeviceId: "请输入通讯编号",
+                    ComType: "请选择通讯类型",
+                    DeviceType: "请选择设备类型",
+                    Priority: "请选择优先级",
+                    ActivelySent: "请选择发送方式"
+                    //StationDeviceName:"请选择设备"
+
+
+                }
+            });
+        }
+        function _addFun(data) {
+            if (data.flag == "no") {
+                layer.msg("操作失败");
+
+            }
+            else {
+                if (data.flag == "have") {
+                    layer.msg("通讯地址和通讯编号重复");
+                }
+                else {
+                    parent.GetNotice(data.data, "", "");
+                    parent.layer.msg("操作成功");
+                    parent.layer.close(index);
+                    parent.refreshTable();
+                    if (@Model.Rtuid!= 0) {
+                        parent.QueryDeviceAndRtu();
+                    }
+                }
+
+            }
+        }
+       
+    </script>
+</body>
+</html>

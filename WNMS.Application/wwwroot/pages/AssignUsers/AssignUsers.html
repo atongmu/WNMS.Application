@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>分配用户</title>
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../css//iconfont.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <script src="../../js/bootstrap.min.js"></script>
+    <style>
+        html,body{height:100%}
+        .a_box{position:relative;width:100%;height:100%;background:#eee}
+        .a_left{width:300px;margin-right:5px;height:100%;overflow:auto;float:left;background:#fff}
+        .a_right{width:calc(100% - 305px);float:right;height:100%;background:#fff;position:relative}
+        .a_seach{padding: 5px 10px;position:relative;border-bottom: solid 1px #c5c5c5;width:100%;background: #fff;}
+        .a_seach i{position:absolute;top:16px;left:19px;color:#999;}
+        .a_seach input{text-indent:1em}
+        .listcont{width:100%;color:#666}
+        .listcont .on span{color:#666 !important;font-weight:400;}
+        .listcont .on{background: url('../../images/imgkg14.png') no-repeat right bottom;background-size:15%;border:1px solid #FF6563}
+        .listcont li{border:1px solid #ccc;cursor:pointer;float:left;margin-right:10px;border-radius:3px;height:80px;width:210px;margin-bottom:10px}
+        .listcont li>span,.listcont p{float:left;height:80px}
+        .listcont li>span{width:70px;height:77px;text-align:center;background:#eee}
+        .listcont li>span img{display:inline-block;padding-top:15px}
+        .listcont p{padding-top:10px;text-indent:1em}
+            .listcont p span {
+                display: block
+            }
+        .ul-over {
+            overflow: auto;
+            margin: 10px;
+            position: absolute;
+            top: 50px;
+            width: calc(100% - 20px);
+            height: calc(100% - 70px)
+        }
+    </style>
+    <!-- 树 -->
+    <link rel="stylesheet" href="../../lib/ztree/zTreeStyle.css">
+    <script src="../../lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="../../lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script type="text/javascript">
+        var setting = {
+            check: {
+                enable: true,
+                chkDisabledInherit: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }
+        };
+
+        var zNodes = [
+            { id: 1, pId: 0, name: "湛江自来水骏景花园高区", open: true },
+            { id: 11, pId: 1, name: "湛江自来水骏景花园高区#低区", open: true },
+            { id: 111, pId: 11, name: "出水压力", },
+            { id: 112, pId: 11, name: "进水压力" },
+            { id: 113, pId: 11, name: "累计电量" },
+            { id: 114, pId: 11, name: "瞬时流量" },
+            { id: 115, pId: 11, name: "累计电量" },
+            { id: 12, pId: 1, name: "湛江自来水骏景花园高区#中区区", open: true },
+            { id: 121, pId: 12, name: "进水压力", },
+            { id: 122, pId: 12, name: "出水压力", },
+            { id: 123, pId: 12, name: "设定压力", },
+            { id: 124, pId: 12, name: "1#瞬时流量", },
+            { id: 125, pId: 12, name: "PH", },
+            { id: 126, pId: 12, name: "余氯", },
+            { id: 127, pId: 12, name: "液位", },
+            { id: 2, pId: 0, name: "日照港烟小区", open: true },
+            { id: 21, pId: 2, name: "日照港烟小区#低区" },
+            { id: 211, pId: 21, name: "出水压力", },
+            { id: 212, pId: 21, name: "进水压力" },
+            { id: 213, pId: 21, name: "累计电量" },
+            { id: 214, pId: 21, name: "瞬时流量" },
+            { id: 215, pId: 21, name: "累计电量" },
+            { id: 22, pId: 2, name: "日照港烟小区#中区", },
+            { id: 221, pId: 22, name: "出水压力", },
+            { id: 222, pId: 22, name: "进水压力" },
+            { id: 223, pId: 22, name: "累计电量" },
+            { id: 224, pId: 22, name: "瞬时流量" },
+            { id: 225, pId: 22, name: "累计电量" },
+            { id: 226, pId: 22, name: "新罗区", },
+            { id: 227, pId: 22, name: "延平区" },
+            { id: 23, pId: 2, name: "日照港烟小区#高区" },
+            { id: 231, pId: 23, name: "出水压力", },
+            { id: 232, pId: 23, name: "进水压力" },
+            { id: 233, pId: 23, name: "累计电量" },
+            { id: 234, pId: 23, name: "瞬时流量" },
+            { id: 235, pId: 23, name: "累计电量" },
+            { id: 236, pId: 23, name: "新罗区", },
+            { id: 237, pId: 23, name: "延平区" }
+        ];
+
+        function disabledNode(e) {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                disabled = e.data.disabled,
+                nodes = zTree.getSelectedNodes(),
+                inheritParent = false, inheritChildren = false;
+            if (nodes.length == 0) {
+                alert("请先选择一个节点");
+            }
+            if (disabled) {
+                inheritParent = $("#py").attr("checked");
+                inheritChildren = $("#sy").attr("checked");
+            } else {
+                inheritParent = $("#pn").attr("checked");
+                inheritChildren = $("#sn").attr("checked");
+            }
+
+            for (var i = 0, l = nodes.length; i < l; i++) {
+                zTree.setChkDisabled(nodes[i], disabled, inheritParent, inheritChildren);
+            }
+        }
+
+        $(document).ready(function () {
+            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            $("#disabledTrue").bind("click", { disabled: true }, disabledNode);
+            $("#disabledFalse").bind("click", { disabled: false }, disabledNode);
+
+        });
+        //-->
+    </script>
+</head>
+<body>
+    <div class="a_box">
+        <div class="a_left">
+            <div id="treeDemo" class="ztree">
+                <!-- tree渲染区域 -->
+            </div>
+        </div>
+        <div class="a_right">
+            <div class="a_seach">
+                <form action="">
+                    <i class="glyphicon glyphicon-search"></i>
+                    <input type="text" class="form-control" placeholder="搜索&quot;泵房&quot;名称">
+                </form>
+            </div>
+            <div class="ul-over" >
+                <ul class="listcont">
+                    <li class="on">
+                        <span><img src="../../images/man.png" /></span>
+                        <p>
+                            <span>账户：10021</span>
+                            <span>姓名：张三</span>
+                            <span>部门：仓库</span>
+                        </p>
+                    </li>
+                    <li>
+                        <span><img src="../../images/wman.png" /></span>
+                        <p>
+                            <span>账户：10021</span>
+                            <span>姓名：张三</span>
+                            <span>部门：采购</span>
+                        </p>
+                    </li>
+                    <li>
+                        <span><img src="../../images/man.png" /></span>
+                        <p>
+                            <span>账户：10021</span>
+                            <span>姓名：张三</span>
+                            <span>部门：仓库</span>
+                        </p>
+                    </li>
+                    <li>
+                        <span><img src="../../images/wman.png" /></span>
+                        <p>
+                            <span>账户：10021</span>
+                            <span>姓名：张三</span>
+                            <span>部门：采购</span>
+                        </p>
+                    </li>
+                    <li>
+                        <span><img src="../../images/man.png" /></span>
+                        <p>
+                            <span>账户：10021</span>
+                            <span>姓名：张三</span>
+                            <span>部门：仓库</span>
+                        </p>
+                    </li>
+                    <li>
+                        <span><img src="../../images/wman.png" /></span>
+                        <p>
+                            <span>账户：10021</span>
+                            <span>姓名：张三</span>
+                            <span>部门：采购</span>
+                        </p>
+                    </li>
+                    <li>
+                        <span><img src="../../images/man.png" /></span>
+                        <p>
+                            <span>账户：10021</span>
+                            <span>姓名：张三</span>
+                            <span>部门：仓库</span>
+                        </p>
+                    </li>
+                    <li>
+                        <span><img src="../../images/wman.png" /></span>
+                        <p>
+                            <span>账户：10021</span>
+                            <span>姓名：张三</span>
+                            <span>部门：采购</span>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $(document).on("click", ".listcont li", function () {
+                var $this = $(this);
+                if ($this.hasClass("on")) {
+                    $this.removeClass("on");
+                } else {
+                     $this.addClass("on");
+                }
+                
+            })
+        })
+    </script>
+</body>
+</html>

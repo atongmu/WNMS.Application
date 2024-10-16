@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define(["exports"],function(d){function e(a,b){if(null==a||!a.length)return null;a=a.filter(c=>""!==c).map(c=>`'${c}'`);a.push("''");return`${b} IN (${a.join(",")}) OR ${b} IS NULL`}d.combineFloorsDefinitionExpression=function(a,b){({definitionExpression:b}=b);return a?b?`(${b}) AND (${a})`:a:b};d.getFloorFilterClause=function(a){var b;const c=a.layer;return"floorInfo"in c&&null!=(b=c.floorInfo)&&b.floorField&&"floors"in a.view?e(a.view.floors,c.floorInfo.floorField):null};d.getLayerFloorFilterClause=
+function(a,b){var c;return"floorInfo"in b&&null!=(c=b.floorInfo)&&c.floorField?e(a,b.floorInfo.floorField):null};Object.defineProperty(d,"__esModule",{value:!0})});

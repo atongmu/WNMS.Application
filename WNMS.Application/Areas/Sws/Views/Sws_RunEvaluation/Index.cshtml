@@ -1,0 +1,389 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- 树 -->
+    <link rel="stylesheet" href="~/lib/ztree/zTreeStyle.css">
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/js/echarts.min.js"></script>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+        }
+
+        .progress {
+            margin-bottom: 0px;
+            position: relative;
+            overflow: initial;
+            background-color: white !important;
+        }
+
+            .progress span {
+                position: absolute;
+                left: 5px;
+            }
+
+        .form-top {
+            border-bottom: 1px solid #ccc
+        }
+
+        #ExportBtnPage {
+            cursor: pointer;
+        }
+
+        #ExportBtnAll {
+            cursor: pointer;
+        }
+         
+    </style>
+</head>
+<body>
+    <div class="form-top overflow pad10px">
+        <label class="hyl_label"> 时间：</label>
+        <select name="selectDate" id="selectDate" class="hyl_select">
+            <option value="1">按周</option>
+            <option value="2">按月</option>
+            <option value="3">按年</option>
+            <option value="4">自定义</option>
+        </select>
+        <label class="hyl_label ml15px"> 查询时段：</label>
+        @*<input class="form-control" />*@
+        <input type="text" placeholder="开始时间" onfocus="createTime()" id="BeginDate" class="hyl_input hyl_input-sm" value="@ViewBag.datemin">
+        <span class="s-data hidden">
+            <span class="pl10px lh30px pr10px">至</span>
+            <input type="text" onclick="WdatePicker()" placeholder="结束时间" id="EndDate" class="hyl_input hyl_input-sm" value="@ViewBag.datemax">
+        </span>
+        <button class="hyl_btn" type="submit" id="selectbtn">
+            <i class="fa fa-search mr5px"></i>查询
+        </button>
+    </div>
+    <div class="sl_working_main" style="padding:0;height:calc(100% - 52px);overflow-x:hidden">
+        <div class="sl_working_l left">
+            <div class="sl_working_title form-inline">
+                <h3 class="form-group mt0px">设备运行分析</h3>
+                <div class="right">
+                    <span id="ExportBtnPage">  <i class="fa fa-download" style="color: #757575;"></i> 导出当前</span>
+                    <var id="ExportBtnAll"> <i class="fa fa-download" style="color: #757575;"></i> 导出全部</var>
+                </div>
+            </div>
+            <div id="tablebox" style="overflow:hidden;height:calc(100% - 65px)">
+                <table id="tabledata" data-toggle="table" data-pagination="true" data-side-pagination="server" data-page-list="[10, 15, 20]" data-page-size="10" class="table-striped">
+                </table>
+            </div>
+
+
+        </div>
+        <div class="sl_working_r right">
+            <div class="nhtj">
+                <div class="nhtj_title" style="z-index:99">
+                    <p>能耗统计</p>
+                    <div class="nhtj_title_b">
+                        <div class="left form-inline">
+                            <img src="~/images/gsl.png" alt="" class="form-group">
+                            <div class="form-group">
+                                <h6>总供水量</h6>
+                                <span><var style="color: #55c2b8;" id="flow">0</var>m³</span>
+                            </div>
+                        </div>
+                        <div class="left form-inline">
+                            <img src="~/images/gdl.png" alt="" class="form-group">
+                            <div class="form-group">
+                                <h6>总供电量</h6>
+                                <span><var style="color: #3f92f6;" id="ener">0</var>kW·h</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nhtj_main" id="nhtj_main">
+
+                </div>
+            </div>
+            <div class="cjpm">
+                <div class="cjpm_title">
+                    <p>设备同比能耗排名</p>
+                </div>
+                <div class="pl20px pr20px pb20px" id="pretablebox">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+
+
+        window.onresize = function () {
+            nhtj_main.resize();
+        }
+    </script>
+    <script>
+        //  echarts 能耗统计
+        var nhtj_main = echarts.init(document.getElementById('nhtj_main'));
+        var pHeight = $("#content-wrapper", parent.document).height() - 170;
+        var nhtj_mainsetOption = ({
+            backgroundColor: '#fff',
+            tooltip: {
+                formatter: "{a} <br/>{c} {b}"
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {
+                        show: false
+                    },
+                    restore: {
+                        show: false
+                    },
+                    saveAsImage: {
+                        show: false
+                    }
+                }
+            },
+            series: [{
+                name: '速度',
+                type: 'gauge',
+                min: 0,
+                max: 220,
+                splitNumber: 11,
+                radius: '70%',
+                axisLine: { // 坐标轴线
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        color: [
+                            [0.39, 'lime'],
+                            [0.82, '#1e90ff'],
+                            [1, '#ff4500']
+                        ],
+                        width: 2,
+                        // shadowColor: '#fff', //默认透明
+                        shadowBlur: 10
+                    }
+                },
+                axisLabel: { // 坐标轴小标记
+                    textStyle: { // 属性lineStyle控制线条样式
+                        fontWeight: 'bolder',
+                        color: '#fff',
+                        shadowColor: '#fff', //默认透明
+                        shadowBlur: 10
+                    }
+                },
+                axisTick: { // 坐标轴小标记
+                    length: 1, // 属性length控制线长
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        color: 'auto',
+                        shadowColor: '#000', //默认透明
+                        shadowBlur: 10
+                    }
+                },
+                splitLine: { // 分隔线
+                    length: 25, // 属性length控制线长
+                    lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
+                        width: 3,
+                        color: '#fff',
+                        shadowColor: '#fff', //默认透明
+                        shadowBlur: 10
+                    }
+                },
+                pointer: { // 分隔线
+                    shadowColor: '#fff', //默认透明
+                    shadowBlur: 5,
+                    width: 4
+                },
+                title: {
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: '200',
+                        fontSize: 30,
+                        fontStyle: '微软雅黑',
+                        color: '#000',
+                        shadowColor: '#fff', //默认透明
+                        shadowBlur: 10,
+                    },
+                    offsetCenter: [0, '110%'],
+                },
+                detail: {
+                    backgroundColor: '#fff',
+                    borderWidth: 1,
+                    borderColor: '#fff',
+                    shadowColor: '#fff', //默认透明
+                    shadowBlur: 5,
+                    offsetCenter: [0, '70%'], // x, y，单位px
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        fontWeight: '200',
+                        color: '#3481ff',
+                        fontSize: '18'
+                    }
+                },
+                data: [{
+                    value: 0,
+                    name: '平均吨水电耗'
+                }]
+            }]
+        })
+        var $table = $("#tabledata");
+        var options = $table.bootstrapTable('getOptions');
+        var exsize; var expageindex; var exsort; var exorder
+        $(function () {
+            $("#tablebox").height(pHeight);
+            //初次加载数据
+            LoadData(options.pageNumber, options.pageSize, "tonwater", "desc");
+            LoadChart();
+            LoadPreData(1, 5, "pre", "desc");
+            $("#selectDate").change(function () {
+                var date = new Date();
+                var year = date.getFullYear();//获取当前年
+                var year2 = date.getFullYear() - 1;//获取上年
+                var month = date.getMonth() + 1;//获取当前月
+                var month2 = date.getMonth();//获取上月
+                var strDate = date.getDate();//获取当前日
+                var selectban = $("#selectDate").val();
+                if (selectban == 1) {
+                    //$("#BeginDate").val(year + "-" + month + "-" + strDate);
+                    $(".s-data").addClass("hidden");
+                    //WdatePicker({ dateFmt: 'yyyy-MM-dd', minDate: year + "-" + month + "-" + strDate })
+                     $("#BeginDate").val("@ViewBag.datemin");
+                    myDateFMT='yyyy-MM-dd';
+                } else if (selectban == 2) {
+                    //$("#BeginDate").val(year + "-" + month);
+                    //WdatePicker({dateFmt: 'yyyy-MM',  maxDate:'%y-%M',})
+                      $("#BeginDate").val("@ViewBag.datemin.ToString().Substring(0,7)")
+                        myDateFMT='yyyy-MM';
+                    $(".s-data").addClass("hidden");
+                } else if (selectban == 3) {
+                     $("#BeginDate").val("@ViewBag.datemin.ToString().Substring(0,4)")
+                        myDateFMT='yyyy';
+                    //WdatePicker({dateFmt: 'yyyy', minDate: year})
+                    //$("#BeginDate").val(year);
+                    $(".s-data").addClass("hidden");
+                } else if (selectban == 4) {
+                      $("#BeginDate").val("@ViewBag.datemin");
+                    myDateFMT='yyyy-MM-dd';
+                    $(".s-data").removeClass("hidden");
+                }
+            })
+            $("#selectbtn").click(function () {
+                LoadData(1, options.pageSize, "tonwater", "desc");
+                LoadChart();
+                LoadPreData(1, 5, "pre", "desc");
+            })
+            //数据导出
+            $("#ExportBtnAll").click(function () {
+                ExportList();
+            });
+            //数据导出
+            $("#ExportBtnPage").click(function () {
+                ExportPage();
+            });
+        })
+         var myDateFMT = 'yyyy-MM-dd';
+        //日期控件选择
+        function createTime() {
+            WdatePicker({dateFmt:myDateFMT});
+        }
+        //加载数据
+        function LoadData(index, pagesize, sort, order) {
+            $.post('/Sws/Sws_RunEvaluation/LoadDeviceRunEvaluationData', {
+                //beginDate: $("#BeginDate").val(),
+                //endDate: $("#EndDate").val(),
+                beginTime: $("#BeginDate").val(),
+                endTime: $("#EndDate").val(),
+                type: $("#selectDate").val(),
+                pageindex: index || 1,
+                pagesize: pagesize,
+                sortName: sort,
+                order: order
+            }, function (res) {
+                //添加table
+                $("#tablebox").html('<table id="tabledata" data-sort-name="' + res.sortName + '" class="table table-striped" data-page-list="[10,15, 20]" data-pagination="true" data-toggle="table"  data-side-pagination="server"  ' +
+                    'data-total-rows="' + res.total + '" data-sort-order="' + res.order + '"  data-page-size="' + res.pageSize + '"   data-page-number="' + res.pageIndex +  '" data-height="'+pHeight+'">' + res.dataTable + '</table>')
+                $('.no-date').html("");
+                exsize = res.pageSize;
+                expageindex = res.pageIndex;
+                exsort = res.sortName;
+                exorder = res.order;
+
+                // alert($(".bootstrap3").height - 60);
+                    $table = $('#tabledata').bootstrapTable();
+                    $table = $('#tabledata').bootstrapTable({
+                        smartDisplay:false
+                    })
+                //分页
+                $table.on('page-change.bs.table', function (e, number, size) {
+                    LoadData(number, size, sort, order);
+                });
+                //排序
+                $table.on('sort.bs.table', function (e, field, order) {
+                    LoadData(index, pagesize, field, order);
+                });
+                $('#tabledata').bootstrapTable('hideLoading');
+            });
+        }
+        //加载同比数据
+        function LoadPreData(index, pagesize, sort, order) {
+            $.post('/Sws/Sws_RunEvaluation/LoadDeviceRunPreData', {
+                //beginDate: $("#BeginDate").val(),
+                //endDate: $("#EndDate").val(),
+                beginTime: $("#BeginDate").val(),
+                endTime: $("#EndDate").val(),
+                type: $("#selectDate").val(),
+                pageindex: index || 1,
+                pagesize: pagesize,
+                sortName: sort,
+                order: order
+            }, function (res) {
+                //添加table
+                $("#pretablebox").html(res.dataTable);
+                $('#pretabledata').bootstrapTable('hideLoading');
+            });
+        }
+        function LoadChart() {
+            $.post("/Sws/Sws_RunEvaluation/LoadDeviceRunEvaluationCharts", {
+                beginTime: $("#BeginDate").val(),
+                endTime: $("#EndDate").val(),
+                type: $("#selectDate").val()
+            }, function (data) {
+                var strJson = JSON.parse(data);
+                $("#flow").html(strJson.FlowCon);
+                $("#ener").html(strJson.EnergyCon);
+                console.log(strJson.tonwater);
+                //能耗统计
+                nhtj_mainsetOption.series[0].data[0].value = strJson.tonwater;
+                nhtj_main.setOption(nhtj_mainsetOption);
+            })
+
+        }
+        //导出全部数据
+        function ExportList() {
+            window.location.href = "/Sws/Sws_RunEvaluation/ExprotEvaluationData?beginTime=" + $("#BeginDate").val() + "&endTime=" + $("#EndDate").val() + "&type=" + $("#selectDate").val() + "&pagesize=" + exsize + "&pageindex=0&sortName=" + exsort + "&order=" + exorder + "";
+
+        }
+        //导出当前数据
+        function ExportPage() {
+            window.location.href = "/Sws/Sws_RunEvaluation/ExprotEvaluationData?beginTime=" + $("#BeginDate").val() + "&endTime=" + $("#EndDate").val() + "&type=" + $("#selectDate").val() + "&pagesize=" + exsize + "&pageindex" + expageindex + "=&sortName=" + exsort + "&order=" + exorder + "";
+
+        }
+    </script>
+</body>
+
+</html>

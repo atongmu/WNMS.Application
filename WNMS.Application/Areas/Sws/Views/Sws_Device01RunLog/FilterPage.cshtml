@@ -1,0 +1,163 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>运行日志</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <!-- 树 -->
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <style>
+        .zlw_manageconrgconsan .bootstrap3 {
+            height: calc(100% - 60px)
+        }
+
+        .no-date {
+            text-align: center;
+            color: #999
+        }
+
+        .sl_list {
+            margin-top: 50px
+        }
+
+        .fixed-table-container {
+            height: calc(100% - 130px) !important;
+            overflow: auto;
+        }
+
+        .sl_chioce {
+            border-bottom: 0
+        }
+    </style>
+    <script type="text/javascript">
+
+        $table = $("#tabledata");
+        var EquipmentId =  @ViewBag.EquipmentId
+
+        $(document).ready(function () {
+            $('.fixed-table-pagination').hide();
+            //初次加载数据
+            var options = $table.bootstrapTable('getOptions');
+            //LoadData(options.pageNumber, options.pageSize, "", "");
+            $('.fixed-table-loading').hide();
+            $("#btnSelect").click(function () {
+                LoadData(options.pageNumber, options.pageSize, "", "", 2);
+                //var nodes = zTreeObj.getSelectedNodes();
+                //if (nodes.length > 0) {
+                //    console.log(nodes[0].isDevice);
+                //    if (nodes[0].isDevice == true) {
+                //        LoadData(options.pageNumber, options.pageSize, "", "", nodes[0].id);
+                //    } else {
+                //        alert("您选中的非设备类型！请重新选中！");
+                //    }
+                //}
+            });
+        });
+          $(function () {
+            //暂未数据
+            var $h = $(window).height() - 120;
+            $(".no-date").height($h);
+              $(".no-date img").css("margin-top", $h / 2 - 110);
+              //$(".zlw_manageconrgconsan").css("height", $h);
+        })
+        //加载数据
+        function LoadData(index, pagesize, sort, order, deviceid) {
+             if ($("#BeginDate").val() > $("#EndDate").val()) {
+                layer.msg("开始日期不能大于结束日期");
+                return;
+            }
+            $.post('/Sws/Sws_Device01RunLog/SetData', {
+                beginDate: $("#BeginDate").val(),
+                endDate: $("#EndDate").val(),
+                //beginDate: "2020-02-03",
+                //endDate: "2020-02-05",
+                EquipmentId: EquipmentId,
+                DataID: $("#DataID").val(),
+                pageindex: index || 1,
+                pageSize: pagesize,
+                order: sort,
+                sort: order
+            }, function (res) {
+                    //添加table
+                    $("#tablebox").html('<table id="tabledata">' + res.dataTable + '</table>')
+                    $('.no-date').html("");
+                //$("#tablebox").html('<table id="tabledata" data-sort-name="' + res.sortName + '" class="table table-striped" data-pagination="true" data-toggle="table"  data-side-pagination="server"  ' +
+                //    'data-total-rows="' + res.total + '" data-sort-order="' + res.order + '"  data-page-size="' + res.pageSize + '"   data-page-number="' + res.pageIndex + '">' + res.dataTable + '</table>')
+
+                // $('#tabledata').bootstrapTable({
+                //        height: 280
+                //    });
+                //$table = $('#tabledata').bootstrapTable();
+                ////分页
+                //$table.on('page-change.bs.table', function (e, number, size) {
+                //    LoadData(number, size, sort, order);
+                //});
+                ////排序
+                //$table.on('sort.bs.table', function (e, field, order) {
+                //    LoadData(index, pagesize, field, order);
+                //});
+                //$('#tabledata').bootstrapTable('hideLoading');
+            });
+        }
+
+
+    </script>
+</head>
+<body>
+    <div class="sl_maing">
+        <div class="sl_rg">
+            <div class="sl_chioce">
+                <nav aria-label="Page navigation" style="margin-left: 10px;margin-top: 10px;display: inline-block;">
+                    <ul class="paginations sl_chioDate">
+                        <li>
+                            <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" placeholder="开始时间" id="BeginDate" class="hyl_input hyl_input-sm" value="@ViewBag.datemin">
+                            <span class="pl10px lh30px pr10px">至</span>
+                            <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" placeholder="结束时间" id="EndDate" class="hyl_input hyl_input-sm" value="@ViewBag.datemax">
+
+                            <select id="DataID" class="hyl_select ml5px">
+                                @{
+                                    IEnumerable<SwsDataInfo> listdata = ViewBag.Sws_DataInfo as IEnumerable<SwsDataInfo>;
+                                    foreach (var item in listdata)
+                                    {
+                                        <option value="@item.DataId">@item.Cnname</option>
+                                    }
+                                }
+                            </select>
+                            <button id="btnSelect" class="hyl_btn"> <i class="fa fa-search"></i> 查询</button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="sl_list" style="height:calc(100% - 50px);overflow:auto">
+                <div class="zlw_manageconrgconsan" id="tablebox" style="height:100%;">
+                    <div class="no-date">
+                        <img src="~/images/null.png" width="150" />
+                        <p>暂无数据</p>
+                    </div>
+                    @*<table id="tabledata" data-toggle="table" data-pagination="true" data-side-pagination="server" data-page-list="[10, 25, 50, 100]" data-page-size="10" class="table-striped" >
+                            <tr></tr>
+                        </table>*@
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define(["exports","../../../../core/arrayUtils","../../../../chunks/vec2f64","../../../../chunks/vec2"],function(f,g,k,h){let n=function(){function d(a,b,e,l,m=0){this.origin=a;this.axis1=b;this.factor1=e;this.factor2=l;this.accumulationType=m;this.axis2=k.fromValues(b[1],-b[0])}var c=d.prototype;c.scale=function(a,b,e){h.projectAndScale(a.pos,a.pos,this.origin,this.axis1,b);h.projectAndScale(a.pos,a.pos,this.origin,this.axis2,e)};c.apply=function(a){this.scale(a,this.factor1,this.factor2)};c.undo=
+function(a){this.scale(a,1/this.factor1,1/this.factor2)};c.canAccumulate=function(a){return a instanceof d&&g.equals(this.origin,a.origin)&&g.equals(this.axis1,a.axis1)};c.accumulate=function(a,b){1===b.accumulationType?this.scale(a,b.factor1/this.factor1,b.factor2/this.factor2):this.scale(a,b.factor1,b.factor2)};c.accumulateParams=function(a){const b=1===a.accumulationType;this.factor1=b?a.factor1:this.factor1*a.factor1;this.factor2=b?a.factor2:this.factor2*a.factor2};return d}();f.ScaleVertex=n;
+Object.defineProperty(f,"__esModule",{value:!0})});

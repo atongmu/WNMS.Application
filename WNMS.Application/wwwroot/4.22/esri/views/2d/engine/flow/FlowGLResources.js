@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define("../../../webgl/BufferObject ../../../webgl/FramebufferObject ../../../../chunks/_rollupPluginBabelHelpers ../../../../core/has ../../../webgl/checkWebGLError ../../../webgl/enums ../../../../chunks/builtins ../../../webgl/Texture ../../../webgl/VertexArrayObject".split(" "),function(c,l,m,n,p,q,r,t,h){return function(){function d(a,b){this._vertexData=a;this._indexData=b}var e=d.prototype;e.prepareForRendering=function(a,b,k){const f=c.createVertex(a,35044,this._vertexData),g=c.createIndex(a,
+35044,this._indexData);a=new h(a,b,k,{geometry:f},g);this.vertexBuffer=f;this.indexBuffer=g;this.vertexArray=a;this._indexData=this._vertexData=null};e.detach=function(){this.vertexArray.dispose();this.vertexBuffer.dispose();this.indexBuffer.dispose()};return d}()});

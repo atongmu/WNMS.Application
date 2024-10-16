@@ -1,0 +1,341 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ManualDispatch</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle02.css" rel="stylesheet" />
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <style>
+        .workbox {
+            margin: 20px;
+        }
+
+        .ztree li span {
+            color: #333
+        }
+
+        .ztree li a.curSelectedNode span {
+            color: #fff
+        }
+
+        .workbox label {
+            font-size: 16px;
+            padding-bottom: 5px;
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+
+        .boxchild {
+            display: block;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 10px
+        }
+
+        .means {
+        }
+
+            .means h6 {
+                font-size: 16px;
+                margin: 0;
+                line-height: 36px;
+                height: 36px;
+                overflow: hidden;
+                zoom: 1;
+            }
+
+            .means textarea {
+                width: 100%;
+                resize: none;
+                padding: 5px;
+                height: 90px;
+                border: 1px solid #ccc;
+                outline: none;
+                border-radius: 4px;
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            }
+
+                .means textarea:focus {
+                    border-color: #66afe9;
+                    outline: 0;
+                    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+                    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+                }
+
+        .fzr-ztree {
+            width: 300px;
+            border-radius: 3px;
+            display: none;
+            background: #f5f5f5;
+            position: fixed;
+            left: 20px;
+            top: 86px;
+            z-index: 100;
+            box-shadow: 0 1px 10px #ccc
+        }
+
+        .cyr-ztree {
+            width: 300px;
+            border-radius: 3px;
+            display: none;
+            background: #f5f5f5;
+            position: fixed;
+            left: 20px;
+            top: 162px;
+            box-shadow: 0 1px 10px #ccc
+        }
+    </style>
+</head>
+<body>
+    <div class="workbox">
+        <div id="MUser" class="row means">
+            <div class="col-sm-6">
+                <label>负责人<i class="ion-compose"></i></label>
+                <div class="toggleztree">
+                    <input id="musername" type="text" class="form-control" placeholder="负责人" value="" />
+                </div>
+                <ul id="mtreeDemo" class="ztree fzr-ztree"></ul>
+            </div>
+            <div class="col-sm-6">
+                <label>分派意见</label>
+                <textarea id="instruction"></textarea>
+            </div>
+        </div>
+        @*<div id="MUser" class="form-group">
+            <label>负责人<i class="ion-compose"></i></label>
+            <div class="toggleztree">
+                <input id="musername" type="text" class="form-control" placeholder="负责人" value="" />
+            </div>
+            <ul id="mtreeDemo" class="ztree fzr-ztree"></ul>
+
+        </div>
+
+        <div class="means form-group">
+            <label>分派意见</label>
+            <textarea id="instruction"></textarea>
+        </div>*@
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="Department">泵房</label>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-suitcase"></i>
+                        </div>
+                        <select id="StationId" name="StationId" class="form-control">
+                            <option value="">==请选择==</option>
+                            @{
+                                IEnumerable<SwsStation> station = ViewBag.station as IEnumerable<SwsStation>;
+                                foreach (var item in station)
+                                {
+                                    <option value="@item.StationId">@item.StationName</option>
+
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="Department">设备</label>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-suitcase"></i>
+                        </div>
+                        <select id="EquipmentId" name="EquipmentId" class="form-control">
+                            <option value="">==请选择==</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="Gender">紧急程度</label>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-transgender-alt"></i>
+                        </div>
+                        <select id="degree" name="degree" class="form-control">
+                            @{
+                                var em = System.Enum.GetValues(typeof(WNMS.Model.CustomizedClass.EmergencyDegree));
+                                foreach (var item in em)
+                                {
+                                <option value="@((int)item)">@item</option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="Gender">处理级别</label>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-transgender-alt"></i>
+                        </div>
+                        <select id="level" name="level" class="form-control">
+                            @{
+                                var pr = System.Enum.GetValues(typeof(WNMS.Model.CustomizedClass.ProcessingLevel));
+                                foreach (var item in pr)
+                                {
+                                <option value="@((int)item)">@item</option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="means">
+            <h6>
+                <span style="float: left;">事件内容</span>
+            </h6>
+            <textarea id="eventContent"></textarea>
+        </div>
+        <div>
+            <label style="margin-top:5px">完成日期<i class="ion-compose"></i></label>
+            <div>
+                <input type="text" id="EndDate" name="EndDate" class="form-control" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" placeholder="完成时间" value="@ViewBag.CTime" autocomplete="off" />
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.all.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script>
+        $(function () {
+            var $h = $(window).height() - 180;
+            $(".fzr-ztree,.cyr-ztree").height($h);
+            $(".toggleztree input").click(function (e) {
+                $(this).parent(".toggleztree").siblings("ul").toggle();
+                e.stopPropagation()
+            });
+            $(".fzr-ztree,.cyr-ztree").click(function (e) {
+                e.stopPropagation()
+            });
+            $(document).click(function (e) {
+                if ($(".fzr-ztree,.cyr-ztree").is(':visible')) {
+                    $(".fzr-ztree,.cyr-ztree").hide();
+                }
+                e.stopPropagation()
+            });
+        });
+        var index = parent.layer.getFrameIndex(window.name);
+        var pindex = parent.layer.getFrameIndex(parent.window.name);
+        var time = $("#EndDate").val(); //完成时间
+        //ztree 配置
+        var ztreeid;
+        var mzTreeObj;
+
+        var msetting = {
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }, callback: {
+                onCheck: zTreeOnCheck
+            }, view: {
+                showTitle: false,
+                showLine: true,
+                nameIsHTML: true
+            }
+            ,
+            check: {
+                enable: true,
+                chkStyle: "radio",
+                chkboxType: "all"
+            }
+        };
+        var zNodes = @ViewBag.TreeNode;
+        $(function () {
+            if (time != "") {
+                $("#EndDate").attr("readonly", "readonly");
+            }
+            mzTreeObj = $.fn.zTree.init($("#mtreeDemo"), msetting, zNodes);
+        });
+        function zTreeOnCheck(event, treeId, treeNode) {
+            if (treeNode.type == "1") {
+                $("#musername").val(treeNode.name);
+            }
+        }
+
+        function SubmitData() {
+            var mnodes = mzTreeObj.getCheckedNodes();
+            if (mnodes.length > 0 && mnodes[0].type != 0) {
+                if ($("#StationId").val() == "" || $("#StationId").val() == 0 || $("#EquipmentId").val() == "" || $("#EquipmentId").val() == 0) {
+                    layer.msg("请选择泵房和设备");
+                    return false;
+                }
+                if (time == ""&&$("#EndDate").val()=="") {
+                    layer.msg("请填写完成时间");
+                } else {
+                    PostData(mnodes[0].id);
+                }
+            } else {
+                layer.msg("请选择负责人");
+            }
+        }
+
+        function PostData(mid, id) {
+            $.post("/Wo/WorkHandle/AddManualDispatch",
+                {
+                    mid: mid,
+                    Description: $("#instruction").val(),
+                    CompDate: $("#EndDate").val(),
+                    level: $("#level").val(),
+                    degree: $("#degree").val(),
+                    stationid: $("#StationId").val(),
+                    eqid: $("#EquipmentId").val(),
+                    eventContent: $("#eventContent").val(),
+                },
+                function (res) {
+                    if (res == "ok") {
+                        layer.msg("任务派发成功", function () {
+                            window.parent.location.reload();
+                        });
+                    }else {
+                         layer.alert("工单派发失败，请重新派发");
+                    }
+                });
+        }
+        function LoadEq() {
+            $.post("/Wo/WorkHandle/LoadEq",
+                {
+                    id:$("#StationId").val()
+                },
+                function (data) {
+                    var strhtml = "";
+                    $("#EquipmentId").empty();
+                    if (data.eqList != "") {
+                        for (var i = 0; i < data.eqList.length; i++) {
+
+                            strhtml += "<option value=" + data.eqList[i].deviceId + ">" + data.eqList[i].deviceName + "</option>";
+                        }
+                        $("#EquipmentId").append(strhtml);
+                    }
+                });
+        }
+         $("#StationId").change(function () {
+           LoadEq();
+        })
+    </script>
+</body>
+</html>

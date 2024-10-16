@@ -1,0 +1,117 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link rel="stylesheet" href="~/Swslxl/css/page.css">
+</head>
+<body>
+    <table class="layui-hide" id="tableAlarmsDetail" lay-filter="tableAlarmsDetail"></table>
+
+    <script src="~/Swslxl/js/libs/jquery-1.12.4/jquery-1.12.4.min.js"></script>
+
+    <link rel="stylesheet" href="~/Swslxl/js/libs/layui/css/layui.css">
+    <script src="~/Swslxl/js/libs/layui/layui.js"></script>
+
+    <script src="~/Swslxl/js/common.js"></script>
+
+    <script>
+		layui.use(['form', 'table'], function() {
+			var form = layui.form,
+				table = layui.table,
+				$ = layui.$;
+
+			// 接收页面传递的参数
+			var beginDate = '@ViewBag.beginDate',
+				endDate = '@ViewBag.endDate',
+				detailType = @ViewBag.type,
+                content = @Html.Raw(ViewBag.content);
+            datetype = '@ViewBag.DateType';
+
+			table.render({
+				elem: '#tableAlarmsDetail',
+                url: "/Sws/Sws_EventAnalysis/GetEventDetailData",
+                method: 'post' ,
+				where: {
+					beginDate: beginDate,
+                    endDate: endDate,
+                    type: datetype,
+					detailType: detailType,
+					content: content
+				},
+				even: true,
+				page: true,
+                cols: [
+                    [
+                        {
+                            field: 'manufacturer',
+                            title: '报警厂商',
+                        },
+                        {
+                            field: 'stationName',
+                            title: '报警泵房',
+                        },
+                        {
+                            field: 'deviceType',
+                            title: '设备类型',
+                        },
+                        {
+                            field: 'eventTime',
+                            title: '报警时间',
+                            width: 170,
+                        },
+                        {
+                            field: 'eventMessage',
+                            title: '报警内容',
+                        },
+                        //{
+                        //    field: 'currentValue',
+                        //    title: '当前值',
+                        //    width: 90,
+                        //},
+                        {
+                            field: 'state',
+                            title: '报警状态',
+                            width: 90,
+                            templet: function (d) {
+                                var color = '#333';
+                                var name = '';
+                                switch (d.state) {
+                                    case 1:
+                                        color = '#f00';
+                                        name = '发生';
+                                        break;
+                                    case 0:
+                                        color = '#28a506';
+                                        name = '解除';
+                                        break;
+                                    default:
+                                        color = '#28a506';
+                                        name = '解除';
+                                        break;
+                                }
+                                return '<span style="color: ' + color + '">' + name + '</span>';
+                            }
+                        },
+                        {
+                            field: 'duration',
+                            title: '持续时间',
+                        },
+                    ]
+                ],
+				done: function(res, curr, count) {
+					console.log(res);
+				}
+			});
+		});
+    </script>
+</body>
+</html>

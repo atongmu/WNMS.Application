@@ -1,0 +1,992 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="keywords" content="智慧供水平台">
+    <meta name="description" content="智慧供水平台">
+    <title>能耗分析</title>
+    <link href="~/Swslxl/css_nh/common.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Swslxl/css_nh/reset.css">
+    <link rel="stylesheet" href="~/Swslxl/css_nh/common.css">
+    <link rel="stylesheet" href="~/Swslxl/fonts/iconfont.css">
+    <link rel="stylesheet" href="~/Swslxl/css_nh/theme1.css">
+    <script src="~/Swslxl/js/plugins/adaption.js"></script>
+</head>
+<body>
+    <div class="window-height pb-10 has-left-menu" data-negative=".1">
+        <div class="page-title">
+            <h2>
+                <i class="iconfont icon-bengfang"></i>
+                <span id="stationName"></span>
+            </h2>
+        </div>
+
+        <div class="container full-height pt-70">
+            <div class="row height-2 list-parameter-card">
+                <div class="col-sm-3 full-height item">
+                    <div class="box full-height">
+                        <div class="box-content">
+                            <div class="middle-box">
+                                <div class="middle-inner">
+                                    <div class="name">今日能耗</div>
+                                    <div class="value" id="todayData"></div>
+                                </div>
+                            </div>
+                            <i class="icon icon-linechart"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 full-height item">
+                    <div class="box full-height">
+                        <div class="box-content">
+                            <div class="middle-box">
+                                <div class="middle-inner">
+                                    <div class="name">昨日能耗</div>
+                                    <div class="value" id="yesterDay"></div>
+                                </div>
+                            </div>
+                            <i class="icon icon-linechart"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 full-height item">
+                    <div class="box full-height">
+                        <div class="box-content">
+                            <div class="middle-box">
+                                <div class="middle-inner">
+                                    <div class="name">本周能耗</div>
+                                    <div class="value" id="weekData"></div>
+                                </div>
+                            </div>
+                            <i class="icon icon-linechart"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 full-height item">
+                    <div class="box full-height">
+                        <div class="box-content">
+                            <div class="middle-box">
+                                <div class="middle-inner">
+                                    <div class="name">本月能耗</div>
+                                    <div class="value" id="monthData"></div>
+                                </div>
+                            </div>
+                            <i class="icon icon-linechart"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row height-5">
+                <div class="col-sm-6 full-height">
+                    <div class="box full-height">
+                        <div class="box-content box-content-primary">
+                            <div class="box-content-title">
+                                <div class="title">分段式能耗分析图</div>
+                                <div class="subtitle clearfix">
+                                    @*<h4>统计时间&nbsp;<span>2021-01-20</span>&nbsp;至&nbsp;<span>2021-01-20</span></h4>*@
+                                    <h4>统计时间&nbsp;<span id="Etime1">@ViewBag.BeginTimeDay</span></h4>
+                                </div>
+
+                                <div class="layui-form form form-primary form-inline">
+                                    <div class="form-group">
+                                        <input type="text" name="time1" value="@ViewBag.BeginTimeDay" class="form-control advanceDate time-d" data-name="time1" data-type="date" readonly="readonly" placeholder="选择日期" style="width: 1rem;" />
+                                    </div>
+                                    <div class="form-group" style="width: .8rem;">
+                                        <select name="time1Interval" lay-filter="time1IntervalChange">
+                                            <option value="1">1小时</option>
+                                            <option value="4">4小时</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-content-wrap">
+                                <div id="echarts1" class="echarts"></div>
+
+                                <div class="nothing absolute" id="nothing1">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 full-height">
+                    <div class="box full-height">
+                        <div class="box-content box-content-primary">
+                            <div class="box-content-title">
+                                <div class="title">累计能耗分析</div>
+                                <div class="subtitle clearfix">
+                                    <h4>统计时间&nbsp;<span id="LJtime1">@ViewBag.BeginTime</span>&nbsp;至&nbsp;<span id="LJtime2">@ViewBag.EndTime</span></h4>
+                                </div>
+
+                                <div class="layui-form form form-primary form-inline">
+                                    <div class="form-group">
+                                        <input type="text" name="timeInterval2" value="@ViewBag.BeginTime ~ @ViewBag.EndTime" class="form-control advanceDate time-d-range" data-name="timeInterval2" data-type="date" data-range="~" readonly="readonly" placeholder="选择日期" style="width: 2.8rem;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-content-wrap">
+                                <div id="echarts2" class="echarts"></div>
+
+                                <div class="nothing absolute" id="nothing2">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row height-5">
+                <div class="col-sm-4 full-height">
+                    <div class="box full-height">
+                        <div class="box-content box-content-primary">
+                            <div class="box-content-title">
+                                <div class="title">近七天能耗分析</div>
+                                <div class="subtitle clearfix">
+                                    <h4>统计时间&nbsp;<span>@DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd") </span>&nbsp;至&nbsp;<span>@DateTime.Now.ToString("yyyy-MM-dd")</span></h4>
+
+                                    <!-- echart图例 -->
+                                    @*<div id="echarts3legend" class="list-legend"></div>*@
+                                </div>
+                            </div>
+                            <div class="box-content-wrap">
+                                <div id="echarts3" class="echarts"></div>
+
+                                <div class="nothing absolute" id="nothing3">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 full-height">
+                    <div class="box full-height">
+                        <div class="box-content box-content-primary">
+                            <div class="box-content-title">
+                                <div class="title">能耗分段查询</div>
+                                <div class="subtitle clearfix">
+                                    @*<h4>统计时间&nbsp;<span>@ViewBag.BeginTime</span>&nbsp;至&nbsp;<span>@ViewBag.EndTime</span></h4>*@
+                                    <h4>统计时间&nbsp;<span id="TableTime">@ViewBag.BeginTimeDay</span></h4>
+                                </div>
+
+                                <div class="layui-form form form-primary form-inline">
+                                    <div class="form-group">
+                                        <input type="text" name="time4" value="@ViewBag.BeginTimeDay" class="form-control advanceDate time-d" data-name="time4" data-type="date" readonly="readonly" placeholder="选择日期" style="width: 1rem;" />
+                                    </div>
+                                    <div class="form-group" style="width: .8rem;">
+                                        <select name="time4Interval" lay-filter="time4IntervalChange">
+                                            <option value="1">1小时</option>
+                                            <option value="4">4小时</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-content-wrap box-content-wrap-padding">
+                                <div id="table4" class="table table-primary table-sm table-thead-absolute table-flex">
+                                    <div class="thead">
+                                        <div class="tr"></div>
+                                    </div>
+                                    <div class="tbody">
+                                    </div>
+                                </div>
+
+                                <div class="nothing absolute" id="nothing4">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 full-height">
+                    <div class="box full-height">
+                        <div class="box-content box-content-primary">
+                            <div class="box-content-title">
+                                <div class="title">月累计能耗分析表</div>
+                                <div class="subtitle clearfix">
+                                    <h4>统计时间&nbsp;<span id="LTabletime1">@ViewBag.BeginTime</span>&nbsp;至&nbsp;<span id="LTabletime2">@ViewBag.EndTime</span></h4>
+                                </div>
+                            </div>
+                            <div class="box-content-wrap box-content-wrap-padding">
+                                <div id="table5" class="table table-primary table-sm table-compact table-thead-absolute table-flex">
+                                    <div class="thead">
+                                        <div class="tr"></div>
+                                    </div>
+                                    <div class="tbody">
+                                    </div>
+                                </div>
+
+                                <div class="nothing absolute" id="nothing5">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 泵房选择 -->
+    <div class="ztree-container active">
+        <form class="layui-form form form-search">
+            <div class="form-group">
+                <i class="layui-icon layui-icon-search"></i>
+                <input type="text" name="keywords" lay-verify="required" lay-verType="tips" lay-reqText="请输入泵房名称" class="layui-input" placeholder="“泵房”名称">
+                <button class="btn btn-primary" lay-submit lay-filter="formSearch">搜索</button>
+            </div>
+        </form>
+
+        <div class="btn-aside-fold left active"></div>
+
+        <div id="zTreeStation" class="ztree"></div>
+    </div>
+
+    <!-- 设置时间框宽度，仅供占位使用 -->
+    <div class="time-value-content time-width-dhms-range">2021-01-01 00:00:00 ~ 2021-07-05 21:00:34</div>
+    <div class="time-value-content time-width-d-range">2021-01-01 ~ 2021-07-05</div>
+    <div class="time-value-content time-width-d">2021-01-01</div>
+
+    <script src="~/Swslxl/js/libs/jquery-1.12.4/jquery-1.12.4.min.js"></script>
+
+    <link rel="stylesheet" href="~/Swslxl/js/libs/layui/css/layui.css">
+    <script src="~/Swslxl/js/libs/layui/layui.js"></script>
+
+    <script src="~/Swslxl/js/plugins/echarts/echarts.js"></script>
+    <script src="~/Swslxl/js/plugins/echarts/customed.js"></script>
+
+    <script src="~/Swslxl/js/plugins/jquery.SuperSlide.3.0.alpha.js"></script>
+
+    <!-- ztree -->
+    <link href="~/Swslxl/js/plugins/ztree/css/ztreefont.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Swslxl/js/plugins/ztree/diy/zTreeStyle01.css">
+    <script src="~/Swslxl/js/plugins/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/Swslxl/js/plugins/ztree/jquery.ztree.excheck-3.5.js"></script>
+
+    <script src="~/Swslxl/js/common.js"></script>
+
+    <script>
+        // 异常数据处理----筛查出异常数据赋给平均值
+        function replaceOutliersWithAverage(arr) {
+            // 第一步：找出所有可以转换为数字的字符串
+            const numbers = arr.filter(item => !isNaN(parseFloat(item))).map(Number);
+
+            // 第二步：如果所有元素都不能转换为数字，则返回原始数组（或可以选择抛出错误）
+            if (numbers.length === 0) {
+                return arr; // 或者 throw new Error('No valid numbers found in the array.');
+            }
+            const max = Math.max(...numbers);
+
+            // 第三步：计算这些数字的总和和平均值
+            const filteredNumbers = numbers.filter(num => num !== max);
+
+            // 第四步：计算平均值
+            const sum = filteredNumbers.reduce((acc, num) => acc + num, 0);
+            const average = sum / filteredNumbers.length;
+
+            // 第五步：创建一个新数组，用平均值替换异常值（即无法转换为数字的字符串）
+            const newArr = arr.map(item => {
+                const num = parseFloat(item);
+                if (isNaN(num) || num > (average*5)) {
+                    // 替换为平均值的字符串表示（如果需要数字，可以直接返回 average）
+                    return average.toFixed(2).toString();
+                }
+
+
+                return item; // 如果可以转换为数字，则保持原样（注意这里会保持为字符串）
+            });
+
+            return newArr;
+        }
+        var zTreeObj = null,
+            zTreeSetting = {
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                },
+                callback: {
+                    onClick: zTreeOnClick
+                },
+                view: {
+                    showTitle: false,
+                    showLine: true,
+                    nameIsHTML: true,
+                    showIcon: false
+                }
+            };
+
+        var zTreeNodes = @ViewBag.treenodes;
+
+        var stationId = 0, 					// 默认选中的泵房id
+            deviceId = 0,
+            type = 0,
+            stationName = ''; 	// 默认选中的泵房名称
+
+        /**
+         * 写入默认值
+         */
+        $('#stationName').text(stationName);
+
+        /**
+         * 图表配置
+         */
+        var echartsApp = [],
+            // 1、分段式能耗分析图
+            options1 = {
+                color: ['#85d363', '#5d9df2'],
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var html = params[0].name + '<br />';
+                        for (var i = 0; i < params.length; i++) {
+                            html += params[i].marker + params[i].seriesName + '：' + params[i].value + 'kW·h<br>'
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    top: 20,
+                    left: .14 * baseSize,
+                    right: .14 * baseSize,
+                    bottom: .14 * baseSize,
+                    containLabel: true
+                },
+                legend: {
+                    show: false,
+                    data: []
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: [],
+                }],
+                yAxis: [{
+                    type: 'value',
+                }],
+                series: [
+                    {
+                        name: '参数1',
+                        type: 'bar',
+                        barWidth: 12,
+                        barGap: '50%',
+                        itemStyle: {
+                            normal: {
+                                barBorderRadius: [30, 30, 0, 0],
+                            }
+                        },
+                        data: []
+                    }, {
+                        name: '参数2',
+                        type: 'bar',
+                        barWidth: 12,
+                        barGap: '50%',
+                        itemStyle: {
+                            normal: {
+                                barBorderRadius: [30, 30, 0, 0],
+                            }
+                        },
+                        data: []
+                    }
+                ]
+            },
+
+            // 2、累计能耗分析
+            options2 = {
+                color: ['#ff8a8a', '#75b1ff'],
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var html = params[0].name + '<br />';
+                        for (var i = 0; i < params.length; i++) {
+                            var val = params[i].value;
+                            if (params[i].value == undefined) {
+                                val = 0;
+                            }
+                            html += params[i].marker + params[i].seriesName + '：' + val + 'kW·h<br>'
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    top: 20,
+                    left: .14 * baseSize,
+                    right: .14 * baseSize,
+                    bottom: .14 * baseSize,
+                    containLabel: true
+                },
+                legend: {
+                    show: false,
+                    data: []
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: [],
+                }],
+                yAxis: [{
+                    type: 'value',
+                }],
+                series: [
+                    {
+                        name: '参数1',
+                        type: 'bar',
+                        barWidth: 12,
+                        barGap: '50%',
+                        itemStyle: {
+                            normal: {
+                                barBorderRadius: [30, 30, 0, 0],
+                            }
+                        },
+                        data: []
+                    }, {
+                        name: '参数2',
+                        type: 'bar',
+                        barWidth: 12,
+                        barGap: '50%',
+                        itemStyle: {
+                            normal: {
+                                barBorderRadius: [30, 30, 0, 0],
+                            }
+                        },
+                        data: []
+                    }
+                ]
+            },
+
+            // 3、近七天能耗分析
+            options3 = {
+                color: ['#fc69b2', '#fc9a72', '#91CB74', '#EE6666', '#75b1ff'],
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var html = params[0].name + '<br />';
+                        for (var i = 0; i < params.length; i++) {
+                            var marker = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color: ' + params[i].color + ';"></span>';
+                            html += marker + params[i].seriesName + '：' + params[i].value + 'kW·h<br>'
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    top: 40,
+                    left: .14 * baseSize,
+                    right: .14 * baseSize,
+                    bottom: .14 * baseSize,
+                    containLabel: true
+                },
+                legend: {
+                    type: 'scroll',
+                    data: []
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: [],
+                }],
+                yAxis: [{
+                    type: 'value',
+                }],
+                series: [
+                    {
+                        name: '中区',
+                        type: 'bar',
+                        barWidth: 12,
+                        barGap: '50%',
+                        itemStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                                    offset: 1,
+                                    color: 'rgba(255, 168, 158, 1)'
+                                }, {
+                                    offset: 0,
+                                    color: 'rgba(252, 105, 178, 1)'
+                                }]),
+                                barBorderRadius: [30, 30, 0, 0],
+                            }
+                        },
+                        data: []
+                    }, {
+                        name: '高区',
+                        type: 'bar',
+                        barWidth: 12,
+                        barGap: '50%',
+                        itemStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                                    offset: 1,
+                                    color: 'rgba(252, 182, 125, 1)'
+                                }, {
+                                    offset: 0,
+                                    color: 'rgba(252, 154, 114, 1)'
+                                }]),
+                                barBorderRadius: [30, 30, 0, 0],
+                            }
+                        },
+                        data: []
+                    }
+                ]
+            };
+
+        var table4Slide = null, // 滚动插件对象
+            table5Slide = null, // 滚动插件对象
+            visNum = null;		// 可视个数
+
+        layui.use(['form', 'laydate'], function () {
+            var form = layui.form,
+                laydate = layui.laydate,
+                $ = layui.$;
+
+            /**
+             * 泵房选择zTree初始化
+             */
+            zTreeObj = $.fn.zTree.init($("#zTreeStation"), zTreeSetting, zTreeNodes);
+            var nodes = zTreeObj.getNodes();
+            stationId = nodes[0].id;
+            stationName = nodes[0].name.replace(/<em.*?em>/, '');
+            $('#stationName').text(stationName);
+            form.on('submit(formSearch)', function (data) {
+                console.log(data.field);
+                zTreeReload(data.field.keywords);
+                return false;
+            });
+
+            /**
+             * 初始化日期选择器
+             */
+            lay('.advanceDate').each(function () {
+                var name = $(this).data('name'),
+                    type = $(this).data('type'),
+                    range = $(this).data('range');
+
+                laydate.render({
+                    elem: this,
+                    trigger: 'click',
+                    type: type,
+                    range: range ? range : false,
+                    max: 0,
+                    done: function (value) {
+                        // 将选择后的值回填
+                        $("input[name='" + name + "']").val(value);
+
+                        switch (name) {
+                            case 'time1':
+                                // 1、分段式能耗分析图
+                                getData1();
+                                break;
+
+                            case 'timeInterval2':
+                                // 2、累计能耗分析
+                                getData2();
+                                getData5();
+                                break;
+
+                            case 'time4':
+                                // 4、能耗分段查询
+                                getData4();
+                                break;
+                        }
+                    }
+                });
+            });
+
+            /**
+             * 设置title中 legend 容器最大宽度
+             */
+            setTimeout(function () {
+                $('.subtitle-legend-container').each(function () {
+                    var containerWidth = $(this).outerWidth(),
+                        h4Width = $(this).children('h4').width();
+                    console.log(containerWidth);
+                    console.log(h4Width);
+
+                    $(this).children('.list-legend').css('max-width', (containerWidth - h4Width));
+                    console.log(containerWidth);
+                });
+            }, 1000);
+
+            /**
+             * 分段式能耗分析图select change
+             * time1IntervalChange
+             */
+            form.on('select(time1IntervalChange)', function (data) {
+                // 1、分段式能耗分析图
+                getData1();
+            });
+
+            /**
+             * 能耗分段查询select change
+             * time4IntervalChange
+             */
+            form.on('select(time4IntervalChange)', function (data) {
+                // 4、能耗分段查询
+                getData4();
+
+            });
+
+            /**
+             * 初始化图表
+             */
+            // 1、分段式能耗分析图
+            echartsApp[1] = echarts.init($('#echarts1')[0], 'customed');
+            echartsApp[1].setOption(options1);
+
+            // 2、累计能耗分析
+            echartsApp[2] = echarts.init($('#echarts2')[0], 'customed');
+            echartsApp[2].setOption(options2);
+
+            // 3、近七天能耗分析
+            echartsApp[3] = echarts.init($('#echarts3')[0], 'customed');
+            echartsApp[3].setOption(options3);
+
+            /**
+             * 获取数据
+             */
+            refreshData();
+            //setTimeout(function() {
+            //	//refreshData();
+            //}, .1 * 1000);
+        });
+
+        /**
+         * 树查询
+         */
+        function zTreeReload(keywords) {
+            console.log('查询关键字：');
+            console.log(keywords);
+            zTreeObj.destroy(); //清空树
+
+            // 查询树列表数据
+            $.post("/Sws/Sws_EnergyConsump/SearchTree", {
+                stationName: keywords
+            }, function (data) {
+                var aa = JSON.parse(data);
+
+                // 重新初始化树
+                zTreeObj = $.fn.zTree.init($("#zTreeStation"), zTreeSetting, aa);
+                zTreeObj.expandAll(true);
+            });
+        }
+
+        /**
+         * 树叶子点击事件
+         */
+        function zTreeOnClick(event, treeId, treeNode) {
+            // 泵房id
+            if (treeNode.isDevice == true) {
+                type = 1;
+                deviceId = treeNode.id;
+                stationId = treeNode.pId;
+            } else {
+                type = 0;
+                deviceId = 0;
+                stationId = treeNode.id;
+            }
+            // 泵房名称
+            stationName = treeNode.name.replace(/<em.*?em>/, '');
+
+            // 写入泵房名称
+            $('#stationName').text(stationName);
+            $(".time4").val(@ViewBag.BeginTimeDay);
+            $(".time1").val(@ViewBag.BeginTimeDay);
+            $(".timeInterval2").val(@ViewBag.BeginTime+"~" + @ViewBag.EndTime);
+
+            // 刷新数据
+            refreshData();
+        }
+
+        /**
+         * 获取数据
+         */
+        function refreshData() {
+            // 获取统计汇总数据
+            getStatisticsData();
+
+            // 1、分段式能耗分析图
+            getData1();
+
+            // 2、累计能耗分析
+            getData2();
+
+            // 3、近七天能耗分析
+            getData3();
+
+            // 4、能耗分段查询
+            getData4();
+
+            // 5、月累计能耗分析表
+            getData5();
+        }
+
+        /**
+         * ***** 数据绑定 *****
+         */
+        /**
+         * 获取统计汇总数据
+         */
+        function getStatisticsData() {
+            $.post("/Sws/Sws_EnergyConsump/GetTotalData", {
+                type: type,//type
+                stationID: stationId,
+                deviceId: deviceId
+            }, function (res) {
+                if (res != null) {
+                    $("#todayData").html(res.todayNH + 'kW·h');
+                    $("#yesterDay").html(res.yestodayNH + 'kW·h');
+                    $("#weekData").html(res.weekNH + 'kW·h');
+                    $("#monthData").html(res.monthNH + 'kW·h');
+                }
+                else {
+                    $("#todayData").html('0kW·h');
+                    $("#yesterDay").html('0kW·h');
+                    $("#weekData").html('0kW·h');
+                    $("#monthData").html('0kW·h');
+                }
+            });
+        }
+
+        /**
+         * 1、分段式能耗分析图
+         */
+        function getData1() {
+            var date = $("input[name='time1']").val(),
+                interval = $("select[name='time1Interval']").val();
+
+            $("#Etime1").html(date);
+
+            $.post("/Sws/Sws_EnergyConsump/GetEnergySectionData", {
+                type: type,//type
+                date: date,
+                timevalue: interval,
+                stationId: stationId,
+                deviceId: deviceId
+            }, function (res) {
+                if (res.timelist.length > 0) {
+                    $("#echarts1").css("display", "block");
+                    $("#nothing1").css("display", "none");
+
+                    options1.xAxis[0].data = eval(res.timelist);
+                    options1.legend.data = eval(res.lengnds);
+                    var series = [];
+
+                    for (var i = 0; i < res.seriesList.length; i++) {
+                        var opt = {
+                            name: '',
+                            data: [],
+                            type: 'line',
+                            smooth: true,
+                            yAxisIndex: 0
+                        };
+                        opt.name = res.seriesList[i].name;
+                        opt.data = eval(res.seriesList[i].data);
+                        series.push(opt);
+                    }
+                    options1.series = series;
+
+                    echartsApp[1].clear();;
+                    echartsApp[1].setOption(options1, true);
+                }
+                else {
+                    $("#echarts1").css("display", "none");
+                    $("#nothing1").css("display", "block");
+                }
+            });
+        }
+
+        /**
+         * 2、月累计能耗分析图
+         */
+        function getData2() {
+            var timeInterval = $("input[name='timeInterval2']").val().split('~'),
+                date1 = timeInterval[0],
+                date2 = timeInterval[1];
+
+            //时间段显示
+            $("#LJtime1").html(date1);
+            $("#LJtime2").html(date2);
+
+            //数据查询
+            $.post("/Sws/Sws_EnergyConsump/GetDayChartData", {
+                type: type,//type
+                beginDate: date1,
+                endDate: date2,
+                stationID: stationId,
+                deviceId: deviceId
+            }, function (res) {
+                console.log(res)
+                if (res.timelist.length > 0) {
+                    $("#echarts2").css("display", "block");
+                    $("#nothing2").css("display", "none");
+                    options2.xAxis[0].data = eval(res.timelist);
+                    options2.legend.data = eval(res.lengnds);
+                    var series = [];
+
+                    for (var i = 0; i < res.seriesList.length; i++) {
+                        var opt = {
+                            name: '',
+                            data: [],
+                            type: 'line',
+                            smooth: true,
+                            yAxisIndex: 0
+                        };
+                        opt.name = res.seriesList[i].name;
+                        var json_data = eval(res.seriesList[i].data)
+                        const new_data = replaceOutliersWithAverage(json_data)
+                        
+                        opt.data = new_data;
+                        series.push(opt);
+                    }
+                    options2.series = series;
+
+                    echartsApp[2].clear();;
+                    echartsApp[2].setOption(options2, true);
+                }
+                else {
+                    $("#echarts2").css("display", "none");
+                    $("#nothing2").css("display", "block");
+                }
+            });
+        }
+
+        /**
+         * 3、近七天能耗分析
+         */
+        function getData3() {
+
+            $.post("/Sws/Sws_EnergyConsump/GetDayChartData", {
+                type: type,//type
+                beginDate: "",
+                endDate: "",
+                stationID: stationId,
+                deviceId: deviceId
+            }, function (res) {
+                if (res.timelist.length > 0) {
+                    $("#echarts3").css("display", "block");
+                    $("#nothing3").css("display", "none");
+                    options3.xAxis[0].data = eval(res.timelist);
+                    options3.legend.data = eval(res.lengnds);
+
+                    var series = [];
+
+                    for (var i = 0; i < res.seriesList.length; i++) {
+                        var opt = {
+                            name: '',
+                            data: [],
+                            type: 'line',
+                            smooth: true,
+                            yAxisIndex: 0
+                        };
+                        opt.name = res.seriesList[i].name;
+                        var json_data = eval(res.seriesList[i].data)
+                        const new_data = replaceOutliersWithAverage(json_data)
+
+                        opt.data = new_data;
+                        series.push(opt);
+                    }
+                    options3.series = series;
+                    console.log(options3);
+
+                    // 插入图例
+                    //var htmlLegend = '';
+                    //options3.legend.data.forEach(function (item, index) {
+                    //    // 设置图例
+                    //    htmlLegend += '<div class="item"><i style="background-color: ' + options3.color[index] + ';"></i>' + item + '</div>';
+                    //});
+
+                    //$('#echarts3legend').html(htmlLegend);
+
+                    echartsApp[3].clear();;
+                    echartsApp[3].setOption(options3, true);
+                }
+                else {
+                    $("#echarts3").css("display", "none");
+                    $("#nothing3").css("display", "block");
+                }
+            });
+        }
+
+        /**
+         * 4、能耗分段查询
+         */
+        function getData4() {
+            var date = $("input[name='time4']").val(),
+                interval = $("select[name='time4Interval']").val();
+            $("#TableTime").html(date);
+            $.post("/Sws/Sws_EnergyConsump/GetEnergySectionTable", {
+                type: type,//type
+                date: date,
+                timevalue: interval,
+                stationId: stationId,
+                deviceId: deviceId
+            }, function (res) {
+                if (res.dataTable != "") {
+                    $("#table4").css("display", "block");
+                    $("#nothing4").css("display", "none");
+                    $("#table4").html(res.dataTable);
+
+                    // 可视个数
+                    visNum = Math.floor(($('#table4').height()) / (baseSize * .38));
+                    if (table4Slide) table4Slide[0].destroy();
+                    table4Slide = $("#table4").slide({ mainCell: ".tbody", autoPlay: true, effect: "topMarquee", vis: visNum, interTime: 50 });
+                } else {
+                    $("#table4").css("display", "none");
+                    $("#nothing4").css("display", "block");
+                }
+            });
+
+        }
+
+        /**
+         * 5、月累计能耗分析表
+         */
+        function getData5() {
+            var aa = $("input[name='timeInterval3']").val();
+            var timeInterval = $("input[name='timeInterval2']").val().split('~'),
+                //var timeInterval = $("input[name='timeInterval3']").val().split('~'),
+                date1 = timeInterval[0],
+                date2 = timeInterval[1];
+
+            //时间段显示
+            $("#LTabletime1").html(date1);
+            $("#LTabletime2").html(date2);
+
+            $.post("/Sws/Sws_EnergyConsump/GetTableDayData", {
+                type: type,//type
+                beginDate: date1,
+                endDate: date2,
+                stationID: stationId,
+                deviceId: deviceId
+            }, function (res) {
+                if (res.dataTable != "") {
+                    $("#table5").css("display", "block");
+                    $("#nothing5").css("display", "none");
+                    $("#table5").html(res.dataTable);
+
+                    // 可视个数
+                    console.log($('#table5').height());
+
+                    visNum = Math.floor(($('#table5').height()) / (baseSize * .38));
+                    if (table5Slide) table5Slide[0].destroy();
+                    table5Slide = $("#table5").slide({ mainCell: ".tbody", autoPlay: true, effect: "topMarquee", vis: visNum, interTime: 50 });
+                } else {
+                    $("#table5").css("display", "none");
+                    $("#nothing5").css("display", "block");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

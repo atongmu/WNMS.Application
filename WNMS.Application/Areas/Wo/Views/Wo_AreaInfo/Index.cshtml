@@ -1,0 +1,1821 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>区域管理</title>
+
+    <!-- 字体文件 -->
+    <link rel="stylesheet" href="../../css/font-awesome.min.css" />
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="../../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../../css/bootstrap-table.min.css" />
+
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="../../css/anniu.css" />
+
+    <!-- layer -->
+    <link rel="stylesheet" href="../../lib/layer/layer.css">
+    <link href="../../js/layui/css/layui.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="../../css/zlw.css" />
+    <link rel="stylesheet" href="../../css/hyl.css" />
+    <link rel="stylesheet" href="../../css/patrol.css">
+
+    <!-- jquery -->
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+
+    <!-- bootstrap -->
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+
+    <!-- layer -->
+    <script src="../../lib/layer/layer.js"></script>
+
+    <!-- layui -->
+    <script src="../../js/layui/layui.all.js"></script>
+
+    <!-- jquery validate -->
+    <script src="../../js/jquery.validate.min.js"></script>
+
+    <!-- zTree -->
+    <link rel="stylesheet" href="../../js/zTree/css/zTreeStyle/zTreeStyle.css">
+    <script src="../../js/zTree/js/jquery.ztree.all.min.js"></script>
+
+    <!-- My97DatePicker -->
+    <link href="../../lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <script src="../../lib/My97DatePicker/WdatePicker.js"></script>
+
+    <script src="//a.amap.com/jsapi_demos/static/china.js"></script>
+    <!--加载鼠标绘制工具-->
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=28068084e71b4dac1344e8d5c9451629&&plugin=AMap.MouseTool"></script>
+    <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+
+
+    <style type="text/css">
+        body {
+            background-color: #ccc;
+        }
+
+        .SimpleTree_right {
+            right: -1px;
+        }
+
+        .height-wrapper {
+            height: 100%;
+        }
+
+        .SimpleTree {
+            width: 260px;
+            height: 100%;
+            background: #fff;
+            padding: 5px;
+            border-radius: 3px;
+            float: left;
+            position: relative;
+            padding: 5px !important;
+        }
+
+            .SimpleTree > .txt-search {
+                width: 215px !important;
+                margin: 0 !important;
+                border-radius: 3px 0 0 3px;
+                float: left;
+                outline: none;
+                padding-left: 10px;
+                border: 1px solid #29b1d3;
+                color: #9E9C9C;
+            }
+
+        .txt-search {
+            height: 30px !important;
+        }
+
+        .SimpleTree > .btn-search {
+            height: 30px !important;
+            width: 35px;
+            height: 30px;
+            border: none;
+            background: #29b1d3;
+            border-radius: 0 3px 3px 0;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .ztree {
+            border-top: 1px solid #ccc;
+            margin: 0;
+        }
+
+        .content {
+            background: #eee;
+            border-radius: 3px;
+        }
+
+        .treelayer_2_ico {
+            background-size: 20px;
+        }
+
+        /* 设置滚动条的样式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        /*滚动槽*/
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: none;
+            border-radius: unset;
+        }
+
+        /* 滚动条滑块 */
+        ::-webkit-scrollbar-thumb {
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.5);
+            border-width: 6px !important;
+            border-style: solid;
+            border-color: rgba(255, 255, 255, 0) !important;
+            box-shadow: 8px 0 0 #B9B9B9 inset;
+            -webkit-box-shadow: 8px 0 0 #B9B9B9 inset;
+        }
+
+        .ztree li span.button.add {
+            margin-left: 2px;
+            margin-right: -1px;
+            background-position: -142px 0;
+            vertical-align: text-bottom;
+        }
+
+        .ztree li span.add {
+            width: 16px;
+            height: 16px;
+        }
+
+        .ztree li span.edit {
+            width: 16px;
+            height: 16px;
+        }
+
+        .ztree li span.remove {
+            width: 16px;
+            height: 16px;
+        }
+
+        .ztree li a input.rename {
+            height: 20px;
+            width: 80px;
+            padding: 0;
+            margin: 0;
+            font-size: 12px;
+            border: 1px #7EC4CC solid;
+            *border: 0px
+        }
+
+        .ztree {
+            border-top: none;
+        }
+
+        #addPopup {
+            position: absolute;
+            top: 200px;
+            left: 300px;
+            width: 290px;
+            height: 420px;
+            border: 2px solid #29b1d3;
+            border-radius: 3px;
+            background-color: aliceblue;
+            display: none;
+        }
+
+        #addTitle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            line-height: 32px;
+            height: 35px;
+            background-color: #29b1d3;
+            font-size: 16px;
+            text-indent: 1em;
+            color: #fff;
+        }
+
+        #tabTitle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            line-height: 32px;
+            height: 35px;
+            font-size: 16px;
+            text-indent: 1em;
+            color: #fff;
+        }
+
+        #addForm {
+            position: absolute;
+            top: 35px;
+            left: 0;
+            width: 100%;
+            height: 385px;
+        }
+
+            #addForm div {
+                padding: 8px 10px;
+            }
+
+            #addForm label {
+                float: left;
+                font-size: 14px;
+                width: 70px;
+                line-height: 30px;
+                text-align: right;
+            }
+
+            #addForm input {
+                width: 130px;
+                outline: none;
+                text-indent: 0.5em;
+                height: 28px;
+                border: 1px #ccc solid;
+                line-height: 28px;
+            }
+
+        .btn2 {
+            background-color: #FFB800;
+        }
+
+        .btn1 {
+            background-color: #009688;
+        }
+
+        .btn1,
+        .btn2 {
+            border-radius: 2px;
+            height: 30px;
+            margin: 4px;
+            background-color: #29b1b3;
+            color: #fff;
+            width: 50px;
+            border: none
+        }
+
+        .btns {
+            border-radius: 2px;
+            height: 30px;
+            margin-left: 5px;
+            background-color: #FFB800;
+            color: #fff;
+            width: 50px;
+            border: none
+        }
+
+        .required {
+            color: red;
+            font-size: 150%;
+            position: absolute;
+            left: 25px;
+            top: 10px
+        }
+
+        label.error {
+            background-position: 0% 50%;
+        }
+
+        #line1 .error,
+        #line3 .error,
+        #line4 .error {
+            width: 130px;
+            text-align: left
+        }
+
+        .layui-tab {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            width: 500px;
+            overflow: hidden;
+            bottom: 1px;
+            margin: 0;
+            border: 2px solid #29b1d3;
+            border-radius: 3px;
+            background-color: aliceblue;
+        }
+
+        .tc-child {
+            max-height: 700px;
+            overflow: auto;
+        }
+
+            .tc-child li {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding-right: 6px;
+                border: 1px solid #ccc;
+                border-radius: 2px;
+                height: 36px;
+                line-height: 36px;
+                box-sizing: border-box;
+                background: #d7edec;
+                box-shadow: 3px 3px 5px #ccc;
+                position: relative;
+                text-indent: 0.4em;
+                width: calc(33.3% - 20px);
+                float: left;
+                margin-left: 15px;
+                margin-top: 10px
+            }
+
+        .name {
+            padding-left: 5px
+        }
+
+        .layui-elem-quote {
+            padding: 10px 15px;
+            cursor: pointer
+        }
+
+        .overflows {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .mores {
+            width: 100%;
+            text-align: center;
+            display: inline-block;
+            color: #999;
+            padding-top: 7px;
+            cursor: pointer
+        }
+
+        .hide {
+            display: none
+        }
+
+        .layui-table-body {
+            z-index: 999
+        }
+
+        .name {
+            margin-left: 5px;
+        }
+
+        .layui-table-view .layui-table-box .layui-table-header table thead tr th {
+            background: none;
+        }
+
+        .content {
+            float: right;
+            width: calc(100% - 263px);
+            height: 100%;
+            border-radius: 3px;
+            background: #eee;
+            overflow: hidden;
+        }
+
+        #page-content {
+            width: 100%;
+            /*height:100%;*/
+            border-radius: 3px;
+            padding-right: 5px;
+            background: #eee;
+        }
+
+        /**
+                 * 删除绿色样式
+                */
+        .ztree li span {
+            color: #333;
+        }
+
+        .ztree li a.curSelectedNode {
+            color: #fff;
+            background-color: #29b1d3;
+            border-color: #29b1d3;
+        }
+
+        .layui-tab-brief > .layui-tab-title .layui-this {
+            color: #29b1b3;
+        }
+
+            .layui-tab-brief > .layui-tab-more li.layui-this:after, .layui-tab-brief > .layui-tab-title .layui-this:after {
+                border-color: #29b1b3;
+            }
+
+        .btn {
+            color: #29b1b3;
+            border-color: #29b1b3;
+        }
+
+        .layui-laypage select {
+            height: 22px;
+            padding: 3px;
+            border-radius: 2px;
+            cursor: pointer;
+            width: 65px;
+        }
+    </style>
+
+
+</head>
+<body>
+    <div class="height-wrapper" style="overflow:hidden ;">
+        <div class="SimpleTree" id="SimpleTree" style="height:100%;">
+            <div id="SimpleTree_btn"> </div>
+            <input type="text" placeholder="search..." id="AreaName" class="form-control txt-search" style="display:inline-block;" />
+            <button id="SearchBtn_Tree" class="btn-search" style="margin-bottom:3px">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+            <ul id="treeDemo" class="ztree"></ul>
+        </div>
+        <div id="SimpleTree_1"></div>
+        <!-- main content -->
+        <div class="content" id="conten" style="overflow:hidden ;">
+
+            <div id="page-content" style="height:100%;float:right; overflow:hidden;">
+            </div>
+            <div id="addPopup">
+
+                <div id="addTitle">
+                    巡检区域管理
+                    <div>
+
+                        <a id="offAddIcon" style="position: absolute;right: 5px;top:5px;width: 24px;height: 24px">
+                            <img src="http://47.93.6.250:10041/Content/newself/images/shutdown.png" style="position: absolute;right: 4px;top:4px;width: 16px;height: 16px" />
+                        </a>
+                    </div>
+                </div>
+                <form id="addForm">
+                    <div id="line1" style="padding-top:30px;">
+                        <label>名称：</label><input id="nameText" name="nameText">
+                    </div>
+
+                    <div id="line3">
+                        <label>颜色：</label><input class="color" value="66FF00" id="colorText">
+                    </div>
+                    <div id="line4" class="formLine">
+                        <label>坐标：</label><input id="coordinateText" name="coordinateText" readonly="readonly"><button id="startDraw"
+                                                                                                                       class="btns" type="button">
+                            绘制
+                        </button>
+                    </div>
+                    <div id="line5" class="formLine" style="position:absolute;bottom:35px;left:50%;transform: translateX(-50%);">
+                        <button id="conformBtn" class="btn1" type="button">确认</button>
+                        <button id="cancelBtn" class="btn2" type="button">取消</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="layui-tab layui-tab-brief hide" lay-filter="docDemoTabBrief">
+                <div id="tabTitle">
+
+                    <div>
+
+                        <a id="offTabIcon" style="position: absolute;right: 5px;top:5px;width: 24px;height: 24px;z-index:1">
+                            <img src="http://47.93.6.250:10041/Content/newself/images/closeicon.png" style="position: absolute;right: 4px;top:4px;width: 16px;height: 16px" />
+                        </a>
+                    </div>
+                </div>
+                <ul class="layui-tab-title">
+                    <li class="layui-this" id="rtuli">设备</li>
+                    <li id="teamlli">人员</li>
+
+
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top:10px;text-align:center;">
+                                    <div>
+                                        <input type="text" class="input-text" id="deviceName" style="width:30%;background-color:#FFFFFF" placeholder="输入名称"
+                                               autocomplete="off">&nbsp;&nbsp;
+                                        <button type="button" class="btn btn-success input-btn" id="SearchBtn"> <i class="fa fa-search"></i>查询</button>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div style="margin-top:5px;">
+                                <div id="Table_Rtu">
+                                </div>
+                                <div id="page_Rtu">
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item" id="teamarea">
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#SimpleTree_right_btn').click(function () {
+                $('#SimpleTree_right').css('display', 'none');
+                //$('#SimpleTree_2').css('display', 'block')
+            })
+            //$('#SimpleTree_2').click(function () {
+            //    $('#SimpleTree_right').css('display', 'block');
+            //    $('#SimpleTree_2').css('display', 'none')
+            //})
+
+        })
+    </script>
+    <script type="text/javascript">
+        var table = layui.table;
+        var sort = "asc";
+        var pageSize = 20;
+        var zTreeObj; //树对象
+        var map; //地图对象
+        var areaID = 0,
+            areapid = 0;
+        var bigmark = [];
+        var markoverlayer = [];
+        var rtuoverlayer = [];
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+
+                beforeEditName: beforeEditName,
+                beforeRemove: beforeRemove,
+                onCheck: zTreeOnCheck,
+                onClick: zTreeOnClick
+            },
+            view: {
+                showTitle: false,
+                showLine: true,
+                nameIsHTML: true,
+                addHoverDom: addHoverDom
+                //removeHoverDom: removeHoverDom
+            },
+            check: {
+                enable: true,
+                chkboxType: {
+                    'Y': 's',
+                    'N': 's'
+                }
+
+            },
+            edit: {
+                enable: true,
+                showRemoveBtn: showRemoveBtn,
+                showRenameBtn: showRenameBtn
+            }
+        };
+        var isadd = true; //是否添加（true表示添加，false表示修改）
+        var isRedraw = false; //是否重画（true表示重画，false表示未重画）
+        var intiteam = 0;
+        var zNodes = @ViewBag.TreeNodes;
+        var templays = [];
+        var overlays = [];
+
+        $(function () {
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes); //加载树形
+            //实例化地图
+            layui.use('element', function () {
+                var element = layui.element;
+
+                //获取hash来切换选项卡，假设当前地址的hash为lay-id对应的值
+                var layid = location.hash.replace(/^#test1=/, '');
+                element.tabChange('test1', layid);
+
+                //监听Tab切换，以改变地址hash值
+                element.on('tab(test1)', function (data) {
+                    location.hash = 'test1=' + this.getAttribute('lay-id');
+
+                });
+            });
+            layui.table.on('sort(demo)', function (obj) {
+                if (obj.type == "desc" || obj.type == "null") {
+                    sort = "desc";
+                } else {
+                    sort = "asc";
+                }
+
+            });
+        });
+        //设备表格开始
+        //加载数据列表
+        var $h;
+        $h = $(window).height();
+
+        function LoadRtu(curr) {
+            var load = layer.load(0, {
+                shade: false
+            });
+            $.post('/Wo/Wo_AreaInfo/GetRtuByPage', {
+                areaID: areaID,
+                sort: sort,
+                pageSize: pageSize,
+                devicename: $("#deviceName").val(),
+                pageIndex: curr || 1,
+
+            }, function (res) {
+                layer.close(load);
+
+                //if (res.TotalCount > 0) {
+                $("#Table_Rtu").html(res.dataTable);
+
+                var $h = $(window).height();
+                //转换静态表格
+                table.init('demo', {
+                    height: $h - 180,
+                    limit: pageSize,
+                    limits: [10, 20, 30, 50, 100],
+                    autoSort: false,
+                    page: false,
+                    skin: 'row',
+                    even: true,
+                    //size: 'sm',
+                    initSort: {
+                        field: 'DeviceName',
+                        type: sort
+                    }
+                });
+
+                layui.use('laypage', function () {
+                    var laypage = layui.laypage;
+                    //执行一个laypage实例
+                    laypage.render({
+                        skin: 'molv',
+                        elem: 'page_Rtu',
+                        count: res.totalCount,
+                        layout: ['count', 'prev', 'next', 'limit'],
+                        skip: true,
+                        curr: curr || 1,
+                        limit: pageSize,
+                        jump: function (obj, first) {
+                            if (!first) {
+                                pageSize = obj.limit;
+                                LoadRtu(obj.curr);
+                            }
+                        }
+                    });
+                });
+                //}
+            });
+        }
+
+        $("#SearchBtn").click(function () {
+            LoadRtu(1);
+        });
+
+        //显示某个设备
+        function DisPlayOneRtu(Lng, Lat) {
+            var markerold = null;
+            if (bigmark.length > 0) {
+                for (var i = 0; i < bigmark.length; i++) {
+
+                    map.remove(bigmark[i]);
+                    if (bigmark[i].Ce.position.lng != Lng || bigmark[i].Ce.position.lat != Lat) {
+                        var aa = bigmark[i].Ce.position.lng; var bb = bigmark[i].Ce.position.lat;
+                        var markerold = new AMap.Marker({
+                            position: new AMap.LngLat(bigmark[i].Ce.position.lng, bigmark[i].Ce.position.lat),
+                            icon: '/images/positionrtu.png',
+                            offset: new AMap.Pixel(-13, -30)
+                        });
+                        // 创建标注
+                        map.add(markerold);
+                    }
+                    bigmark.splice(i, 1);
+                }
+            }
+            bigmark.length = 0;
+
+            var marker2 = new AMap.Marker({
+                position: new AMap.LngLat(Lng, Lat),
+                icon: '/images/positionBig.png',
+                offset: new AMap.Pixel(-13, -30)
+            });
+
+            // 创建标注
+            map.add(marker2); // 将标注添加到地图中
+            map.panTo([Lng,Lat]);
+            bigmark.push(marker2);
+            for (var i = 0; i < markoverlayer.length; i++) { //把之前的标注删掉
+                if (markoverlayer[i].Ce.text.indexOf(areaID + "编号") > -1) {
+                    if (markerold != null) {
+                        rtuoverlayer[i].push(markerold);
+                    }
+
+                    if (rtuoverlayer[i].length != 0) {
+                        var removearray1 = [];
+
+                        for (var j = 0; j < rtuoverlayer[i].length; j++) {
+                            if (rtuoverlayer[i][j].Ce.position.lat == Lat && rtuoverlayer[i][j].Ce.position.lng == Lng) {
+                                map.remove(rtuoverlayer[i][j]);
+                                removearray1.push(j);
+                            }
+
+                        }
+                        if (removearray1.length > 0) {
+                            for (var ii = removearray1.length - 1; ii >= 0; ii--) {
+                                rtuoverlayer[i].splice(removearray1[ii], 1);
+                            }
+                        }
+
+                    }
+                    return false;
+                }
+            }
+        }
+        //设备表格结束
+
+
+        //----------------------------------   班组代码开始    -----------------------------------------------
+        var userpage = 1; //人员总页面
+        var currentpage = 1; //当前页码
+
+        //右侧【人员】点击显示
+        $("#teamlli").click(function () {
+            if (intiteam == 0) {
+                $.post("/Wo/Wo_AreaInfo/GetTeamUser", {
+                    areaID: areaID
+                }, function (res) {
+                    userpage = res.totalPage;
+                    if (res.teamlist.length > 0) {
+                        for (var i = 0; i < res.teamlist.length; i++) {
+                            if (i == 0) { //把人员附上
+                                $("#teamarea").empty();
+                                var userstring = "";
+                                if (res.tuserlist.length > 0) {
+                                    for (var j = 0; j < res.tuserlist.length; j++) {
+                                        userstring += ' <li class="ml15px overflow">' +
+                                            '<span class="left">' +
+                                            '<i class="fa fa-user fa-lg"></i>' +
+                                            '<span class="name" title="' + res.tuserlist[j].nickName + '">' + res.tuserlist[j].nickName +
+                                            '</span>' +
+                                            '</span>' +
+                                            '</li>';
+                                    }
+                                }
+                                var morestring = "";
+                                if (userpage > currentpage) {
+                                    morestring = '<span class="mores">加载更多 >></span>';
+                                }
+                                $("#teamarea").append(
+                                    '<section class="layui-form layui-form-pane">' +
+                                    '<blockquote class="layui-elem-quote" id="' + res.teamlist[i].teamId + '">' + res.teamlist[i].teamName +
+                                    '</blockquote>' +
+                                    ' <div class="overflows">' +
+                                    '<ul class="tc-child ">' + userstring + '' +
+                                    '</ul>' +
+                                    '' + morestring + '' +
+                                    '</div>' +
+                                    '</section>')
+                            } else {
+                                var morestring = '<span class="mores">加载更多 >></span>';
+                                $("#teamarea").append(
+                                    '<section class="layui-form layui-form-pane">' +
+                                    '<blockquote class="layui-elem-quote" id="' + res.teamlist[i].teamId + '">' + res.teamlist[i].teamName +
+                                    '</blockquote>' +
+                                    ' <div class="overflows hide">' +
+                                    '<ul class="tc-child ">' + userstring + '' +
+                                    '</ul>' +
+                                    '' + morestring + '' +
+                                    '</div>' +
+                                    '</section>')
+                            }
+                        }
+                    } else {
+                        $("#teamarea").empty();
+                    }
+                })
+            }
+            intiteam = intiteam + 1;
+        });
+
+        //点击人员显示下的班组  显示具体人员
+        $(document).on('click', '.layui-elem-quote', function () {
+            $(".tc-child").css("max-height", $h - 200);
+            if ($(this).next(".overflows").hasClass("hide")) {
+                userpage = 1;
+                currentpage = 1;
+                var tid = $(this)[0].id;
+                $("#" + tid + "").siblings(".overflows").find("ul").empty();
+
+                $.post("/Wo/Wo_AreaInfo/GetSomeTeamUser", {
+                    teamid: tid,
+                    pageindex: currentpage
+                }, function (res) {
+
+                    userpage = res.totalPage;
+                    //人员
+                    if (userpage <= currentpage) {
+                        $("#" + tid + "").siblings(".overflows").find(".mores").addClass("hide");
+
+                    } else {
+                        $("#" + tid + "").siblings(".overflows").find(".mores").removeClass("hide");
+
+                    }
+                    var userstring = "";
+                    for (var i = 0; i < res.tuserlist.length; i++) {
+                        userstring += ' <li class="ml15px overflow">' +
+                            '<span class="left">' +
+                            '<i class="fa fa-user fa-lg"></i>' +
+                            '<span class="name" title="' + res.tuserlist[i].nickName + '">' + res.tuserlist[i].nickName +
+                            '</span>' +
+                            '</span>' +
+                            '</li>';
+                    }
+                    $("#" + tid + "").siblings(".overflows").find("ul").append(userstring);
+                });
+            }
+            $(this).next(".overflows").removeClass("hide").parents("section").siblings("section").find(".overflows").addClass(
+                "hide");
+        });
+
+        //点击某个班组更多按钮
+        $(document).on('click', '.mores', function () {
+            currentpage = currentpage + 1;
+            var tid = $(this).parent(".overflows").siblings("blockquote")[0].id;
+
+            $.post("/Wo/Wo_AreaInfo/GetSomeTeamUser", {
+                teamid: tid,
+                pageindex: currentpage
+            }, function (res) {
+                userpage = res.totalPage;
+                //人员
+                if (userpage <= currentpage) {
+
+                    $("#" + tid + "").siblings(".overflows").find(".mores").addClass("hide");
+                }
+                var userstring = "";
+                for (var i = 0; i < res.tuserlist.length; i++) {
+                    userstring += ' <li class="ml15px overflow">' +
+                        '<span class="left">' +
+                        '<i class="fa fa-user fa-lg"></i>' +
+                        '<span class="name" title="' + res.tuserlist[i].nickName + '">' + res.tuserlist[i].nickName +
+                        '</span>' +
+                        '</span>' +
+                        '</li>';
+                }
+                $("#" + tid + "").siblings(".overflows").find("ul").append(userstring);
+            });
+        });
+
+        //-------------------------------------  班组代码结束  -----------------------------------------------------
+
+
+        //------------------------------------   树及表单操作 ------------------------------------------------------
+        //查询树
+        $("#SearchBtn_Tree").click(function () {
+            //查询树列表数据
+            if ($("#DeviceName").val() != "") {
+                $.post("/Wo/Wo_AreaInfo/SearchTree", {
+                    areaName: $("#AreaName").val()
+                }, function (data) {
+                    zTreeObj.destroy(); //清空树
+                    var aa = JSON.parse(data); //数据转json8
+
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa); //重新初始化树
+                    zTreeObj.expandAll(true); //初始化数列表展开
+                });
+            }
+        });
+
+        //关闭添加修改操作窗口
+        $("#offAddIcon").click(function () {
+            $("#addPopup").hide();
+            if (templays.length > 0) {
+                map.remove(templays[0]);
+            }
+            templays = [];
+            //如果为修改的话
+            if (isadd == false) {
+                var treenode = zTreeObj.getNodeByParam("id", areaID, null);
+                if (treenode.checked && isRedraw == true) {
+                    showpolygon(areaID);
+                }
+                if (treenode.checked == false) { //取消相关区域
+                    clearSomeOverlay(areaID);
+                }
+            }
+        });
+        //树增加按钮
+        function addHoverDom(treeId, treeNode) {
+            if (treeNode.level != 2) {
+
+                var sObj = $("#" + treeNode.tId + "_span");
+                if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
+                var addStr = "<span class='button add' id='addBtn_" + treeNode.tId +
+                    "' title='add node' onfocus='this.blur();'></span>";
+                sObj.after(addStr);
+                var btn = $("#addBtn_" + treeNode.tId);
+                if (btn) btn.bind("click", function () {
+                    areaID = 0;
+                    areapid = treeNode.id;
+                    $("#nameText").val("");
+                    $("#coordinateText").val("");
+                    $("#addPopup").css("display", "block");
+                    isadd = true;
+                    isRedraw = false;
+                    areapid = treeNode.id;
+                    return false;
+                });
+            }
+        };
+        //删除区域
+        function beforeRemove(treeId, treeNode) {
+            layer.confirm("确认删除 节点 -- " + treeNode.name + " 吗？", {
+                btn: ['确定', '取消']
+            }, function (index) {
+                onRemove1(treeNode);
+                layer.close(index);
+            }, function () {
+
+            });
+            return false;
+        }
+
+        function onRemove1(treeNode) {
+            $.post("/Wo/Wo_AreaInfo/DeleteAreaInfo", {
+                areaID: treeNode.id
+            }, function (data) {
+                if (data == "ok") {
+                    zTreeObj.removeNode(treeNode);
+                    //if (treeNode.level == 1) {
+                    //    var node = zTreeObj.getNodeByParam("pId", treeNode.pId, null);
+                    //    if (node == null) {
+                    //        var parentnode = zTreeObj.getNodeByParam("id", treeNode.pId, null);
+                    //        zTreeObj.removeNode(parentnode);
+                    //    }
+                    //}
+                    clearAll();
+                    zTreeObj.checkAllNodes(false);
+                } else if (data == "no") {
+                    layer.msg("删除节点失败");
+                } else {
+                    layer.msg(data);
+                }
+            })
+        }
+
+        function beforeEditName(treeId, treeNode) {
+            zTreeObj.selectNode(treeNode);
+            areaID = treeNode.id;
+            areapid = treeNode.pId;
+            //console.log(areapid);
+            $("#addPopup").css("display", "block");
+            isadd = false;
+            isRedraw = false;
+            $.post("/Wo/Wo_AreaInfo/GetAreaInfo", {
+                IDs: treeNode.id
+            }, function (result) {
+                if (result != "") {
+                    var data = JSON.parse(result);
+                    for (var i = 0; i < data.length; i++) {
+                        var points = data[i].GISPoints;
+                        $("#nameText").val(data[i].AreaName);
+                        $("#colorText").val(data[i].FillColor);
+                        document.getElementById('colorText').style.backgroundColor = '#' + $("#colorText").val();
+                        if (points != null && points != "") {
+                            var pts = [];
+                            var start = points.lastIndexOf('(') + 1;
+                            var end = points.indexOf(')');
+                            var pointarray = points.substring(start, end).split(", ");
+                            $("#coordinateText").val(points.substring(start, end));
+                            if (treeNode.checked == false) { //当修改区域事，如果改区域节点未选中，修改的时候要在地图上显示相关的区域
+
+                                var centlng = 0,
+                                    centerlat = 0;
+                                for (var j = 0; j < pointarray.length; j++) {
+                                    var dp = pointarray[j].split(" ");
+                                    var pt1 = [dp[0], dp[1]];
+                                    pts.push(pt1);
+                                    centlng += parseFloat(dp[0]);
+                                    centerlat += parseFloat(dp[1])
+                                }
+                                centlng = centlng / pointarray.length;
+                                centerlat = centerlat / pointarray.length;
+                                //将多边形添加到地图上
+                                var fillcolor = "red";
+                                if (data[i].FillColor != null && data[i].FillColor != "") {
+                                    fillcolor = "#" + data[i].FillColor;
+                                }
+
+                                text = new AMap.Text({
+                                    text: "<div style='display:none'>" + data[i].ID + "编号</div><div style='font:bold'>名称：<span style='color:red'>" + data[i].AreaName + "</span></div><div>设备数量：<span style='color:red'>" + data[i].countnum + "</span></div>",
+                                    anchor: 'center', // 设置文本标记锚点
+                                    cursor: 'pointer',
+                                    style: {
+                                        'background-color': '#f3eded26',
+                                        'border-width': 0,
+                                        'color': 'black',
+                                        'font-weight': 'bold'
+                                    },
+                                    position: [centlng, centerlat]
+                                });
+
+                                text.setMap(map);
+                                var styleOptions = new AMap.Polygon({
+                                    path: pts,
+                                    strokeColor: "#FF33FF",
+                                    strokeWeight: 6,
+                                    strokeOpacity: 0.2,
+                                    fillOpacity: 0.4,
+                                    fillColor: "" + fillcolor + "",
+                                    //zIndex: 50
+                                });
+                                map.add(styleOptions);
+                                map.setFitView(styleOptions);//自适应显示
+
+                                markoverlayer.push(text);
+                                rtuoverlayer.push([]);
+                                overlays.push(styleOptions);
+                            }
+                        }
+                    }
+                }
+            });
+            return false;
+        }
+
+        function showRemoveBtn(treeId, treeNode) {
+            return treeNode.level != 0;
+        }
+
+        function showRenameBtn(treeId, treeNode) {
+            return treeNode.level != 0;
+        }
+
+        //表单验证
+        function validate() {
+            $("#addForm").validate({
+                submitHandler: function (form) {
+                    postForm();
+                },
+                rules: {
+                    nameText: "required",
+                    InspectorName: "required",
+                    coordinateText: "required"
+                },
+                messages: {
+                    nameText: "请输入名称",
+                    InspectorName: "请选择负责人",
+                    coordinateText: "请绘制区域"
+                }
+            });
+        }
+        //提交
+        $("#conformBtn").click(function () {
+            validate();
+            $("form").submit();
+        });
+        //表单提交
+        function postForm() {
+           // console.log(areapid);
+            $.post("/Wo/Wo_AreaInfo/SetGD_areaInfo", {
+                areaID: areaID,
+                pid: areapid,
+                areaName: $("#nameText").val(),
+                fillColor: $("#colorText").val(),
+                points: $("#coordinateText").val()
+            }, function (data) {
+                if (data.result == "ok") {
+
+                    if (areaID == 0) {
+                        var newNode = {
+                            id: data.data,
+                            name: $("#nameText").val(),
+                            pId: areapid,
+                            icon: '../../images/open.png'
+                        };
+                        var parentNodes = zTreeObj.getNodeByParam("id", areapid, null);
+                        zTreeObj.addNodes(parentNodes, newNode); //根节点
+                    } else {
+                        var Nodes = zTreeObj.getNodeByParam("id", areaID, null);
+                        Nodes.name = $("#nameText").val();
+                        zTreeObj.updateNode(Nodes); //更新节点
+                    }
+                    $("#addPopup").css("display", "none");
+
+                    map.remove(templays[0]);
+                    templays = [];
+
+                    //如果为修改的话
+                    if (isadd == false) {
+                        var treenode = zTreeObj.getNodeByParam("id", areaID, null);
+                        //if (treenode.checked && isRedraw == true) {
+                        //    showpolygon(areaID);
+                        //}
+                        if (treenode.checked) {
+                            clearSomeOverlay(areaID);
+                            showpolygon(areaID);
+                        }
+                        if (treenode.checked == false) { //取消相关区域
+                            clearSomeOverlay(areaID);
+                        }
+                    }
+
+                } else {
+                    alert("提交失败");
+                    //clearAll();
+                }
+            });
+        }
+        //表单取消
+        $("#cancelBtn").click(function () {
+            $("#addPopup").hide();
+            if (templays.length > 0) {
+                map.removeOverlay(templays[0]);
+            }
+            templays = [];
+            //如果为修改的话
+            if (isadd == false) {
+                var treenode = zTreeObj.getNodeByParam("id", areaID, null);
+                if (treenode.checked && isRedraw == true) {
+                    showpolygon(areaID);
+                }
+
+                if (treenode.checked == false) { //取消相关区域
+                    clearSomeOverlay(areaID);
+                }
+            }
+        });
+        //树节点选中，取消事件
+        function zTreeOnCheck(event, treeId, treeNode) {
+            $("#addPopup").css("display", "none");
+            var stringappend = "";
+
+            if (treeNode.level == 0) {
+                clearAll();
+                if (treeNode.checked == true) {
+                    //全选  地图中心移动
+                    //map.centerAndZoom(new BMap.Point(116.3964, 39.9093), 5); // 设置中心点坐标和地图级别
+                    var nodeids = "";
+                    var nodes = zTreeObj.getCheckedNodes(true);
+                    for (var i = 0; i < nodes.length; i++) {
+                        if (nodes[i].level > 0) {
+                            nodeids += nodes[i].id + ",";
+                        }
+                    }
+                    if (nodeids != "") {
+                        nodeids = nodeids.substring(0, nodeids.length - 1);
+                    }
+                    //clearAll();
+                    showpolygon(nodeids);
+                } else {
+                    clearAll();
+                }
+            } else {
+
+                if (treeNode.isParent == true) { //显示区域
+                    var nodes = zTreeObj.getNodesByParam("pId", treeNode.id, treeNode);
+                    if (treeNode.checked == true) {
+                        var nodeids = treeNode.id + ",";
+                        for (var i = 0; i < nodes.length; i++) {
+
+                            nodeids += nodes[i].id + ",";
+
+                        }
+                        if (nodeids != "") {
+                            nodeids = nodeids.substring(0, nodeids.length - 1);
+                        }
+                        showpolygon(nodeids);
+                    } else { //删除区域
+                        clearSomeOverlay(treeNode.id);
+                        for (var i = 0; i < nodes.length; i++) {
+
+                            clearSomeOverlay(nodes[i].id);
+                        }
+
+                    }
+                } else { //非父节点
+                    if (treeNode.checked == true) {
+                        showpolygon(treeNode.id);
+                    } else {
+                        clearSomeOverlay(treeNode.id);
+                    }
+                }
+            }
+
+        };
+
+        function zTreeOnClick(event, treeId, treeNode) {
+            //text置空
+            $("#deviceName").val("");
+            if (bigmark.length > 0) {
+                for (var i = 0; i < bigmark.length; i++) {
+                    map.remove(bigmark[i]);
+                    bigmark.splice(i, 1);
+                }
+            }
+            if (treeNode.level != 0) {
+                intiteam = 0;
+                userpage = 1;
+                currentpage = 1;
+                //把其他的区域中的设备位置去掉，只保留当前的
+                if (rtuoverlayer.length > 0) {
+                    for (var i = 0; i < rtuoverlayer.length; i++) {
+                        if (rtuoverlayer[i].length > 0) {
+                            for (var j = 0; j < rtuoverlayer[i].length; j++) {
+                                map.remove(rtuoverlayer[i][j]);
+                            }
+
+                        }
+                    }
+                }
+                $(".layui-tab-brief").removeClass("hide");
+                if (!$("#rtuli").hasClass("layui-this")) {
+                    $("#rtuli").addClass("layui-this");
+                    $(".layui-tab-content div").eq(0).addClass("layui-show");
+
+                }
+                if ($("#teamlli").hasClass("layui-this")) {
+                    $("#teamlli").removeClass("layui-this");
+                    $("#teamarea").removeClass("layui-show");
+                }
+                if (treeNode.checked == false) {
+                    zTreeObj.checkNode(treeNode, true, false);
+                    showpolygonandzoom(treeNode.id, false);
+                    ShowRtuOfArea(treeNode.id, false); //显示区域内的设备
+                    areaID = treeNode.id;
+                } else {
+                    showpolygonandzoom(treeNode.id, true);
+                    ShowRtuOfArea(treeNode.id, true); //显示区域内的设备
+                    areaID = treeNode.id;
+                }
+
+            } else {
+                if (treeNode.checked == false) {
+                    zTreeObj.checkNode(treeNode, true, true, true);
+                }
+                areaID = 0;
+                map.setZoomAndCenter(5, [116.3964, 39.9093]); // 设置中心点坐标和地图级别
+                //删除设备覆盖物
+                if (rtuoverlayer.length > 0) {
+                    for (var i = 0; i < rtuoverlayer.length; i++) {
+                        if (rtuoverlayer[i].length > 0) {
+                            for (var j = 0; j < rtuoverlayer[i].length; j++) {
+                                map.remove(rtuoverlayer[i][j]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //tab关闭按钮
+        $("#offTabIcon").click(function () {
+            $(".layui-tab-brief").addClass("hide");
+            intiteam = 0;
+            userpage = 1;
+            currentpage = 1;
+        });
+
+        //// 根据点的数组自动调整缩放级别
+        //function setZoom(bPoints) {
+        //    var view = map.getViewport(eval(bPoints));
+        //    var mapZoom = view.zoom;
+        //    var centerPoint = view.center;
+        //    map.centerAndZoom(centerPoint, mapZoom);
+        //}
+
+
+        //显示区域内的设备
+        function ShowRtuOfArea(areaID, isaddpoint) {
+            $.post("/Wo/Wo_AreaInfo/DisplayRtu", {
+                areaID: areaID,
+                sort: "asc",
+                pageSize: pageSize,
+                deviceName: $("#deviceName").val()
+            }, function (result) {
+                   // console.log(result);
+                /**
+                 * 前端从10041上取areaID = 3,pageSize = 20的数据
+                 */
+
+
+                //设备tab显示
+                //if (result.TotalCount > 0) {
+                $("#Table_Rtu").html(result.dataTable);
+
+                var pageHeight = $(".layui-tab-content").height();
+
+                var $h = $(window).height();
+                //alert($h);
+                //转换静态表格
+                table.init('demo', {
+                    height: $h - 180,
+                    limit: pageSize,
+                    limits: [10, 20, 30, 50, 100],
+                    autoSort: false,
+                    page: false,
+                    skin: 'row',
+                    even: true,
+                    //size: 'sm',
+                    initSort: {
+                        field: 'DeviceName',
+                        type: sort
+                    }
+                });
+
+                layui.use('laypage', function () {
+                    var laypage = layui.laypage;
+                    //执行一个laypage实例
+                    laypage.render({
+                        skin: 'molv',
+                        elem: 'page_Rtu',
+                        count: result.totalCount,
+                        layout: ['count', 'prev', 'next', 'limit'],
+                        skip: true,
+                        curr: 1,
+                        limit: pageSize,
+                        jump: function (obj, first) {
+                            if (!first) {
+                                pageSize = obj.limit;
+                                LoadRtu(obj.curr);
+                            }
+                        }
+                    });
+                });
+                //}
+
+                //设备显示
+                if (result.rtudata != "") {
+                    var rtudata = JSON.parse(result.rtudata);
+                    var arrayrtu = [];
+                    for (var i = 0; i < rtudata.length; i++) {
+                        var marker2 = new AMap.Marker({
+                            position: new AMap.LngLat(rtudata[i].Lng, rtudata[i].Lat),
+                            icon: '/images/positionrtu.png',
+                            offset: new AMap.Pixel(-13, -30)
+                        });
+                        //marker2.id = rtudata[i].EquipmentID;
+                        //marker2.DeviceName = rtudata[i].DeviceName;
+                        map.add(marker2); // 将标注添加到地图中
+                        arrayrtu.push(marker2);
+                    }
+                    if (isaddpoint == false) {
+                        rtuoverlayer.push(arrayrtu);
+                    } else {
+                        for (var i = 0; i < markoverlayer.length; i++) {
+                            if (markoverlayer[i].Ce.text.indexOf(areaID + "编号") > -1) {
+
+                                rtuoverlayer[i].length = 0;
+                                rtuoverlayer[i] = arrayrtu;
+                                return false;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        ////标注点击或者鼠标放上去事件
+        //function addInfoWindow(id, devicename, e) {
+        //    var html = "<div style='overflow:auto;'>" +
+        //        "<p><span>【名称】：<a style='color:#ff6a00;padding-left:5px'>" + devicename + "</a> </span></p>";
+
+        //    html += "</div>";
+
+        //    //定义窗口高度
+        //    //var wheight = 190;
+        //    //定义窗口位置
+        //    var markerpoint = new BMap.Point(e.point.lng, e.point.lat);
+        //    //定义并添加窗口
+        //    //var infowindow = new BMap.InfoWindow(html, { width: 255, title:"<a onclick='loadDetail("+id+")'>"+json.name+"</a>" });
+        //    var detaillink = "<a  >" + devicename + "</a>";
+
+        //    var infowindow = new BMap.InfoWindow(html, {
+        //        width: 255,
+        //        title: detaillink
+        //    });
+        //    map.openInfoWindow(infowindow, markerpoint);
+        //}
+
+
+        //---------------------------地图操作区域-----------------------------------------
+        //-----------------------------strat-----------------------------------------
+        ////1.实例化地图
+
+        //map = new BMap.Map("page-content", {
+        //    minZoom: 5
+        //}); // 创建Map实例
+        //map.centerAndZoom(new BMap.Point(116.3964, 39.9093), 5); // 初始化地图,设置中心点坐标和地图级别
+        //map.addControl(new BMap.MapTypeControl({
+        //    mapTypes: [BMAP_NORMAL_MAP, BMAP_HYBRID_MAP],
+        //    anchor: BMAP_ANCHOR_TOP_RIGHT
+        //})); //添加地图类型控件
+        //map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
+        //map.enableScrollWheelZoom(true);
+        ////loadMarkerByZoom();
+        ////地图级别变化结束监听
+        //map.addEventListener("zoomend", function () {
+        //    //loadMarkerByZoom();
+        //});
+        ////拖动获取设备信息
+        //map.addEventListener("moveend", function () {
+
+        //    //loadMarkerByMove();
+        //});
+
+        //var overlays = [];
+        //var templays = [];
+        //var overlaycomplete = function (e) {
+        //    var path = e.overlay.getPath(); //Array<Point> 返回多边型的点数组
+        //    if (path.length < 3) {
+        //        map.removeOverlay(e.overlay);
+
+        //    } else {
+        //        if ($("#addPopup").css("display") == "none") {
+        //            map.removeOverlay(e.overlay);
+        //        } else {
+
+        //            //overlays.push(e.overlay);
+
+        //            var pointarray = "";
+        //            for (var i = 0; i < path.length; i++) {
+
+        //                pointarray += path[i].lng + " " + path[i].lat + ',';
+        //            }
+        //            if (pointarray != "") {
+        //                pointarray += path[0].lng + " " + path[0].lat + ',';
+        //                pointarray = pointarray.substring(0, pointarray.length - 1);
+
+        //            }
+        //            $("#coordinateText").val(pointarray);
+        //            templays.push(e.overlay);
+        //        }
+        //    }
+        //};
+        //var styleOptions = {
+        //    strokeColor: "#DAD5D5", //边线颜色。
+        //    fillColor: "red", //填充颜色。当参数为空时，圆形将没有填充效果。
+        //    strokeWeight: 3, //边线的宽度，以像素为单位。
+        //    strokeOpacity: 0.8, //边线透明度，取值范围0 - 1。
+        //    fillOpacity: 0.6, //填充的透明度，取值范围0 - 1。
+        //    strokeStyle: 'solid' //边线的样式，solid或dashed。
+        //}
+        ////实例化鼠标绘制工具
+        //var drawingManager = new BMapLib.DrawingManager(map, {
+        //    isOpen: false, //是否开启绘制模式
+        //    enableDrawingTool: false, //是否显示工具栏
+        //    drawingMode: BMAP_DRAWING_POLYGON, //绘制模式  多边形
+        //    drawingToolOptions: {
+        //        anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
+        //        offset: new BMap.Size(5, 5), //偏离值
+        //        drawingModes: [
+        //            BMAP_DRAWING_POLYGON
+        //        ]
+        //    },
+        //    polygonOptions: styleOptions //多边形的样式
+        //});
+
+        ////添加鼠标绘制工具监听事件，用于获取绘制结果
+        //drawingManager.addEventListener('overlaycomplete', overlaycomplete);
+
+        //function clearAll() {
+        //    //for (var i = 0; i < overlays.length; i++) {
+        //    //    map.removeOverlay(overlays[i]);
+        //    //}
+        //    map.clearOverlays();
+        //    overlays.length = 0;
+        //    markoverlayer.length = 0;
+        //    rtuoverlayer.length = 0;
+        //    bigmark.length = 0;
+        //    $(".layui-tab-brief").addClass("hide");
+        //}
+
+        //function clearSomeOverlay(id) {
+
+        //    if (bigmark.length > 0) {
+        //        for (var i = 0; i < bigmark.length; i++) {
+
+        //            map.removeOverlay(bigmark[i]);
+
+        //            bigmark.splice(i, 1);
+        //        }
+        //    }
+        //    for (var i = 0; i < markoverlayer.length; i++) {
+        //        var aa = markoverlayer[i].getLabel().content;
+        //        if (markoverlayer[i].getLabel().content.indexOf(id + "编号") > -1) {
+
+        //            map.removeOverlay(markoverlayer[i]);
+        //            map.removeOverlay(overlays[i]);
+        //            if (rtuoverlayer.length > 0) {
+        //                if (rtuoverlayer[i].length != 0) {
+        //                    for (var j = 0; j < rtuoverlayer[i].length; j++) {
+        //                        map.removeOverlay(rtuoverlayer[i][j]);
+        //                    }
+        //                }
+        //                rtuoverlayer.splice(i, 1);
+        //            }
+        //            markoverlayer.splice(i, 1);
+        //            overlays.splice(i, 1);
+
+        //            return false;
+        //        }
+        //    }
+
+        //}
+        //绘制
+
+        //document.getElementById("startDraw").onclick = function () {
+        //    $("#coordinateText").val("");
+        //    //clearAll();
+        //    if (templays.length > 0) {
+        //        map.removeOverlay(templays[0]);
+        //    }
+        //    templays = [];
+        //    if (isadd == false && isRedraw == false) { //当修改区域时，重画应该去掉相对应的区域
+        //        clearSomeOverlay(areaID);
+        //        $(".layui-tab-brief").addClass("hide");
+
+        //        if (rtuoverlayer.length > 0) {
+        //            for (var i = 0; i < rtuoverlayer.length; i++) {
+        //                if (rtuoverlayer[i].length != 0) {
+        //                    for (var j = 0; j < rtuoverlayer[i].length; j++) {
+        //                        map.removeOverlay(rtuoverlayer[i][j]);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    isRedraw = true;
+
+        //    styleOptions.fillColor = "#" + $("#colorText").val();
+        //    drawingManager.open();
+        //    drawingManager.setDrawingMode(BMAP_DRAWING_POLYGON);
+        //}
+
+        $("#startDraw").click(function () {
+            $("#coordinateText").val("");
+            if (templays.length > 0) {
+                map.remove(templays[0]);
+            }
+            templays = [];
+            if (isadd == false && isRedraw == false) {//当修改区域时，重画应该去掉相对应的区域
+                clearSomeOverlay(areaID);
+                $(".layui-tab-brief").addClass("hide");
+
+                if (rtuoverlayer.length > 0) {
+                    for (var i = 0; i < rtuoverlayer.length; i++) {
+                        if (rtuoverlayer[i].length != 0) {
+                            for (var j = 0; j < rtuoverlayer[i].length; j++) {
+                                map.remove(rtuoverlayer[i][j]);
+                            }
+                        }
+                    }
+                }
+            }
+            isRedraw = true;
+            drawPolygon();
+        });
+    </script>
+
+    <script type="text/javascript">
+        map = new AMap.Map('page-content', {
+            resizeEnable: true,
+
+            zoom: 5,
+            mapStyle: 'amap://styles/8d723b70ba3f078f5fb4c35f177c05e3', //设置地图的显示样式
+            center: [116.376979, 39.904374],
+            layers: [//使用多个图层
+                //  new AMap.TileLayer.Satellite(),
+                //  new AMap.TileLayer.RoadNet()
+            ],
+            zooms: [6, 14],//设置地图级别范围
+        });
+        //拖动获取设备信息
+        AMap.event.addListener(map, "zoomchange", function (e) {
+
+        });
+        //拖动获取设备信息
+        AMap.event.addListener(map, "moveend", function (e) {
+
+        });
+
+        function clearAll() {
+            map.clearMap();
+        }
+
+
+
+        //选择区域后地图展示所选区域
+        function showpolygon(ids) {
+            $.post("/Wo/Wo_AreaInfo/GetAreaInfo", {
+                IDs: ids
+            }, function (result) {
+                if (result != "") {
+                    var data = JSON.parse(result);
+                    for (var i = 0; i < data.length; i++) {
+                        var points = data[i].GISPoints;
+                        if (points != null && points != "") {
+                            var pts = [];
+                            var start = points.lastIndexOf('(') + 1;
+                            var end = points.indexOf(')');
+                            var pointarray = points.substring(start, end).split(", ");
+                            var centlng = 0,
+                                centerlat = 0;
+                            for (var j = 0; j < pointarray.length; j++) {
+                                var dp = pointarray[j].split(" ");
+                                var pt1 = [dp[0], dp[1]];
+                                pts.push(pt1);
+                                centlng += parseFloat(dp[0]);
+                                centerlat += parseFloat(dp[1])
+                            }
+                            centlng = centlng / pointarray.length;
+                            centerlat = centerlat / pointarray.length;
+                            //将多边形添加到地图上
+                            var fillcolor = "red";
+                            if (data[i].FillColor != null && data[i].FillColor != "") {
+                                fillcolor = "#" + data[i].FillColor;
+                            }
+
+                            text = new AMap.Text({
+                                text: "<div style='display:none'>" + data[i].ID + "编号</div><div style='font:bold'>名称：<span style='color:red'>" + data[i].AreaName + "</span></div><div>设备数量：<span style='color:red'>" + data[i].countnum + "</span></div>",
+                                anchor: 'center', // 设置文本标记锚点
+                                cursor: 'pointer',
+                                style: {
+                                    'background-color': '#f3eded26',
+                                    'border-width': 0,
+                                    'color': 'black',
+                                    'font-weight': 'bold'
+                                },
+                                position: [centlng, centerlat]
+                            });
+
+                            text.setMap(map);
+                            var styleOptions = new AMap.Polygon({
+                                path: pts,
+                                strokeColor: "#FF33FF",
+                                strokeWeight: 6,
+                                strokeOpacity: 0.2,
+                                fillOpacity: 0.4,
+                                fillColor: "" + fillcolor + "",
+                                //zIndex: 50
+                            });
+                            map.add(styleOptions);
+                            map.setFitView(styleOptions);//自适应显示
+
+                            markoverlayer.push(text);
+                            rtuoverlayer.push([]);
+                            overlays.push(styleOptions);
+                        }
+                    }
+                }
+            });
+        }
+
+
+        function showpolygonandzoom(ids, isaddpoint) { //isaddpoint是否重新显示区域,=false重新显示，=true不显示
+            $.post("/Wo/Wo_AreaInfo/GetAreaInfo", {
+                IDs: ids
+            }, function (result) {
+
+                if (result != "") {
+                    var data = JSON.parse(result);
+                    for (var i = 0; i < data.length; i++) {
+                        var points = data[i].GISPoints;
+                        if (points != null && points != "") {
+                            var pts = [];
+                            var start = points.lastIndexOf('(') + 1;
+                            var end = points.indexOf(')');
+                            var pointarray = points.substring(start, end).split(", ");
+                            var centlng = 0,
+                                centerlat = 0;
+                            for (var j = 0; j < pointarray.length; j++) {
+                                var dp = pointarray[j].split(" ");
+                                var pt1 = [dp[0], dp[1]];
+                                pts.push(pt1);
+                                centlng += parseFloat(dp[0]);
+                                centerlat += parseFloat(dp[1])
+                            }
+
+                            if (isaddpoint == false) {
+                                centlng = centlng / pointarray.length;
+                                centerlat = centerlat / pointarray.length;
+
+                                //将多边形添加到地图上
+                                var fillcolor = "red";
+                                if (data[i].FillColor != null && data[i].FillColor != "") {
+                                    fillcolor = "#" + data[i].FillColor;
+                                }
+
+                                text = new AMap.Text({
+                                    text: "<div style='display:none'>" + data[i].ID + "编号</div><div style='font:bold'>名称：<span style='color:red'>" + data[i].AreaName + "</span></div><div>设备数量：<span style='color:red'>" + data[i].countnum + "</span></div>",
+                                    anchor: 'center', // 设置文本标记锚点
+                                    cursor: 'pointer',
+                                    style: {
+                                        'background-color': '#f3eded26',
+                                        'border-width': 0,
+                                        'color': 'black',
+                                        'font-weight': 'bold'
+                                    },
+                                    position: [centlng, centerlat]
+                                });
+
+                                text.setMap(map);
+                                var styleOptions = new AMap.Polygon({
+                                    path: pts,
+                                    strokeColor: "#FF33FF",
+                                    strokeWeight: 6,
+                                    strokeOpacity: 0.2,
+                                    fillOpacity: 0.4,
+                                    fillColor: "" + fillcolor + "",
+                                    //zIndex: 50
+                                });
+                                map.add(styleOptions);
+                                map.setFitView(styleOptions);//自适应显示
+
+                                markoverlayer.push(text);
+                                overlays.push(styleOptions);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        //绘制图形
+        var mouseTool = new AMap.MouseTool(map);
+        mouseTool.on("draw", draw);
+        function drawPolygon() {
+            var color = "#" + $("#colorText").val();
+            mouseTool.polygon({
+                strokeColor: "#FF33FF",
+                strokeOpacity: 1,
+                strokeWeight: 6,
+                strokeOpacity: 0.2,
+                fillColor: color,
+                fillOpacity: 0.4,
+                // 线样式还支持 'dashed'
+                strokeStyle: "solid",
+                // strokeStyle是dashed时有效
+                // strokeDasharray: [30,10],
+            });
+
+        }
+
+        function draw(e) {
+            var path = e.obj.De.path;
+            if (path.length < 3) {
+                map.remove(e.overlay);
+            } else {
+                if ($("#addPopup").css("display") == "none") {
+                    map.remove(e.overlay);
+                } else {
+                    var pointarray = "";
+                    for (var i = 0; i < path.length; i++) {
+                        pointarray += path[i].lng + " " + path[i].lat + ',';
+                    }
+                    if (pointarray != "") {
+                        pointarray += path[0].lng + " " + path[0].lat + ',';
+                        pointarray = pointarray.substring(0, pointarray.length - 1);
+                    }
+                    $("#coordinateText").val(pointarray);
+                    templays.push(e.obj);
+                }
+            }
+        }
+
+
+        function clearSomeOverlay(id) {
+
+            if (bigmark.length > 0) {
+                for (var i = 0; i < bigmark.length; i++) {
+                    map.remove(bigmark[i]);
+                    bigmark.splice(i, 1);
+                }
+            }
+            for (var i = 0; i < markoverlayer.length; i++) {
+                if (markoverlayer[i].Ce.text.indexOf(id + "编号") > -1) {
+
+                    map.remove(markoverlayer[i]);
+                    map.remove(overlays[i]);
+                    if (rtuoverlayer.length > 0) {
+                        if (rtuoverlayer[i].length != 0) {
+                            for (var j = 0; j < rtuoverlayer[i].length; j++) {
+                                map.remove(rtuoverlayer[i][j]);
+                            }
+                        }
+                        rtuoverlayer.splice(i, 1);
+                    }
+                    markoverlayer.splice(i, 1);
+                    overlays.splice(i, 1);
+                    return false;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

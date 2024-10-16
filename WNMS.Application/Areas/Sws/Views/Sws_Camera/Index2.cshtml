@@ -1,0 +1,617 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>视频监控</title>
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+
+    <script src="~/lib/laydate/laydate.js"></script>
+
+    <style>
+        .selected {
+            border: 1px solid red;
+        }
+
+        .double {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nothascamera {
+            display: none
+        }
+
+        .advanceDate {width: 0;padding: 0 23px 0 10px;background: url(/Swslxl/images/icons/calendar.png) no-repeat right 3px center / auto 70%;border: 1px solid #ccc;border-radius: 3px;opacity: 0;transition: all .3s;}
+        .advanceDate.active {width: 220px;opacity: 1;}
+
+        body .layui-laydate .layui-this {background-color: #258ffc!important;}
+        body .layui-laydate-content td.laydate-selected {background-color: #9fcdfd;}
+        body .layui-laydate-header i:hover, .layui-laydate-header span:hover,
+        body .layui-laydate-footer span:hover {color: #258ffc;}
+    </style>
+</head>
+<body>
+    <div class="zlw-content">
+        <div class="zlw-content-lf relative" style="overflow-x:hidden;">
+            <div class="zlw-content-lfdj"></div>
+            <div class="zlw-content-lfcon">
+                <div class="zlw-sxtcyi">
+                    <div class="zlw-sxtcyicon">
+                        <i class="glyphicon glyphicon-search" id="searchbtn"></i>
+                        <input id="selname" type="text" placeholder="请输入搜索的内容" class="zlw-ssk">
+                    </div>
+                </div>
+                <div class="zlw-sxtcer">
+                    <div class="zlw-tree pt5px">
+                        <ul class="sxt_list" id="dataList">
+                            @{
+                                var stationSates = ViewBag.stationState as IEnumerable<dynamic>;
+                                if (stationSates!=null&&stationSates.Count() > 0)
+                                {
+                                    var States = stationSates.ToList();
+                                    for (var i = 0; i < States.Count; i++)
+                                    {
+                                        var classSate = "";
+                                        if (States[i].state == "在线")
+                                        {
+                                            classSate = "clcle-green";
+                                        }
+                                        else if (States[i].state == "报警")
+                                        {
+                                            classSate = "clcle-red";
+                                        }
+                                        else
+                                        {
+                                            classSate = "clcle-gray";
+
+                                        }
+                                        var cameraclass = "";
+                                        if (!States[i].CameraMonitor)
+                                        {
+                                            cameraclass = "nothascamera";
+                                        }
+                                        else
+                                        {
+                                            cameraclass = "";
+                                        }
+
+                                        if (i == 0)
+                                        {
+                                <li data-key="@States[i].StationID" class="on">
+                                    <em class="@classSate"></em>
+                                    <span class="chaochu">@States[i].StationName</span>
+                                    <i class="iconfont icon-shexiangtou @cameraclass"></i>
+                                </li>
+                                        }
+                                        else
+                                        {
+                                <li data-key="@States[i].StationID">
+                                    <em class="@classSate"></em>
+                                    <span class="chaochu">@States[i].StationName</span>
+                                    <i class="iconfont icon-shexiangtou @cameraclass"></i>
+                                </li>
+                                        }
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="zlw-content-rg">
+            <div class="zlw-content-rgcon">
+                <div class="left-icon"></div>
+                <!--- star Camera -->
+                <div class="zlw-camera-list">
+                    <div class="zlw-camera-list-title">
+                        <p>视频列表</p>
+                    </div>
+                    <div class="zlw-camera-list-content">
+                        <ul id="camerList" class="textCenter gray">
+                            该泵房下暂无摄像头
+                            @*<li class="camera_act"><p>锦绣蓝山1</p></li>
+                                <li><p>锦绣蓝山2</p></li>
+                                <li><p>锦绣蓝山3</p></li>
+                                <li><p>锦绣蓝山4</p></li>*@
+                        </ul>
+                    </div>
+                </div>
+                <div class="zlw-camera-content">
+
+                    <div class="zlw-camera-contentdw">
+                        <div class="zlw-camera-content-xx clearfloat">
+                            <span class="left">选项</span>
+                            <ul class="left clearfloat">
+                                <li class="xz_active left numberyiyi" id="preview">视频监控</li>
+                                <li class="left numbererer" id="playbacks">视频回放</li>
+                            </ul>
+
+                            <div class="advance-date-content" style="float: left;margin-left: 20px;">
+                                <input type="text" name="playbacksTimeInterval" value="" class="advanceDate" readonly="readonly" placeholder="开始时间 ~ 结束时间" />
+                            </div>
+                        </div>
+                        <div class="zlw-camera-content-nr">
+                            <iframe id="tab" class="webControl-tab" name="homeIframe" src="" frameborder="0" style="width:100%;overflow:hidden;height:100%;"> </iframe>
+                        </div>
+                        </div>
+                    </div>
+                <!-- Camera end -->
+            </div>
+        </div>
+    </div>
+    <script src="~/video/demos1/jsencrypt.min.js"></script>
+    <script src="~/video/demos1/jsWebControl-1.0.0.min.js"></script>
+    <script>
+        var stationid = $(".sxt_list li .on").data("key");
+        var cameraId;   //当前选中摄像头的Id
+        var width = 0, height = 0;
+        $(function () {
+            /**
+             * 初始化日期选择器
+             */
+            lay('.advanceDate').each(function () {
+                laydate.render({
+                    elem: this,
+                    trigger: 'click',
+                    type: 'date',
+                    range: '~',
+                    max: 0,
+                    value: '@ViewBag.beginTime ~ @ViewBag.endTime', // 初始时间
+                    ready: function () {
+                        var iframe = $('iframe.webControl-tab'),
+                            oWebControl = iframe[0].contentWindow.oWebControl;
+
+                        // 隐藏iframe视频窗口
+                        oWebControl.JS_HideWnd();
+                    },
+                    done: function (value) {
+                        var advanceDateArray = value.split(' ~ '),
+                            beginTime = advanceDateArray[0],
+                            endTime = advanceDateArray[1];
+
+                        $("#tab").attr("src", "/Sws/Sws_Camera/PlayBack?cameraId=" + cameraId + "&beginTime=" + beginTime + "&endTime=" + endTime + "");
+                    }
+                });
+            });
+
+            $(".zlw-content-lfdj").click(function () {
+                $(".zlw-content-lfdj").hide();
+                $(".left-icon").css("display", "block");
+                $(".zlw-content-lf").css({ "width": "0", "padding": "0" });
+                $(".zlw-content-rg").css("width", "100%");
+            });
+
+            GetCameraList($(".sxt_list .on").data("key"));
+
+            //树查询
+            //$("#searchbtn").click(function () {
+            //    LoadStationList();
+            //});
+            $("#selname").bind("keypress", function (event) {
+                if (event.keyCode != 13) {
+                    if (event.keyCode < 48 || event.keyCode > 57) {
+                        console.log("1");
+                    }
+                } else {
+                    event.preventDefault();
+                    LoadStationList();
+                }
+            });
+
+            $(".left-icon").click(function () {
+                $(".zlw-content-lfdj").fadeIn();
+                $(".left-icon").css("display", "none");
+                $(".zlw-content-lf").css({ "width": "220px", "padding": "5px" });
+                $(".zlw-content-rg").css("width", "calc(100% - 220px)");
+            });
+
+            //泵房点击事件
+            $(document).on('click', '.sxt_list li', function () {
+                stationid = $(this).data("key");
+                $(this).addClass('on').siblings('li').removeClass('on');
+                GetCameraList(stationid);
+            });
+
+            //摄像头获取视频信息
+            $(document).on('click', '.zlw-camera-list-content ul li', function () {
+                cameraId = $(this).data("camerid");
+                //var Id = $(this).data("camerid");
+                $(this).addClass('camera_act').siblings('li').removeClass('camera_act');
+                if ($("#preview").hasClass("xz_active")) {
+                    $("#tab").attr("src", "/Sws/Sws_Camera/Preview?cameraId=" + cameraId + "");
+                } else {
+                    var advanceDateArray = $('.advanceDate').val().split(' ~ '),
+                        beginTime = advanceDateArray[0],
+                        endTime = advanceDateArray[1];
+                    $("#tab").attr("src", "/Sws/Sws_Camera/PlayBack?cameraId=" + cameraId + "&beginTime=" + beginTime + "&endTime=" + endTime + "");
+                }
+            });
+
+            /**
+             * 点击视频监控
+             */
+            $("#preview").click(function () {
+                $('.advanceDate').removeClass('active');
+
+                $(this).addClass('xz_active').siblings('li').removeClass('xz_active');
+                $("#tab").attr("src", "/Sws/Sws_Camera/Preview?cameraId=" + cameraId + "");
+            });
+
+            /**
+             * 点击视频回放
+             */
+            $("#playbacks").click(function () {
+                $('.advanceDate').addClass('active');
+                var advanceDateArray = $('.advanceDate').val().split(' ~ '),
+                    beginTime = advanceDateArray[0],
+                    endTime = advanceDateArray[1];
+
+                $(this).addClass('xz_active').siblings('li').removeClass('xz_active');
+                $("#tab").attr("src", "/Sws/Sws_Camera/PlayBack?cameraId=" + cameraId + "&beginTime=" + beginTime + "&endTime=" + endTime+"");
+            });
+
+            //点击"视频监控"样式
+            $(document).on('click', '.zlw-camera-content-xx ul li', function () {
+                $(this).addClass('xz_active').siblings('li').removeClass('xz_active');
+            });
+
+            //点击"录像回放"样式
+            $(document).on('click', '.zlw-camera-content-nr>ul>li>.sxt', function () {
+                $(this).addClass('selected').parent().siblings('li').children('.sxt').removeClass('selected');
+            });
+
+            $(document).on('dblclick', '.zlw-camera-content-nr>ul>li', function () {
+                if ($(".numbererer").hasClass("xz_active")) {
+                    var pw = $(this).parent().width();
+                    var ph = $(this).parent().height();
+                    if ($(this).hasClass("double")) {
+                        $(this).removeClass("double").css({ "width": pw / 2, "height": ph / 2 }).siblings("li").css("display", "block");
+                    } else {
+                        $(this).addClass("double").css({ "width": pw, "height": ph }).siblings("li").css("display", "none");
+                    };
+                };
+            });
+
+            width = window.parent.$(".main-sidebar")[0].clientWidth;
+            height = window.parent.$(".main-header")[0].clientHeight;
+        });
+
+
+        //左侧泵房查询
+        function LoadStationList() {
+            var searchText = $("#selname").val();
+            var flag = false;
+            $.post("/Sws/Sws_Camera/SearchStationList", { stationName: searchText }, function (res) {
+                $("#dataList").empty();
+                if (res.data.length > 0) {
+                    var appends = "";
+                    var States = res.data;
+                    for (var i = 0; i < States.length; i++) {
+
+                        var classSate = "";
+                        if (States[i].state == "在线") {
+                            classSate = "clcle-green";
+                        }
+                        else if (States[i].state == "报警") {
+                            classSate = "clcle-red";
+                        }
+                        else {
+                            classSate = "clcle-gray";
+                        }
+                        var cameraclass = "";
+                        if (!States[i].CameraMonitor) {
+                            cameraclass = "nothascamera";
+                        }
+                        else {
+                            cameraclass = "";
+                        }
+                        if (States[i].StationID == stationid) {
+                            appends += ' <li class="on"  data-key="' + States[i].StationID + '">' +
+                                '<em class="' + classSate + '"></em>' +
+                                '<span class="chaochu">' + States[i].StationName + '</span>' +
+                                ' <i class="iconfont icon-shexiangtou' + cameraclass + '"></i>' +
+                                '</li>';
+                            flag = true;
+                        }
+                        else {
+                            appends += ' <li  data-key="' + States[i].StationID + '">' +
+                                '<em class="' + classSate + '"></em>' +
+                                '<span class="chaochu">' + States[i].StationName + '</span>' +
+                                ' <i class="iconfont icon-shexiangtou' + cameraclass + '"></i>' +
+                                '</li>';
+                        }
+                    }
+                    $("#dataList").html(appends);
+                }
+                if (flag == false) {
+                    doorid = 0;
+                    stationid = 0;
+                }
+            })
+
+        }
+
+        //获取泵房下摄像头列表
+        function GetCameraList(stationid) {
+            $.post("/Sws/Sws_Camera/GetCameraList", {
+                stationID: stationid
+            }, function (res) {
+                if (res.list.length > 0) {
+                    $("#camerList").empty();
+                    var list = res.list;
+                    var str = "";
+                    for (var i = 0; i < list.length; i++) {
+                        if (i == 0) {
+                            str += '<li class="camera_act" data-camerId="' + list[i].cameraId + '" data-type="' + list[i].cameraType + '"><p>' + list[i].cameraName + '</p></li>';
+                        } else {
+                            str += '<li  data-camerId="' + list[i].cameraId + '" data-type="' + list[i].cameraType + '"><p>' + list[i].cameraName + '</p></li>';
+                        }
+                    }
+                    $("#camerList").html(str);
+                } else {
+                    $("#camerList").html("<span style='position:relative;top:10px'>该泵房下暂无摄像头</span>");
+                }
+
+                // 切换一级列表时，右侧iframe置空
+                $("#tab").attr("src", "");
+            });
+        }
+
+
+        //----------------------------------------------------------视频直播---------------------------------------------------------------
+        //点击摄像头，获取视频信息
+        function GetVideoInfo(Id) {
+            $.post("/Sws/Sws_Camera/GetCameraDetail", {
+                cameraID: Id
+            }, function (res) {
+                var url = res.url;
+                var Ip = res.cameraIp;
+                if ($(".numberyiyi").hasClass("xz_active")) {
+                    /*                   if (res.type == 0 || res.type == 1) {   */          //大华海康
+                    getLiveUrl("videoElement1", url, Id, Ip);
+                    //} else {
+                    //    if (res.type == 2) {                          //萤石
+                    //        $('#videoElement1').attr("src", res.url);
+                    //        var player = new EZUIKit.EZUIPlayer('videoElement1');
+                    //    } else {                            //乐橙
+                    //        live("videoElement1", url);
+                    //    }
+
+                    //}
+                } else {
+                    if ($(".numbererer").hasClass("xz_active")) {
+                        var aa = $(".zlw-camera-content-nr>ul>li .selected").children();
+                        var elementId = aa[0].id;
+                        //if (res.type == 0 || res.type == 1) {
+                        getLiveUrl(elementId, url, Id, Ip);
+                        //} else {
+                        //    if (res.type == 2) {
+                        //        $('#' + elementId + '').attr("src", res.url);
+                        //        var player = new EZUIKit.EZUIPlayer(elementId);
+                        //    } else {
+                        //        live(elementId, url);
+                        //    }
+                        //}
+                    }
+                }
+            });
+        }
+
+
+        //大华海康直播
+        function getLiveUrl(video = "videoElement1", url, stream = 0, IP) {
+            $.getJSON(IP + "/index/api/addStreamProxy", {
+                "url": url,
+                //"url": "rtsp://admin:admin@192.168.80.85:554/cam/realmonitor?channel=1&subtype=1",
+                "enable_rtmp": 1,
+                "enable_rtsp": 1,
+                "vhost": "wnms",
+                "app": "live",
+                "stream": stream,
+                "secret": "035c73f7-bb6b-4889-a715-d9eb2d1925cc"
+
+            }, function (result) {
+                if (result.code == 0) {
+
+                    //alert(result.data.key);
+                    if (flvjs.isSupported()) {
+                        var videoElement = document.getElementById(video);
+                        var num = IP.indexOf("//");
+                        var myip = IP.substring(num + 2, IP.length);
+                        var flvPlayer = flvjs.createPlayer({
+                            type: 'flv',
+                            url: 'ws://' + myip + '/live/' + stream + '.flv?vhost=wnms'
+                        });
+                        flvPlayer.attachMediaElement(videoElement);
+                        flvPlayer.load();
+                        flvPlayer.play();
+                    }
+                } else {
+                    //按需拉流失败
+                    alert("摄像头配置信息有误，请重新配置");
+                }
+            });
+        }
+
+        //乐橙直播
+        function live(video, url) {
+            var player = cyberplayer(video).setup({
+                width: "100%",
+                height: "100%",
+                title: 'demo示例',
+                isLive: true,
+                file: url,
+                image: '',
+                autostart: true,
+                stretching: "uniform",
+                repeat: false,
+                volume: 0,
+                controls: true,
+                hls: {
+                    reconnecttime: 5
+                },
+                ak: "39f82ac87fc3462ea4dcc78734450f57"
+            });
+
+        }
+
+
+        //----视频控制----  0开始 1停止------  0-上，1-下，2-左，3-右，4-左上，5-左下，6-右上，7-右下，8-放大，9-缩小，11-焦距放大，12-焦距缩小，13-光圈放大，14-光圈缩小，10-停止  ---------
+        //上0
+        $("#up").mousedown(function () {
+            ControlCamera(0, 0, cameraId);
+        });
+        $("#up").mouseup(function () {
+            ControlCamera(0, 1, cameraId);
+        });
+
+        //右上6
+        $("#rightup").mousedown(function () {
+            ControlCamera(6, 0, cameraId);
+        });
+        $("#rightup").mouseup(function () {
+            ControlCamera(6, 1, cameraId);
+        });
+
+        //右3
+        $("#right").mousedown(function () {
+            ControlCamera(3, 0, cameraId);
+        });
+        $("#right").mouseup(function () {
+            ControlCamera(3, 1, cameraId);
+        });
+
+        //右下7
+        $("#rightdown").mousedown(function () {
+            ControlCamera(7, 0, cameraId);
+        });
+        $("#rightdown").mouseup(function () {
+            ControlCamera(7, 1, cameraId);
+        });
+
+        //下1
+        $("#down").mousedown(function () {
+            ControlCamera(1, 0, cameraId);
+        });
+        $("#down").mouseup(function () {
+            ControlCamera(1, 1, cameraId);
+        });
+
+        //左下5
+        $("#leftdown").mousedown(function () {
+            ControlCamera(5, 0, cameraId);
+        });
+        $("#leftdown").mouseup(function () {
+            ControlCamera(5, 1, cameraId);
+        });
+
+        //左2
+        $("#left").mousedown(function () {
+            ControlCamera(2, 0, cameraId);
+        });
+        $("#left").mouseup(function () {
+            ControlCamera(2, 1, cameraId);
+        });
+
+        //左上4
+        $("#leftup").mousedown(function () {
+            ControlCamera(4, 0, cameraId);
+        });
+        $("#leftup").mouseup(function () {
+            ControlCamera(4, 1, cameraId);
+        });
+
+        //缩小9
+        $("#zoomsmall").mousedown(function () {
+            ControlCamera(9, 0, cameraId);
+        });
+        $("#zoomsmall").mouseup(function () {
+            ControlCamera(9, 1, cameraId);
+        });
+
+        //放大8
+        $("#zoomlarge").mousedown(function () {
+            ControlCamera(8, 0, cameraId);
+        });
+        $("#zoomlarge").mouseup(function () {
+            ControlCamera(8, 1, cameraId);
+        });
+
+        //焦距缩小12 focalsmall
+        $("#focalsmall").mousedown(function () {
+            ControlCamera(12, 0, cameraId);
+        });
+        $("#focalsmall").mouseup(function () {
+            ControlCamera(12, 1, cameraId);
+        });
+
+        //焦距放大11 focallarge
+        $("#focallarge").mousedown(function () {
+            ControlCamera(11, 0, cameraId);
+        });
+        $("#focallarge").mouseup(function () {
+            ControlCamera(11, 1, cameraId);
+        });
+
+        //光圈缩小14
+        $("#halosmall").mousedown(function () {
+            ControlCamera(14, 0, cameraId);
+        });
+        $("#halosmall").mouseup(function () {
+            ControlCamera(14, 1, cameraId);
+        });
+
+        //光圈放大13
+        $("#halolarge").mousedown(function () {
+            ControlCamera(13, 0, cameraId);
+        });
+        $("#halolarge").mouseup(function () {
+            ControlCamera(13, 1, cameraId);
+        });
+
+
+        function ControlCamera(dir, start, id) {
+            $.post("/Sws/Sws_Camera/CameraMoveControl", { direction: dir, start: start, cameraID: id, step: $("#step option:selected").val() }, function (res) {
+                //layer.alert(res);
+                if (res == "false") {
+                    layer.alert("远程连接失败。");
+                } else {
+                    if (res == "noid") {
+                        layer.alert("摄像头已被删除，请刷新页面重试。")
+                    } else {
+                        if (res == "no") {
+                            layer.alert("操作失败。")
+                        } else {
+                            if (res == "ok") {
+
+                            } else {
+                                layer.alert(res);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

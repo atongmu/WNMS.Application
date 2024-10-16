@@ -1,0 +1,6 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define(["exports","../../../../../core/arrayUtils","../../../../../core/maybe"],function(d,m,h){d.computeEdgeCount=function(b,c,a){const e=b.length;c*=a.minimumEdgeLength;a=m.binaryIndexOf(b,c,!0);b=-1===a?c<b[0]?0:b.length:a;return e-b};d.determineEdgeTransparency=function(b){let c=0;for(const {material:a}of b)if(0<a.size*a.color[3]*a.opacity){if(1>a.color[3]*a.opacity)return 1;c=2}return c};d.determineObjectTransparency=function(b){let c=0;for(const {material:a}of b)if(0<a.size*a.color[3]*a.opacity){switch(a.objectTransparency){case 1:case 0:return 1;
+case 2:if(1>a.opacity)return 1}c=2}return c};d.determineRendererType=function(b){let c=null;for(const a of b)if(b=a.type,0<a.size*a.color[3])if(h.isNone(c))c=b;else if(c!==b)return"uber";return h.isSome(c)?c:"uber"};d.estimateLengthAtDistance=function(b,c,a,e){return e/b*a*2*Math.tan(.5*c)};d.fillComponenBufferIndices=function(b,c,a,e){for(let g=0;g<b.length;g++){const k=b[g].index;var f=c[g];const l=c[g+1];if(e)for(;f<l;f++)a.set(e[f],k);else for(;f<l;f++)a.set(f,k)}};Object.defineProperty(d,"__esModule",
+{value:!0})});

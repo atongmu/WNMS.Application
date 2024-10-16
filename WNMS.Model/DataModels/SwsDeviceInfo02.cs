@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace WNMS.Model.DataModels
+{
+    public partial class SwsDeviceInfo02
+    {
+        public long DeviceId { get; set; }
+        public string DeviceNum { get; set; }
+        public string DeviceName { get; set; }
+        public int DeviceType { get; set; }
+        public DateTime? ProductionDate { get; set; }
+        public int? Rtuid { get; set; }
+        public byte Partition { get; set; }
+        public int StationId { get; set; }
+        public int Manufacturer { get; set; }
+        public string ImageUrl { get; set; }
+        public int Gui { get; set; }
+        public bool IsSingle { get; set; }
+        public DateTime? CreateTime { get; set; }
+    }
+}

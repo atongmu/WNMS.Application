@@ -1,0 +1,2252 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>能耗对比</title>
+    <link rel="Shortcut Icon" href="~/UploadImg/Logo/logo.png" />
+    <link rel="stylesheet" href="~/DataV/css/css.css">
+    <link rel="stylesheet" href="~/DataV/css/layui.css">
+    <script src="~/DataV/js/jquery-1.12.4.min.js"></script>
+    <script src="~/DataV/js/echarts.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/DataV/js/jquery.kxbdMarquee.js"></script>
+    <style>
+        .no-date {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            position: absolute;
+            left: 0;
+            top: 48%;
+        }
+
+            .no-date img {
+                position: relative;
+                top: -75px;
+            }
+
+            .no-date p {
+                text-align: center;
+                font-size: 14px;
+                color: #fff;
+                position: absolute;
+                top: 85px;
+                width: 100%;
+            }
+    </style>
+</head>
+<body>
+    <div class="zlw_content">
+        <!-- star  body -->
+        <div class="zlw_xnhdb  clearfloat">
+            <div class="zlw_xnhdbcon">
+                <!-- star 总览数据 -->
+                <div class="zlw-ldzl">
+                    <!-- star 标识 -->
+                    <div class="zlw_ssnr">
+                        <div class="zlw_ssnrc clearfloat">
+                            <div class="zlw_ssnrc1 left"><span></span> <i id="device_name1">@Html.Raw(ViewBag.devicename1)</i></div>
+                            <div class="zlw_ssnrc2 left"><span></span> <i id="device_name2">@Html.Raw(ViewBag.devicename2)</i></div>
+                            <div class="zlw_ssnrc3 left">
+                                <button id="chongzhi">重置</button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 标识 end -->
+                    <!-- 四个角直角 -->
+                    <div class="dwtopl"></div>
+                    <div class="dwtopr"></div>
+                    <div class="dwbotl"></div>
+                    <div class="dwbotr"></div>
+                    <ul class="clearfloat">
+                        <li>
+                            <div class="zlw-ldzlcon">
+                                <div class="zlw-ldzlconyi"><p>进水压力(MPa)</p></div>
+                                <div class="zlw-ldzlcongd"><span></span></div>
+                                <div class="zlw-ldzlconer">
+                                    <div class="zlw-ldzlconerconk">
+                                        <span></span>
+                                        <div class="zlw-ldzlconercon">
+                                            <p id="InPress1"><i></i>0</p>
+                                            <p id="InPress2"><i></i>0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zlw-ldzlcon">
+                                <div class="zlw-ldzlconyi"><p>出水压力(MPa)</p></div>
+                                <div class="zlw-ldzlcongd"><span></span></div>
+                                <div class="zlw-ldzlconer">
+                                    <div class="zlw-ldzlconerconk">
+                                        <span></span>
+                                        <div class="zlw-ldzlconercon">
+                                            <p id="OutPress1"><i></i>0</p>
+                                            <p id="OutPress2"><i></i>0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zlw-ldzlcon">
+                                <div class="zlw-ldzlconyi"><p>设定压力(MPa)</p></div>
+                                <div class="zlw-ldzlcongd"><span></span></div>
+                                <div class="zlw-ldzlconer">
+                                    <div class="zlw-ldzlconerconk">
+                                        <span></span>
+                                        <div class="zlw-ldzlconercon">
+                                            <p id="SetPress1"><i></i>0</p>
+                                            <p id="SetPress2"><i></i>0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zlw-ldzlcon">
+                                <div class="zlw-ldzlconyi"><p>单吨能耗(kW·h/m³)</p></div>
+                                <div class="zlw-ldzlcongd"><span></span></div>
+                                <div class="zlw-ldzlconer">
+                                    <div class="zlw-ldzlconerconk">
+                                        <span></span>
+                                        <div class="zlw-ldzlconercon">
+                                            <p id="SetCon1"><i></i>0</p>
+                                            <p id="SetCon2"><i></i>0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zlw-ldzlcon">
+                                <div class="zlw-ldzlconyi"><p>瞬时流量(m³/h)</p></div>
+                                <div class="zlw-ldzlcongd"><span></span></div>
+                                <div class="zlw-ldzlconer">
+                                    <div class="zlw-ldzlconerconk">
+                                        <span></span>
+                                        <div class="zlw-ldzlconercon">
+                                            <p id="Inflow1"><i></i>0</p>
+                                            <p id="Inflow2"><i></i>0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zlw-ldzlcon">
+                                <div class="zlw-ldzlconyi"><p>累计流量底数(m³)</p></div>
+                                <div class="zlw-ldzlcongd"><span></span></div>
+                                <div class="zlw-ldzlconer">
+                                    <div class="zlw-ldzlconerconk">
+                                        <span></span>
+                                        <div class="zlw-ldzlconercon">
+                                            <p id="totalFlow1"><i></i>0</p>
+                                            <p id="totalFlow2"><i></i>0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zlw-ldzlcon">
+                                <div class="zlw-ldzlconyi"><p>累计电量底数(kW·h)</p></div>
+                                <div class="zlw-ldzlcongd"><span></span></div>
+                                <div class="zlw-ldzlconer">
+                                    <div class="zlw-ldzlconerconk">
+                                        <span></span>
+                                        <div class="zlw-ldzlconercon">
+                                            <p id="totalPower1"><i></i>0</p>
+                                            <p id="totalPower2"><i></i>0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 总览数据 end -->
+                <div class="zlw_nhdbkk">
+                    <!-- star 中间部分 -->
+                    <div class="zlw-ldzjbf">
+                        <div class="zlw-ldzjbfk">
+                            <ul class="clearfloat">
+                                <li>
+                                    <div class="zlw-ldzjbfkcon">
+                                        <div class="zlw-ldjrlltitle">
+                                            <span>今日流量</span>
+                                        </div>
+                                        <div class="zlw-ldzjbfkconzt">
+                                            <div class="zlw-ljjrll" id="zlw-ljjrll"></div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="zlw-ldzjbfkcon">
+                                        <div class="zlw-ldjrlltitle">
+                                            <span>今日能耗</span>
+                                        </div>
+                                        <div class="zlw-ldzjbfkconzt">
+                                            <div class="zlw-ljjrnh" id="zlw-ljjrnh"></div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="zlw-ldzjbfkcon">
+                                        <div class="zlw-ldjrlltitle">
+                                            <span>昨日流量</span>
+                                        </div>
+                                        <div class="zlw-ldzjbfkconzt">
+                                            <div class="zlw-ljzrll" id="zlw-ljzrll"></div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="zlw-ldzjbfkcon">
+                                        <div class="zlw-ldjrlltitle">
+                                            <span>昨日能耗</span>
+                                        </div>
+                                        <div class="zlw-ldzjbfkconzt">
+                                            <div class="zlw-ljzrnh" id="zlw-ljzrnh"></div>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 中间部分 end -->
+                    <!-- star 下面部分 -->
+                    <div class="zlw-ldxmbf">
+                        <ul class="clearfloat">
+                            <li>
+                                <div class="zlw-ldxmbfk">
+                                    <div class="zlw-ldjrlltitle">
+                                        <span>近一周流量</span>
+                                    </div>
+                                    <div class="zlw-ldxmbfkcon clearfloat">
+                                        <div class="zlw-ldxmbfkconkk clearfloat">
+                                            <div class="zlw-ldxmbfkconlfyi" id="zlw-ldxmbfkconlfyi"></div>
+                                            <div class="zlw-ldxmbfkconlf left" style="display:none">
+
+
+                                            </div>
+                                            <div class="zlw-ldxmbfkconrg right" style="display:none">
+                                                <!--  <div class="zlw-ldxmbfkconrgyi" id="zlw-ldxmbfkconrgyi"></div>-->
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="zlw-ldxmbfk">
+                                    <div class="zlw-ldjrlltitle">
+                                        <span>近一周能耗</span>
+                                    </div>
+                                    <div class="zlw-ldxmbfkcon clearfloat">
+                                        <div class="zlw-ldxmbfkconkk">
+                                            <div class="zlw-ldxmbfkconrgyi" id="zlw-ldxmbfkconrgyi"></div>
+
+
+                                            @*<div class="zlw-ldxmbfkconlf left" style="display:none;">
+                                                <div class="zlw-ldxmbfkconlfsan" id="zlw-ldxmbfkconlfsan"></div>
+
+                                            </div>
+                                            <div class="zlw-ldxmbfkconrg right" style="display:none;">
+                                                <div class="zlw-ldxmbfkconrgsan" id="zlw-ldxmbfkconrgsan"></div>
+
+                                            </div>*@
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="zlw-ldxmbfk">
+                                    <div class="zlw-ldjrlltitle">
+                                        <span>近半月流量/能耗</span>
+                                    </div>
+                                    <div class="zlw-ldxmbfkcon clearfloat">
+                                        <div class="zlw-ldxmbfkconkk">
+                                            <!-- 表格开始 -->
+                                            <div class="zlw-bzlltabkk">
+                                                <div class="zlw-bzlltitle clearfloat">
+                                                    <span>时间 / 泵房</span>
+                                                    <span id="deviceName1_flow"> </span>
+                                                    <span id="deviceName2_flow"> </span>
+                                                    <span id="deviceName1_energy"> </span>
+                                                    <span id="deviceName2_energy"> </span>
+                                                </div>
+                                                <div class="zlw-bzlltab clearfloat" style="width:100%;height:calc(100% - 35px)   ;">
+                                                    <div class="zlw-bzlltabnr" id="marquee1">
+                                                        <ul class="clearfloat">
+                                                            <li class="clearfloat">
+                                                                <div class="zlw-bzlltabnryi" id="timelist">
+                                                                     
+                                                                </div>
+                                                                <div class="zlw-bzlltabnrer" id="device1Flow">
+                                                                     
+                                                                </div>
+                                                                <div class="zlw-bzlltabnrsan" id="device2Flow">
+                                                                     
+                                                                </div>
+                                                                <div class="zlw-bzlltabnrsi" id="device1Energy">
+                                                                     
+                                                                </div>
+                                                                <div class="zlw-bzlltabnrwu" id="device2Energy">
+                                                                     
+                                                                </div>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <script>
+                                                //$("#marquee1").kxbdMarquee({ direction: "up", isEqual: false, scrollDelay: 100 });
+                                            </script>
+
+
+
+                                            @*<div class="zlw-ldxmbfkconlf left" style="display:none;">
+
+                                                <div class="zlw-ldxmbfkconlfer" id="zlw-ldxmbfkconlfer" style="display:none"></div>
+                                                <div class="no-date" id="nodata_monthF" style="display:none">
+                                                    <img src="/images/zanwu.png" width="150" height="150" />
+                                                    <p>暂无数据</p>
+                                                </div>
+
+                                            </div>
+                                            <div class="zlw-ldxmbfkconrg right" style="display:none;">
+                                                <div class="zlw-ldxmbfkconrger" id="zlw-ldxmbfkconrger"></div>
+                                                <div class="no-date" id="nodata_monthE" style="display:none">
+                                                    <img src="/images/zanwu.png" width="150" height="150" />
+                                                    <p>暂无数据</p>
+                                                </div>
+                                            </div>*@
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!-- 下面部分 end -->
+                </div>
+            </div>
+        </div>
+        <!-- body end -->
+    </div>
+    <script>
+        // 添加class
+        $(function () {
+            $(".zlw_header_menu  ul li").click(function () {
+                $(this).siblings('.zlw_header_menu  ul li').removeClass('menuact');  // 删除其他兄弟元素的样式
+                $(this).addClass('menuact');                            // 添加当前元素的样式
+            });
+        });
+    </script>
+
+    <script>
+        var deviceID1 = @ViewBag.deviceid1;
+        var deviceID2 = @ViewBag.deviceid2;
+        var deviceName1 = "@Html.Raw(ViewBag.devicename1)";
+        var deviceName2 = "@Html.Raw(ViewBag.devicename2)";
+        var quee = 0;
+        $(function () {
+            /**
+             * 填入近半月流量/能耗表格头部
+             */
+            $("#deviceName1_flow").text(deviceName1 + "- 流量");
+            $("#deviceName1_flow").attr('title', deviceName1 + "- 流量");
+
+            $("#deviceName2_flow").text(deviceName2 + "- 流量");
+            $("#deviceName2_flow").attr('title', deviceName2 + "- 流量");
+
+            $("#deviceName1_energy").text(deviceName1 + "- 能耗");
+            $("#deviceName1_energy").attr('title', deviceName1 + "- 能耗");
+
+            $("#deviceName2_energy").text(deviceName2 + "- 能耗");
+            $("#deviceName2_energy").attr('title', deviceName2 + "- 能耗");
+
+            if (deviceID1 != 0 && deviceID2 != 0) {
+                GetJKData();
+                GetTodayData();
+                GetYestData();
+                GetThisWeekData();
+                GetThisMonthData();
+                //GetThisYearData();
+            }
+        })
+        //实时数据查询
+        function GetJKData() {
+            $.post("/Sws/BigScreen_ConCompare/GetEnergyJkData", { deviceid1: deviceID1, deviceid2: deviceID2 }, function (res) {
+                var json = JSON.parse(res);
+                var data1 = json[deviceID1];
+                var data2=json[deviceID2];
+                $("#InPress1").html("<i></i>" + data1[0] + "");
+                $("#InPress2").html("<i></i>" + data2[0] + "");
+                $("#OutPress1").html("<i></i>" + data1[1] + "");
+                $("#OutPress2").html("<i></i>" + data2[1] + "");
+                $("#SetPress1").html("<i></i>" + data1[2] + "");
+                $("#SetPress2").html("<i></i>" + data2[2] + "");
+                //$("#SetFlow1").html("<i></i>" + data1[3] + "");
+                //$("#SetFlow2").html("<i></i>" + data2[3] + "");
+                $("#Inflow1").html("<i></i>" + data1[4] + "");
+                $("#Inflow2").html("<i></i>" + data2[4] + "");
+                $("#totalFlow1").html("<i></i>" + data1[5] + "");
+                $("#totalFlow2").html("<i></i>" + data2[5] + "");
+                $("#totalPower1").html("<i></i>" + data1[6] + "");
+                $("#totalPower2").html("<i></i>" + data2[6] + "");
+            })
+        }
+        //今日流量
+        var myChart01 = echarts.init(document.getElementById('zlw-ljjrll'));
+        var option01 = {
+            grid: {
+                top: 70,
+                left: 10,
+                right: 10,
+                bottom: 30,
+                containLabel: true
+            },
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 55,
+                    bottom: 10,
+                    right: 15,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            legend: {
+                data: [],
+                textStyle: {
+                    color: 'rgba(255,255,255,1)'
+                },
+                top: 5
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    axisLabel: {//控制x轴上的文字的样式
+                        show: true,//显示与否
+                        textStyle: { color: '#949fb5' },//控制x轴字体样式
+                        fontSize: 14,
+                    },
+                    data: []
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'm³',
+                    nameTextStyle: {
+                        color: "#fff",
+                        fontSize: 14
+                    },
+                    axisLabel: {
+                        formatter: '{value} '
+                    },
+                    splitLine: {//控制网格的线条样式
+                        show: true,
+                        lineStyle: {
+                            color: '#1a253b',
+                            width: 1,
+                            type: 'deshed'
+                        }
+                    },
+                    axisLabel: {//控制x轴上的文字的样式
+                        show: true,//显示与否
+                        textStyle: { color: '#949fb5' },//控制x轴字体样式
+                        fontSize: 14,
+                    },
+                }
+            ],
+            series: [
+                {
+                    name: '',
+                    type: 'bar',
+                    barWidth: 9,
+                    itemStyle: {
+                        normal: {
+                            show: true,
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                offset: 0,
+                                color: '#95dafe'
+                            }, {
+                                offset: 1,
+                                color: '#036ea5'
+                            }]),
+                            barBorderRadius: [30,30,30,30],
+                            borderWidth: 0,
+                        }
+                    },
+                    data: []
+                },
+                {
+                    name: '',
+                    type: 'bar',
+                    barWidth: 9,
+                    itemStyle: {
+                        normal: {
+                            show: true,
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                offset: 0,
+                                color: '#e8d3fb'
+                            }, {
+                                offset: 1,
+                                color: '#865cfe'
+                            }]),
+                            barBorderRadius: [30,30,30,30],
+                            borderWidth: 0,
+                        }
+                    },
+
+                    data: []
+                }
+
+            ]
+        };
+       //今日能耗
+        var myChart02 = echarts.init(document.getElementById('zlw-ljjrnh'));
+        var option02 = {
+            color: ['#2EC7C9', '#B6A2DE', '#5AB1EF', '#FFB980'],
+            tooltip: {
+                trigger: 'axis'
+            },
+            calculable: true,
+            grid: {
+                top: 70,
+                left: 10,
+                right: 10,
+                bottom: 30,
+                containLabel: true
+            },
+             dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 100,
+                    bottom: 10,
+                    right: 15,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+
+            legend: {
+                type: 'scroll',
+                left: 'center',
+                top: 5,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    axisLabel: {//控制x轴上的文字的样式
+                        show: true,//显示与否
+                        textStyle: { color: '#949fb5' },//控制x轴字体样式
+                        fontSize: 14,
+                    },
+                    data: ['01:00', '02:00', '03:00', '04:00', '05:00', '06:00']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'kW·h',
+                    nameTextStyle: {
+                        color: "#fff",
+                        fontSize: 14
+                    },
+                    axisLabel: {
+                        formatter: '{value} '
+                    },
+                    splitLine: {//控制网格的线条样式
+                        show: true,
+                        lineStyle: {
+                            color: '#1a253b',
+                            width: 1,
+                            type: 'deshed'
+                        }
+                    },
+                    axisLabel: {//控制x轴上的文字的样式
+                        show: true,//显示与否
+                        textStyle: { color: '#949fb5' },//控制x轴字体样式
+                        fontSize: 14,
+                    },
+                }
+            ],
+            series: [
+                {
+                    name: '龙华清湖泵能耗',
+                    type: 'line',
+                    //barWidth: 8,
+                    symbol: 'circle',
+                    smooth: 'true',
+                    lineStyle: {
+                        color: '#04cd67',
+                        width: 2,
+                        type: 'solid'
+                    },
+                    itemStyle: {
+                        borderWidth: 3,
+                        borderColor: '#08e82d',
+                        color: '#08e82d'
+                    },
+
+                    data: [35, 50, 45, 60, 45, 76.7,]
+                },
+                {
+                    name: '龙华大和路泵能耗',
+                    type: 'line',
+                    smooth: 'true',
+                    barWidth: 10,
+                    symbol: 'circle',
+                    lineStyle: {
+                        color: '#cd59fd',
+                        width: 2,
+                        type: 'deshed'
+                    },
+                    itemStyle: {
+                        borderWidth: 3,
+                        borderColor: '#bf3afd',
+                        color: '#bf3afd'
+                    },
+
+                    data: [25, 35, 40, 26.4, 28.7, 70.7]
+                }
+            ]
+        };
+
+        function GetTodayData() {
+            $.post("/Sws/BigScreen_ConCompare/GetTodayData", {deviceid1: deviceID1, deviceid2: deviceID2}, function (res) {
+                option01.xAxis[0].data = res.axias;
+                option01.legend.data = [deviceName1, deviceName2];
+                option01.series[0].name = deviceName1;
+                option01.series[0].data = res.result[0].flowData;
+                option01.series[1].name = deviceName2;
+                option01.series[1].data = res.result[1].flowData;
+                myChart01.clear();
+                myChart01.setOption(option01);
+
+                option02.xAxis[0].data = res.axias;
+                option02.series[0].name = deviceName1;
+                option02.series[0].data = res.result[0].eberyData;
+                option02.series[1].name = deviceName2;
+                option02.series[1].data = res.result[1].eberyData;
+                myChart02.clear();
+                myChart02.setOption(option02);
+
+
+            })
+        }
+        //昨日流量
+        var myChart03 = echarts.init(document.getElementById('zlw-ljzrll'));
+        var option03 = {
+            legend: {
+                left: 'center',
+                top: 5,
+
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            tooltip: {
+                show: 'true',
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                }
+            },
+             grid: {
+                top: 70,
+                left: 10,
+                right: 10,
+                bottom: 30,
+                containLabel: true
+            },
+             dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 60,
+                    bottom: 10,
+                    right: 15,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            color: ['#73d3ff'],
+            xAxis: {
+                type: 'category',
+                axisLabel: {
+                    formatter: '{value} '
+                },
+
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: '#1a253b',
+                        width: 1,
+                        type: 'deshed'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: { color: '#949fb5' },//控制x轴字体样式
+                    fontSize: 14,
+                },
+                data: ['01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00']
+            },
+            yAxis: {
+                name: 'm³',
+                nameTextStyle: {
+                    color: "#fff",
+                    fontSize: 14
+                },
+                axisLabel: {
+                    formatter: '{value} '
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: '#1a253b',
+                        width: 1,
+                        type: 'deshed'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: { color: '#949fb5' },//控制x轴字体样式
+                    fontSize: 14,
+                },
+            },
+            series: [
+                {
+                    name: '',
+                    type: 'line',
+                    lineStyle: {
+                    normal: {
+                        color: "#911aff",
+                    },
+                },
+                itemStyle: {
+                    color: "#a94dff",
+                    borderColor: "#fff",
+                    borderWidth: 3,
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(169, 77, 255,0.6)'
+                        },
+                        {
+                            offset: 1,
+                            color: 'rgba(169,77,255,0)'
+                        }
+                        ], false),
+
+                    }
+                },
+                data: []
+                },
+                {
+                    name: '',
+                    type: 'bar',
+                    barWidth: 10,
+                    itemStyle: {
+                        barBorderRadius: [30,30,30,30],
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: "rgba(55,255,249,1)"
+                        },
+                        {
+                            offset: 1,
+                            color: "rgba(0,222,215,0.1)"
+                        }
+                        ])
+                    },
+
+                    data: []
+                }
+
+            ]
+        };
+
+        //昨日能耗
+        var myChart04 = echarts.init(document.getElementById('zlw-ljzrnh'));
+        var option04 = {
+            color: ['#2EC7C9', '#B6A2DE', '#5AB1EF', '#FFB980'],
+            tooltip: {
+                trigger: 'axis'
+            },
+            calculable: true,
+            grid: {
+                top: 70,
+                left: 10,
+                right: 10,
+                bottom: 30,
+                containLabel: true
+            },
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 50,
+                    bottom: 10,
+                    right: 15,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            legend: {
+                left: 'center',
+                top: 5,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    axisLabel: {//控制x轴上的文字的样式
+                        show: true,//显示与否
+                        textStyle: { color: '#949fb5' },//控制x轴字体样式
+                        fontSize: 14,
+                    },
+                    data: ['01:00', '02:00', '03:00', '04:00', '05:00', '06:00']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'kW·h',
+                    nameTextStyle: {
+                        color: "#fff",
+                        fontSize: 14
+                    },
+                    axisLabel: {
+                        formatter: '{value} '
+                    },
+                    splitLine: {//控制网格的线条样式
+                        show: true,
+                        lineStyle: {
+                            color: '#1a253b',
+                            width: 1,
+                            type: 'deshed'
+                        }
+                    },
+                    axisLabel: {//控制x轴上的文字的样式
+                        show: true,//显示与否
+                        textStyle: { color: '#949fb5' },//控制x轴字体样式
+                        fontSize: 14,
+                    },
+                }
+            ],
+            series: [
+                {
+                    name: '龙华清湖泵能耗',
+                    //barWidth: 13,
+                    type: 'line',
+                    //barWidth: 8,
+                    smooth: 'true',
+                    symbol: 'circle',
+                    lineStyle: {
+                        color: '#04cd67',
+                        width: 2,
+                        type: 'solid'
+                    },
+                    itemStyle: {
+                        borderWidth: 3,
+                        borderColor: '#00dc15',
+                        color: '#00dc15'
+                    },
+                    data: [35, 50, 45, 60, 45, 76.7,]
+                },
+                {
+                    name: '龙华大和路泵能耗',
+                    type: 'bar',
+                    barWidth: 10,
+                    itemStyle: {
+                        normal: {
+                            show: true,
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                offset: 0,
+                                color: '#95dafe'
+                            }, {
+                                offset: 1,
+                                color: '#036ea5'
+                            }]),
+                            barBorderRadius: [30,30,30,30],
+                            borderWidth: 0,
+                        }
+                    },
+
+                    data: [25, 35, 40, 26.4, 28.7, 70.7]
+                }
+
+            ]
+        };
+
+        function GetYestData() {
+            $.post("/Sws/BigScreen_ConCompare/GetYestDayData", {deviceid1: deviceID1, deviceid2: deviceID2}, function (res) {
+                option03.xAxis.data = res.axias;
+                //option03.legend.data = [deviceName1, deviceName2];
+                option03.series[0].name = deviceName1;
+                option03.series[0].data = res.result[0].flowData;
+                option03.series[1].name = deviceName2;
+                option03.series[1].data = res.result[1].flowData;
+                myChart03.clear();
+                myChart03.setOption(option03);
+
+                option04.xAxis[0].data = res.axias;
+                option04.series[0].name = deviceName1;
+                option04.series[0].data = res.result[0].eberyData;
+                option04.series[1].name = deviceName2;
+                option04.series[1].data = res.result[1].eberyData;
+                myChart04.clear();
+                myChart04.setOption(option04);
+                 myChart03.resize();
+                 myChart04.resize();
+
+
+            })
+        }
+        //本周流量
+        var myChart05 = echarts.init(document.getElementById('zlw-ldxmbfkconlfyi'));
+        var option05 = {
+            grid: {
+                top: 80,
+                left: 10,
+                right: 10,
+                bottom: 10,
+                containLabel: true
+            },
+            legend: {
+                left: 'center',
+                top: 15,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+           tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            color: ['#73d3ff'],
+            xAxis: {
+                type: 'category',
+                axisLabel: {
+                    formatter: '{value} '
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: '#1a253b',
+                        width: 1,
+                        type: 'deshed'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: { color: '#949fb5' },//控制x轴字体样式
+                    fontSize: 14,
+                },
+                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            },
+            yAxis: {
+                name: 'm³',
+                nameTextStyle: {
+                    color: "#fff",
+                    fontSize: 14
+                },
+                axisLabel: {
+                    formatter: '{value} '
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: '#1a253b',
+                        width: 1,
+                        type: 'deshed'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: { color: '#cccccc' },//控制x轴字体样式
+                    fontSize: 14,
+                },
+            },
+            series: [{
+                name: '',
+                type: 'line',
+                // smooth: true, //是否平滑
+                showAllSymbol: true,
+                // symbol: 'image://./static/images/guang-circle.png',
+                symbol: 'circle',
+                symbolSize: 5,
+                lineStyle: {
+                    normal: {
+                        color: "#911aff",
+
+                    },
+                },
+                label: {
+                    show: false,
+                    position: 'top',
+                    textStyle: {
+                        color: '#6c50f3',
+                    }
+                },
+                itemStyle: {
+                    color: "#6c50f3",
+                    borderColor: "#fff",
+                    borderWidth: 3,
+                    shadowColor: 'rgba(0, 0, 0, .3)',
+                    shadowBlur: 0,
+                    shadowOffsetY: 2,
+                    shadowOffsetX: 2,
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(169, 77, 255,0.6)'
+                        },
+                        {
+                            offset: 1,
+                            color: 'rgba(169,77,255,0)'
+                        }
+                        ], false),
+
+                    }
+                },
+ 
+                /* 
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                           color: 'rgba(108,80,243,0.3)'
+                        },
+                      {
+                            offset: 1,
+                           color: 'rgba(108,80,243,0)'
+                       }
+                      ], false),
+                     shadowColor: 'rgba(108,80,243, 0.9)',
+                    shadowBlur: 20
+                 }
+                },
+                */
+                data: [84, 97, 79, 55, 35, 60, 77]
+            },
+            {
+                name: '',
+                type: 'line',
+                // smooth: true, //是否平滑
+                showAllSymbol: true,
+                // symbol: 'image://./static/images/guang-circle.png',
+                symbol: 'circle',
+                symbolSize: 5,
+                lineStyle: {
+                    normal: {
+                        color: "#04cd67",
+
+                    },
+                },
+                label: {
+                    show: false,
+                    position: 'top',
+                    textStyle: {
+                        color: '#00ca95',
+                    }
+                },
+
+                itemStyle: {
+                    color: "#00ca95",
+                    borderColor: "#fff",
+                    borderWidth: 3,
+                    shadowColor: 'rgba(0, 0, 0, .3)',
+                    shadowBlur: 0,
+                    shadowOffsetY: 2,
+                    shadowOffsetX: 2,
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(0,202,149,0.3)'
+                        },
+                        {
+                            offset: 1,
+                            color: 'rgba(0,202,149,0)'
+                        }
+                        ], false),
+                        shadowColor: 'rgba(0,202,149, 0.9)',
+                        shadowBlur: 20
+                    }
+                },
+                data: [94, 67, 89, 65, 75, 30, 77]
+            }
+            ]
+        }
+
+        //本周能耗
+        var myChart06 = echarts.init(document.getElementById('zlw-ldxmbfkconrgyi'));
+        var option06 = {
+            legend: {
+                left: 'center',
+                top: 15,
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            tooltip: {
+                show: 'true',
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                },
+                formatter: function (params) {
+                    var html = params[0].name + '<br />';
+                    for (var i = 0; i < params.length; i++) {
+                        var marker = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color: ' + params[i].color.colorStops[0].color + ';"></span>';
+                        html += marker + params[i].seriesName + '：' + params[i].value + ' kW·h<br>';
+                    }
+                    return html;
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            yAxis : [
+                {
+                    type: 'value',
+                    name: 'kW·h',
+                    nameTextStyle: {
+                        color: "#fff",
+                        fontSize: 14
+                    },
+                    axisLabel: {
+                        formatter: '{value} '
+                    },
+                    splitLine: {//控制网格的线条样式
+                        show: true,
+                        lineStyle: {
+                            color: '#1a253b',
+                            width: 1,
+                            type: 'deshed'
+                        }
+                    },
+                    axisLabel: {//控制x轴上的文字的样式
+                        show: true,//显示与否
+                        textStyle: { color: '#949fb5' },//控制x轴字体样式
+                        fontSize: 14,
+                    },
+                }
+            ],
+            xAxis : [
+                {
+                    type : 'category',
+                    axisTick : {show: false},
+                    data: [],
+                    nameTextStyle: {
+                        color: "#fff",
+                        fontSize: 14
+                    },
+                    axisLabel: {
+                        formatter: '{value} '
+                    },
+                    splitLine: {//控制网格的线条样式
+                        show: true,
+                        lineStyle: {
+                            color: '#1a253b',
+                            width: 1,
+                            type: 'deshed'
+                        }
+                    },
+                    axisLabel: {//控制x轴上的文字的样式
+                        show: true,//显示与否
+                        textStyle: { color: '#cccccc' },//控制x轴字体样式
+                        fontSize: 14,
+                    },
+                }
+            ],
+            series : [
+
+                {
+                    name:'',
+                    type: 'bar',
+                    barWidth: 9,
+                    itemStyle: {
+                        normal: {
+                            show: true,
+                            color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                offset: 0,
+                                color: '#f99b9b'
+                            }, {
+                                offset: 1,
+                                color: '#f33d3d'
+                                }]),
+                            barBorderRadius: [30, 30, 0, 0],
+                            borderWidth: 0,
+                        }
+                    },
+                    data:[400, 241,360, 320, 302, 341, 374, 390, 450, 420]
+                },
+                {
+                    name:'',
+                    type: 'bar',
+                    barWidth: 9,
+                    //label: {
+                    //    normal: {
+                    //        show: true,
+                    //        formatter: function(params){return params.value}
+                    //    }
+                    //},
+                    itemStyle: {
+                        normal: {
+                            show: true,
+                            color: new echarts.graphic.LinearGradient(1, 0, 0, 01, [{
+                                offset: 0,
+                                color: '#85eff9'
+                            }, {
+                                offset: 1,
+                                color: '#009ef8'
+                            }]),
+                            barBorderRadius: [30, 30, 0, 0],
+                            borderWidth: 0,
+                        }
+                    },
+                    data:[]
+                }
+            ]
+        };
+
+        function GetThisWeekData() {
+            $.post("/Sws/BigScreen_ConCompare/GetAlmostWeekData", { deviceid1: deviceID1, deviceid2: deviceID2 }, function (res) {
+
+                $("#SetCon1").html("<i></i>"+res.device_comp1);
+                $("#SetCon2").html("<i></i>"+res.device_comp2);
+
+                option05.xAxis.data = res.axias;
+                option05.series[0].name = deviceName1;
+                option05.series[0].data = res.result[0].flowData;
+                option05.series[1].name = deviceName2;
+                option05.series[1].data = res.result[1].flowData;
+                myChart05.clear();
+                myChart05.setOption(option05);
+
+                option06.xAxis[0].data = res.axias;
+
+                option06.series[0].name = deviceName1;
+                option06.series[0].data = res.result[0].eberyData;
+
+                option06.series[1].name = deviceName2;
+                option06.series[1].data = res.result[1].eberyData;
+
+                myChart06.clear();
+                myChart06.setOption(option06);
+
+
+            })
+        }
+        ////本月流量
+        //var myChart07 = echarts.init(document.getElementById('zlw-ldxmbfkconlfer'));
+        //var option07 = {
+        //    grid: {
+        //        top: 80,
+        //        left: 10,
+        //        right: 10,
+        //        bottom: 30,
+        //        containLabel: true
+        //    },
+        //    dataZoom: [
+        //        {
+        //            type: 'slider',
+        //            start: 0,
+        //            end: 100,
+        //            bottom: 10,
+        //            right: 15,
+        //            height: 16,
+        //            handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+        //            handleSize: '110%',
+        //            handleStyle: {
+        //                color: "#d3dee5",
+        //            },
+        //            textStyle: {
+        //                color: "#041A46"
+        //            },
+        //            borderColor: "#90979c"
+        //        }, {
+        //            "type": "inside",
+        //            "show": true,
+        //            "height": 15,
+        //            "start": 1,
+        //            "end": 35
+        //        }],
+        //    legend: {
+        //        left: 'center',
+        //        top: 15,
+        //        textStyle: {
+        //            color: '#fff'
+        //        }
+        //    },
+        //    tooltip: {
+        //        show: 'true',
+        //        trigger: 'axis',
+        //        axisPointer: {
+        //            type: 'cross'
+        //        }
+        //    },
+        //    color: ['#73d3ff'],
+        //    xAxis: {
+        //        type: 'category',
+        //        axisLabel: {
+        //            formatter: '{value} '
+        //        },
+        //        splitLine: {//控制网格的线条样式
+        //            show: true,
+        //            lineStyle: {
+        //                color: '#1a253b',
+        //                width: 1,
+        //                type: 'deshed'
+        //            }
+        //        },
+        //        axisLabel: {//控制x轴上的文字的样式
+        //            show: true,//显示与否
+        //            textStyle: { color: '#949fb5' },//控制x轴字体样式
+        //            fontSize: 14,
+        //        },
+        //        data: ['01', '02', '03', '04', '05', '06', '07', '08']
+        //    },
+        //    yAxis: {
+        //        name: 'm³',
+        //        nameTextStyle: {
+        //            color: "#fff",
+        //            fontSize: 14
+        //        },
+        //        axisLabel: {
+        //            formatter: '{value} '
+        //        },
+        //        splitLine: {//控制网格的线条样式
+        //            show: true,
+        //            lineStyle: {
+        //                color: '#1a253b',
+        //                width: 1,
+        //                type: 'deshed'
+        //            }
+        //        },
+        //        axisLabel: {//控制x轴上的文字的样式
+        //            show: true,//显示与否
+        //            textStyle: { color: '#cccccc' },//控制x轴字体样式
+        //            fontSize: 14,
+        //        },
+        //    },
+        //    series: [{
+        //        name: '龙华青湖',
+        //        type: 'line',
+        //        // smooth: true, //是否平滑
+        //        showAllSymbol: true,
+        //        // symbol: 'image://./static/images/guang-circle.png',
+        //        symbol: 'circle',
+        //        symbolSize: 5,
+        //        lineStyle: {
+        //            normal: {
+        //                color: "#6c50f3",
+
+        //            },
+        //        },
+        //        label: {
+        //            show: false,
+        //            position: 'top',
+        //            textStyle: {
+        //                color: '#6c50f3',
+        //            }
+        //        },
+        //        itemStyle: {
+        //            color: "#6c50f3",
+        //            borderColor: "#fff",
+        //            borderWidth: 3,
+        //            shadowColor: 'rgba(0, 0, 0, .3)',
+        //            shadowBlur: 0,
+        //            shadowOffsetY: 2,
+        //            shadowOffsetX: 2,
+        //        },
+        //        tooltip: {
+        //            show: false
+        //        },
+        //        areaStyle: {
+        //            normal: {
+        //                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+        //                    offset: 0,
+        //                    color: 'rgba(108,80,243,0.3)'
+        //                },
+        //                {
+        //                    offset: 1,
+        //                    color: 'rgba(108,80,243,0)'
+        //                }
+        //                ], false),
+        //                shadowColor: 'rgba(108,80,243, 0.9)',
+        //                shadowBlur: 20
+        //            }
+        //        },
+        //        data: [84, 97, 79, 55, 35, 60, 77, 99]
+        //    },
+        //    {
+        //        name: '舟山中昌',
+        //        type: 'line',
+        //        // smooth: true, //是否平滑
+        //        showAllSymbol: true,
+        //        // symbol: 'image://./static/images/guang-circle.png',
+        //        symbol: 'circle',
+        //        symbolSize: 5,
+        //        lineStyle: {
+        //            normal: {
+        //                color: "#00ca95",
+
+        //            },
+        //        },
+        //        label: {
+        //            show: false,
+        //            position: 'top',
+        //            textStyle: {
+        //                color: '#00ca95',
+        //            }
+        //        },
+
+        //        itemStyle: {
+        //            color: "#00ca95",
+        //            borderColor: "#fff",
+        //            borderWidth: 3,
+        //            shadowColor: 'rgba(0, 0, 0, .3)',
+        //            shadowBlur: 0,
+        //            shadowOffsetY: 2,
+        //            shadowOffsetX: 2,
+        //        },
+        //        tooltip: {
+        //            show: false
+        //        },
+        //        areaStyle: {
+        //            normal: {
+        //                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+        //                    offset: 0,
+        //                    color: 'rgba(0,202,149,0.3)'
+        //                },
+        //                {
+        //                    offset: 1,
+        //                    color: 'rgba(0,202,149,0)'
+        //                }
+        //                ], false),
+        //                shadowColor: 'rgba(0,202,149, 0.9)',
+        //                shadowBlur: 20
+        //            }
+        //        },
+        //        data: [40, 42, 31, 41, 30, 35, 30, 40, 50],
+        //    }
+        //    ]
+        //};
+
+        ////本月能耗
+        //var myChart08 = echarts.init(document.getElementById('zlw-ldxmbfkconrger'));
+        //var option08 = {
+        //    color: ['#2EC7C9', '#B6A2DE', '#5AB1EF', '#FFB980'],
+        //    tooltip: {
+        //        trigger: 'axis'
+        //    },
+        //    calculable: true,
+        //     dataZoom: [
+        //        {
+        //            type: 'slider',
+        //            start: 0,
+        //            end: 100,
+        //            bottom: 10,
+        //            right: 15,
+        //            height: 16,
+        //            handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+        //            handleSize: '110%',
+        //            handleStyle: {
+        //                color: "#d3dee5",
+        //            },
+        //            textStyle: {
+        //                color: "#041A46"
+        //            },
+        //            borderColor: "#90979c"
+        //        }, {
+        //            "type": "inside",
+        //            "show": true,
+        //            "height": 15,
+        //            "start": 1,
+        //            "end": 35
+        //        }],
+        //    grid: {
+        //        top: 80,
+        //        left: 10,
+        //        right: 10,
+        //        bottom: 30,
+        //        containLabel: true
+        //    },
+        //    legend: {
+        //        type: "scroll",
+        //        left: 'center',
+        //        top: 15,
+        //        textStyle: {
+        //            color: '#fff'
+        //        }
+        //    },
+        //    xAxis: [
+        //        {
+        //            type: 'category',
+        //            axisLabel: {//控制x轴上的文字的样式
+        //                show: true,//显示与否
+        //                textStyle: { color: '#949fb5' },//控制x轴字体样式
+        //                fontSize: 14,
+        //            },
+        //            data: ['01', '02', '03', '04', '05', '06', '07']
+        //        }
+        //    ],
+        //    yAxis: [
+        //        {
+        //            type: 'value',
+        //            name: 'kW·h',
+        //            nameTextStyle: {
+        //                color: "#fff",
+        //                fontSize: 14
+        //            },
+        //            axisLabel: {
+        //                formatter: '{value} '
+        //            },
+        //            splitLine: {//控制网格的线条样式
+        //                show: true,
+        //                lineStyle: {
+        //                    color: '#1a253b',
+        //                    width: 1,
+        //                    type: 'deshed'
+        //                }
+        //            },
+        //            axisLabel: {//控制x轴上的文字的样式
+        //                show: true,//显示与否
+        //                textStyle: { color: '#cccccc' },//控制x轴字体样式
+        //                fontSize: 14,
+        //            },
+        //        }
+        //    ],
+        //    series: [
+        //        {
+        //            name: '龙华青湖能耗',
+        //            type: 'bar',
+        //            data: [60, 55, 45, 30, 15, 10, 10, 15, 30, 45, 55, 60, 62, 80, 80, 62,],
+        //            barWidth: 10,
+        //            barGap: 0,//柱间距离
+        //            // label: {//图形上的文本标签
+        //            //     normal: {
+        //            //       show: true,
+        //            //       position: 'top',
+        //            //       textStyle: {
+        //            //           color: '#a8aab0',
+        //            //           fontStyle: 'normal',
+        //            //           fontFamily: '微软雅黑',
+        //            //           fontSize: 12,
+        //            //       },
+        //            //     },
+        //            // },
+        //            itemStyle: {
+        //                normal: {
+        //                    show: true,
+        //                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+        //                        offset: 0,
+        //                        color: '#5768EF'
+        //                    }, {
+        //                        offset: 1,
+        //                        color: '#5768EF'
+        //                    }]),
+        //                     barBorderRadius: [30,30,0,0],
+        //                    borderWidth: 0,
+        //                }
+        //            },
+        //        },
+        //        {
+        //            name: '舟山中昌能耗',
+        //            type: 'bar',
+        //            data: [8, 5, 25, 30, 35, 55, 62, 78, 65, 55, 60, 45, 42, 15, 12, 5],
+        //            barWidth: 10,
+        //            barGap: 0.5,//柱间距离
+        //            // label: {//图形上的文本标签
+        //            //     normal: {
+        //            //       show: true,
+        //            //       position: 'top',
+        //            //       textStyle: {
+        //            //           color: '#a8aab0',
+        //            //           fontStyle: 'normal',
+        //            //           fontFamily: '微软雅黑',
+        //            //           fontSize: 12,
+        //            //       },
+        //            //     },
+        //            // },
+        //            itemStyle: {
+        //                normal: {
+        //                    show: true,
+        //                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+        //                        offset: 0,
+        //                        color: '#69CBF2'
+        //                    }, {
+        //                        offset: 1,
+        //                        color: '#69CBF2'
+        //                    }]),
+        //                    barBorderRadius: [30,30,0,0],
+        //                    borderWidth: 0,
+        //                }
+        //            },
+        //        }
+        //    ]
+        //};
+
+        //function GetThisMonthData() {
+        //    $.post("/Sws/BigScreen_ConCompare/GetThisMonthData", { deviceid1: deviceID1, deviceid2: deviceID2 }, function (res) {
+        //        if (res.axias.length > 0) {
+        //            option07.xAxis.data = res.axias;
+        //            option07.series[0].name = deviceName1;
+        //            option07.series[0].data = res.result[0].flowData;
+        //            option07.series[1].name = deviceName2;
+        //            option07.series[1].data = res.result[1].flowData;
+        //            myChart07.clear();
+        //            myChart07.setOption(option07);
+
+        //            option08.xAxis[0].data = res.axias;
+        //            option08.series[0].name = deviceName1;
+        //            option08.series[0].data = res.result[0].eberyData;
+        //            option08.series[1].name = deviceName2;
+        //            option08.series[1].data = res.result[1].eberyData;
+        //            myChart08.clear();
+        //            myChart08.setOption(option08);
+        //             $("#zlw-ldxmbfkconlfer").css("display", "block");
+        //            $("#zlw-ldxmbfkconrger").css("display", "block");
+        //             $("#nodata_monthF").css("display", "none");
+        //            $("#nodata_monthE").css("display", "none");
+        //        }
+        //        else {
+        //            $("#zlw-ldxmbfkconlfer").css("display", "none");
+        //            $("#zlw-ldxmbfkconrger").css("display", "none");
+        //             $("#nodata_monthF").css("display", "block");
+        //            $("#nodata_monthE").css("display", "block");
+
+        //        }
+
+
+        //    })
+        //}
+
+        ////本年流量
+        //var myChart09 = echarts.init(document.getElementById('zlw-ldxmbfkconlfsan'));
+        //var option09 = {
+        //     grid: {
+        //        top: 80,
+        //        left: 10,
+        //        right: 10,
+        //        bottom: 30,
+        //        containLabel: true
+        //    },
+        //    dataZoom: [
+        //        {
+        //            type: 'slider',
+        //            start: 0,
+        //            end: 100,
+        //            bottom: 10,
+        //            right: 15,
+        //            height: 16,
+        //            handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+        //            handleSize: '110%',
+        //            handleStyle: {
+        //                color: "#d3dee5",
+        //            },
+        //            textStyle: {
+        //                color: "#041A46"
+        //            },
+        //            borderColor: "#90979c"
+        //        }, {
+        //            "type": "inside",
+        //            "show": true,
+        //            "height": 15,
+        //            "start": 1,
+        //            "end": 35
+        //        }],
+        //    legend: {
+        //        left: 'center',
+        //        top: 15,
+        //        textStyle: {
+        //            color: '#fff'
+        //        }
+        //    },
+        //    tooltip: {
+        //        show: 'true',
+        //        trigger: 'axis',
+        //        axisPointer: {
+        //            type: 'cross'
+        //        }
+        //    },
+        //    color: ['#73d3ff'],
+        //    xAxis: {
+        //        type: 'category',
+        //        axisLabel: {
+        //            formatter: '{value} '
+        //        },
+        //        splitLine: {//控制网格的线条样式
+        //            show: true,
+        //            lineStyle: {
+        //                color: '#1a253b',
+        //                width: 1,
+        //                type: 'deshed'
+        //            }
+        //        },
+        //        axisLabel: {//控制x轴上的文字的样式
+        //            show: true,//显示与否
+        //            textStyle: { color: '#949fb5' },//控制x轴字体样式
+        //            fontSize: 14,
+        //        },
+        //        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月']
+        //    },
+        //    yAxis: {
+        //        name: 'm³',
+        //        nameTextStyle: {
+        //            color: "#fff",
+        //            fontSize: 14
+        //        },
+        //        axisLabel: {
+        //            formatter: '{value} '
+        //        },
+        //        splitLine: {//控制网格的线条样式
+        //            show: true,
+        //            lineStyle: {
+        //                color: '#1a253b',
+        //                width: 1,
+        //                type: 'deshed'
+        //            }
+        //        },
+        //        axisLabel: {//控制x轴上的文字的样式
+        //            show: true,//显示与否
+        //            textStyle: { color: '#cccccc' },//控制x轴字体样式
+        //            fontSize: 14,
+        //        },
+        //    },
+        //    series: [{
+        //        name: '龙华青湖',
+        //        type: 'line',
+        //        // smooth: true, //是否平滑
+        //        showAllSymbol: true,
+        //        // symbol: 'image://./static/images/guang-circle.png',
+        //        symbol: 'circle',
+        //        symbolSize: 5,
+        //        lineStyle: {
+        //            normal: {
+        //                color: "#6c50f3",
+
+        //            },
+        //        },
+        //        label: {
+        //            show: false,
+        //            position: 'top',
+        //            textStyle: {
+        //                color: '#6c50f3',
+        //            }
+        //        },
+        //        itemStyle: {
+        //            color: "#6c50f3",
+        //            borderColor: "#fff",
+        //            borderWidth: 3,
+        //            shadowColor: 'rgba(0, 0, 0, .3)',
+        //            shadowBlur: 0,
+        //            shadowOffsetY: 2,
+        //            shadowOffsetX: 2,
+        //        },
+        //        tooltip: {
+        //            show: false
+        //        },
+        //        /* 
+        //        areaStyle: {
+        //            normal: {
+        //                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+        //                    offset: 0,
+        //                    color: 'rgba(108,80,243,0.3)'
+        //                },
+        //                {
+        //                    offset: 1,
+        //                    color: 'rgba(108,80,243,0)'
+        //                }
+        //                ], false),
+        //                shadowColor: 'rgba(108,80,243, 0.9)',
+        //                shadowBlur: 20
+        //            }
+        //        },
+        //        */
+        //        data: [35, 60, 77, 99, 84, 97, 79, 55,]
+        //    },
+        //    {
+        //        name: '舟山中昌',
+        //        type: 'line',
+        //        // smooth: true, //是否平滑
+        //        showAllSymbol: true,
+        //        // symbol: 'image://./static/images/guang-circle.png',
+        //        symbol: 'circle',
+        //        symbolSize: 5,
+        //        lineStyle: {
+        //            normal: {
+        //                color: "#00ca95",
+
+        //            },
+        //        },
+        //        label: {
+        //            show: false,
+        //            position: 'top',
+        //            textStyle: {
+        //                color: '#00ca95',
+        //            }
+        //        },
+
+        //        itemStyle: {
+        //            color: "#00ca95",
+        //            borderColor: "#fff",
+        //            borderWidth: 3,
+        //            shadowColor: 'rgba(0, 0, 0, .3)',
+        //            shadowBlur: 0,
+        //            shadowOffsetY: 2,
+        //            shadowOffsetX: 2,
+        //        },
+        //        tooltip: {
+        //            show: false
+        //        },
+        //        /*
+        //        areaStyle: {
+        //            normal: {
+        //                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+        //                    offset: 0,
+        //                    color: 'rgba(0,202,149,0.3)'
+        //                },
+        //                {
+        //                    offset: 1,
+        //                    color: 'rgba(0,202,149,0)'
+        //                }
+        //                ], false),
+        //                shadowColor: 'rgba(0,202,149, 0.9)',
+        //                shadowBlur: 20
+        //            }
+        //        },
+        //        */
+        //        data: [30, 35, 30, 40, 50, 40, 42, 31, 41,],
+        //    }
+        //    ]
+        //};
+
+        ////本年能耗
+        //var myChart10 = echarts.init(document.getElementById('zlw-ldxmbfkconrgsan'));
+        //var option10 = {
+        //    color: ['#2EC7C9', '#B6A2DE', '#5AB1EF', '#FFB980'],
+        //    tooltip: {
+        //        trigger: 'axis'
+        //    },
+        //    calculable: true,
+        //    dataZoom: [
+        //        {
+        //            type: 'slider',
+        //            start: 0,
+        //            end: 100,
+        //            bottom: 10,
+        //            right: 15,
+        //            height: 16,
+        //            handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+        //            handleSize: '110%',
+        //            handleStyle: {
+        //                color: "#d3dee5",
+        //            },
+        //            textStyle: {
+        //                color: "#041A46"
+        //            },
+        //            borderColor: "#90979c"
+        //        }, {
+        //            "type": "inside",
+        //            "show": true,
+        //            "height": 15,
+        //            "start": 1,
+        //            "end": 35
+        //        }],
+        //    grid: {
+        //        top: 80,
+        //        left: 10,
+        //        right: 10,
+        //        bottom: 30,
+        //        containLabel: true
+        //    },
+        //    legend: {
+        //        type: "scroll",
+        //        left: 'center',
+        //        top: 15,
+        //        textStyle: {
+        //            color: '#fff'
+        //        }
+        //    },
+        //    xAxis: [
+        //        {
+        //            type: 'category',
+        //            axisLabel: {//控制x轴上的文字的样式
+        //                show: true,//显示与否
+        //                textStyle: { color: '#949fb5' },//控制x轴字体样式
+        //                fontSize: 14,
+        //            },
+        //            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月']
+        //        }
+        //    ],
+        //    yAxis: [
+        //        {
+        //            type: 'value',
+        //            name: 'kW·h',
+        //            nameTextStyle: {
+        //                color: "#fff",
+        //                fontSize: 14
+        //            },
+        //            axisLabel: {
+        //                formatter: '{value} '
+        //            },
+        //            splitLine: {//控制网格的线条样式
+        //                show: true,
+        //                lineStyle: {
+        //                    color: '#1a253b',
+        //                    width: 1,
+        //                    type: 'deshed'
+        //                }
+        //            },
+        //            axisLabel: {//控制x轴上的文字的样式
+        //                show: true,//显示与否
+        //                textStyle: { color: '#cccccc' },//控制x轴字体样式
+        //                fontSize: 14,
+        //            },
+        //        }
+        //    ],
+        //    series: [
+        //        {
+        //            name: '龙华青湖能耗',
+        //            type: 'bar',
+        //            data: [10, 15, 30, 45, 55, 60, 62, 80, 80, 62, 60, 55, 45, 30, 15, 10],
+        //            barWidth: 10,
+        //            barGap: 0,//柱间距离
+        //            // label: {//图形上的文本标签
+        //            //     normal: {
+        //            //       show: true,
+        //            //       position: 'top',
+        //            //       textStyle: {
+        //            //           color: '#a8aab0',
+        //            //           fontStyle: 'normal',
+        //            //           fontFamily: '微软雅黑',
+        //            //           fontSize: 12,
+        //            //       },
+        //            //     },
+        //            // },
+        //            itemStyle: {
+        //                normal: {
+        //                    show: true,
+        //                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+        //                        offset: 0,
+        //                        color: '#5768EF'
+        //                    }, {
+        //                        offset: 1,
+        //                        color: '#5768EF'
+        //                    }]),
+        //                     barBorderRadius: [30,30,0,0],
+        //                    borderWidth: 0,
+        //                }
+        //            },
+        //        },
+        //        {
+        //            name: '舟山中昌能耗',
+        //            type: 'bar',
+        //            data: [8, 5, 25, 30, 35, 55, 62, 78, 65, 55, 60, 45, 42, 15, 12, 5],
+        //            barWidth: 10,
+        //            barGap: 0.5,//柱间距离
+        //            // label: {//图形上的文本标签
+        //            //     normal: {
+        //            //       show: true,
+        //            //       position: 'top',
+        //            //       textStyle: {
+        //            //           color: '#a8aab0',
+        //            //           fontStyle: 'normal',
+        //            //           fontFamily: '微软雅黑',
+        //            //           fontSize: 12,
+        //            //       },
+        //            //     },
+        //            // },
+        //            itemStyle: {
+        //                normal: {
+        //                    show: true,
+        //                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+        //                        offset: 0,
+        //                        color: '#69CBF2'
+        //                    }, {
+        //                        offset: 1,
+        //                        color: '#69CBF2'
+        //                    }]),
+        //                    barBorderRadius: [30,30,0,0],
+        //                    borderWidth: 0,
+        //                }
+        //            },
+        //        }
+        //    ]
+        //};
+
+
+        function GetThisYearData() {
+            $.post("/Sws/BigScreen_ConCompare/GetThisYearData", {deviceid1: deviceID1, deviceid2: deviceID2}, function (res) {
+                option09.xAxis.data = res.axias;
+                option09.series[0].name = deviceName1;
+                option09.series[0].data = res.result[0].flowData;
+                option09.series[1].name = deviceName2;
+                option09.series[1].data = res.result[1].flowData;
+                myChart09.clear();
+                myChart09.setOption(option09);
+
+                option10.xAxis[0].data = res.axias;
+                option10.series[0].name = deviceName1;
+                option10.series[0].data = res.result[0].eberyData;
+                option10.series[1].name = deviceName2;
+                option10.series[1].data = res.result[1].eberyData;
+                myChart10.clear();
+                myChart10.setOption(option10);
+
+
+            })
+        }
+        //本月的数据，（2020.4.13 改成表格）
+
+        function GetThisMonthData() {
+            $.post("/Sws/BigScreen_ConCompare/Get15DayData", { deviceid1: deviceID1, deviceid2: deviceID2 }, function (res) {
+                if (res.axias.length > 0) {
+                    //时间列
+                    var timelist = "";
+                    for (var i = 0; i < res.axias.length; i++) {
+                        timelist += "<span>"+res.axias[i]+"</span>";
+                    }
+                    //设备1流量
+                    var deviceflow1 = "";
+                    for (var i = 0; i < res.result[0].flowData.length; i++) {
+                        deviceflow1 += "<span>"+res.result[0].flowData[i]+" <i>m³</i></span>";
+                    }
+                    //设备2流量
+                    var deviceflow2 = "";
+                    for (var i = 0; i < res.result[1].flowData.length; i++) {
+                        deviceflow2 += "<span>"+res.result[1].flowData[i]+" <i>m³</i></span>";
+                    }
+                    //设备1能耗
+                    var device1energy = "";
+                    for (var i = 0; i < res.result[0].eberyData.length; i++) {
+                        device1energy += "<span>"+res.result[0].eberyData[i]+"  <i>kW·h</i> </span>";
+                    }
+                    //设备2能耗
+                    var device2energy = "";
+                    for (var i = 0; i < res.result[1].eberyData.length; i++) {
+                        device2energy += "<span>"+res.result[1].eberyData[i]+"  <i>kW·h</i> </span>";
+                    }
+                    //$("#timelist").empty().html(timelist);
+                    //$("#device1Flow").empty().html(deviceflow1);
+                    //$("#device2Flow").empty().html(deviceflow2);
+                    //$("#device1Energy").empty().html(device1energy);
+                    //$("#device2Energy").empty().html(device2energy);
+                    $("#marquee1 li").empty().append('' +
+                                                            //'<li class="clearfloat">'+
+                                                                '<div class="zlw-bzlltabnryi" id="timelist">'+
+                                                                  ''+timelist+''+
+                                                                '</div>'+
+                                                                '<div class="zlw-bzlltabnrer" id="device1Flow">'+
+                                                                    
+                                                                ''+deviceflow1+'</div>'+
+                                                                '<div class="zlw-bzlltabnrsan" id="device2Flow">'+
+                                                                    
+                                                                ''+deviceflow2+'</div>'+
+                                                                '<div class="zlw-bzlltabnrsi" id="device1Energy">'+
+                                                                   
+                                                                ''+device1energy+'</div>'+
+                                                                '<div class="zlw-bzlltabnrwu" id="device2Energy">'+
+                                                                   
+                                                                ''+device2energy+'</div>'+
+                                                            //'</li>'+
+
+                        '');
+                    
+                    if (quee == 0) {
+                        $("#marquee1").kxbdMarquee({ direction: "up", isEqual: false, scrollDelay: 100 });
+                        quee = 1;
+                    }
+                  
+                }
+
+            })
+        }
+
+        $('#chongzhi').on('click', function () {
+               iframeWithBtns("设备配置", "400px", "300px", "/Sws/BigScreen_ConCompare/SelectDevices/", false, function (formIndex, formLayer) {
+                var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                currentIframe.saveForm(function (deviceid1,devicename1,deviceid2,devicename2) {
+                    deviceID1 = deviceid1;
+                    deviceName1 = devicename1;
+                    deviceID2 = deviceid2;
+                    deviceName2 = devicename2;
+                    $("#device_name1").text(devicename1);
+                    $("#device_name2").text(devicename2);
+
+                    /**
+                     * 填入近半月流量/能耗表格头部
+                     */
+                    $("#deviceName1_flow").text(devicename1 + "- 流量");
+                    $("#deviceName1_flow").attr('title', devicename1 + "- 流量");
+
+                    $("#deviceName2_flow").text(devicename2 + "- 流量");
+                    $("#deviceName2_flow").attr('title', devicename2 + "- 流量");
+
+                    $("#deviceName1_energy").text(devicename1 + "- 能耗");
+                    $("#deviceName1_energy").attr('title', devicename1 + "- 能耗");
+
+                    $("#deviceName2_energy").text(devicename2 + "- 能耗");
+                    $("#deviceName2_energy").attr('title', devicename2 + "- 能耗");
+
+                    layer.close(formIndex);
+                    if (deviceID1 != 0 && deviceID2 != 0) {
+                        GetJKData();
+                        GetTodayData();
+                        GetYestData();
+                        GetThisWeekData();
+                        GetThisMonthData();
+                        //GetThisYearData();
+                    }
+                });
+            });
+            //layer.open({
+            //    type: 1,
+            //    area: ['400px', '260px'],
+            //    shadeClose: true, //点击遮罩关闭
+            //    content: '<div class="zlw_sbxz"><div class="zlw_sbxztitle"><p>设备重置选择</p></div><div class="zlw_sbxzcon"> <input type="text" placeholder="泵房一"> <input type="text" placeholder="泵房二"></div><div class="zlw_sbxztj"><input type="submit" value="提交"></div>               </div>'
+            //});
+        });
+           function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+        window.onresize = function () {
+            myChart01.resize();
+            myChart02.resize();
+            myChart03.resize();
+            myChart04.resize();
+            myChart05.resize();
+            myChart06.resize();
+            //myChart07.resize();
+            //myChart08.resize();
+            //myChart09.resize();
+            //myChart10.resize();
+        }
+
+     
+        
+    </script>
+   
+</body>
+</html>

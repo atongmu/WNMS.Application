@@ -1,0 +1,839 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+
+
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/ergongiconfont.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+
+
+
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    @*<link rel="stylesheet" href="../../css/gdmap.css">*@
+    <!-- 高德地图 -->
+    <link rel="stylesheet" href="../../css/gdmap.css">
+    <script src="//a.amap.com/jsapi_demos/static/china.js"></script>
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=28068084e71b4dac1344e8d5c9451629&plugin=AMap.GraspRoad,AMap.Geocoder"></script>
+
+    <style>
+        .amap-info-close {
+            display: block;
+        }
+        html, body {
+            height: 100%
+        }
+
+
+        .sl_chioce {
+            height: 50px;
+            border-bottom: 0
+        }
+
+
+
+        .sl_list {
+            height: calc(100% - 40px)
+        }
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+
+        .fa {
+            font-family: 'FontAwesome' !important;
+        }
+        /**
+         * 地图弹窗样式
+        */
+        .amap-container {
+            position: relative;
+            z-index: 10;
+        }
+
+        .amap-info-content {
+            box-shadow: 0 0 10px rgba(0,0,0,.6);
+        }
+
+        .map-info-card {
+            width: 320px;
+            background-color: rgba(255, 255, 255, .7);
+        }
+
+            .map-info-card .title {
+                padding: 0 10px;
+                font-size: 14px;
+                line-height: 40px;
+                color: #fff;
+                background-color: #00adff;
+            }
+
+            .map-info-card .content {
+                padding: 10px;
+            }
+
+            .map-info-card .item {
+                position: relative;
+                margin-top: 0;
+                padding: 3px 0 3px 44px;
+                font-size: 14px;
+                line-height: 24px;
+            }
+
+                .map-info-card .item:first-child {
+                    margin-top: 0;
+                }
+
+                .map-info-card .item .label {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    padding: 0;
+                    font-size: 14px;
+                    line-height: 30px;
+                    color: #00adff;
+                    font-weight: normal;
+                }
+
+            .map-info-card .name .iconfont {
+                float: left;
+                margin-right: 5px;
+                font-size: 18px;
+                color: #00adff;
+            }
+
+        .trinfo {
+            background-color: #c0e0f3 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf">
+                <!-- 搜索框 -->
+                <div class="zlw_datamain_lfconsea">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input id="searchtxt" class="form-control" placeholder="搜索" type="text" autocomplete="off" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:100%;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+            </div>
+            <div class="sl_rg">
+                <div class="sl_chioce relative" style="height:51px;border-bottom:1px solid #ddd">
+                    <nav aria-label="Page navigation" style="margin-left: 10px;margin-top: 10px;display: inline-block;">
+                        <ul class="paginations sl_chioDate">
+                            <li>
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" placeholder="开始时间" id="BeginDate" class="hyl_input hyl_input-sm" value="@ViewBag.beginDate" autocomplete="off">
+                                <span class="pl10px lh30px pr10px">至</span>
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" placeholder="结束时间" id="EndDate" class="hyl_input hyl_input-sm" value="@ViewBag.endDate" autocomplete="off">
+                                <button id="btnSelect" class="hyl_btn"> <i class="fa fa-search"></i> 查询</button>
+
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="btn-group pull-right" role="group" aria-label="..." style="position:absolute;right:10px;top:10px">
+                        <span style="margin-left: 10px">速度：</span><select id="sudu" class="hyl_input hyl_input-sm" style="width:80px !important">
+                            <option value="50" selected="selected">缓慢</option>
+                            <option value="100">慢速</option>
+                            <option value="300">匀速</option>
+                            <option value="500">快速</option>
+                            <option value="800">更快</option>
+                            <option value="1000">飞快</option>
+                            <option value="1500">超快</option>
+                        </select>
+                        <button type="button" id="start" onclick="startAnimation()" class="btn btn-default"><i class="fa fa-play"></i>&nbsp开始动画</button>
+                        <button type="button" id="pause" onclick="pauseAnimation()" class="btn btn-default"><i class="fa fa-pause"></i>&nbsp暂停动画</button>
+                        <button type="button" id="resume" onclick="resumeAnimation()" class="btn btn-default"><i class="fa fa-play"></i>&nbsp继续动画</button>
+                        <button type="button" id="stop" onclick="stopAnimation()" class="btn btn-default"><i class="fa fa-stop"></i>&nbsp停止动画</button>
+                        <button type="button" id="closewindow" onclick="closewindow()" class="btn btn-default"><i></i>&nbsp关闭信息窗口</button>
+
+                    </div>
+                </div>
+                <div class="sl_list" style="margin-top:4px">
+                    <div class="zlw_manageconrgconsan" id="map_monitor" style="height:100%;position:relative">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+
+        var userName = "";
+        var serialNumber = "";
+
+        var pageindex = 1;
+        var order = "", sort = "";
+        var $table = $("#tabledata");
+        var innit = true;
+        var iscontinue = true;
+        var currentTime = 0;
+        var loadfinish = true;
+        var startIndex = 0;
+        var speed = $("#sudu").val();
+        var timedisplay = "";
+        var zTreeObj;
+        var setting = {
+            data:{
+                simpleData: {
+                    enable: true
+                }
+            },callback:{
+                onClick: zTreeOnClick
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+        };
+        var zNodes = @ViewBag.TreeNodes;
+
+         $(function () {
+
+              zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+             zTreeObj.expandAll(true);     //初始化数列表展开
+             //$('.btn-slide-toggle').click(function() {
+             //    var isActive = $(this).hasClass('fa-chevron-down');
+             //    if (isActive) {
+             //        $(this).addClass('fa-chevron-up').removeClass('fa-chevron-down');
+             //        $('#tabaleInfo').height(0);
+             //    }
+             //    else {
+             //        $(this).addClass('fa-chevron-down').removeClass('fa-chevron-up');
+             //        $('#tabaleInfo').height('auto');
+             //    }
+             //});
+        })
+         //树查询
+     function LoadZtree() {
+         zTreeObj.destroy();    //清空树
+
+         if ($("#searchtxt").val() != "") {
+             //查询树列表数据
+             $.post("/Sws/Sws_PersonLocusNew/SearchPersonTree", {
+                 searchtxt: $("#searchtxt").val()
+             }, function (data) {
+                 var aa= JSON.parse(data);   //数据转json
+                     zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                     zTreeObj.expandAll(true);     //初始化数列表展开
+
+             });
+         }
+         else {
+
+             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);   //重新初始化树
+             zTreeObj.expandAll(true);     //初始化数列表展开
+         }
+
+     }
+      //左侧树查询回车事件
+        $("#searchtxt").keydown(function(e) {
+           if (e.keyCode == 13) {
+               LoadZtree();
+               return false;
+           }
+        });
+
+       //树点击事件
+     function zTreeOnClick(event, treeId, treeNode) {
+         if (treeNode.isUser == true) {
+             serialNumber = treeNode.serialNumber;
+             userName = treeNode.nickname;
+             GetLocus();
+
+         }
+         else {
+             layer.alert("请点击巡检人员");
+         }
+     };
+
+
+
+
+        var marker, lineArr = [], arrayConvert = [],timeArray=[];
+        var graspRoad,markflag,totalpage,pageindex,passedline=0,windowDisplay=false;
+        var pagesize = 499;//不能超过500
+            //lineArr = [[116.478935, 39.997761], [116.478939, 39.997825], [116.478912, 39.998549], [116.478912, 39.998549], [116.478998, 39.998555], [116.478998, 39.998555], [116.479282, 39.99856], [116.479658, 39.998528], [116.480151, 39.998453], [116.480784, 39.998302], [116.480784, 39.998302], [116.481149, 39.998184], [116.481573, 39.997997], [116.481863, 39.997846], [116.482072, 39.997718], [116.482362, 39.997718], [116.483633, 39.998935], [116.48367, 39.998968], [116.484648, 39.999861]];
+
+        var map = new AMap.Map("map_monitor", {
+            resizeEnable: true,
+            center: [116.397428, 39.90923],
+            zoom: 17
+        });
+
+
+        // 绘制轨迹
+
+         var geocoder = new AMap.Geocoder({
+        city: "", //城市设为北京，默认：“全国”
+        radius: 1000 //范围，默认：500
+    });
+
+         // 创建时间信息展示框
+        var carWindow = new AMap.InfoWindow({
+            offset: new AMap.Pixel(0, -55),
+            content: "",
+            //showShadow:true
+        });
+
+
+        $("#btnSelect").click(function () {
+
+
+            if (serialNumber == "") {
+                layer.alert("请选择人员");
+                return;
+            }
+            GetLocus();
+        })
+        function GetLocus() {
+            if ($("#BeginDate").val() == null || $("#BeginDate").val() == "") {
+                layer.alert("请输入开始时间");
+                return;
+            }
+             if ($("#EndDate").val() == null || $("#EndDate").val() == "") {
+                layer.alert("请输入结束时间");
+                return;
+            }
+            arrayConvert = [];
+            lineArr = [];
+            timeArray = [];
+            map.clearMap();
+            GetPersonData(1);
+            markflag = true;
+            loadfinish = false;
+
+        }
+        function GetPersonData(curr) {
+             $.post("/Sws/Sws_PersonLocusNew/QueryPersonGps", {
+                gpsnum: serialNumber,
+                pagesize: pagesize,
+                pageindex: curr,
+                begindate: $("#BeginDate").val(),
+                endate:$("#EndDate").val()
+             }, function (res) {
+                     var ttdata;
+                     if (res.rows.length > 0) {
+                         if (lineArr.length != 0) {
+                              //var uptime = timeArray[lineArr.length - 1].time;
+                             //var time_temp = { "lng": lineArr[lineArr.length - 1].x, "lat": lineArr[lineArr.length - 1].y, time: uptime, timespan: new Date(uptime).getTime() };
+
+                             lineArr = [lineArr[lineArr.length - 1]];
+
+                             timeArray = [time_temp[time_temp.length-1]];
+                         }
+
+                         arrayConvert = [];
+                         for (var i = 0; i < res.rows.length; i++) {
+                             if (lineArr.length == 0) {
+
+                                 var uptime = res.rows[i].updateTime.replace("T", " ");
+                                 var time_temp = { "lng": res.rows[i].lng, "lat":res.rows[i].lat, time: uptime,timespan: new Date(uptime).getTime()};
+                                 timeArray.push(time_temp);
+                                 ttdata = { "x": res.rows[i].lng, "y": res.rows[i].lat, "sp": 10, "ag": 0, "tm": i + 1 };
+                                 lineArr.push(ttdata);
+                             }
+                             else {
+                                 var linelength = lineArr.length;
+                                 if (lineArr[linelength - 1][0] == res.rows[i].lng && lineArr[linelength - 1][1] == res.rows[i].lat) {
+                                 }
+                                 else {
+
+                                     var uptime = res.rows[i].updateTime.replace("T", " ");
+                                     var time_temp = { "lng":res.rows[i].lng, "lat":res.rows[i].lat, time: uptime,timespan: new Date(uptime).getTime()};
+                                     timeArray.push(time_temp);
+
+
+                                      var seconds = Getsecondes(timeArray[0].time, timeArray[i].time);
+                                      ttdata = { "x": res.rows[i].lng, "y": res.rows[i].lat, "sp": 10, "ag": 0, "tm": seconds };
+                                      lineArr.push(ttdata);
+
+                                 }
+
+                             }
+                         }
+
+                         convertLngLat(curr, res.totalpage);
+
+                     }
+                     else {
+                         layer.alert("暂无数据");
+                         loadfinish = true;
+                     }
+
+            })
+        }
+
+        function convertLngLat(pageindex, totalpage) {
+
+            var now = new Date();
+
+            //var year = now.getFullYear();
+            //var month = ('0' + (now.getMonth() + 1)).slice(-2);
+            //var day = ('0' + now.getDate()).slice(-2);
+            //var hours = ('0' + now.getHours()).slice(-2);
+            //var minutes = ('0' + now.getMinutes()).slice(-2);
+            //var seconds = ('0' + now.getSeconds()).slice(-2);
+            //var formattedTime = year + month + day + hours + minutes + seconds;
+            
+            
+
+            var date_qian = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            //console.log(date_qian);
+            //console.log(timeArray[0].time);
+            var seconde = Getsecondes(timeArray[0].time, date_qian);
+            //console.log(seconde);
+            if (!graspRoad) {
+                graspRoad = new AMap.GraspRoad()
+            }
+
+            graspRoad.driving(lineArr, function (error, result) {
+                if (!error) {
+
+                    var newPath = result.data.points;
+                    
+
+                    for (var i = 0; i < newPath.length; i += 1) {
+                        if (i == 0) {
+                            arrayConvert.push([newPath[0].x, newPath[0].y]);
+                        }
+                        else {
+                            var length1 = arrayConvert.length;
+                            if (arrayConvert[length1 - 1][0] == newPath[i].x && arrayConvert[length1 - 1][1] == newPath[i].y) {
+                            }
+                            else {
+                                arrayConvert.push([newPath[i].x, newPath[i].y]);
+                            }
+                        }
+                    }
+
+                    var newLine = new AMap.Polyline({
+                        path: arrayConvert,
+                        strokeWeight: 8,
+                        strokeOpacity: 0.8,
+                        strokeColor: '#0091ea',
+                        showDir: true,
+                        extData: timeArray
+                    })
+
+                    if (markflag == true) {
+                        if (seconde<=0) {
+                            marker = new AMap.Marker({
+                                position: arrayConvert[0],
+                                offset: new AMap.Pixel(-25, -50),
+                                icon: new AMap.Icon({
+                                    size: new AMap.Size(50, 50),
+                                    imageSize: new AMap.Size(50, 50),
+                                    image: '/images/mark_user2.png'
+                                }),
+                                autoRotation: true,
+                                //angle: -90,
+                            });
+                        }
+                        else if (seconde>0) {
+                            marker = new AMap.Marker({
+                                position: arrayConvert[0],
+                                offset: new AMap.Pixel(-25, -50),
+                                icon: new AMap.Icon({
+                                    size: new AMap.Size(50, 50),
+                                    imageSize: new AMap.Size(50, 50),
+                                    image: '/images/mark_user2hui.png'
+                                }),
+                                autoRotation: true,
+                                //angle: -90,
+                            });
+                        }
+
+                        map.add(marker);
+
+                        if (timeArray.length > 0) {
+                            timedisplay = timeArray[0].time;
+                        }
+                        marker.on('click', markerevnet);
+                        markflag = false;
+
+                    }
+                    map.add(newLine);
+                    //var passedPolyline = new AMap.Polyline({
+                    //    map: map,
+                    //    // path: lineArr,
+                    //    strokeColor: "#ccc",  //线颜色
+                    //    // strokeOpacity: 1,     //线透明度
+                    //    strokeWeight: 6,      //线宽
+                    //    // strokeStyle: "solid"  //线样式
+                    //    extData:[]
+                    //});
+
+                    //marker.on('moving', function (e) {
+
+                    //    passedPolyline.setPath(e.passedPath);
+                    //     var len = e.passedPath.length;
+                    //    var time = timeArray[len - 1];
+                    //     var lastLocation = e.passedPath[len - 1];
+                    //    carWindow.setPosition(lastLocation);
+                    //    setVehicleSpeedInWidowns(lastLocation);
+                    //    //IsOut(lastLocation);
+                    //});
+                    //marker.on("movealong", function (e) {
+                    //    alert(1);
+                    //    //var polylines = map.getAllOverlays('polyline');
+                    //    //if (polylines.length > 0&&passedline<=polylines.length-1) {
+                    //    //    var pathdata = polylines[passedline].getPath();
+                    //    //    marker.resumeMove();
+                    //    //    marker.moveAlong(pathdata, 200);
+                    //    //    passedline = passedline+1;
+                    //    //}
+                    //    //startAnimation();
+                    //    markinit();
+                    //})
+                    var pageindex_next = pageindex + 1;
+                    if (totalpage != 0 && pageindex_next <= totalpage) {
+                        GetPersonData(pageindex_next);
+                    }
+                    if (pageindex_next > totalpage) {
+                        loadfinish = true;
+                    }
+
+                    map.setFitView();
+                }
+                else {
+                    var pageindex_next = pageindex + 1;
+                    if (totalpage != 0 && pageindex_next <= totalpage) {
+                        GetPersonData(pageindex_next);
+                    }
+                    if (pageindex_next > totalpage) {
+                        loadfinish = true;
+                    }
+                }
+            })
+
+    };
+        function IsOut(point) {
+            var bounds = map.getBounds();
+
+            var paths = [[bounds.northeast.lng, bounds.northeast.lat],
+            [bounds.northeast.lng, bounds.southwest.lat],
+            [bounds.southwest.lng, bounds.southwest.lat],
+            [bounds.southwest.lng, bounds.northeast.lat]];
+            var isPointInRing = AMap.GeometryUtil.isPointInRing(point, paths);
+            if (isPointInRing = false) {
+                 map.setCenter(point);
+            }
+        }
+        function startAnimation() {
+
+            if (loadfinish == true) {
+                var polylines = map.getAllOverlays('polyline');
+                //windowDisplay = false;
+                
+                iscontinue = true;
+                currentTime = 0;
+                if (polylines.length > 0) {
+                    //var pathdata = polylines[0].getPath();
+                    //timeArray = polylines[0].getExtData();
+                    //if (timeArray.length > 0) {
+                    //    marker.moveAlong(pathdata, 1000);
+                    //}
+                    passedline = 0;
+
+                    speed = $("#sudu").val();
+                    $("#sudu").attr("disabled","disabled");
+                    markinit();
+                    //carWindow.open(map, marker.getPosition());
+                }
+            }
+            else {
+                layer.msg("数据加载中");
+            }
+        }
+        var passedPathlength = -1;
+        function markinit() {
+
+            var polylines = map.getAllOverlays('polyline');
+            if (polylines.length > 0 && passedline <= polylines.length - 1) {
+                var pathdata = polylines[passedline].getPath();
+
+                timeArray = polylines[passedline].getExtData();
+                if (timeArray.length > 0) {
+
+                    map.remove(marker);
+                    marker = new AMap.Marker({
+                        position: [pathdata[0].lng, pathdata[0].lat],
+                        offset: new AMap.Pixel(-25, -50),
+                        icon: new AMap.Icon({
+                            size: new AMap.Size(50, 50),
+                            imageSize: new AMap.Size(50, 50),
+                            image: '/images/mark_user2.png'
+                        }),
+                        //autoRotation: true,
+                        //angle: -90,
+                    });
+                    map.add(marker);
+                    var passedPolyline = new AMap.Polyline({
+                        map: map,
+                        // path: lineArr,
+                        strokeColor: "#ccc",  //线颜色
+                        // strokeOpacity: 1,     //线透明度
+                        strokeWeight: 6,      //线宽
+                        // strokeStyle: "solid"  //线样式
+                        extData: []
+                    });
+
+                    startIndex = 0;
+                    timedisplay = "";
+                    passedPathlength = -1;
+                    marker.on('moving', function (e) {
+                        var len = e.passedPath.length;
+
+                        var lastLocation = e.passedPath[len - 1];
+                        carWindow.setPosition(lastLocation);
+
+
+
+                        passedPolyline.setPath(e.passedPath);
+                        if (passedPathlength != len) {
+                            setVehicleSpeedInWidowns(lastLocation, timeArray);
+                            if (windowDisplay == true) {
+                                displayWindow(lastLocation, timedisplay);
+
+                            }
+                            passedPathlength = len;
+                        }
+                    });
+                    marker.on("movealong", function (e) {
+                        // alert(1);
+                        markinit();
+                    })
+
+
+                    ////marker.resumeMove();
+
+                    marker.moveAlong(pathdata, speed);
+                    passedline = passedline + 1;
+                    marker.on("click", markerevnet);
+                }
+                else {
+
+                    passedline = passedline + 1;
+                    markinit();
+
+                }
+
+
+            }
+            else {//结束
+                iscontinue = false;
+               $("#sudu").removeAttr("disabled");
+            }
+        }
+        function setVehicleSpeedInWidowns1(lnglat, timeArray1) {
+
+            for (var i = startIndex; i < timeArray1.length; i++) {
+                if (lnglat.distance(new AMap.LngLat(timeArray1[i].lng, timeArray1[i].lat)) < 10) {
+                    if ((timeArray1[i].timespan - currentTime) < 600000 || currentTime == 0) {
+                        displayWindow(lnglat, timeArray1[i].time);
+
+                        currentTime = timeArray1[i].timespan;
+                        startIndex = i;
+                        return;
+
+                    }
+                    else {
+                        if ((i - startIndex) < 3) {
+                            displayWindow(lnglat, timeArray1[i].time);
+
+                            startIndex = i;
+                            currentTime = timeArray1[i].timespan;
+                            return;
+                        }
+                        else {
+                            //比较距离
+                            var mindis = lnglat.distance(new AMap.LngLat(timeArray1[startIndex].lng, timeArray1[startIndex].lat));
+                            var minindex = timeArray1.length < (startIndex + 3) ? timeArray1.length : (startIndex + 3);
+                            var indexnum = startIndex;
+
+                            for (var k = startIndex + 1; k < minindex; k++) {
+                                var dis = lnglat.distance(new AMap.LngLat(timeArray1[k].lng, timeArray1[k].lat));
+                                if (mindis > dis) {
+                                    mindis = dis;
+                                    indexnum = k;
+
+                                }
+
+                            }
+
+                            displayWindow(lnglat, timeArray1[indexnum].time);
+                            startIndex = indexnum;
+                            currentTime = timeArray1[indexnum].timespan;
+                            return;
+
+                        }
+
+                    }
+                }
+
+            }
+
+        }
+
+        function setVehicleSpeedInWidowns(lnglat, timeArray1) {
+            var templength = startIndex + 5;
+            if (templength > timeArray1.length) {
+                templength = timeArray1.length;
+            }
+            for (var i = startIndex; i < templength; i++) {
+
+
+                //比较距离
+                var mindis = lnglat.distance(new AMap.LngLat(timeArray1[startIndex].lng, timeArray1[startIndex].lat));
+                var minindex = templength;
+                var indexnum = startIndex;
+
+                for (var k = startIndex + 1; k < minindex; k++) {
+                    var dis = lnglat.distance(new AMap.LngLat(timeArray1[k].lng, timeArray1[k].lat));
+                    if (mindis > dis) {
+                        mindis = dis;
+                        indexnum = k;
+
+                    }
+
+                }
+                timedisplay = timeArray1[indexnum].time;
+
+                //displayWindow(new AMap.LngLat(timeArray1[startIndex].lng, timeArray1[startIndex].lat),timeArray1[indexnum].time);
+                startIndex = indexnum;
+                //currentTime = timeArray1[indexnum].timespan;
+                //console.log(num12++);
+                return;
+            }
+
+        }
+        function displayWindow(lnglat,time) {
+
+            //if (windowDisplay == false) {
+            //    carWindow.open(map, lnglat);
+            //    windowDisplay = true;
+            //}
+            var address = "不详";
+
+            geocoder.getAddress(lnglat, function (status, result) {
+                if (status === 'complete' && result.regeocode) {
+                    address = result.regeocode.formattedAddress;
+                    //if (timeArray1[i] != undefined) {
+                        var html = '';
+                        html += '<div class="map-info-card">';
+                        html += '<div class="title">人员信息</div>';
+                        html += '<div class="content">';
+                        html += '<div class="item name">';
+                        html += '<div class="label">姓名：</div>' + userName;
+                        html += '</div>';
+
+                        html += '<div class="item">';
+                        html += '<div class="label" id="timedisplay">时间：</div>' + time;
+                        html += '</div>';
+                        html += '<div class="item">';
+                        html += '<div class="label">地址：</div>' + address;
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                        carWindow.setContent(html);
+                    //}
+                } else {
+                    //if (timeArray1[i] != undefined) {
+                        var html = '';
+                        html += '<div class="map-info-card">';
+                        html += '<div class="title">人员信息</div>';
+                        html += '<div class="content">';
+                        html += '<div class="item name">';
+                        html += '<div class="label">姓名：</div>' + userName;
+                        html += '</div>';
+
+                        html += '<div class="item">';
+                        html += '<div class="label" id="timedisplay">时间：</div>' + time;
+                        html += '</div>';
+                        html += '<div class="item">';
+                        html += '<div class="label">地址：</div>' + address;
+                        html += '</div>';
+                        html += '</div>';
+                        html += '</div>';
+                        carWindow.setContent(html);
+                        log.error('根据经纬度查询地址失败');
+                    //}
+                }
+            });
+
+        }
+        function markerevnet(e) {
+            var position1 = marker.getPosition();
+            carWindow.open(map, position1);
+
+            displayWindow( position1,timedisplay);
+
+            windowDisplay = true;
+        }
+
+        $(".amap-info-close").click(function () {
+            windowDisplay = false;
+        })
+        function closewindow() {
+            carWindow.close();
+            windowDisplay = false;
+        }
+        function pauseAnimation() {
+            marker.pauseMove();
+        }
+
+        function resumeAnimation() {
+            if (iscontinue == true) {
+                marker.resumeMove();
+            }
+
+        }
+
+        function stopAnimation() {
+            marker.stopMove();
+            $("#sudu").removeAttr("disabled");
+            }
+        function Getsecondes(date1,date2) {
+            var date3 = new Date(date2).getTime() - new Date(date1).getTime();   //时间差的毫秒数
+            var seconds = Math.round(date3 / 1000);
+            return seconds;
+        }
+         function changeDateFormat(cellval) {
+            if (cellval != null) {
+                var date = cellval.replace("T", " ");
+                return date;
+            }
+        }
+
+    </script>
+</body>
+</html>

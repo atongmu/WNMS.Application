@@ -1,0 +1,348 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SetRole</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap-table.min.css">
+    @*<link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <!-- bootstrap -->
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+
+</head>
+<body>
+    @model SwsAccessories
+    <div style="padding:20px" class="xiugai">
+    <form id="FormAccessories" class="" action="/Com/Accessories/SetInfo" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun">
+        <div class="box-body">
+            <input name="id_M" for="id_M" value="@ViewBag.id_M" style="display:none;" />
+            <div class="">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Id">器件编号</label>
+                                    <div class="form-group ml15px">
+                                        <input type="text" class="form-control" id="Id" name="Id" value="@Model.Id" placeholder="请输入器件编号">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Name">器件名称</label>
+                                    <div class="form-group ml15px">
+                                        <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" placeholder="请输入器件名称">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Cost">器件类型</label>
+                                    <div class="form-group ml15px">
+                                        <input type="text" class="form-control" id="Type" name="Type" placeholder="请输入器件类型" value="@Model.Type">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Material">材质</label>
+                                    <div class="form-group ml15px">
+                                        <input type="text" class="form-control" id="Material" name="Material" value="@Model.Material" placeholder="请输入材质">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Cost">型号</label>
+                                    <div class="form-group ml15px">
+                                        <input type="text" class="form-control" id="Model" name="Model" placeholder="请输入型号" value="@Model.Model">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Material">产地</label>
+                                    <div class="form-group ml15px">
+                                        <input type="text" class="form-control" id="Place" name="Place" value="@Model.Place" placeholder="请输入产地">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Manufacturer">生产商</label>
+                                    <div class="form-group ml15px">
+                                        <input type="text" class="form-control" id="Manufacturer" name="Manufacturer" placeholder="请输入生产商" value="@Model.Manufacturer" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="ReplacementCycle">更换周期（天）</label>
+                                    <div class="form-group ml15px">
+                                        <input type="text" class="form-control" id="ReplacementCycle" name="ReplacementCycle" placeholder="请输入更换周期" value="@Model.ReplacementCycle" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+
+                                    <label for="Inventory">库存量</label>
+                                    <div class="form-group ml15px">
+                                        <input type="text" class="form-control" id="Inventory" name="Inventory" placeholder="请输入库存量" value="@Model.Inventory" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Unit">计量单位</label>
+                                    <div class="form-group ml15px">
+                                        <input type="text" class="form-control" id="Unit" name="Unit" value="@Model.Unit" placeholder="请输入计量单位">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="IsConsumable">是否是易消耗品</label>
+                                    <div>
+                                        <select id="IsConsumable" name="IsConsumable" class="form-control">
+
+                                            @{
+                                                if (!Model.IsConsumable)
+                                                {
+                                                    <option value="false" selected="selected">否</option>
+                                                    <option value="true">是</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="false">否</option>
+                                                    <option value="true" selected="selected">是</option>
+                                                }
+                                            }
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="colMP" class="col-sm-6">
+                                <label for="MaintenancePeriod">保养周期</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-bandcamp"></i>
+                                    </div>
+                                    <select class="form-control" id="MaintenancePeriod" name="MaintenancePeriod">
+                                        @{
+                                            var MPids = ViewBag.MaintenancePeriodlist as IEnumerable<SysDataItemDetail>;
+                                            foreach (var item in MPids)
+                                            {
+                                                if (Model != null && Model.MaintenancePeriod == int.Parse(item.ItemValue))
+                                                {
+                                                    <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.ItemValue">@item.ItemName</option>
+                                                }
+                                            }
+
+                                        }
+
+
+                                    </select>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+    <script>
+        var index = parent.layer.getFrameIndex(window.name);
+        $(function () {
+            validateForm();
+
+        });
+        function saveForm() {
+            $("form").submit();
+        }
+        $(function () {
+            var mid = '@ViewBag.id_M';
+
+            if (mid == null || mid == '') {
+
+
+            } else {
+
+                $("#Id").attr("readonly", "readonly");
+            }
+           
+            if ($("#IsConsumable").val() == "true") {
+                $("#colMP").attr("style", "display:none;");
+            } else {
+                $("#colMP").attr("style", "display:block;");
+            }
+            //选择易消耗品
+            $("#IsConsumable").change(function() {
+
+
+                var opt = $("#IsConsumable").val();
+                if (opt == "true") {
+                    $("#colMP").attr("style", "display:none;");
+
+                } else {
+                    $("#colMP").attr("style", "display:block;");
+                }
+            });
+        })
+
+        function validateForm() {
+            $("#FormAccessories").validate({
+                rules: {
+                    Id: "required",
+                    Name: "required",
+                    Type: "required",
+                    Model: "required",
+                    Place: "required",
+                    Material: "required",
+                    Manufacturer: "required",
+                    ReplacementCycle: {
+                        required: true,
+                        number: true,
+                        min: 0
+                    },
+                    Unit: "required",
+                    Inventory: {
+                        required: true,
+                        number: true,
+                        min: 0
+                    }
+                },
+                messages: {
+                    Id: {
+                        required: "请输入器件编号"
+
+                    },
+                    Name: {
+                        required: "请输入器件名称"
+
+                    },
+                    Type: {
+                        required: "请输入器件类型"
+
+                    },
+                    Model: {
+                        required: "请输入型号"
+
+                    },
+                    Place: {
+                        required: "请输入产地"
+
+                    },
+                    Material: {
+                        required: "请输入材质"
+
+                    },
+                    Manufacturer: {
+                        required: "请输入生产商"
+
+                    },
+
+                    ReplacementCycle: {
+                        required: "请输入更换周期",
+                        digits: "更换周期必须为整数",
+                        min: "更换周期必须为大于等于0的整数"
+                    },
+                    Unit: {
+                        required: "请输入计量单位"
+
+                    },
+                    Inventory: {
+                        required: "请输入库存量",
+                        digits: "库存量必须为整数",
+                        min: "库存量必须为大于等于0的整数"
+                    }
+                }
+            });
+        }
+
+
+        function _addFun(data) {
+            if (data == "ok") {
+                window.parent.refreshTable();
+                parent.layer.close(index);
+            } else {
+                layer.alert(data);
+            }
+        }
+
+    </script>
+</body>
+</html>

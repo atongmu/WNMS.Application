@@ -1,0 +1,116 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Model.DataModels;
+@model IEnumerable<DhourQuartZ01>
+@*<thead>
+        <tr>
+            <th>时间</th>
+            <th>总用电量(kW·h)</th>
+            @{
+                IEnumerable<dynamic> deviceids = ViewBag.deviceidList as IEnumerable<dynamic>;
+                foreach (var item in deviceids)
+                {
+                    <th>@(item.deviceName+"(kW·h)")</th>
+                }
+            }
+        </tr>
+    </thead>*@
+
+@*<tbody>
+        @{
+            if (Model.Count() > 0)
+            {
+                var DeviceData_Head = Model.GroupBy(r => r.DeviceId).ToList();
+                int value = ViewBag.TimeValue;
+                for (int i = 0; i < 24; i = i + value)
+                {
+                    DateTime dt = Model.FirstOrDefault().UpdateTime;
+                    var datas = Model.Where(r => r.UpdateTime >= dt.AddHours(i) && r.UpdateTime < dt.AddHours(i + value)).OrderBy(r => r.UpdateTime);
+                    <tr>
+                        <td>@datas.FirstOrDefault().UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@Math.Round(datas.Sum(r => r.EnergyCon), 2)</td>
+                        @foreach (var st in deviceids)
+                        {
+                            var sdata = datas.Where(r => r.DeviceId == st.DeviceID).ToList();
+                            if (sdata == null)
+                            {
+                                <td>--</td>
+                            }
+                            else
+                            {
+                                <td>@(sdata.Sum(r=>r.EnergyCon).ToString() == "" ? "--" : Math.Round((double)sdata.Sum(r => r.EnergyCon), 2).ToString())</td>
+                            }
+                        }
+                    </tr>
+                }
+            }
+        }
+    </tbody>*@
+
+@{
+    IEnumerable<dynamic> deviceids = ViewBag.deviceidList as IEnumerable<dynamic>;
+
+    // 默认为一个元素+1，,type==0则新增一个元素+1
+    var tdExtraLength = 1;
+    @if (ViewBag.Type == 0) tdExtraLength++;
+    var tdLength = deviceids.Count() + tdExtraLength;
+    var tdWidth = (1.0 / tdLength - 0.01).ToString("p0");
+
+    var theadClassName = "thead";
+    if (tdLength > 4) theadClassName += " width-auto";
+}
+
+<div class="@theadClassName">
+    @{
+        <div class="th" title="时间" style="width:@tdWidth">时间</div>
+        @if (ViewBag.Type == 0)
+        {
+            <div class="th" title="总用电量(kW·h)" style="width:@tdWidth)">总用电量(kW·h)</div>
+        }
+
+        foreach (var item in deviceids)
+        {
+           
+            <div class="th" title="@(item.deviceName+"(kW·h)")" style="width:@tdWidth; text-align: center">@(item.deviceName)<br>kW·h</div>
+        }
+    }
+</div>
+<div class="tbody">
+    @{
+        if (Model.Count() > 0)
+        {
+            var DeviceData_Head = Model.GroupBy(r => r.DeviceId).ToList();
+            int value = ViewBag.TimeValue;
+            for (int i = 0; i < 24; i = i + value)
+            {
+                DateTime dt = Model.FirstOrDefault().UpdateTime;
+                var datas = Model.Where(r => r.UpdateTime >= dt.AddHours(i) && r.UpdateTime < dt.AddHours(i + value)).OrderBy(r => r.UpdateTime);
+                if (datas.Count() > 0)
+                {
+                    <div class="tr">
+                        <div class="td" style="width:@tdWidth">@datas.FirstOrDefault().UpdateTime.ToString("HH:mm:ss")</div>
+                        @if (ViewBag.Type == 0)
+                        {
+                            <div class="td" style="width:@tdWidth">@Math.Round(datas.Sum(r => r.EnergyCon), 1)</div>
+                        }
+
+                        @foreach (var st in deviceids)
+                        {
+                            var sdata = datas.Where(r => r.DeviceId == st.DeviceID).ToList();
+                            if (sdata == null)
+                            {
+                                <div class="td" style="width:@tdWidth">--</div>
+                            }
+                            else
+                            {
+                                <div class="td" style="width:@tdWidth">@(sdata.Sum(r=>r.EnergyCon).ToString() == "" ? "--" : Math.Round((double)sdata.Sum(r => r.EnergyCon), 2).ToString())</div>
+                            }
+                        }
+                    </div>
+                }
+
+            }
+        }
+    }
+</div>

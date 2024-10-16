@@ -1,0 +1,369 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>系统功能</title>
+
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+
+    @*<link rel="stylesheet" href="../../css/font-awesome.min.css">*@
+
+    <link rel="stylesheet" href="../../css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/css/bootstrap-switch.min.css">
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="../../css/anniu.css">
+    <script src="../../lib/layer/layer.css"></script>
+    <link href="~/css/ergongiconfont.css" rel="stylesheet" />
+    <!-- bootstrap -->
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/js/bootstrap-switch.min.js"></script>
+    <!-- 树 -->
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    @*<link href="../../lib/ztree/zTreeStyle.css" rel="stylesheet" />*@
+    <script src="../../lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="../../lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="../../lib/layer/layer.js"></script>
+    <style>
+        .zlw_manageconrgconyi {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            margin: 10px;
+        }
+
+        .ztree .fa {
+            padding-right: 5px;
+        }
+
+        /*.ztree li:hover {
+            background-color: #f5f5f5;
+        }*/
+
+        .zlw_manageconlfcon li:hover {
+            background-color: #f5f5f5;
+        }
+
+            .zlw_manageconlfcon li:hover > ul {
+                background-color: #fff;
+            }
+
+        /*.zlw_manageconlfcon ul li:hover {
+            background-color: #fff;
+        }*/
+
+        /*.zlw_manageconlfcon li ul:hover {
+            background-color: #fff;
+        }*/
+
+        .zlw_manageconlfcon ul li a:hover {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="zlw_manage">
+        <div class="zlw_managecon">
+            <!-- star left -->
+            <div class="zlw_manageconlf">
+                <div class="zlw_manageconlfcon">
+                    <div class="zlw_managecontitle">
+                        <p style="margin:0"> <i class="fa fa-align-justify"></i> 功能模块</p>
+                    </div>
+                    <ul id="treeDemo" class="ztree">
+                        <!-- tree渲染区域 -->
+                    </ul>
+                </div>
+            </div>
+            <!-- left end -->
+            <!-- star right -->
+            <div class="zlw_manageconrg">
+                <div class="zlw_manageconrgcon">
+                    <!-- star 查询 -->
+                    <div class="left">
+                        <ul class="clearfloat mt10px ml10px">
+                            <li>
+                                <input type="text" id="ModuleName" class="hyl_input" placeholder="输入模块名称">
+                                <button class="hyl_btn" id="moduleSearch_Btn"> <i class="fa fa-search"></i> 查询</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- 查询 end -->
+                    <div class="zlw_manageconrgconer" style="height:51px;border-bottom:1px solid #ddd">
+                        <div class="btn-group mar10px pull-right" style="margin-right:10px">
+                            @await Component.InvokeAsync("ModuleButtons")
+
+                            @*<button type="button" id="module_AddBtn" class="btn btn-default"><i class="fa fa-plus"></i> 添加</button>
+                                <button type="button" id="module_EditBtn" class="btn btn-default"><i class="fa fa-pencil-square-o"></i> 修改</button>
+                                <button type="button" id="module_DelBtn" class="btn btn-default"><i class="fa fa-trash-o"></i> 删除</button>*@
+                        </div>
+                    </div>
+                    <!-- 表格 -->
+                    <div class="zlw_manageconrgconsan" id="tablebox" style="height:calc(100% - 50px);margin-top:10px">
+                        <table id="tabledata" data-toggle="table" data-pagination="true" data-side-pagination="server" data-page-list="[10, 25, 50, 100]" data-page-size="10" class="table-striped">
+                            <tr></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- right end -->
+        </div>
+    </div>
+    <script>
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+    </script>
+    <script type="text/javascript">
+        var pNum = 0;
+       //配置树
+        var setting = {
+            data:{
+                simpleData: {
+                    enable: true
+                }
+            },callback:{
+                onClick: zTreeOnClick
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+        };
+        var zNodes = @ViewBag.TreeNodes,zTreeobj;
+
+        $table = $("#tabledata");
+        var options = $table.bootstrapTable('getOptions');
+        $(function () {
+            // 按钮切换样式
+            $(".zlw_time_con li").click(function () {
+                $(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+            });
+
+            //加载树
+            zTreeobj=$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+            //初次加载数据
+            LoadData(options.pageNumber, options.pageSize, "", "");
+
+            //查询列表
+            $("#moduleSearch_Btn").click(function () {
+                LoadData(1, options.pageSize, "", "");
+            });
+            $("#ModuleName").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    LoadData(1, options.pageSize, "", "");
+                }
+            });
+
+            //添加模块
+            $("#module_AddBtn").click(function () {
+                iframeWithBtns("添加模块", "800px", "660px", "/Sys/Sys_Module/AddModulePage", false);
+            });
+            //编辑模块
+            $("#module_EditBtn").click(function () {
+                var selects = $table.bootstrapTable('getSelections');
+                if (selects.length != 1) {
+                    layer.msg("请选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    iframeWithBtns("编辑模块", "800px", "660px", "/Sys/Sys_Module/EditModulePage/" + selects[0].ModuleNum, false);
+                }
+            });
+
+            //删除模块
+            $("#module_DelBtn").click(function () {
+                var selects = $table.bootstrapTable('getSelections');
+                if (selects.length != 1) {
+                    layer.msg("请选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    layer.confirm("确定要删除模块？",
+                        {
+                            btn: ["确定", "取消"]
+                        },
+                        function () {
+                            DeleteModule(selects[0].ModuleNum);
+                        },
+                        function () { }
+                    );
+                }
+            });
+
+            $('.fixed-table-loading').hide()
+        });
+
+        //加载数据
+        function LoadData(index, pagesize, sort, order) {
+            $.post('/Sys/Sys_Module/GetModuleDate', {
+                name: $("#ModuleName").val(),
+                pnum:pNum,
+                pageindex: index || 1,
+                pagesize: pagesize,
+                sortName: sort,
+                order: order
+            }, function (res) {
+                //添加table
+                $("#tablebox").html('<table id="tabledata" data-sort-name="' + res.sortName + '" class="table table-striped" data-pagination="true" data-page-list="[10, 15,20]" data-toggle="table"  data-side-pagination="server"  ' +
+                    'data-total-rows="' + res.total + '" data-sort-order="' + res.order + '"  data-page-size="' + res.pageSize + '"   data-page-number="' + res.pageIndex + '">' + res.dataTable + '</table>')
+                $table = $("#tabledata").bootstrapTable({
+                    smartDisplay: false
+                });
+                options = $table.bootstrapTable('getOptions');
+
+                //分页
+                $table.on('page-change.bs.table', function (e, number, size) {
+                    LoadData(number, size, sort, order)
+                });
+
+                //排序
+                $table.on('sort.bs.table', function (e, field, order) {
+                    LoadData(index, pagesize, field, order)
+                });
+                initSwitch();
+                //加载成功事件
+                $table.on('load-success.bs.table', function (e, data) {
+                    initSwitch();
+                });
+            });
+        }
+
+        //删除数据treeObj.removeNode(nodes[i]);
+        function DeleteModule(id) {
+            $.post("/Sys/Sys_Module/DeleteModule", { moduleId: id }, function (res) {
+                if (res == "ok") {
+                    layer.alert("删除模块成功。");
+                    var option = $table.bootstrapTable('getOptions');
+                    LoadData(1, option.pageSize, "", "");
+                    var node = zTreeobj.getNodeByParam("id", id, null);
+                    if (node != null) {
+                        zTreeobj.removeNode(node);
+                    }
+                    //window.location.reload();
+                } else {
+                    layer.alert("删除模块失败。");
+                }
+            });
+        }
+
+        //查询树
+        function LoadZtree() {
+            //查询树列表数据
+            $.post("/Sys/Sys_Module/SelectTree", {
+            }, function (data) {
+                zTreeobj.destroy();    //清空树
+                var aa = JSON.parse(data);   //数据转json
+                zTreeobj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树                
+            });
+        }
+
+        //树节点点击事件
+        function zTreeOnClick(event, treeId, treeNode) {
+            pNum = treeNode.id;
+            var option = $table.bootstrapTable('getOptions');
+            LoadData(1, option.pageSize, "", "");
+        }
+
+        //启用禁用
+        function initSwitch() {
+            $("[id='project_status_switch']").bootstrapSwitch({
+                onText: "启用",
+                offText: "禁用",
+                onColor: "success",
+                offColor: "warning",
+                size: "mini",
+                onSwitchChange: function (event, state) {
+                    $.post("/Sys/Sys_Module/UpdateStatus", { moduleId: this.value, status: state });
+                }
+            })
+        }
+
+        //弹出层
+        function iframeWithBtns(title, width, height, url, isParent) {
+            var options = {
+                skin: 'layui-ext-skin01',
+                type: 2,
+                title: title,
+                shadeClose: true,
+                closeBtn: 1,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+               // btn: ['提交', '取消'],
+                //yes: function (index, layero) {
+                //    func(index, layero);
+                //},
+                //cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+    </script>
+</body>
+</html>

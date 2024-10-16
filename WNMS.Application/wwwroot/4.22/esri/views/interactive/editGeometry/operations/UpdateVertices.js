@@ -1,0 +1,6 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define(["exports"],function(e){let g=function(){function d(a,b,f){this.editGeometry=a;this.vertices=b;this.operation=f;this.undone=!1}var c=d.prototype;c.apply=function(){this.vertices.forEach(a=>this.operation.apply(a));this.editGeometry.components.forEach(a=>a.unnormalizeVertexPositions());this.editGeometry.notifyChanges({operation:this.undone?"redo":"apply",updatedVertices:this.vertices})};c.undo=function(){this.vertices.forEach(a=>this.operation.undo(a));this.editGeometry.notifyChanges({operation:"undo",
+updatedVertices:this.vertices});this.undone=!0};c.canAccumulate=function(a){if(this.undone||a.vertices.length!==this.vertices.length)return!1;for(let b=0;b<a.vertices.length;++b)if(a.vertices[b]!==this.vertices[b])return!1;return this.operation.canAccumulate(a.operation)};c.accumulate=function(a){return a instanceof d&&this.canAccumulate(a)?(this.vertices.forEach(b=>this.operation.accumulate(b,a.operation)),this.operation.accumulateParams(a.operation),this.editGeometry.components.forEach(b=>b.unnormalizeVertexPositions()),
+this.editGeometry.notifyChanges({operation:"apply",updatedVertices:this.vertices}),!0):!1};return d}();e.UpdateVertices=g;Object.defineProperty(e,"__esModule",{value:!0})});

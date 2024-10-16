@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/hyl.css">
+    <link href="../../css/font-awesome.min.css" rel="stylesheet" />
+    <link href="../../css/bootstrap.min.css" rel="stylesheet" />
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../js/echarts.min.js"></script>
+    <script src="../../js/sl_main.js"></script>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            color: #636366;
+        }
+
+        .sl_alarmAnalysis {
+            background-color: #f5f5f5;
+        }
+        /* table thead tr th{
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        } */.mores i{font-size:20px}
+        .mores{cursor:pointer;position:absolute;right:10px;top:25px;z-index:99;width:30px;text-align:center}
+    </style>
+</head>
+<body>
+    <div class="sl_alarmAnalysis">
+        
+        <!-- 搜索 -->
+        <div class="sl_Aa_search pt10px">
+            <span class="hyl_label pl15px">统计方式：</span>
+            <select class="hyl_select">
+                <option>时</option>
+                <option>日</option>
+                <option>月</option>
+                <option>年</option>
+            </select>
+            <span class="hyl_label pl10px">查询时段：</span>
+            <input type="text" class="hyl_input  hyl_input-sm" placeholder="请选择时段">
+            <button type="button" class="hyl_btn"><i class="fa fa-search mr5px"></i>查询</button>
+
+        </div>
+        <div class="sl_Aa_top clearfloat">
+            <div class="sl_Aa_top_item">
+                <div class="sl_Aa_top_item_l">
+                    <i class="fa fa-tachometer"></i>
+                </div>
+                <div class="sl_Aa_top_item_r">
+                    <p>报警总数   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 404</p>
+                    <div class="Aa_jindutiao1"></div><span>&nbsp;&nbsp;&nbsp;&nbsp;10%</span>
+                    <div class="Aa_jindutiao2"></div>
+                </div>
+            </div>
+            <div class="sl_Aa_top_item">
+                <div class="sl_Aa_top_item_l">
+                    <i class="fa fa-tachometer"></i>
+                </div>
+                <div class="sl_Aa_top_item_r">
+                    <p>硬件报警   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 40</p>
+                    <div class="Aa_jindutiao1"></div><span>&nbsp;&nbsp;&nbsp;&nbsp;10%</span>
+                    <div class="Aa_jindutiao2"></div>
+                </div>
+            </div>
+            <div class="sl_Aa_top_item">
+                <div class="sl_Aa_top_item_l">
+                    <i class="fa fa-tachometer"></i>
+                </div>
+                <div class="sl_Aa_top_item_r">
+                    <p>阈值报警   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 200</p>
+                    <div class="Aa_jindutiao1"></div><span>&nbsp;&nbsp;&nbsp;&nbsp;10%</span>
+                    <div class="Aa_jindutiao2"></div>
+                </div>
+            </div>
+            <div class="sl_Aa_top_item">
+                <div class="sl_Aa_top_item_l">
+                    <i class="fa fa-tachometer"></i>
+                </div>
+                <div class="sl_Aa_top_item_r">
+                    <p>突变报警   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 40</p>
+                    <div class="Aa_jindutiao1"></div><span>&nbsp;&nbsp;&nbsp;&nbsp;10%</span>
+                    <div class="Aa_jindutiao2"></div>
+                </div>
+            </div>
+            <div class="sl_Aa_top_item">
+                <div class="sl_Aa_top_item_l">
+                    <i class="fa fa-tachometer"></i>
+                </div>
+                <div class="sl_Aa_top_item_r">
+                    <p>超时报警&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 40</p>
+                    <div class="Aa_jindutiao1"></div><span>&nbsp;&nbsp;&nbsp;&nbsp;10%</span>
+                    <div class="Aa_jindutiao2"></div>
+                </div>
+            </div>
+            <span class="mores" style=""><i class="fa fa-ellipsis-v"></i></span>
+        </div>
+        
+
+        <div class="sl_Aa_main">
+            <div class="sl_Aa_main_t">
+                <!-- 报警总数分析 -->
+                <div class="al_Aa_main_bjzs_all">
+                    <p>报警总数分析</p>
+                    <div class="al_Aa_main_bjzs" id="al_Aa_main_bjzs"></div>
+                </div>
+                <!-- 报警等级分析 -->
+                <div class="al_Aa_main_bjdj_all">
+                    <p>报警等级统计</p>
+                    <div class="al_Aa_main_bjdj">
+                        <div id="al_Aa_main_bjdj"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="sl_Aa_main_b">
+                <!-- 表格分析 -->
+                <div class="sl_Aa_main_table">
+                    <table class="table table-striped">
+                        <p style="font-size: 18px;color: #333;">报警详情</p>
+                        <thead>
+                            <tr>
+                                <th>报警时间</th>
+                                <th>报警等级</th>
+                                <th>报警泵房</th>
+                                <th>报警内容</th>
+                                <th>报警方案</th>
+                                <th>当前值</th>
+                                <th>持续时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tanmay</td>
+                                <td>Bangalore</td>
+                                <td>560001</td>
+                                <td>Tanmay</td>
+                                <td>Bangalore</td>
+                                <td>560001</td>
+                                <td>560001</td>
+                            </tr>
+                            <tr>
+                                <td>Tanmay</td>
+                                <td>Bangalore</td>
+                                <td>560001</td>
+                                <td>Tanmay</td>
+                                <td>Bangalore</td>
+                                <td>560001</td>
+                                <td>560001</td>
+                            </tr>
+                            <tr>
+                                <td>Tanmay</td>
+                                <td>Bangalore</td>
+                                <td>560001</td>
+                                <td>Tanmay</td>
+                                <td>Bangalore</td>
+                                <td>560001</td>
+                                <td>560001</td>
+                            </tr>
+                            <tr>
+                                <td>Tanmay</td>
+                                <td>Bangalore</td>
+                                <td>560001</td>
+                                <td>Tanmay</td>
+                                <td>Bangalore</td>
+                                <td>560001</td>
+                                <td>560001</td>
+                            </tr>
+                            <tr>
+                                <td>Tanmay</td>
+                                <td>Bangalore</td>
+                                <td>560001</td>
+                                <td>Tanmay</td>
+                                <td>Bangalore</td>
+                                <td>560001</td>
+                                <td>560001</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- 报警频度分析 -->
+                <div class="sl_Aa_main_bjpd_all">
+                    <p>报警频度排名</p>
+                    <div class="sl_Aa_main_bjpd">
+                        <ul>
+                            <li class="sl_Aa_main_bjpd_itle"><span>排名</span><span>报警泵房</span><span>报警次数</span></li>
+                            <li><span><var>1</var></span><span>重庆智能动力</span><span>10</span></li>
+                            <li></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            //  echarts 报警总数分析
+            var al_Aa_main_bjzs = echarts.init(document.getElementById('al_Aa_main_bjzs'));
+            al_Aa_main_bjzs.setOption({
+                grid: {
+                    left: '5%',    //左上角x轴距盒子边框的距离
+                    right: '5%',    //左上角Y轴距盒子边框的距离
+                    top: '40px',    //右下角x轴距盒子边框的距离
+                    bottom: '40px',     //右下角Y轴距盒子边框的距离
+                    borderWidth: 1
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['2020-01', '2020-01', '2020-01', '2020-01', '2020-01', '2020-01', '2020-01', '2020-01', '2020-01', '2020-01', '2020-01', '2020-01', '2020-01', '2020-01', '2020-01', '2020-01']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    smooth: true,
+                    data: [2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+                    type: 'line',
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#25cfe9'
+                        }, {
+                            offset: 1,
+                            color: '#fff'
+                        }])
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#8cd5c2', //改变折线点的颜色
+                            lineStyle: {
+                                color: '#8cd5c2' //改变折线颜色
+                            }
+                        }
+                    },
+                }]
+            })
+
+            // echarts 报警等级统计
+            var al_Aa_main_bjdj = echarts.init(document.getElementById('al_Aa_main_bjdj'));
+            al_Aa_main_bjdj.setOption({
+                grid: {
+                    left: '5%',    //左上角x轴距盒子边框的距离
+                    right: '5%',    //左上角Y轴距盒子边框的距离
+                    top: '30px',    //右下角x轴距盒子边框的距离
+                    bottom: '30px',     //右下角Y轴距盒子边框的距离
+                    borderWidth: 1
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                toolbox: {
+                    show: false,
+                },
+                calculable: true,
+                color: ['#2c7afa', '#15a3f9', '#25cfe9', '#04ccae', '#78dca9'],//自己设置扇形图颜色
+                series: [
+                    {
+                        name: '等级占比',
+                        type: 'pie',
+                        radius: [20, 70],
+                        center: ['60%', '50%'],
+                        roseType: 'radius',
+                        max: 40,                // for funnel
+                        sort: 'ascending',     // for funnel
+                        data: [
+                            { value: 40, name: '一级' },
+                            { value: 30, name: '二级' },
+                            { value: 25, name: '三级' },
+                            { value: 5, name: '四级' },
+                            { value: 2, name: '五级' }
+                        ],
+                        //标线的属性设置，以及显示的文字
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,
+                                    formatter: '{c}次',
+                                    textStyle: {
+                                        color: '#ccc',
+                                        fontSize: 12,
+                                        fontWeight: '100'
+                                    }
+
+                                },
+                                //标线长度，宽度
+                                labelLine: {
+                                    show: true,
+                                    length: 1,
+                                    lineStyle: {
+                                        width: 1
+                                    }
+                                }
+                            },
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        },
+                    }
+                ]
+            })
+
+
+            window.onresize = function () {
+                al_Aa_main_bjzs.resize();
+                al_Aa_main_bjdj.resize();
+            }
+        </script>
+    </div>
+</body>
+</html>

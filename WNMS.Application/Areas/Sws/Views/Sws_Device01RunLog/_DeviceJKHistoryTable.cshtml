@@ -1,0 +1,91 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Model.CustomizedClass;
+@using WNMS.Model.DataModels;
+@model IEnumerable<HistoryJKData>
+<thead>
+    @{
+        int tableWidth = 160;
+    }
+    <tr>
+
+        <th data-sortable="true" data-field="UpdateTime" data-width="200px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;更新时间&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+        @{
+            List<SwsDataInfo> dataInfo = ViewBag.DataInfo as List<SwsDataInfo>;
+            foreach (var item in dataInfo)
+            {
+                @*int w = System.Text.Encoding.Default.GetBytes(item.Cnname).Length * 10;
+                tableWidth += w + 1;
+                <th data-field="@item.DataId" data-width="@w">@item.Cnname (@item.Unit)</th>*@
+                <th data-field="@item.DataId" >@item.Cnname (@item.Unit)</th>
+            }
+        }
+    </tr>
+</thead>
+<tbody>
+    @{
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.UpdateTime</td>
+                @{
+                    foreach (var d in dataInfo)
+                    {
+                        if (d.DataType == 1)
+                        {
+                            if (item.AnalogValues.Keys.Contains(d.DataId.ToString()))
+                            {
+                                @*<td>@Math.Round(decimal.Parse(item.AnalogValues[d.DataId.ToString()].ToString()),2)</td>*@
+                                <td>@Math.Round((double)item.AnalogValues[d.DataId.ToString()],2)</td>
+                            }
+                            else
+                            {
+                                <td>--</td>
+                            }
+                        }
+                        else
+                        {
+                            if (item.DigitalValues.Keys.Contains(d.DataId.ToString()))
+                            {
+                                if (d.DataId != 1000 && d.DataId != 1001)
+                                {
+                                    <td>@item.DigitalValues[d.DataId.ToString()]</td>
+                                }
+                                else
+                                {
+                                    if (d.DataId == 1000)
+                                    {
+                                        if (item.DigitalValues[d.DataId.ToString()].ToString() == "True")
+                                        {
+                                            <td>成功</td>
+                                        }
+                                        else
+                                        {
+                                            <td>失败</td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (item.DigitalValues[d.DataId.ToString()].ToString() == "True")
+                                        {
+                                            <td>在线</td>
+                                        }
+                                        else
+                                        {
+                                            <td>离线</td>
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <td>--</td>
+                            }
+                        }
+                    }
+                }
+            </tr>
+        }
+    }
+</tbody>

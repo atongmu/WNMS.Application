@@ -1,0 +1,208 @@
+
+
+.legend {
+    line-height: 2px;
+    color: #000;
+}
+.legend .legendtitle {
+    width: 94px;
+    font-weight:bold;
+    line-height: 15px;
+	text-align:center;
+	height:40px;
+}
+.legend i {
+    width: 18px;
+    height: 1px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.9;
+}
+
+
+.legend i:hover {
+    opacity: 0.5;
+}
+.legend .valuetxt {
+    float: right;
+    top:24px;
+    line-height: 22px;
+	text-align:left;
+	width: 60px;
+}
+
+.legend1 {
+    line-height: 19px;
+    color: #000;
+}
+
+.legend1 i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.9;
+}
+
+
+.aqi_show_div {
+       position: relative;
+   }
+
+.aqi_title {
+    background: url(images/bg-aqi-title.png) no-repeat center;
+    height: 89px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+    .aqi_title p {
+        font-size: 14px;
+        font-weight: bold;
+        padding-top: 6px;
+        
+    }
+
+.aqi-content {
+	text-align:center;
+	xposition:absolute;
+    overflow:hidden;
+	filter:alpha(opacity=90);
+	width:100%;
+}
+/* 
+    .aqi-content dt {
+        float: left;
+        padding-left: 50px;
+    }
+
+    .aqi-content dd {
+        float: left;
+        text-align: center;
+        padding-top: 10px;
+        padding-left: 5px;
+    }
+ */    
+    
+.aqi_value {
+    background: rgba(0,0,0,0.1);
+    border: solid 0px #a3cddb;
+    width: 100%;
+    -moz-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0 2px 2px rgba(0,0,0,0.1); /* FF3.5+ */
+    -webkit-box-shadow: 0 2px 2px rgba(0,0,0,0.1); /* Saf3.0+, Chrome */
+    box-shadow: 0 2px 2px rgba(0,0,0,0.1); /* Opera 10.5, IE 9.0 */
+}
+
+.aqi_value_number {
+    font-size: 15px;
+    line-height: 22px;
+    border-bottom:solid 1px #f0f6ff;
+    filter:alpha(opacity=90);
+    background:#ffffff;
+    cursor:pointer;
+}
+.aqi_value_number:hover {
+    filter:alpha(opacity=70);
+    border-bottom:solid 0px #b0b6bf;
+}
+.aqi_value_number .wrwname {
+    width: 100px;
+	text-align:left;
+	border:solid 0px #333;
+	display:inline-block;
+}
+.aqi_value_number .wrw1 {
+    width: 60px;
+	text-align:left;
+	border:solid 0px #333;
+	display:inline-block;
+}
+.aqi_value_number .wrw2 {
+    width: 60px;
+	text-align:left;
+	padding-left:12px;
+	border:solid 0px #333;
+	display:inline-block;
+}
+
+.aqi_value_number2 {
+    font-size: 13px;
+    line-height: 24px;
+    filter:alpha(opacity=90);
+    padding:0px 0px 0px 0px;
+}
+.aqi_value_number2 .wrwname {
+    width: 90px;
+	text-align:left;
+	border:solid 0px #333;
+	display:inline-block;
+}
+.aqi_value_number2 .wrw1 {
+    width: 45px;
+	text-align:left;
+	border:solid 0px #333;
+	display:inline-block;
+}
+.aqi_value_number2 .wrw2 {
+    width: 45px;
+	text-align:left;
+	padding-left:2px;
+	border:solid 0px #333;
+	display:inline-block;
+}
+
+.aqi_value_number3 {
+    font-size: 13px;
+    line-height: 24px;
+    filter:alpha(opacity=90);
+    padding:0px 0px 0px 0px;
+}
+
+.aqi_value_number3 span {
+    width: 90px;
+	text-align:left;
+	border:solid 0px #333;
+	display:inline-block;
+}
+.aqi_value_level {
+    font-size: 24px;
+    line-height: 24px;
+    padding-bottom: 5px;
+}
+
+/*等级字体颜色*/
+.color1 {
+    color: #228c00;
+}
+
+.color2 {
+    color: #9b9a00;
+}
+
+.color3 {
+    color: #ff6d00;
+}
+
+.color4 {
+    color: #DF2101;
+}
+
+.color5 {
+    color: #B000C5;
+}
+
+.color6 {
+    color: #5F0136;
+}
+
+.color7 {
+    color: #5F0136;
+}
+
+.color8 {
+    color: #5F0136;
+}

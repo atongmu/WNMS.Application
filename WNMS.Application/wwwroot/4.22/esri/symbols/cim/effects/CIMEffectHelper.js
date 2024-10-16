@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define(["exports","../../../geometry/support/jsonUtils","../CIMCursor","../CIMEffects","../CIMOperators"],function(f,d,g,h,k){const l=96/72;let m=function(){function e(){}e.executeEffects=function(a,b){b=g.cloneAndDecodeGeometry(b);b=new h.SimpleGeometryCursor(b);for(const c of a)(a=k.getEffectOperator(c))&&(b=a.execute(b,c,l,!0));return b};e.next=function(a){a=a.next();g.deltaEncodeGeometry(a);return a};e.applyEffects=function(a,b){if(!a)return b;b=new h.SimpleGeometryCursor(b);for(var c of a)(a=
+k.getEffectOperator(c))&&(b=a.execute(b,c,1,!1));for(c=null;a=b.next();)c?d.isPolyline(c)?d.isPolyline(a)&&c.paths.push(...a.paths):d.isPolygon(c)&&d.isPolygon(a)&&c.rings.push(...a.rings):c=a;return c};return e}();f.CIMEffectHelper=m;Object.defineProperty(f,"__esModule",{value:!0})});

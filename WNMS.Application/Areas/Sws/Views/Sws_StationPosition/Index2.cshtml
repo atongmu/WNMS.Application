@@ -1,0 +1,608 @@
+﻿
+@{
+    Layout = null;
+}
+
+@using WNMS.Model.CustomizedClass;
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>泵房分布</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+    <link rel="stylesheet" href="~/css/iconfont.css">
+    <link rel="stylesheet" href="~/css/ziti.css">
+    <link rel="stylesheet" href="../../css/fbmap.css">
+    @*<link rel="stylesheet" href="../../css/gdmap.css">*@
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- 高德地图 -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=28068084e71b4dac1344e8d5c9451629"></script>
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=19f27b47f69a7be7890be2210d59ff6f&plugin=AMap.DistrictSearch,AMap.MarkerClusterer"></script>
+    <style>
+        .pt5px{
+            padding-top:5px;
+        }
+        .carousel-inner>.item>a>img, .carousel-inner>.item>img{height: 100%;}
+    </style>
+</head>
+<body>
+    <div class="zlw_sbfb">
+        <!-- star 地图层 -->
+        <div class="zlw_map_layer">
+            <div id="map_monitor"></div>
+        </div>
+        <!-- star 地图层 -->
+        <!-- star 泵房搜索 -->
+        <div class="zlw_bfsslay">
+            <div class="zlw_bfsslayyi">
+                <div class="zlw_bfsslayyicon">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" id="stationName" placeholder="泵房名称" autocomplete="off">
+                    </form>
+                </div>
+            </div>
+            <div class="zlw_bfsslayer">
+                <div class="zlw_bfsslayercon">
+                    <div class="zlw_bfsslayerconnr">
+                        <div class="zlw_bfsslayercontitle">
+                            <ul class="clearfloat">
+                                <li>
+                                    <select name="" id="Type">
+                                        <option value="0">全部类型</option>
+                                        @{
+                                            List<StationType> item = ViewBag.deviceType as List<StationType>;
+                                            foreach (var i in item)
+                                            {
+                                                <option value="@i.ItemValue">@i.ItemName (@i.Num)</option>
+                                            }
+                                        }
+                                    </select>
+                                </li>
+                                <li><span>泵房名称</span></li>
+                                <li><span>安装日期</span></li>
+                                <li><span>操作</span></li>
+                            </ul>
+                        </div>
+                        <div class="zlw_bfsslayerconcon">
+                            <div class="zlw_bfsslist" id="stationTable">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 泵房搜索 end -->
+        <!-- star 设备表示 -->
+        <div class="zlw_sbbs">
+            <div class="zlw_sbbscon">
+                <div class="zlw_sbbsconyi">
+                    <ul id="type_Checkbox">
+                        <li class="clearfloat wyf">
+                            <input type="checkbox" value="1" id="check1" checked="checked">
+                            <i></i>
+                            <span>无负压泵房</span>
+                        </li>
+                        <li class="clearfloat zys">
+                            <input type="checkbox" value="2" id="check2" checked="checked">
+                            <i></i>
+                            <span>直饮水泵房</span>
+                        </li>
+                        <li class="clearfloat wfy">
+                            <input type="checkbox" value="3" id="check3" checked="checked">
+                            <i></i>
+                            <span>移动万用房</span>
+                        </li>
+                        @*<li class="clearfloat gydj">
+                                <input type="checkbox">
+                                <i></i>
+                                <span>高压电机</span>
+                            </li>*@
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- 设备表示 end -->
+        <!-- star 收缩按钮 -->
+        <div class="zlw_ss"></div>
+        <!-- 收缩按钮 end -->
+
+
+    </div>
+    <script>
+        var areaname = '@Html.Raw(@ViewBag.AreaName)';
+        //初始化地图
+        var map = new AMap.Map('map_monitor', {
+            center: [@ViewBag.lng, @ViewBag.lat],
+            mapStyle: 'amap://styles/d363428cd7ab3d540fc2e80d22c5ea80', //设置地图的显示样式
+            layers: [//使用多个图层
+                //new AMap.TileLayer.Satellite(),
+                //new AMap.TileLayer.RoadNet()
+            ],
+            zooms: [6, 16],//设置地图级别范围
+            zoom: @ViewBag.Zoom
+        });
+        mapselect = new AMap.DistrictSearch({
+            extensions: 'all',
+            subdistrict: 0
+        }).search(areaname, function (status, result) {
+            // 外多边形坐标数组和内多边形坐标数组
+            var outer = [
+                new AMap.LngLat(-360, 90, true),
+                new AMap.LngLat(-360, -90, true),
+                new AMap.LngLat(360, -90, true),
+                new AMap.LngLat(360, 90, true),
+            ];
+            var holes = result.districtList[0].boundaries
+
+            var pathArray = [
+                outer
+            ];
+            pathArray.push.apply(pathArray, holes);
+            var polygon = new AMap.Polygon({
+                pathL: pathArray,
+                strokeColor: '#0168bc',
+                strokeWeight: 5,
+                fillColor: '#00080e',
+                fillOpacity: 0.7
+            });
+
+
+            polygon.setPath(pathArray);
+            map.add(polygon)
+        });
+
+        var infoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30) });
+        //定义覆盖物群组标记
+        var makers1 = [], makers2 = [], makers3 = [];
+        var overlayGroups1 = [], overlayGroups2 = [], overlayGroups3 = [];
+        var clusters;
+
+        $(function () {
+            //地图内tab
+            $(document).on("click", ".tablist li", function () {
+                var indx = $(this).index();
+                $(this).addClass("on").siblings("li").removeClass("on");
+                $(".tabcont section").eq(indx).removeClass("hide").siblings("section").addClass("hide");
+            });
+
+            var layui_yi = $('.data_layeryi').height();
+            var layui_er = $('.data_layerer').height();
+            var layuisanpadding = (layui_yi + layui_er + 30) + 'px';
+            $('.data_layersan').css('padding-top', layuisanpadding)
+            // 搜索框点击变长
+            $(".shuai_layui_sea input").focus(function () {
+                $('.shuai_layui_sea input').css('width', '200px')
+            });
+            $(".shuai_layui_sea input").blur(function () {
+                $('.shuai_layui_sea input').css('width', '60px')
+            });
+            // 点击收缩
+            $('.zlw_ss').click(function () {
+                if ($(".zlw_ss").hasClass("ss_active")) {
+                    $('.zlw_bfsslay').css('right', '0px');
+                    $('.zlw_sbbs').css('right', '385px');
+                    $('.zlw_ss').css('right', '378px').removeClass('ss_active');
+                    $('.zlw_ss').css('background-image', 'url(../../images/收缩-触发-白色.svg)')
+                } else {
+                    $('.zlw_bfsslay').css('right', '-380px');
+                    $('.zlw_sbbs').css('right', '0px');
+                    $('.zlw_ss').css('right', '-2px').addClass('ss_active');
+                    $('.zlw_ss').css('background-image', 'url(../../images/展开-未触发-白色.svg)')
+                }
+            });
+
+            //初次加载数据
+            GetTableData();
+
+            //类型改变事件
+            $("#Type").change(function () {
+                GetTableData();
+            });
+
+            ////查询按钮点击事件
+            //$("#Search").click(function () {
+            //    GetTableData();
+            //});
+
+            //table查询
+            $("#stationName").bind("keypress", function (event) {
+                if (event.keyCode != 13) {
+                    if (event.keyCode < 48 || event.keyCode > 57) {
+                        console.log("1");
+                    }
+                } else {
+                    event.preventDefault();
+                    GetTableData();
+                }
+            });
+
+            //地图类型选择事件
+            $(":checkbox").on("change", function () {
+                if ($(this).is(':checked')) {
+                    if ($(this).val() == 1) {
+                        map.add(overlayGroups1);
+                    } else {
+                        if ($(this).val() == 2) {
+                            map.add(overlayGroups2);
+                        } else {
+                            map.add(overlayGroups3);
+                        }
+                    }
+                } else {
+                    if ($(this).val() == 1) {
+                        map.remove(overlayGroups1);
+                    } else {
+                        if ($(this).val() == 2) {
+                            map.remove(overlayGroups2);
+                        } else {
+                            map.remove(overlayGroups3);
+                        }
+                    }
+                }
+                clusters.clearMarkers();
+                Mapaggregation();
+            });
+        });
+
+        //加载table和地图
+        function GetTableData() {
+            $.post("/Sws/Sws_StationPosition/GetStationData", {
+                stationName: $("#stationName").val(),
+                stationtype: $("#Type").val()
+            }, function (res) {
+                $("#stationTable").html(res.dataTable);
+                var datas = eval(res.dataList);
+                for (i = 0; i < datas.length; i++) {
+                    var markericon1 = '' +
+                        '<div>' +
+                        '<div class="wfybf">  ' +
+                        '<div class="circle">' +
+                        '<img src="../../images/bftb.png">' +
+                        '</div> ' +
+                        '<div class="circle_bottom animation "></div>' +
+                        '<div class="circle_bottom2 animation2 "></div>' +
+                        '</div>' +
+                        '</div>';
+                    var markericon2 = '' +
+                        '<div>' +
+                        '<div class="zysbf">  ' +
+                        '<div class="circle">' +
+                        '<img src="../../images/bftb.png">' +
+                        '</div> ' +
+                        '<div class="circle_bottom animation "></div>' +
+                        '<div class="circle_bottom2 animation2 "></div>' +
+                        '</div>' +
+                        '</div>';
+                    var markericon3 = '' +
+                        '<div>' +
+                        '<div class="wnbf">  ' +
+                        '<div class="circle">' +
+                        '<img src="../../images/bftb.png">' +
+                        '</div> ' +
+                        '<div class="circle_bottom animation "></div>' +
+                        '<div class="circle_bottom2 animation2 "></div>' +
+                        '</div>' +
+                        '</div>';
+                    //创建marker
+                    var marker = new AMap.Marker({
+                        position: new AMap.LngLat(datas[i].Lng, datas[i].Lat),
+                        offset: new AMap.Pixel(-32, -40),
+                        extData: {
+                            id: datas[i].StationID
+                        },
+                        title: datas[i].StationName
+                    });
+
+
+                    map.on('zoomchange', mapZoom);
+                    ////添加标注监听事件(点击时显示设备名称)
+                    //AMap.event.addListener(marker, 'click', function () {
+                    //    marker.setLabel({
+                    //        offset: new AMap.Pixel(20, 20),                          //设置文本标注偏移量
+                    //        content: "<div class='info'>" + res.StationName + "</div>",        //设置文本标注内容
+                    //        direction: 'right'                                      //设置文本标注方位
+                    //    });
+                    //});
+                    marker.on('click', markerClick);
+                    //根据不同类型，更换图标，并添加到不同的分组
+                    if (datas[i].StaitonType == 1) {
+                       // marker.setIcon('../../images/标注蓝.png');
+                        marker.setContent(markericon1);
+                        makers1.push(marker);
+                    } else {
+                        if (datas[i].StaitonType == 2) {
+                            //marker.setIcon('../../images/标注橙.png');
+                            marker.setContent(markericon2);
+                            makers2.push(marker);
+                        } else {
+                            //marker.setIcon('../../images/标注紫.png');
+                            marker.setContent(markericon3);
+                            makers3.push(marker);
+                        }
+                    }
+                }
+
+                //var markers = makers1.concat(makers2).concat(makers3);
+                //创建标注群组
+                overlayGroups1 = new AMap.OverlayGroup(makers1);
+                overlayGroups2 = new AMap.OverlayGroup(makers2);
+                overlayGroups3 = new AMap.OverlayGroup(makers3);
+
+                //添加标注到地图
+                map.add(overlayGroups1); map.add(overlayGroups2); map.add(overlayGroups3);
+
+                //创建聚合
+                Mapaggregation();
+            });
+        }
+
+        //标注点击事件
+        function markerClick(e) {
+            var id = e.target.getExtData().id
+            $.post("/Sws/Sws_StationPosition/GetMapWindowInfo", { stationID: id }, function (res) {
+                var data = eval(res);
+                var station = eval(res.station);
+
+                //添加泵房信息
+                var stationInfo = '<p><span>泵房名称</span><span class="ellipsis1">' + station[0].StationName + '</span></p>' +
+                    '<p><span>泵房编码</span><span>' + station[0].StationNum + '</span></p>' +
+                    '<p><span>泵房类型</span><span>' + station[0].StaitonTypeName + '</span></p>' +
+                    '<p><span>泵房安装日期</span><span>' + (station[0].InstallationDate==null?"":station[0].InstallationDate.substring(0, 10)) + '</span></p>' +
+                    
+                    '<p><span>水箱个数</span><span>' + station[0].WaterTankNum + '</span></p>'+
+                '<p><span>验收日期</span><span>' + (station[0].AcceptanceDate==null?"":station[0].AcceptanceDate.substring(0, 10)) + '</span></p>' +
+                    '<p><span>质保日期</span><span>' + (station[0].QualityEndDate==null?"":station[0].QualityEndDate.substring(0, 10)) + '</span></p>' +
+                    '<p><span>负责人</span><span>' + station[0].Manager + '</span></p>' +
+                    '<p><span>负责人电话</span><span>' + station[0].ManagerPhone + '</span></p>';
+
+                //添加设备信息
+                var type = res.type;
+                var tab = '', deviceInfo = '';
+                if (type == 1) {    //二供设备
+                    var device = eval(res.device01);
+                    for (i = 0; i < device.length; i++) {
+                        var manufactureDate = "";
+                        if (device[i].manufactureDate == null) {
+                            manufactureDate = "";
+                        } else {
+                            manufactureDate = device[i].manufactureDate.substring(0, 10);
+                        }
+                        tab += '<li><i class="iconfont icon-fangzi" style="font-size:18px"></i><span>' + device[i].partitionName + '</span></li>';
+                        deviceInfo += '<section class="hide">' +
+                            '<div class="zq_wz overflow pt50px">' +
+                            '<p><span>设备名称</span><span class="ellipsis1">' + device[i].deviceName + '</span></p>' +
+                            '<p><span>设备编号</span><span>' + device[i].deviceNum + '</span></p>' +
+                            '<p><span>设备类型</span><span>' + device[i].deviceTypeName + '</span></p>' +
+                            '<p><span>水泵品牌</span><span>' + device[i].manufacturerName + '</span></p>' +
+                            '<p><span>泵房楼层</span><span>30</span></p>' +
+                            '<p><span>水泵个数</span><span>' + device[i].pumpNum + '</span></p>' +
+                            '<p><span>出口DN</span><span>' + device[i].exportDn + '</span></p>' +
+                            '<p><span>进口DN</span><span>' + device[i].importDn + '</span></p>' +
+                            '<p><span>变频器类型</span><span>' + device[i].frequencyName + '</span></p>' +
+                            '<p><span>出厂日期</span><span>' + manufactureDate + '</span></p>' +
+                            '<p><span>有无调峰功能</span><span>无</span></p>' +
+                            '<p><span>主泵流量</span><span>0</span></p>' +
+                            '<p><span>主泵扬程</span><span>3</span></p>' +
+                            '</div>' +
+                            '</section>';
+                    }
+                }
+
+                if (type == 2) {   //直饮水设备
+                    var device = res.device02;
+                    for (i = 0; i < device.length; i++) {
+                        tab += '<li><i class="iconfont icon-fangzi" style="font-size:18px"></i><span>' + device[i].partitionName + '</span></li>';
+                        deviceInfo += '<section class="hide">' +
+                            '<div class="zq_wz overflow pt50px">' +
+                            '<p><span>设备名称</span><span class="ellipsis1">' + device[i].deviceName + '</span></p>' +
+                            '<p><span>设备编号</span><span>' + device[i].deviceNum + '</span></p>' +
+                            '<p><span>设备类型</span><span>' + device[i].deviceTypeName + '</span></p>' +
+                            '<p><span>厂商</span><span>' + device[i].manufacturerName + '</span></p>' +
+                            '<p><span>泵房楼层</span><span>30</span></p>' +
+                            '<p><span>生产日期</span><span>' + (device[i].productionDate==null?"":device[i].productionDate.substring(0, 10)) + '</span></p>' +
+                            '</div>' +
+                            '</section>';
+                    }
+                }
+
+                //添加资产信息
+                var pro = res.property;
+                var proInfo = '';
+                if (pro != null) {
+                    for (i = 0; i < pro.length; i++) {
+                        proInfo += '<li><span>' + pro[i].PropertyTypeName + '</span><span>' + pro[i].Name + '</span><span>' + pro[i].BrandName + '</span><span>' + pro[i].Size + '</span></li>'
+                    }
+                }
+
+                //添加附件
+                var attach = res.attach;
+                var attachInfo = '';
+                var img = '';
+                if (attach != null) {
+                    for (i = 0; i < attach.length; i++) {
+                        attachInfo += '<li><span>' + i + 1 + '</span><span><a href="' + attach[i].fileUrl + '">' + attach[i].fileName + '</a></span></li>';
+                        if (attach[i].fileType == 1) {
+                            img += '<img src="' + attach[i].fileUrl + '" class="left" style="width:30px"/>'
+                        }
+                    }
+                }
+
+                //添加图片
+                var imgs = res.imgList;
+                var content1 = "";
+                var content2 = "";
+                if (imgs != null && imgs.length>0) {
+                    for (i = 0; i < imgs.length; i++) {
+                        if (i == 0) {
+                            content1 += '<li data-target="#myCarousel" data-slide-to="' + i + '" class="active"></li>';
+                            content2 += '<div class="item active" style="height:300px" ><img src="' + imgs[i].fileUrl + '" /></div>';
+                        } else {
+                            content1 += '<li data-target="#myCarousel" data-slide-to="' + i + '"></li>';
+                            content2 += '<div class="item" style="height:300px" ><img src="' + imgs[i].fileUrl + '" /></div>';
+                        }
+                        
+                    }
+                } else {
+                    content1 += '<li data-target="#myCarousel" data-slide-to="0" class="active"></li>';
+                    content2 += '<div class="item active" style="height:300px"><img src="../../images/no-img.png" /></div>';
+                }
+
+                var markerContent = '' +
+                    '<div class="mapbox">' +
+                    '<div class="mar5px" >' +
+                    '<p class="overflow">' + '<img src="../../images/bf2.png" class="left" style="width:30px"/>' +
+                    '<span class="left pl10px lh30px f18px fb">' + station[0].StationName + '</span> ' +
+                    '<img src="../../images/jk.png" class="left ml10px" style="width:30px" />' +
+                    '<span class="lh30px pl10px f18px blue" onClick="window.top.homeAddTab(\'sta' + station[0].StationID+'\',\''+station[0].StationName+'\',\'\/Sws\/Sws_Detail\/Index\/'+station[0].StationID+'\')">实时监控</span>' +
+                    '</p> ' +
+                    '<ul class="tablist overflow mt15px">' +
+                    '<li class="on"><i class="iconfont icon-shengchanbengfang"></i><span>泵房</span></li>' + tab +
+                    '<li><i class="iconfont icon-huabanfuben" style="font-size:18px"></i><span>资产</span></li>' +
+                    '<li><i class="iconfont icon-fujian"></i><span>附件</span></li>' +
+                    '</ul>' +
+                    '<div class="tabcont">' +
+                    '<section class="overflow relative" >' +
+                    //'<div class="lunbo">' +
+                    //'<div class="swiper-slide">' + img + '</div>' +
+                    //'</div>' +
+                    '<div class="lunbo mt10px">' +
+                                '<div id="myCarousel" class="carousel slide">'+
+	                                '<ol class="carousel-indicators" style="height:50%">'+content1+
+		                                //'<li data-target="#myCarousel" data-slide-to="0" class="active"></li>'+
+		                                //'<li data-target="#myCarousel" data-slide-to="1"></li>'+
+		                                //'<li data-target="#myCarousel" data-slide-to="2"></li>'+
+	                                '</ol>'+
+                    '<div class="carousel-inner">' +
+                    content2 +
+		                                //'<div class="item active" style="height:300px"><img src="../../images/no-img.png" /></div>'+
+		                                //'<div class="item" style="height:300px"><img src="../../images/no-img.png" /></div>'+
+		                                //'<div class="item" style="height:300px">图片3</div>'+
+	                                '</div>'+
+
+	                                '<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">'+
+		                                '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>'+
+		                                '<span class="sr-only">Previous</span>'+
+	                                '</a>'+
+	                                '<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">'+
+		                                '<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>'+
+		                                '<span class="sr-only">Next</span>'+
+                                    '</a>' +
+                                '</div>'+
+                            '</div>' +
+
+                    '<div class="lb_wz pt5px">' + stationInfo +
+                    '</div>' +
+                    '</section > ' + deviceInfo +
+                    '<section class="hide">' +
+                    '<div class="zc_table">' +
+                    '<p>' +
+                    '<span>资产类型</span>' +
+                    '<span>资产名称</span>' +
+                    '<span>品牌</span>' +
+                    '<span>规格</span>' +
+                    '</p>' +
+                    '<ul class="zc_cont">' + proInfo +
+                    '</ul>' +
+                    '</div>' +
+                    '</section>' +
+                    '<section class="hide">' +
+                    '<div class="zc_table2">' +
+                    '<p>' +
+                    '<span>序号</span>' +
+                    '<span>文档</span>' +
+                    '</p>' +
+                    '<ul class="zc_cont2">' + attachInfo +
+                    '</ul>' +
+                    '</div>' +
+                    '</section > ' +
+                    '</div>' +
+                    '</div>' +
+                    '</div > ';
+                //内容添加到信息窗口
+                infoWindow.setContent(markerContent);
+                infoWindow.open(map, e.target.getPosition());
+            });
+        }
+
+
+        //地图缩放
+        function mapZoom() {
+            var zoom = map.getZoom(); //获取当前地图级别zysbf
+            var markers = makers1.concat(makers2).concat(makers3);
+            map.remove(markers);
+            if ($("#check1").is(':checked')) {
+                //创建标注群组
+                overlayGroups1 = new AMap.OverlayGroup(makers1);
+                map.add(overlayGroups1);
+            }
+            if ($("#check2").is(':checked')) {
+                overlayGroups2 = new AMap.OverlayGroup(makers2);
+                //添加标注到地图
+                map.add(overlayGroups2);
+            }
+            if ($("#check3").is(':checked')) {
+                overlayGroups3 = new AMap.OverlayGroup(makers3);
+                map.add(overlayGroups3);
+            }
+           
+            clusters.clearMarkers();
+            Mapaggregation();
+        }
+
+        //创建聚合clearMarkers( )
+        function Mapaggregation() {
+
+            var markers = [];
+            if ($("#check1").is(":checked")) {
+                markers = markers.concat(makers1);
+            }
+            if ($("#check2").is(":checked")) {
+                markers = markers.concat(makers2);
+            }
+            if ($("#check3").is(":checked")) {
+                markers = markers.concat(makers3);
+            }
+            var count = markers.length;;
+            var _renderClusterMarker = function (context) {
+                var factor = Math.pow(context.count / count, 1 / 18)
+                var div = document.createElement('div');
+                var Hue = 180 - factor * 180;
+                var bgColor = 'hsla(' + Hue + ',100%,50%,0.7)';
+                var fontColor = 'hsla(' + Hue + ',100%,20%,1)';
+                var borderColor = 'hsla(' + Hue + ',100%,40%,1)';
+                var shadowColor = 'hsla(' + Hue + ',100%,50%,1)';
+                div.style.backgroundColor = bgColor
+                var size = Math.round(30 + Math.pow(context.count / count, 1 / 5) * 20);
+                div.style.width = div.style.height = size + 'px';
+                div.style.border = 'solid 1px ' + borderColor;
+                div.style.borderRadius = size / 2 + 'px';
+                div.style.boxShadow = '0 0 1px ' + shadowColor;
+                div.innerHTML = context.count;
+                div.style.lineHeight = size + 'px';
+                div.style.color = fontColor;
+                div.style.fontSize = '14px';
+                div.style.textAlign = 'center';
+                context.marker.setOffset(new AMap.Pixel(-size / 2, -size / 2));
+                context.marker.setContent(div)
+            }
+            map.plugin('AMap.MarkerClusterer', function () {
+                clusters = new AMap.MarkerClusterer(map, markers, {
+                    gridSize: 80,
+                    renderClusterMarker: _renderClusterMarker,
+                    maxZoom: 10
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1372 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="../../css/AdminLTE.lite.css" rel="stylesheet" />
+    <link href="../../css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+
+    <!-- 树 -->
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <!-- 日历 -->
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/js/bootstrap/bootstrap.min.js"></script>
+    <!-- echart -->
+    <script src="~/js/echarts.min.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <style>
+        .con13_top {
+            height: 51px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd
+        }
+
+        .btn-group, .btn-group-vertical {
+            vertical-align: top
+        }
+
+        .zlw_datamain_rgyi label {
+            font-weight: 400
+        }
+
+        .con13_top .hyl_input {
+            width: 165px;
+        }
+
+        .con13_top .timeChoice {
+            display: none;
+        }
+
+            .con13_top .timeChoice:first-of-type {
+                display: inline-block;
+            }
+
+        /*.input-text, .inptnb {
+            height: 30px;
+            border-radius: 5px;
+            outline: none;
+            padding: 0 5px;
+            border: 1px solid #999
+        }*/
+        .no-img {
+            position: absolute;
+            left: 0;
+            top: 30%;
+            width: 100%;
+            height: 100%;
+            text-align: center
+        }
+
+        .con13_many {
+            display: none;
+        }
+
+        #MyOverLayNum:focus {
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_datamain">
+        <div class="zlw_datamaincon">
+            <!-- star left -->
+            <div class="zlw_datamain_lf">
+                <div id="treeDemo" class="ztree" style="height:calc(100% - 50px);margin-top:50px;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+                <div class="zlw_datamain_lfcon">
+                    <div class="zlw_datamain_lfconsea">
+                        <form action="">
+                            <i class="glyphicon glyphicon-search" id="search"></i>
+                            <input type="text" class="form-control" id="stationName" placeholder="搜索&quot;泵房&quot;名称" autocomplete="off"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- left end -->
+            <!-- star right -->
+            <div class="zlw_datamain_rg">
+                <div class="zlw_datamain_rgcon">
+                    <!-- 列表 -->
+                    <div class="zlw_datamain_rgyi clearfloat">
+                        <div class="con13_top con13_single">
+                            <label class="hyl_label">起始时间:</label>
+                            <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" id="Dev_BeginDate" class="hyl_input hyl_input-sm input-text" value="@ViewBag.DateTime">
+                            <select class="input-text hyl_select" style="margin:0 10px;" id="OverlayTime">
+                                @*
+                                    <option value="">叠加时间...</option>*@
+                                <option value="day">天</option>
+                                <option value="week">周</option>
+                                <option value="month">月</option>
+                            </select>
+                            <select class="input-text hyl_select" id="OverlayNum">
+                                @*
+                                    <option value="">叠加数量...</option>*@
+                                <option value="3">3天</option>
+                                <option value="5">5天</option>
+                                <option value="9">9天</option>
+                            </select>
+                            <label class="hyl_label pl10px">自定义叠加数量:</label>
+                            <input id="MyOverLayNum" type="text" class="inptnb hyl_input" style="width: 60px" />
+
+
+                            <label style="margin:0 10px;"><input type="checkbox" id="linemax" /> 显示曲线最大值</label>
+                            <label><input type="checkbox" id="linemin" /> 显示曲线最小值</label>
+
+
+                            <div class="btn-group pull-right" role="group" aria-label="...">
+                                <button type="button" class="btn btn-default" id="OverlayTimeSearch"><i class="fa fa-search"></i> 查询</button>
+                                <button type="button" class="btn btn-default" id="overrefresh"><i class="fa fa-refresh"></i> 刷新</button>
+                            </div>
+                        </div>
+
+                        <div class="con13_top con13_many">
+                            <div class="btn-group input-tabBtn timeChoice_btn input-tabBtnDX" role="group" id="Btn_Time" aria-label="...">
+                                @*<button type="button" class="btn btn-default  ym_btn">一秒</button>
+                                    <button type="button" class="btn btn-default  wm_btn">五秒</button>*@
+                                <button type="button" class="btn btn-default active fz_btn">分钟</button>
+                                <button type="button" class="btn btn-default xs_btn">小时</button>
+                                <button type="button" class="btn btn-default rz_btn">日值</button>
+                                <button type="button" class="btn btn-default yz_btn">月值</button>
+                            </div>
+                            <span class="timeChoice time_fm">
+                                &nbsp;&nbsp;
+                                <label>时段:</label>
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" id="minDate" class="input-text hyl_input hyl_input-sm input_fm1" value="@Convert.ToDateTime(ViewBag.Time).AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss")">
+                                -
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" id="maxDate" class="input-text hyl_input hyl_input-sm input_fm2" value="@ViewBag.Time">
+                            </span>
+                            <span class="timeChoice time_xs">
+                                &nbsp;&nbsp;
+                                <label>时段:</label>
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" id="" class="input-text hyl_input hyl_input-sm input_hour1" value="@Convert.ToDateTime(ViewBag.Time).AddDays(-3).ToString("yyyy-MM-dd HH:mm:ss")">
+                                -
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" id="" class="input-text hyl_input hyl_input-sm input_hour2" value="@ViewBag.Time">
+                            </span>
+                            <span class="timeChoice time_rz">
+                                &nbsp;&nbsp;
+                                <label>时段:</label>
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" id="" class="input-text  hyl_input hyl_input-sm input_day1" value="@Convert.ToDateTime(ViewBag.Time).AddMonths(-1).ToString("yyyy-MM-dd")">
+                                -
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" id="" class="input-text hyl_input hyl_input-sm input_day2" value="@Convert.ToDateTime(ViewBag.Time).ToString("yyyy-MM-dd")">
+                            </span>
+                            <span class="timeChoice time_yz">
+                                &nbsp;&nbsp;
+                                <label>时段:</label>
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM' })" id="" class="input-text hyl_input hyl_input-sm input_month1" value="@Convert.ToDateTime(ViewBag.Time).ToString("yyyy-01")">
+                                -
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM' })" id="" class="input-text hyl_input hyl_input-sm input_month2" value="@Convert.ToDateTime(ViewBag.Time).ToString("yyyy-MM")">
+                            </span>
+
+                            <span class="timeChoice time_qrz">
+                                &nbsp;&nbsp;
+                                <label>时段:</label>
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" id="" class="input-text hyl_input hyl_input-sm input_day1" value="@Convert.ToDateTime(ViewBag.Time).AddYears(-1).ToString("yyyy-01-01")">
+                                -
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" id="" class="input-text hyl_input hyl_input-sm input_day2" value="@Convert.ToDateTime(ViewBag.Time).AddYears(-1).ToString("yyyy-12-31")">
+                            </span>
+                            <span class="timeChoice time_qyz">
+                                &nbsp;&nbsp;
+                                <label>时段:</label>
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM' })" id="" class="input-text hyl_input hyl_input-sm input_month1" value="@Convert.ToDateTime(ViewBag.Time).AddYears(-1).ToString("yyyy-01")">
+                                -
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM' })" id="" class="input-text hyl_input hyl_input-sm input_month2" value="@Convert.ToDateTime(ViewBag.Time).AddYears(-1).ToString("yyyy-MM")">
+                            </span>
+                            &nbsp;&nbsp;
+                            <div class="btn-group input-tabBtn input-tabBtnBX" role="group" aria-label="...">
+                                <button type="button" data-value="max" class="btn btn-default active">峰值</button>
+                                <button type="button" data-value="min" class="btn btn-default">谷值</button>
+                                <button type="button" data-value="average" class="btn btn-default">平均值</button>
+                            </div>
+                            <div class="btn-group input-tabBtn input-tabBtnDX" role="group" aria-label="...">
+                                <button type="button" class="btn btn-default active current_btn">当前</button>
+                                <button type="button" class="btn btn-default  lastYear_btn" disabled="disabled">去年</button>
+                            </div>
+                            <div class="btn-group" role="group" aria-label="..." style="float:right;">
+                                <button type="button" class="btn btn-default" id="Btn_Search"><span class="glyphicon glyphicon-search"></span> 查询</button>
+                                <button type="button" class="btn btn-default" id="manyrefresh"><span class="glyphicon glyphicon-refresh"></span> 刷新</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表格 -->
+                    <div class="zlw_datamain_rger">
+                        <div class="no-img" id="imge">
+                            <img src="~/images/null.png" width="150" />
+                            <p class="gray">暂无数据！</p>
+                        </div>
+                        <div class="zlw_datamain_rgernr" id="echart">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- right end -->
+        </div>
+    </div>
+    <script>
+        //定义设备Id，模拟量Id
+        var deviceId, dataId;
+        var deviceIds;
+
+        //树配置及回调函数
+        var setting = {
+			check: {
+				enable: true,
+                chkboxType: { "Y": "", "N": "" }
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+            }
+            ,callback:{
+                onCheck: zTreeOnCheck
+            },
+            view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+		};
+        var zNodes =@ViewBag.TreeNodes, zTreeObj;
+
+        function zTreeOnCheck(event, treeId, treeNode) {
+            deviceId = treeNode.pId;
+            dataId = treeNode.id;
+            var nodes = zTreeObj.getCheckedNodes(true);
+
+            if (nodes.length <= 1) {
+                $('.con13_single').show();
+                $('.con13_many').hide();
+                SearchData();
+            } else {
+
+                $('.con13_single').hide();
+                $('.con13_many').show();
+                if (nodes.length == 2) {
+                    GetChartsData();
+                } else {
+                    if (treeNode.checked) {
+                        GetSingleData();
+                    } else {
+                        RemoveSingData();
+                    }
+                }
+            }
+        }
+
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('echart'));
+        // 指定图表的配置项和数据
+        option = {
+            title: {
+                //text: '用水量预测分析图表',
+                subtext: '',
+                x: 'center'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: [],
+                top: 20,
+                icon: 'roundRect'
+            },
+             grid: {
+                left: '45px',
+                right:'20px'
+
+            },
+            dataZoom: [
+                {
+                    show: true,
+                    realtime: true,
+                    start: 25,
+                    end: 85
+                },
+                {
+                    type: 'inside',
+                    realtime: true,
+                    start: 25,
+                    end: 85
+                }
+            ],
+            toolbox: {
+                show: true,
+                feature: {
+                    dataView: { show: false, readOnly: true },
+                    magicType: { show: true, type: ['line', 'bar'] },
+                    restore: { show: true },
+                    saveAsImage: { show: true },
+                    lang:['数据视图', '关闭']
+                }
+            },
+            calculable: true,
+            xAxis:
+                {
+                type: 'time',
+
+                }
+            ,
+            yAxis: {
+                type: 'value',
+                min: function (value) {
+                    var val=(0.95*value.min).toFixed(2)
+                    return val;
+                },
+                max: function (value) {
+                    var val=(1.05*value.max).toFixed(2);
+                    return val;
+                }
+            },
+            series: [
+            ]
+        };
+
+        $(function () {
+            //加载树
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            //选项卡处理
+            var time_length = 1;
+            var date_length = 1;
+            $('.xs_btn').click(function () {//小时/日/月 选项卡
+                $('.timeChoice').hide();
+                $('.time_xs').show();
+                $('.timeChoice input').attr('id', '')
+                $('.time_xs input:first-of-type').attr('id', 'minDate')
+                $('.time_xs input:last-of-type').attr('id', 'maxDate')
+                $('.lastYear_btn').attr('disabled', 'disabled');
+                time_length = 1
+            });
+            //$('.ym_btn').click(function () {//小时/日/月 选项卡
+            //    $('.timeChoice').hide();
+            //    $('.time_fm').show();
+            //    $('.timeChoice input').attr('id', '')
+            //    $('.time_fm input:first-of-type').attr('id', 'minDate')
+            //    $('.time_fm input:last-of-type').attr('id', 'maxDate')
+            //    $('.lastYear_btn').attr('disabled', 'disabled');
+            //    time_length = 4
+            //});
+            //$('.wm_btn').click(function () {//小时/日/月 选项卡
+            //    $('.timeChoice').hide();
+            //    $('.time_fm').show();
+            //    $('.timeChoice input').attr('id', '')
+            //    $('.time_fm input:first-of-type').attr('id', 'minDate')
+            //    $('.time_fm input:last-of-type').attr('id', 'maxDate')
+            //    $('.lastYear_btn').attr('disabled', 'disabled');
+            //    time_length = 4
+            //});
+            $('.fz_btn').click(function () {//小时/日/月 选项卡
+                $('.timeChoice').hide();
+                $('.time_fm').show();
+                $('.timeChoice input').attr('id', '')
+                $('.time_fm input:first-of-type').attr('id', 'minDate')
+                $('.time_fm input:last-of-type').attr('id', 'maxDate')
+                $('.lastYear_btn').attr('disabled', 'disabled');
+                time_length = 4
+            });
+            $('.rz_btn').click(function () {//小时/日/月 选项卡
+                if (date_length == 1) {
+                    $('.timeChoice').hide();
+                    $('.time_rz').show();
+                    $('.timeChoice input').attr('id', '')
+                    $('.time_rz input:first-of-type').attr('id', 'minDate')
+                    $('.time_rz input:last-of-type').attr('id', 'maxDate')
+                } else {
+                    $('.timeChoice').hide();
+                    $('.time_qrz').show();
+                    $('.timeChoice input').attr('id', '')
+                    $('.time_qrz input:first-of-type').attr('id', 'minDate')
+                    $('.time_qrz input:last-of-type').attr('id', 'maxDate')
+                }
+                $(".lastYear_btn").removeAttr("disabled");
+                time_length = 2
+            });
+            $('.yz_btn').click(function () {//小时/日/月 选项卡
+                if (date_length == 1) {
+                    $('.timeChoice').hide();
+                    $('.time_yz').show();
+                    $('.timeChoice input').attr('id', '')
+                    $('.time_yz input:first-of-type').attr('id', 'minDate')
+                    $('.time_yz input:last-of-type').attr('id', 'maxDate')
+                } else {
+                    $('.timeChoice').hide();
+                    $('.time_qyz').show();
+                    $('.timeChoice input').attr('id', '')
+                    $('.time_qyz input:first-of-type').attr('id', 'minDate')
+                    $('.time_qyz input:last-of-type').attr('id', 'maxDate')
+                }
+                $(".lastYear_btn").removeAttr("disabled");
+                time_length = 3
+            });
+
+            $('.input-tabBtnDX button').click(function () { //btn, active样式
+                $(this).parent().children('button').removeClass("active");
+                $(this).addClass("active");
+            });
+            $('.input-tabBtnBX button').click(function () { //btn, active样式
+                $(this).toggleClass("active");
+            });
+
+            //$('.con13_tab a').prepend('<span><img src="/Content/newself/img/imgkg14.png" /></span>')
+
+            //$('.con13_tab a').click(function () {//给左列点击事件
+            //    $(this).toggleClass('active')
+            //    var aLen = $('.con13_tab .active').length;
+            //    if (aLen <= 1) {
+            //        $('.con13_single').show();
+            //        $('.con13_many').hide();
+            //        SearchData();
+            //    } else {
+            //        $('.con13_single').hide();
+            //        $('.con13_many').show();
+            //        if (aLen == 2) {
+            //            GetChartsData();
+            //        } else {
+            //            if ($(this).hasClass("active")) {
+            //                GetSingleData();
+            //            } else {
+            //                RemoveSingData();
+            //            }
+            //        }
+            //    }
+            //});
+
+            //当前按钮
+            $('.current_btn').click(function () {
+                date_length = 1;
+                $('.xs_btn').removeAttr("disabled");
+                //$('.ym_btn').removeAttr("disabled");
+                //$('.wm_btn').removeAttr("disabled");
+                $('.fz_btn').removeAttr("disabled");
+                if (time_length == 1) {
+                    $('.timeChoice').hide();
+                    $('.time_xs').show();
+                }
+                if (time_length == 2) {
+                    $('.timeChoice').hide();
+                    $('.time_rz').show();
+                    $('.timeChoice input').attr('id', '')
+                    $('.time_rz input:first-of-type').attr('id', 'minDate')
+                    $('.time_rz input:last-of-type').attr('id', 'maxDate')
+                }
+                if (time_length == 3) {
+                    $('.timeChoice').hide();
+                    $('.time_yz').show();
+                    $('.timeChoice input').attr('id', '')
+                    $('.time_yz input:first-of-type').attr('id', 'minDate')
+                    $('.time_yz input:last-of-type').attr('id', 'maxDate')
+                }
+                if (time_length == 4) {
+                    $('.timeChoice').hide();
+                    $('.time_fm').show();
+                }
+            });
+            //去年按钮
+            $('.lastYear_btn').click(function () {
+                date_length = 2;
+                $('.xs_btn').attr('disabled', 'disabled');
+                //$('.ym_btn').attr('disabled', 'disabled');
+                //$('.wm_btn').attr('disabled', 'disabled');
+                $('.fz_btn').attr('disabled', 'disabled');
+                if (time_length == 2) {
+                    $('.timeChoice').hide();
+                    $('.time_qrz').show();
+                    $('.timeChoice input').attr('id', '')
+                    $('.time_qrz input:first-of-type').attr('id', 'minDate')
+                    $('.time_qrz input:last-of-type').attr('id', 'maxDate')
+                }
+                if (time_length == 3) {
+                    $('.timeChoice').hide();
+                    $('.time_qyz').show();
+                    $('.timeChoice input').attr('id', '')
+                    $('.time_qyz input:first-of-type').attr('id', 'minDate')
+                    $('.time_qyz input:last-of-type').attr('id', 'maxDate')
+                }
+            });
+
+            //查询按钮点击事件
+            $("#Btn_Search").click(function () {
+                var nodes = zTreeObj.getCheckedNodes(true);
+                if (nodes.length < 1) {
+                    alert("请选中至少一个检测点")
+                } else {
+                    if (nodes.length == 1) {
+
+                    } else {
+                        GetChartsData();
+                    }
+                }
+            });
+
+            ////查询树
+            //$("#search").click(function () {
+            //    LoadZtree();
+            //});
+
+            //树查询
+            $("#stationName").bind("keypress", function (event) {
+                if (event.keyCode != 13) {
+                    if (event.keyCode < 48 || event.keyCode > 57) {
+                    }
+                } else {
+                    event.preventDefault();
+                    LoadZtree();
+                }
+            });
+
+            window.onresize = function () {
+                myChart.resize();
+            }
+        });
+
+        //树查询
+        function LoadZtree() {
+            //查询树列表数据
+            $.post("/Sws/Sws_DataMonitoring/SearchTree",{
+                stationName:$("#stationName").val()
+            },function(data){
+                zTreeObj.destroy();    //清空树
+                var aa= JSON.parse(data);   //数据转json
+                if($("#stationName").val()!=""){
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                    zTreeObj.expandAll(true);     //初始化数列表展开
+                }else{
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                }
+            });
+        }
+
+        //时间叠加查询
+        $("#OverlayTimeSearch").click(function () {
+            SearchData();
+        });
+
+        function SearchData() {
+            var nodes = zTreeObj.getCheckedNodes(true);
+            if (nodes.length > 0) {
+                var dataid = nodes[0].id;
+                var did=nodes[0].pId
+                if ($("#OverlayTime").val() != "" && ($("#OverlayNum").val() != "" || $("#MyOverLayNum").val() != "")) {
+                    var overNum;
+                    if ($("#MyOverLayNum").val() != "") {
+                        overNum = $("#MyOverLayNum").val();
+                    } else {
+                        overNum = $("#OverlayNum").val();
+                    }
+                    $.post("/Sws/Sws_DataMonitoring/GetOverLayTimeHistory", {
+                        time: $("#OverlayTime").val(),
+                        num: overNum,
+                        dataID: dataid,
+                        beginDate: $("#Dev_BeginDate").val(),
+                        deviceID: did
+                    }, function (data) {
+                        var nuits = data.datainfo;
+                        if ($("#OverlayTime").val() == "day") {
+                            if (data.result.length > 0) {
+                                $("#imge").css("display", "none");
+                                $("#echart").css("display", "block");
+                                var series = [];
+                                var legends = [];
+                                var xsis = {
+                                    type: 'time',
+                                    maxInterval: 3600 * 1 * 1000,
+                                    axisLabel: {
+                                        rotate: 30,
+                                        formatter: function (value, index) {
+                                            var date = new Date(value);
+                                            return FormattDate(date);
+                                        }
+                                    },
+                                };
+                                var tooltip = {
+                                    trigger: 'axis',
+                                    formatter: function (datas) {
+                                        var aa = datas[0].name;
+                                        var date = new Date(Date.parse(aa.replace(/-/g, "/")));
+                                        var datetime = FormattDate(date);
+                                        var res = datetime + '<br/>'
+                                        for (var i = 0, length = datas.length; i < length; i++) {
+                                            var dataC = "--";
+                                            if (datas[i].value[1] != undefined) {
+                                                dataC = datas[i].value[1];
+                                            }
+
+                                            res += '<div class="circle_box"><span class="circle" style="float:left;background:' + datas[i].color + '"></span>' + datas[i].seriesName + '：'
+                                                + dataC + " " + nuits + '</div>'
+                                        }
+                                        return res;
+                                    }
+                                };
+                                for (var i = 0; i < data.result.length; i++) {
+                                    var markdata = [];
+                                    var aa = $("#linemax");
+                                    if ($("#linemax")[0].checked) {
+                                        var mark1 = { type: 'max', name: '最大值' };
+                                        markdata.push(mark1);
+                                    }
+                                    if ($("#linemin")[0].checked) {
+                                        var mark1 = { type: 'min', name: '最小值' };
+                                        markdata.push(mark1);
+                                    }
+                                    var obj = {
+                                        name: '',
+                                        type: 'line',
+                                        yAxisIndex: '0',
+                                        smooth: true,
+                                        symbol: "none",
+                                        data: [],
+                                        markPoint: {
+                                            data: markdata
+                                        },
+                                    };
+                                    //if (dataid > 2002) {
+                                    //    obj.yAxisIndex = "1"
+                                    //}
+                                    obj.name = data.result[i].name;
+                                    obj.data = eval(data.result[i].data);
+                                    series.push(obj);
+                                    legends.push(data.result[i].name);
+                                }
+                                myChart.clear();
+                                option.dataZoom = zoominit();
+                                option.series = series;
+                                option.legend.data = legends;
+                                option.xAxis = xsis;
+                                option.yAxis.name = nuits;
+                                option.tooltip = tooltip;
+                                myChart.setOption(option);
+                                var height = $(".zlw_datamain_rgernr").height();
+                                var width = $(".zlw_datamain_rgernr").width();
+                                myChart.resize({
+                                    width: width,
+                                    height: height
+                                });
+                            } else {
+                                $("#echart").css("display", "none");
+                                $("#imge").css("display", "block");
+                            }
+                        }
+                        if ($("#OverlayTime").val() == "week") {
+                            if (data.IsCumulation == true) {//累计量
+                                if (data.result.length > 0) {
+                                    $("#imge").css("display", "none");
+                                    $("#echart").css("display", "block");
+                                    var series = [];
+                                    var legends = [];
+                                    var xsis = {
+                                        type: 'time',
+                                        maxInterval: 3600 * 24 * 1000,
+                                        axisLabel: {
+                                            rotate: 30,
+                                            formatter: function (value, index) {
+                                                // 格式化成月/日，只在第一个刻度显示年份
+                                                var date = new Date(value);
+                                                var dayname = ConvertDateName(date.getDay());
+                                                return dayname;
+                                            }
+                                        }
+                                    };
+                                    var tooltip = {
+                                        trigger: 'axis',
+                                        formatter: function (datas) {
+                                            var aass = datas[0].name;
+                                            var date = new Date(Date.parse(aass.replace(/-/g, "/")));
+                                            var res = ConvertDateName(date.getDay()) + '<br/>'
+                                            for (var i = 0, length = datas.length; i < length; i++) {
+                                                var dataC = "--";
+                                            if (datas[i].value[1] != undefined) {
+                                                dataC = datas[i].value[1];
+                                            }
+                                                res += '<div class="circle_box"><span class="circle" style="float:left;background:' + datas[i].color + '"></span>' + " " + datas[i].seriesName + '：'
+                                                    + dataC + " " + nuits + '</div>'
+                                            }
+                                            return res;
+                                        }
+                                    };
+                                    for (var i = 0; i < data.result.length; i++) {
+                                        var markdata = [];
+                                        var aa = $("#linemax");
+                                        if ($("#linemax")[0].checked) {
+                                            var mark1 = { type: 'max', name: '最大值' };
+                                            markdata.push(mark1);
+                                        }
+                                        if ($("#linemin")[0].checked) {
+                                            var mark1 = { type: 'min', name: '最小值' };
+                                            markdata.push(mark1);
+                                        }
+                                        var obj = {
+                                            name: '',
+                                            type: 'line',
+                                            yAxisIndex: '0',
+                                            smooth: true,
+                                            data: [],
+                                            symbol: "none",
+                                            markPoint: {
+                                                data: markdata
+                                            },
+                                        };
+                                        //if (dataid > 2002) {
+                                        //    obj.yAxisIndex = "1"
+                                        //}
+                                        obj.name = "第" + data.result[i].name + "周";
+                                        obj.data = eval(data.result[i].data);
+                                        series.push(obj);
+                                        legends.push("第" + data.result[i].name + "周");
+                                    }
+                                    myChart.clear();
+                                    option.series = series;
+                                    option.legend.data = legends;
+                                    option.xAxis = xsis;
+                                    option.yAxis.name = nuits;
+                                     option.dataZoom = zoominit();
+                                    option.tooltip = tooltip;
+                                    myChart.setOption(option);
+                                    var height = $(".zlw_datamain_rgernr").height();
+                                    var width = $(".zlw_datamain_rgernr").width();
+                                    myChart.resize({
+                                        width: width,
+                                        height: height
+                                    });
+                                } else {
+                                    $("#echart").css("display", "none");
+                                    $("#imge").css("display", "block");
+                                }
+                            } else {//瞬时量
+                                if (data.result.length > 0) {
+                                    $("#imge").css("display", "none");
+                                    $("#echart").css("display", "block");
+                                    var series = [];
+                                    var legends = [];
+                                    var xsis = {
+                                        type: 'time',
+                                        maxInterval: 3600 * 8 * 1000,
+                                        axisLabel: {
+                                            rotate: 30,
+                                            formatter: function (value, index) {
+                                                // 格式化成月/日，只在第一个刻度显示年份
+                                                var date = new Date(value);
+                                                var dayname = ConvertDateName(date.getDay());
+                                                return dayname + " " + FormattDate(date);
+                                            }
+                                        }
+                                    };
+                                    var tooltip = {
+                                        trigger: 'axis',
+                                        formatter: function (datas) {
+                                            var aa = datas[0].name;
+                                            var date = new Date(Date.parse(aa.replace(/-/g, "/")));
+                                            var res = ConvertDateName(date.getDay()) + FormattDate(date) + '<br/>'
+                                            for (var i = 0, length = datas.length; i < length; i++) {
+                                                var dataC = "--";
+                                            if (datas[i].value[1] != undefined) {
+                                                dataC = datas[i].value[1];
+                                            }
+                                                res += '<div class="circle_box"><span class="circle" style="float:left;background:' + datas[i].color + '"></span>' + " " + datas[i].seriesName + '：'
+                                                    + dataC + " " + nuits + '</div>'
+                                            }
+                                            return res;
+                                        }
+                                    };
+                                    for (var i = 0; i < data.result.length; i++) {
+                                        var markdata = [];
+                                        var aa = $("#linemax");
+                                        if ($("#linemax")[0].checked) {
+                                            var mark1 = { type: 'max', name: '最大值' };
+                                            markdata.push(mark1);
+                                        }
+                                        if ($("#linemin")[0].checked) {
+                                            var mark1 = { type: 'min', name: '最小值' };
+                                            markdata.push(mark1);
+                                        }
+                                        var obj = {
+                                            name: '',
+                                            type: 'line',
+                                            yAxisIndex: '0',
+                                            smooth: true,
+                                            data: [],
+                                            symbol: "none",
+                                            markPoint: {
+                                                data: markdata
+                                            },
+                                            showSymbol: false,
+                                        };
+                                        //if (dataid > 2002) {
+                                        //    obj.yAxisIndex = "1"
+                                        //}
+                                        obj.name = "第" + data.result[i].name + "周";
+                                        obj.data = eval(data.result[i].data);
+                                        series.push(obj);
+                                        legends.push("第" + data.result[i].name + "周");
+                                    }
+                                    myChart.clear();
+                                    option.series = series;
+                                    option.legend.data = legends;
+                                    option.xAxis = xsis;
+                                    option.yAxis.name = nuits;
+                                    option.tooltip = tooltip;
+                                    option.dataZoom = zoominit();
+                                    myChart.setOption(option);
+                                    var height = $(".zlw_datamain_rgernr").height();
+                                    var width = $(".zlw_datamain_rgernr").width();
+                                    myChart.resize({
+                                        width: width,
+                                        height: height
+                                    });
+                                } else {
+                                    $("#echart").css("display", "none");
+                                    $("#imge").css("display", "block");
+                                }
+                            }
+                        }
+                        if ($("#OverlayTime").val() == "month") {//月数据查询
+                            if (data.IsCumulation == true) {//累计量
+                                if (data.result.length > 0) {
+                                    $("#imge").css("display", "none");
+                                    $("#echart").css("display", "block");
+                                    var series = [];
+                                    var legends = [];
+                                    var xsis = {
+                                        type: 'time',
+                                        //minInterval: 3600 * 24 * 1000,
+                                        axisLabel: {
+                                            rotate: 30,
+                                            formatter: function (value, index) {
+                                                // 格式化成月/日，只在第一个刻度显示年份
+                                                var date = new Date(value);
+                                                return date.getDate() + "日";
+                                            }
+                                        }
+                                    };
+                                    var tooltip = {
+                                        trigger: 'axis',
+                                        formatter: function (datas) {
+                                            var aa = datas[0].name;
+                                            var date = new Date(Date.parse(aa.replace(/-/g, "/")));
+                                            var res = date.getDate() + "日" + '<br/>'
+                                            for (var i = 0, length = datas.length; i < length; i++) {
+                                                var dataC = "--";
+                                            if (datas[i].value[1] != undefined) {
+                                                dataC = datas[i].value[1];
+                                            }
+                                                res += '<div class="circle_box"><span class="circle" style="float:left;background:' + datas[i].color + '"></span>' + " " + datas[i].seriesName + '：'
+                                                    + dataC + " " + nuits + '</div>'
+                                            }
+                                            return res;
+                                        }
+                                    };
+                                    for (var i = 0; i < data.result.length; i++) {
+                                        var markdata = [];
+                                        var aa = $("#linemax");
+                                        if ($("#linemax")[0].checked) {
+                                            var mark1 = { type: 'max', name: '最大值' };
+                                            markdata.push(mark1);
+                                        }
+                                        if ($("#linemin")[0].checked) {
+                                            var mark1 = { type: 'min', name: '最小值' };
+                                            markdata.push(mark1);
+                                        }
+                                        var obj = {
+                                            name: '',
+                                            type: 'line',
+                                            yAxisIndex: '0',
+                                            smooth: true,
+                                            data: [],
+                                            symbol: "none",
+                                            markPoint: {
+                                                data: markdata
+                                            },
+                                        };
+                                        //if (dataid > 2002) {
+                                        //    obj.yAxisIndex = "1"
+                                        //}
+                                        obj.name = data.result[i].name;
+                                        obj.data = eval(data.result[i].data);
+                                        series.push(obj);
+                                        legends.push(data.result[i].name);
+                                    }
+                                    myChart.clear();
+                                    option.series = series;
+                                    option.legend.data = legends;
+                                    option.xAxis = xsis;
+                                    option.yAxis.name = nuits;
+                                    option.tooltip = tooltip;
+                                    option.dataZoom = zoominit();
+                                    myChart.setOption(option);
+                                    var height = $(".zlw_datamain_rgernr").height();
+                                    var width = $(".zlw_datamain_rgernr").width();
+                                    myChart.resize({
+                                        width: width,
+                                        height: height
+                                    });
+                                } else {
+                                    $("#echart").css("display", "none");
+                                    $("#imge").css("display", "block");
+                                }
+                            } else {//瞬时量
+
+                                if (data.result.length > 0) {
+                                    $("#imge").css("display", "none");
+                                    $("#echart").css("display", "block");
+                                    var series = [];
+                                    var legends = [];
+                                    var xsis = {
+                                        type: 'time',
+                                        //maxInterval: 3600 * 24 * 1000,
+                                        axisLabel: {
+                                            rotate: 30,
+                                            formatter: function (value, index) {
+                                                var date = new Date(value);
+                                                return date.getDate() + "日";
+                                            }
+                                        }
+                                    };
+                                    var tooltip = {
+                                        trigger: 'axis',
+                                        formatter: function (datas) {
+                                            var aa = datas[0].name;
+                                            var date = new Date(Date.parse(aa.replace(/-/g, "/")));
+                                            var res = date.getDate() + "日" + '<br/>'
+                                            for (var i = 0, length = datas.length; i < length; i++) {
+                                                var dataC = "--";
+                                            if (datas[i].value[1] != undefined) {
+                                                dataC = datas[i].value[1];
+                                            }
+                                                res += '<div class="circle_box"><span class="circle" style="float:left;background:' + datas[i].color + '"></span>' + " " + datas[i].seriesName + '：'
+                                                    + dataC + " " + nuits + '</div>'
+                                            }
+                                            return res;
+                                        }
+                                    };
+                                    for (var i = 0; i < data.result.length; i++) {
+                                        var markdata = [];
+                                        var aa = $("#linemax");
+                                        if ($("#linemax")[0].checked) {
+                                            var mark1 = { type: 'max', name: '最大值' };
+                                            markdata.push(mark1);
+                                        }
+                                        if ($("#linemin")[0].checked) {
+                                            var mark1 = { type: 'min', name: '最小值' };
+                                            markdata.push(mark1);
+                                        }
+                                        var obj = {
+                                            name: '',
+                                            type: 'line',
+                                            yAxisIndex: '0',
+                                            smooth: true,
+                                            symbol: "none",
+                                            data: [],
+                                            markPoint: {
+                                                data: markdata
+                                            },
+                                        };
+                                        //if (dataid > 2002) {
+                                        //    obj.yAxisIndex = "1"
+                                        //}
+                                        obj.name = data.result[i].name;
+                                        obj.data = eval(data.result[i].data);
+                                        series.push(obj);
+                                        legends.push(data.result[i].name);
+                                    }
+                                    myChart.clear();
+                                    option.series = series;
+                                    option.legend.data = legends;
+                                    option.xAxis = xsis;
+                                    option.yAxis.name = nuits;
+                                    option.tooltip = tooltip;
+                                     option.dataZoom = zoominit();
+                                    myChart.setOption(option);
+                                    var height = $(".zlw_datamain_rgernr").height();
+                                    var width = $(".zlw_datamain_rgernr").width();
+                                    myChart.resize({
+                                        width: width,
+                                        height: height
+                                    });
+                                } else {
+                                    $("#echart").css("display", "none");
+                                    $("#imge").css("display", "block");
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    alert("请完善查询条件");
+                }
+            } else {
+                //alert("请选择查询参数");
+                $("#echart").css("display", "none");
+                $("#imge").css("display", "block");
+            }
+        }
+
+        $("#OverlayTime").change(function () {
+            if ($("#OverlayTime").val() == "day") {
+                $("#OverlayNum").empty();
+                $("#OverlayNum").append('<option value = "3"> 3天</option >' +
+                    '<option value="5">5天</option>' +
+                    '<option value="9">9天</option>');
+            } else {
+                if ($("#OverlayTime").val() == "week") {
+                    $("#OverlayNum").empty();
+                    $("#OverlayNum").append('<option value = "3">3周</option >' +
+                        '<option value="4">4周</option>' +
+                        '<option value="5">5周</option>');
+                } else {
+                    if ($("#OverlayTime").val() == "month") {
+                        $("#OverlayNum").empty();
+                        $("#OverlayNum").append('<option value = "3">3月</option >' +
+                            '<option value="4">4月</option>' +
+                            '<option value="5">5月</option>');
+                    } else {
+                        $("#OverlayNum").empty();
+                    }
+                }
+            }
+        });
+
+        function ConvertDateName(num) {
+            var stringname = "";
+            if (num == 1) {
+                stringname = "周一";
+            }
+            if (num == 2) {
+                stringname = "周二";
+            }
+            if (num == 3) {
+                stringname = "周三";
+            }
+            if (num == 4) {
+                stringname = "周四";
+            }
+            if (num == 5) {
+                stringname = "周五";
+            }
+            if (num == 6) {
+                stringname = "周六";
+            }
+            if (num == 0) {
+                stringname = "周日";
+            }
+            return stringname;
+        }
+
+        function FormattDate(date) {
+            var hour = "";
+            var minites = "";
+            var second = "";
+            if (date.getHours() < 10) {
+                hour = "0" + date.getHours();
+            }
+            else {
+                hour = date.getHours();
+            }
+            if (date.getMinutes() < 10) {
+                minites = "0" + date.getMinutes();
+            }
+            else {
+                minites = date.getMinutes();
+            }
+            if (date.getSeconds() < 10) {
+                second = "0" + date.getSeconds();
+            }
+            else {
+                second = date.getSeconds();
+            }
+            return hour + ":" + minites + ":" + second;
+        }
+        //刷新
+        $("#overrefresh").click(function () {
+            window.location.reload();
+        });
+        $("#manyrefresh").click(function () {
+            window.location.reload();
+        });
+
+        //测点叠加
+
+        //查询按钮数据查询
+        function GetChartsData() {
+            GetdateFormate();
+            $("#imge").css("display", "none");
+            $("#echart").css("display", "block");
+            $.post("/Sws/Sws_DataMonitoring/GetMongoDBHistorychart", {
+                date: $("#Btn_Time .active").text(),
+                deviceID: getDeviceIDs(),
+                beginDate: $("#minDate").val(),
+                endDate: $("#maxDate").val(),
+                //dataIDs: getDataID()
+            }, function (data) {
+                option.series = [];
+                    var json = JSON.parse(data);
+                var arr = [];
+                var tooltip = {
+                    trigger: 'axis',
+                    //formatter: function (datas) {
+                    //    var date = new Date(datas[0].name);
+                    //    var datetime = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+                    //    var res = datetime + '<br/>'
+                    //    for (var i = 0, length = datas.length; i < length; i++) {
+                    //        res += '<div class="circle_box"><span class="circle" style="float:left;background:' + datas[i].color + '"></span>' + datas[i].seriesName + '：'
+                    //            + datas[i].value[1] + '</div>'
+                    //    }
+                    //    return res;
+                    //}
+                };
+                for (var i = 0; i < json.DataID.length; i++) {
+                    var oo = {
+                        name: '',
+                        type: 'line',
+                        data: [],
+                        symbol: "none",
+                        smooth: true,
+                    };
+                    var mark = [];
+                    var mline = [];
+                    $('.input-tabBtnBX .active').each(function () {
+                         var obj = { type: $(this).data("value"), name: $(this).text() };
+                        if ($(this).data("value") == "average") {
+                            mline.push(obj);
+                        }
+                        else {
+
+                            mark.push(obj);
+                        }
+                    });
+                    var markpoint = {
+                        data: mark
+                    };
+                    var markLine = {
+                        data:mline
+                    };
+                    var aa = json.DataID[i];
+                    oo.data = eval(json.data[aa]);
+                    oo.name = json.DataName[i];
+                    oo.markPoint = markpoint;
+                    oo.markLine = markLine;
+                    arr.push(oo);
+                }
+                option.series = arr;
+                    option.legend.data = json.DataName;
+                option.tooltip = tooltip;
+                option.dataZoom = [{
+                    show: true,
+                    realtime: true,
+                    start: 25,
+                    end: 85
+                },
+                {
+                    type: 'inside',
+                    realtime: true,
+                    start: 25,
+                    end: 85
+                }]
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.clear();
+                myChart.setOption(option);
+            });
+        }
+
+        //添加单条曲线
+        function GetSingleData() {
+            GetdateFormate();
+            $.post("/Sws/Sws_DataMonitoring/GetMongoDBSingle",
+                {
+                    date: $("#Btn_Time .active").text(),
+                    deviceID: deviceId,
+                    beginDate: $("#minDate").val(),
+                    endDate: $("#maxDate").val(),
+                    dataIDs: dataId
+                }, function (data) {
+                    var json = JSON.parse(data);
+                    var oo = {
+                        name: '',
+                        type: 'line',
+                        symbol: "none",
+                        data: [],
+                        smooth: true,
+                    };
+                    var mark = [];
+                    var mline = [];
+                    $('.input-tabBtnBX .active').each(function () {
+                         var obj = { type: $(this).data("value"), name: $(this).text() };
+                        if ($(this).data("value") == "average") {
+                            mline.push(obj);
+                        }
+                        else {
+
+                            mark.push(obj);
+                        }
+                    });
+                    var markpoint = {
+                        data: mark
+                    };
+                    var markLine = {
+                        data:mline
+                    };
+                    var aa = json.DataID[0];
+                    oo.data = eval(json.data[aa]);
+                    oo.name = json.DataName[0];
+                    oo.markPoint = markpoint;
+                    oo.markLine = markLine;
+                    option.series.push(oo);
+                    option.legend.data.push(json.DataName[0]);
+                    option.dataZoom = [{
+                        show: true,
+                        realtime: true,
+                        start: 25,
+                        end: 85
+                    },
+                    {
+                        type: 'inside',
+                        realtime: true,
+                        start: 25,
+                        end: 85
+                    }]
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.clear();
+                    myChart.setOption(option);
+                });
+        }
+
+        //删除单条曲线
+        function RemoveSingData() {
+            GetdateFormate();
+            $.post("/Sws/Sws_DataMonitoring/GetMongoDBSingle", {
+                date: $("#Btn_Time .active").text(),
+                deviceID: deviceId,
+                beginDate: $("#minDate").val(),
+                endDate: $("#maxDate").val(),
+                dataIDs: dataId
+            }, function (data) {
+                var json = JSON.parse(data);
+                var oo = {
+                    name: '',
+                    type: 'line',
+                    symbol: "none",
+                    data: [],
+                    smooth: true,
+                };
+                var mark = [];
+                $('.input-tabBtnBX .active').each(function () {
+                    var obj = { type: $(this).data("value"), name: $(this).text() };
+                    mark.push(obj);
+                });
+                var markpoint = {
+                    data: mark
+                };
+                var aa = json.DataID[0];
+                oo.data = eval(json.data[aa]);
+                oo.name = json.DataName[0];
+                    oo.markPoint = markpoint;                   
+                //option.series.splice($.inArray(oo, option.series)+1, 1);
+                var index1 = option.legend.data.indexOf(json.DataName[0]);
+                option.series.splice(index1, 1);
+                option.legend.data.splice(index1, 1);
+                myChart.clear();
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            });
+        }
+
+        //获取监控点dataID
+        function getDataID() {
+            var dataID = "";
+            var nodes= zTreeObj.getCheckedNodes(true);
+            for (i = 0; i < nodes.length; i++) {
+                dataID += nodes[i].id + ",";
+            }
+            dataID = dataID.substring(0, dataID.length - 1);
+            return dataID;
+        }
+
+        //多个点时获取不同设备
+        function getDeviceIDs() {
+            var data = [];
+            var nodes= zTreeObj.getCheckedNodes(true);
+            for (i = 0; i < nodes.length; i++) {
+                var aa = { "DeviceID": nodes[i].pId, "DataID": nodes[i].id };
+                data.push(aa);
+            }
+            return JSON.stringify(data);
+        }
+
+        function GetdateFormate() {
+            if ($("#Btn_Time .active").text() == "小时"||$("#Btn_Time .active").text() == "分钟") {
+                var aa = {
+                    type: 'time'
+                };
+                option.xAxis = aa;
+            } else {
+                if ($("#Btn_Time .active").text() == "日值") {
+                    var aa = {
+                        type: 'time',
+                        maxInterval: 3600 * 24 * 1000,
+                        axisLabel: {
+                            formatter: function (value, index) {
+                                var date = new Date(value);
+                                var y = date.getFullYear();
+                                var m = date.getMonth() + 1;
+                                var d = date.getDate();
+                                return y+"-"+m+"-"+d;
+                            }
+                        }
+                    };
+                    option.xAxis = aa;
+                } else {
+                    var aa = {
+                        type: 'time',
+                        axisLabel: {
+                            formatter: function (value, index) {
+                                var date = new Date(value);
+                                var y = date.getFullYear();
+                                var m = date.getMonth() + 1;
+                                return (date.getMonth() + 1) + "月";
+                                return y + "-" + m;
+                            }
+                        }
+                    };
+                    option.xAxis = aa;
+                }
+            }
+        }
+         function zoominit() {
+            var zooms = [{
+                show: true,
+                realtime: true,
+                start: 25,
+                end: 85
+            },
+            {
+                type: 'inside',
+                realtime: true,
+                start: 25,
+                end: 85
+            }];
+            return zooms;
+
+        }
+    </script>
+</body>
+</html>

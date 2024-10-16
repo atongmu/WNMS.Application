@@ -1,0 +1,462 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../css/iconfont.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <title>设备报警</title>
+    <!-- 日历 -->
+	<script src="../../lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <style>
+        .zlw_bjlbnrconer table label{
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_sbbjd">
+        <div class="zlw_sbbjdcon">
+            <!-- star 泵房列表 -->
+            <div class="zlw_bflist">
+                <div class="zlw_bflistcon">
+                    <div class="zlw_bflistyi">
+                        <div class="zlw_datamain_lfconsea">
+                            <form action="">
+                                <i class="glyphicon glyphicon-search"></i>
+                                <input type="text" class="form-control" placeholder="搜索&quot;泵房&quot;名称">
+                            </form>
+                        </div>
+                    </div>
+                    <div class="zlw_bflister">
+                        <ul>
+                            <li>
+                                <div class="zlw_bflisttitle clearfloat">
+                                    <span class="iconfont icon-GIS-tulitucengicon_ergongbengfang"></span>
+                                    <p class="chaochu">潍坊寒亭润合花园</p>
+                                    <i class="glyphicon glyphicon-menu-right"></i>
+                                </div>
+                                <div class="zlw_bflistmain clearfloat">
+                                    <div><i class="iconfont icon-wushuibeng" style="color:#008efe;"></i><p>潍坊寒亭润合花园#低区</p></div>
+                                    <div><i class="iconfont icon-wushuibeng" style="color: #888;"></i><p>潍坊寒亭润合花园#高区</p></div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="zlw_bflisttitle clearfloat">
+                                    <span class="iconfont icon-GIS-tulitucengicon_ergongbengfang"></span>
+                                    <p class="chaochu">青岛龙湖悠山郡</p>
+                                    <i class="glyphicon glyphicon-menu-right"></i>
+                                </div>
+                                <div class="zlw_bflistmain clearfloat">
+                                    <div><i class="iconfont icon-wushuibeng" style="color:#008efe;"></i><p>青岛龙湖悠山郡#低区</p></div>
+                                    <div><i class="iconfont icon-wushuibeng" style="color:#008efe;"></i><p>青岛龙湖悠山郡#中区</p></div>
+                                    <div><i class="iconfont icon-wushuibeng" style="color: #008efe;"></i><p>青岛龙湖悠山郡#高区</p></div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="zlw_bflisttitle clearfloat">
+                                    <span class="iconfont icon-GIS-tulitucengicon_ergongbengfang"></span>
+                                    <p class="chaochu">青岛蔚蓝群岛</p>
+                                    <i class="glyphicon glyphicon-menu-right"></i>
+                                </div>
+                                <div class="zlw_bflistmain clearfloat">
+                                    <div><i class="iconfont icon-wushuibeng" style="color:#008efe;"></i><p>青岛蔚蓝群岛#低区</p></div>
+                                    <div><i class="iconfont icon-wushuibeng" style="color:#008efe;"></i><p>青岛蔚蓝群岛#中区</p></div>
+                                    <div><i class="iconfont icon-wushuibeng" style="color: #008efe;"></i><p>青岛蔚蓝群岛#高区</p></div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="zlw_bflisttitle clearfloat">
+                                    <span class="iconfont icon-GIS-tulitucengicon_ergongbengfang"></span>
+                                    <p class="chaochu">青岛海尔硅谷</p>
+                                    <i class="glyphicon glyphicon-menu-right"></i>
+                                </div>
+                                <div class="zlw_bflistmain clearfloat">
+                                    <div><i class="iconfont icon-wushuibeng" style="color:#008efe;"></i><p>青岛海尔硅谷#低区</p></div>
+                                    <div><i class="iconfont icon-wushuibeng" style="color:#008efe;"></i><p>青岛海尔硅谷#中区</p></div>
+                                    <div><i class="iconfont icon-wushuibeng" style="color: #008efe;"></i><p>青岛海尔硅谷#高区</p></div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="zlw_bflisttitle clearfloat">
+                                    <span class="iconfont icon-GIS-tulitucengicon_ergongbengfang"></span>
+                                    <p class="chaochu">潍坊寒亭润合花园</p>
+                                    <i class="glyphicon glyphicon-menu-right"></i>
+                                </div>
+                                <div class="zlw_bflistmain clearfloat">
+                                    <div><i class="iconfont icon-wushuibeng" style="color:#008efe;"></i><p>潍坊寒亭润合花园#低区</p></div>
+                                    <div><i class="iconfont icon-wushuibeng" style="color: #888;"></i><p>潍坊寒亭润合花园#高区</p></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                   
+                </div>
+            </div>
+            <!-- 泵房列表 end -->
+            <!-- star 报警方案 -->
+            <div class="zlw_bjfad">
+                <!-- star 报警列表 -->
+                <div class="zlw_bjlbnr">
+                    <div class="zlw_bjlbnrcon">
+                        <div class="zlw_bjlbnrconyi clearfloat">
+                            <div class="zlw_bjlbnrconyilf left">
+                                <p><i class="fa fa-exclamation-triangle"></i> 报警方案列表</p>
+                            </div>
+                            <div class="zlw_bjlbnrconyirg right">
+                                <span class="zlw_xz"><i class="fa fa-plus-square"></i>新增</span>
+                                <span class="zlw_sc"><i class="fa fa-trash-o"></i>删除</span>
+                            </div>
+                        </div>
+                        <div class="zlw_bjlbnrconer">
+                            <table id="tabledata" class=" table-striped">
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- 报警列表 end -->
+                <!-- star 报警详情 -->
+                <div class="zlw_bjxqnr">
+                    <div class="zlw_bjxqnrcon">
+                        <div class="zlw_bjxqnrconyi">
+                            <p><i class="fa fa-road"></i> 报警方案详情</p>
+                        </div>
+                        <div class="zlw_bjxqnrconer">
+                            <div class="zlw_bjxqnrconerkk">
+                                <div class="zlw_bjxqnrcontit">
+                                    <p><i class="fa fa-tags"></i>基本信息</p>
+                                </div>
+                                <div class="zlw_bjxqnnyi">
+                                    <span class="">方案名称：</span>
+                                    <div class=""><input type="text" placeholder="请输入方案名称"></div>
+                                </div>
+                                <div class="zlw_bjxqnner clearfloat">
+                                    <div class="zlw_bjxqnnyilf left">
+                                        <span>报警类型：</span>
+                                        <div>
+                                            <select class="form-control">
+                                                <option>报警类型 1</option>
+                                                <option>报警类型 2</option>
+                                                <option>报警类型 3</option>
+                                                <option>报警类型 4</option>
+                                                <option>报警类型 5</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="zlw_bjxqnnyilf left">
+                                        <span>是否启用：</span>
+                                        <div class="zlw_pa">
+                                            <label class="radio-inline">
+                                                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 是
+                                            </label>
+                                            <label class="radio-inline" >
+                                                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 否
+                                            </label>
+                                        </div>
+                                    </div>      
+                                </div>
+                                <div class="zlw_bjxqnrcontit" style="padding-top:25px;">
+                                    <p style="color:#008efe;"><i class="fa fa-paper-plane-o" style="color:#008efe;"></i>作用范围</p>
+                                </div>
+                                <div class="zlw_bjxqnnsan">
+                                    <input type="text" placeholder="作用范围">
+                                    <span data-toggle="modal" data-target="#myModal0">选择作用范围</span>
+                                </div>
+                                <div class="zlw_bjxqnrcontit" style="padding-top:25px;">
+                                    <p style="color:#68b828;"><i class="fa fa-pencil-square-o" style="color:#68b828;"></i>报警值配置</p>
+                                </div>
+                                <div class="zlw_bjxqnnsi clearfloat">
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>低 限：</span>
+                                        <input type="text">
+                                    </div>
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>优先级：</span>
+                                        <select class="form-control">
+                                            <option>报警类型 1</option>
+                                            <option>报警类型 2</option>
+                                            <option>报警类型 3</option>
+                                            <option>报警类型 4</option>
+                                            <option>报警类型 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="zlw_bjxqnnsi clearfloat">
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>高 限：</span>
+                                        <input type="text">
+                                    </div>
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>优先级：</span>
+                                        <select class="form-control">
+                                            <option>报警类型 1</option>
+                                            <option>报警类型 2</option>
+                                            <option>报警类型 3</option>
+                                            <option>报警类型 4</option>
+                                            <option>报警类型 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="zlw_bjxqnnsi clearfloat">
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>低 低 限：</span>
+                                        <input type="text">
+                                    </div>
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>优先级：</span>
+                                        <select class="form-control">
+                                            <option>报警类型 1</option>
+                                            <option>报警类型 2</option>
+                                            <option>报警类型 3</option>
+                                            <option>报警类型 4</option>
+                                            <option>报警类型 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="zlw_bjxqnnsi clearfloat">
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>高 高 限：</span>
+                                        <input type="text">
+                                    </div>
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>优先级：</span>
+                                        <select class="form-control">
+                                            <option>报警类型 1</option>
+                                            <option>报警类型 2</option>
+                                            <option>报警类型 3</option>
+                                            <option>报警类型 4</option>
+                                            <option>报警类型 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="zlw_bjxqnnsi clearfloat">
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>超 低 限：</span>
+                                        <input type="text">
+                                    </div>
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>优先级：</span>
+                                        <select class="form-control">
+                                            <option>报警类型 1</option>
+                                            <option>报警类型 2</option>
+                                            <option>报警类型 3</option>
+                                            <option>报警类型 4</option>
+                                            <option>报警类型 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="zlw_bjxqnnsi clearfloat">
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>超 高 限：</span>
+                                        <input type="text">
+                                    </div>
+                                    <div class="zlw_bjxqnnsank left">
+                                        <span>优先级：</span>
+                                        <select class="form-control">
+                                            <option>报警类型 1</option>
+                                            <option>报警类型 2</option>
+                                            <option>报警类型 3</option>
+                                            <option>报警类型 4</option>
+                                            <option>报警类型 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="zlw_bjxqnrcontit" style="padding-top:25px;">
+                                    <p style="color:#7c38bc;"><i class="fa fa-crosshairs" style="color:#7c38bc;"></i>其他配置</p>
+                                </div>
+                                <div class="zlw_bjxqnnwu">
+                                    <span>有效时段：</span>
+                                    <div class="zlw_bjxqnnwucon clearfloat">
+                                        <div class="zlw_bjxqnnwuconk">
+                                            <i>开始：</i>
+                                            <input type="text" class="Wdate" id="d456" onclick="WdatePicker({dateFmt:'HH:mm:ss',disabledDates:['#F{randomH()}']})"/>
+                                            
+                                        </div>
+                                        <div class="zlw_bjxqnnwuconk">
+                                            <i>结束：</i>
+                                            <input type="text" class="Wdate" id="d456" onclick="WdatePicker({dateFmt:'HH:mm:ss',disabledDates:['#F{randomH()}']})"/>
+                                        </div>
+                                        
+                                    </div>  
+                                </div>
+                                <div class="zlw_bjxqnnwu">
+                                    <span>有效日期：</span>
+                                    <div class="zlw_bjxqnnwucon clearfloat">
+                                        <div class="zlw_bjxqnnwuconk">
+                                            <i>开始：</i>
+                                            <input id="d422" class="Wdate" type="text" onclick="WdatePicker({minDate:'%y-%M-{%d+1}'})"/>
+                                            
+                                        </div>
+                                        <div class="zlw_bjxqnnwuconk">
+                                            <i>结束：</i>
+                                            <input id="d422" class="Wdate" type="text" onclick="WdatePicker({minDate:'%y-%M-{%d+1}'})"/>
+                                        </div>
+                                        
+                                    </div>  
+                                </div>
+
+
+
+                                <script>
+                                    function randomH(){
+                                    //产生一个随机的数字 0-23 
+                                    var H = Math.round(Math.random() * 23);
+                                    if(H<10) H='0'+H;
+                                    //返回 '^' + 数字
+                                    return '^'+H;
+                                    }
+                                </script>
+                                <div class="zlw_bjxqnnliu">
+                                    <span class="">通知方式：</span>
+                                    <div style="padding-top:4px;">
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" id="inlineCheckbox1" value="option1"> 平台弹框
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" id="inlineCheckbox2" value="option2"> 公众号
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" id="inlineCheckbox3" value="option3"> 短信
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="zlw_bjxqnnsan">
+                                    <i>通知人员：</i>
+                                    <input type="text" placeholder="通知人员">
+                                    <span data-toggle="modal" data-target="#myModal">选择通知人员</span>
+                                </div>
+                                <div class="zlw_bjxqnnqi">
+                                    <input type="submit" value="新增报警方案" class="zlw_xzfa">    
+                                    <input type="reset" value="重置" class="zlw_cz">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 报警详情 end -->
+            </div>
+            <!-- 报警方案 end -->
+        </div>
+    </div>
+    <!-- 选择作用范围模态框 -->
+    <div class="modal fade" id="myModal0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        选择作用范围
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    在这里添加一些文本
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 选择通知人员模态框 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        通知人员选择
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    在这里添加一些文本
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <script>
+        $(function(){
+            $('.zlw_bflister').on('click', 'li', function() {
+                $(this).find('.glyphicon-menu-right').removeClass('glyphicon-menu-right').addClass('glyphicon-menu-down');
+                $(this).addClass('zlw_bjactive').children('.zlw_bflistmain').slideDown()
+                $(this).siblings().removeClass('zlw_bjactive').children('.zlw_bflistmain').slideUp()
+                $(this).siblings().find('.glyphicon-menu-down').removeClass('glyphicon-menu-down').addClass('glyphicon-menu-right ');
+            })
+            $('.zlw_bflistmain div').click(function(){
+                $(this).siblings('.zlw_bflistmain div').removeClass('zlw_listact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_listact');   
+            })
+        })
+    </script>
+    <script>
+		// 按钮切换样式
+		$(function(){
+			$(".zlw_time_con li").click(function() {
+				$(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+				$(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+            });
+            // 数据
+        $('#tabledata').bootstrapTable({
+            // url: '/json/data.json',        // 表格数据来源
+            // showColumns:true,
+            columns: [
+            {
+                checkbox: true,
+                align: 'center',
+                valign: 'middle',
+            },
+            {
+                field: 'id',
+                title: '序号',
+                align: 'center',
+                backgroundColor:'#449d44'
+            }, {
+                field: 'column0',
+                title: '报警方案名称'
+            }, {
+                field: 'column1',
+                title: '方案类型',
+                align:'center'
+            },{
+                field: 'column2',
+                title: '启用状态',
+                align:'center'
+            }
+            ],
+            data:[
+            {
+                id:1,
+                column0:'日照龙湖小区#低区出水压力',
+                column1:'限值报警',
+                column2:'是',
+            }
+           
+            ]
+        });
+        $('.fixed-table-loading').hide()
+	}); 
+	</script>
+</body>
+</html>

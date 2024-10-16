@@ -1,0 +1,339 @@
+﻿@using WNMS.Model.CustomizedClass;
+@model IEnumerable<ZStationJkInfo>
+<style>
+    .zlw_list1_itemtop > em {
+        position: absolute;
+        bottom: 5px;
+        left: 5px
+    }
+    .zlw_list1_itemtop .kp_gd{top:10px}
+    .zlw_list1_itemtopyi > span {
+        float: left
+    }
+
+    .zlw_list1_itemtoper > p {
+        padding-left: 0
+    }
+
+    .zlw_list1_item {
+        padding: 0 10px 25px
+    }
+     #gallery-wrapper {
+        position: relative;left:2.5px
+    }
+    .zlw_list1_item {
+        position: absolute;overflow:hidden
+    }
+</style>
+<div class="zlw_xxzl_kp zlw_xxzl_kpxs">
+    <!-- star 循环区域 -->
+    <div class="zlw_list1">
+        <div class="zlw_list1con" id="gallery-wrapper">
+            @{
+                foreach (var item in Model)
+                {
+                    var starP = "";
+                    if (item.Attention == true)
+                    {
+                        starP = "fa fa-star orange";
+                    }
+                    else
+                    {
+                        starP = "fa fa-star-o";
+                    }
+                    var corelid = "myCarouse" + item.StationID;
+                    var stationidflag = "s" + item.StationID;
+                    <div class="zlw_list1_item relative" id="@stationidflag">
+                        <div class="zlw_list1_itemtop clearfloat">
+                            @if (item.State == "正常")
+                            {
+                                <em class="iconfont green icon-bengfang" ></em>
+                            }
+                            else if (item.State == "离线")
+                            {
+                                <em class="iconfont gray icon-bengfang" ></em>
+                            }
+                            else
+                            {
+                                <em class="iconfont red icon-bengfang" ></em>
+                            }
+                            <div class="zlw_list1_itemtopnr">
+                                <div class="zlw_list1_itemtopyi">
+                                    <span id="@item.StationID" class="@starP  mr10px mt5px" onclick="OperateAttention(@item.StationID,'')"></span>
+                                    <a href="javascript:void(0);"><p class="chaochu">@item.StationName</p></a>
+                                </div>
+                                <div class="zlw_list1_itemtoper">
+                                     
+                                </div>
+                            </div>
+                            <i class="fa fa-sign-in kp_gd" onClick="ShowDetail(@item.StationID,'@item.StationName',1)"></i>
+                        </div>
+                        <div class="zlw_list1_itemmid2 clearfloat">
+                            <ul>
+                                <li class="clearfloat">
+                                    <div><p>分区</p></div>
+                                    <div><p>更新时间</p></div>
+                                    <div title="净出水/原出水/净设压(MPa)"><p class="ellipsis1">净出水/原出水(MPa)</p></div>
+                                    <div><p>原水箱液位</p></div>
+                                    <div><p>净水箱液位</p></div>
+                                </li>
+                                @{
+                                    foreach (var it in item.deviceJKs)
+                                    {
+                                        <li>
+                                            <div class="kp_xxyi">
+                                                @if (it.State == "正常")
+                                                {
+                                                    <i style="background:#1cc800"></i>
+                                                }
+                                                else if (it.State == "故障")
+                                                {
+                                                    <i style="background:#FF0202"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i style="background:#999"></i>
+                                                }
+                                                <span title="@it.devicename">@it.devicename</span>
+                                            </div>
+                                            @if (it.datetime != "--")
+                                            {
+                                                <div title="@it.datetime"><span>@(it.datetime != "--" ? (Convert.ToDateTime(it.datetime).ToString("HH:mm:ss")) : "--")</span></div>
+                                            }
+                                            else
+                                            {
+                                                <div><span>@it.datetime</span></div>
+                                            }
+
+
+                                            <div class="kp_xxer">
+                                                @if (it.JPressOut.Value == true)
+                                                {
+                                                    <i style="color:#ff485e">@it.JPressOut.Key</i>
+                                                }
+                                                else
+                                                {
+                                                    <i >@it.JPressOut.Key</i>
+                                                }
+                                                /
+                                                @if (it.YPressOut.Value == true)
+                                                {
+                                                    <i style="color:#ff485e">@it.YPressOut.Key</i>
+                                                }
+                                                else
+                                                {
+                                                    <i>@it.YPressOut.Key</i>
+                                                }
+                                            </div>
+                                            <div>
+                                                @it.YLevel
+                                            </div>
+                                            <div>
+                                                @it.JLevel
+                                            </div>
+                                        </li>
+
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                        <div class="zlw_list1_itembot clearfloat">
+
+                            <div class="zlw_list1_itembot_rg" style="z-index:9999">
+                                @if (item.CameraMonitor == true)
+                                {
+                                    <a href="javascript:void(0);" onclick="ShowCarema(@item.StationID,'@item.StationName')">视频</a>
+
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0);" class="disableclass">视频</a>
+
+                                }
+                                @if (item.ControlMonitor == true)
+                                {
+                                    <a href="javascript:void(0);" onClick="ShowDetail(@item.StationID,'@item.StationName',3);">控制</a>
+                                    @*<button type="button" class="layui-btn" onClick="window.top.homeAddTab('sta'+@item.StationID,'@item.StationName','/Sws/Sws_Detail/ShowDetail?id=@item.StationID&showTab=3');">控制</button>*@
+
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0);" class="disableclass">控制</a>
+
+                                }
+
+                            </div>
+                        </div>
+                        <!--报警信息-->
+                        @if (item.State == "故障")
+                        {
+                            var stationalarm = item.StationID + "alarm";
+                            <div class="show_baojing">
+                                <!--头部-->
+                                <div class="bj-top relative">
+                                    <em><i class="iconfont icon-bengfang"></i></em>
+                                    <span class="bj-toptxt">
+                                        <i id="@stationalarm" class="@starP  mr10px mt5px" onclick="OperateAttention(@item.StationID,'alarm')"></i>@item.StationName
+                                    </span>
+                                    <span class="bj-top-righticon"><i class="fa f24px fa-angle-right" onClick="ShowDetail(@item.StationID,'@item.StationName',1)"></i></span>
+                                </div>
+                                <!--内容-->
+                                <div class="bj-center" style="height:calc(100% - 60px);">
+                                    <!--轮播-->
+                                    <div id="@corelid" class="carousel slide" style="height:calc(100% - 40px);position:relative">
+                                        <!-- 轮播（Carousel）指标 -->
+                                        <ol class="carousel-indicators">
+                                            @for (var i = 0; i < item.eventlist.Count; i++)
+                                            {
+                                                if (i == 0)
+                                                {
+                                                    <li data-target="#@corelid" data-slide-to="0" class="active"></li>
+                                                }
+                                                else
+                                                {
+                                                    <li data-target="#@corelid" data-slide-to="@i"></li>
+                                                }
+                                            }
+
+                                        </ol>
+                                        <!-- 轮播（Carousel）项目 -->
+                                        @{ 
+                                            var eventDivStyle = "position:absolute;top:-5%;";
+                                            if (item.deviceJKs.Count() > 1)
+                                            {
+                                                eventDivStyle = "position:absolute;top:10px";
+                                            }
+                                        }
+                                        <div class="carousel-inner" style="@eventDivStyle">
+                                          
+                                        
+                                        
+                                                @for (var i = 0; i < item.eventlist.Count; i++)
+                                                {
+                                                    if (i == 0)
+                                                    {
+                                                        <div class="item active" >
+
+                                                            @if (item.eventlist[i].DataType == 1)
+                                                            {
+                                                            <ul class="bj_list">
+                                                                <li>报警分区: <span>@item.eventlist[i].RegionName</span></li>
+                                                                <li>报警时间: <span>@item.eventlist[i].EventTime</span></li>
+                                                                <li>报警内容: <span>@item.eventlist[i].EventMessage</span></li>
+                                                            </ul>
+                                                                <p class="bj_tx">
+
+                                                                    <i class="fa fa-exclamation-circle f24px mr10px"></i>@(item.eventlist[i].CurrentValue == -9999 ? "" : item.eventlist[i].CurrentValue.ToString()) @item.eventlist[i].Unit (设定在：@(item.eventlist[i].LimitValue == -9999 ? "" : item.eventlist[i].LimitValue.ToString()) @item.eventlist[i].Unit)
+
+
+                                                                </p>
+                                                            }
+                                                            else
+                                                            {
+                                                        <ul class="bj_list removeline">
+                                                            <li>报警分区: <span>@item.eventlist[i].RegionName</span></li>
+                                                            <li>报警时间: <span>@item.eventlist[i].EventTime</span></li>
+                                                            <li>报警内容: <span>@item.eventlist[i].EventMessage</span></li>
+                                                        </ul>
+                                                                <p class="bj_tx"></p>
+                                                            }
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="item" >
+
+                                                            @if (item.eventlist[i].DataType == 1)
+                                                            {
+                                                            <ul class="bj_list">
+                                                                <li>报警分区: <span>@item.eventlist[i].RegionName</span></li>
+                                                                <li>报警时间: <span>@item.eventlist[i].EventTime</span></li>
+                                                                <li>报警内容: <span>@item.eventlist[i].EventMessage</span></li>
+                                                            </ul>
+                                                                <p class="bj_tx">
+
+                                                                    <i class="fa fa-exclamation-circle f24px mr10px"></i>@(item.eventlist[i].CurrentValue == -9999 ? "" : item.eventlist[i].CurrentValue.ToString()) @item.eventlist[i].Unit (设定在：@(item.eventlist[i].LimitValue == -9999 ? "" : item.eventlist[i].LimitValue.ToString()) @item.eventlist[i].Unit)
+
+
+                                                                </p>
+                                                            }
+                                                            else
+                                                            {
+                                                        <ul class="bj_list removeline">
+                                                            <li>报警分区: <span>@item.eventlist[i].RegionName</span></li>
+                                                            <li>报警时间: <span>@item.eventlist[i].EventTime</span></li>
+                                                            <li>报警内容: <span>@item.eventlist[i].EventMessage</span></li>
+                                                        </ul>
+                                                                <p class="bj_tx"></p>
+                                                            }
+                                                        </div>
+                                                    }
+                                                }
+
+                                            </div>
+                                        <!-- 轮播（Carousel）导航 -->
+                                        <a class="left carousel-control" href="#@corelid" role="button" data-slide="prev">
+                                            <span class="fa fa-angle-left posico-left" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="right carousel-control" href="#@corelid" role="button" data-slide="next">
+                                            <span class="fa fa-angle-right posico-right" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </div>
+                                    <!--/轮播-->
+                                </div>
+
+                                <div class="kz" style="z-index:99999">
+                                    @if (item.CameraMonitor == true)
+                                    {
+                                        <a href="javascript:void(0);" onclick="ShowCarema(@item.StationID,'@item.StationName')">视频</a>
+                                        @*<a href="javascript:void(0);" onclick="ShowCarema(@item.StationID,'@item.StationName')">视频</a>*@
+
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:void(0);" class="disableclass">视频</a>
+
+                                    }
+                                    @if (item.ControlMonitor == true)
+                                    {
+                                        @*<a href="javascript:void(0);">控制</a>*@
+                                        <a href="javascript:void(0);" onClick="ShowDetail(@item.StationID,'@item.StationName',3)">控制</a>
+
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:void(0);" class="disableclass">控制</a>
+
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+            }
+            <!-- star 内容块 -->
+            <!-- 内容块  end -->
+        </div>
+    </div>
+    <!-- 循环区域 end -->
+</div>
+<script type="text/javascript">
+    $(function () {
+        var jj = $('.zlw_xinxi_main').width();
+        $(".zlw_xxzl_kp").css('width', jj + 'px');
+        $("#gallery-wrapper").pinterest_grid({
+            no_columns: 3,
+            padding_x: 10,
+            padding_y: 10,
+            margin_bottom: 20,
+            single_column_breakpoint: 700
+        });
+
+    });
+
+
+</script>

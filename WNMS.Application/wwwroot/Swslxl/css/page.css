@@ -1,0 +1,7 @@
+@charset "utf-8";
+
+body .layui-table,
+body .layui-table-view {margin: 0;}
+body .layui-laypage .layui-laypage-curr .layui-laypage-em {background-color: #0075e6;}
+
+body .layui-table-cell {text-align: center;}

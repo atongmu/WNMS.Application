@@ -1,0 +1,522 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>WatchPlan</title>
+    <link href="~/css/AdminLTE.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/dist/css.css">
+    <link href="~/css/fbmap.css" rel="stylesheet" />
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <style>
+        html, body, #container {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .common {
+            position: absolute;
+            top: 10px;
+        }
+
+            .common > div {
+                margin-bottom: 0;
+            }
+
+        .list {
+            left: 10px;
+            min-width: 520px;
+        }
+
+        .detail {
+            right: 10px;
+            width: 350px;
+        }
+
+        .dl-horizontal dt {
+            width: 100px;
+        }
+
+        .dl-horizontal dd {
+            margin-left: 120px;
+        }
+
+        .carousel .item img {display: block;max-height: 200px;margin: 0 auto;}
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div class="list common" id="planData">
+        <div class="box no-border">
+
+            <div class="box-body">
+                <div class="box box-widget widget-user">
+                    <div class="widget-user-header bg-aqua-active" style="height:90px">
+                        @{
+                            dynamic plandata = ViewBag.PlanData as dynamic;
+                            if (plandata != null)
+                            {
+                                var plannum = "RWXJ" + plandata.PlanID;
+                                <h3 class="widget-user-username">@plannum (@plandata.feedNum/@plandata.allNum)</h3>
+                                <h5 class="widget-user-desc">@plandata.time</h5>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="table-responsive" style="max-height:300px">
+                    <table class="table no-margin table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>设备</th>
+                                <th>坐标</th>
+                                <th>状态</th>
+                                <th>时间</th>
+                                <th>设备状态</th>
+                                <th>审核</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabletada">
+                            @*<tr>
+                                    <td>1</td>
+                                    <td>临商银行生活低区</td>
+                                    <td>118.353059,35.109041</td>
+                                    <td>
+                                        <i class="fa fa-circle"></i>
+                                    </td>
+                                    <td>
+                                        2021-4-26 14:34
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>临商银行生活低区</td>
+                                    <td>118.353059,35.109041</td>
+                                    <td>
+                                        <i class="fa fa-circle"></i>
+                                    </td>
+                                    <td>
+                                        2021-4-26 14:34
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>临商银行生活低区</td>
+                                    <td>118.353059,35.109041</td>
+                                    <td>
+                                        <i class="fa fa-circle"></i>
+                                    </td>
+                                    <td>
+                                        2021-4-26 14:34
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>临商银行生活低区</td>
+                                    <td>118.353059,35.109041</td>
+                                    <td>
+                                        <i class="fa fa-circle text-green"></i>
+                                    </td>
+                                    <td>
+                                        2021-4-26 14:34
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>临商银行生活低区</td>
+                                    <td>118.353059,35.109041</td>
+                                    <td>
+                                        <i class="fa fa-circle text-green"></i>
+                                    </td>
+                                    <td>
+                                        2021-4-26 14:34
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>临商银行生活低区</td>
+                                    <td>118.353059,35.109041</td>
+                                    <td>
+                                        <i class="fa fa-circle text-green"></i>
+                                    </td>
+                                    <td>
+                                        2021-4-26 14:34
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>临商银行生活低区</td>
+                                    <td>118.353059,35.109041</td>
+                                    <td>
+                                        <i class="fa fa-circle"></i>
+                                    </td>
+                                    <td>
+                                        2021-4-26 14:34
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>临商银行生活低区</td>
+                                    <td>118.353059,35.109041</td>
+                                    <td>
+                                        <i class="fa fa-circle"></i>
+                                    </td>
+                                    <td>
+                                        2021-4-26 14:34
+                                    </td>
+                                </tr>*@
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="box-footer clearfix">
+                <div class="row">
+                    <div class="col-xs-3 text-right">
+                        <select id="type">
+                            <option value="8">全部</option>
+                            <option value="1">已反馈</option>
+                            <option value="0">未反馈</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-2 text-right">共 <span id="recordNum">0</span> 条记录</div>
+                    <div class="col-xs-4">
+                        <i class="fa fa-circle text-green"> 已反馈</i>
+                        &nbsp;
+                        <i class="fa fa-circle"> 未反馈</i>
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="#"><span onclick="DealFinish()" class='label label-success'>标记完成</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="detail common" id="taskData">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">反馈详情</a></li>
+                <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">设备详情</a></li>
+                <li class="pull-right" id="close"><a href="#" class="text-muted"><i class="fa fa-times"></i></a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_1">
+                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                        </ol>
+
+                        <div class="carousel-inner" role="listbox">
+                            <div class="item active">
+                                <img src="~/images/bf.jpg" />
+                            </div>
+                            <div class="item">
+                                <img src="~/images/bf.jpg" />
+                            </div>
+                            <div class="item">
+                                <img src="~/images/bf.jpg" />
+                            </div>
+                        </div>
+
+                        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <dl class="dl-horizontal" style="margin-top:10px" id="Info">
+                        @*<dt class="text-muted">设备名称</dt>
+                            <dd class="text-green">临商银行生活低区</dd>
+
+                            <dt class="text-muted">安装位置</dt>
+                            <dd class="text-green">山东省临沂市北城新区北京路37号</dd>
+
+                            <dt class="text-muted">Gis 坐标</dt>
+                            <dd class="text-green">118.353059,35.109041</dd>
+
+                            <dt class="text-muted">设备编号</dt>
+                            <dd class="text-green">1009025</dd>
+
+                            <dt class="text-muted">通讯编号</dt>
+                            <dd class="text-green">13900007431</dd>
+
+                            <dt class="text-muted">IP 端口</dt>
+                            <dd class="text-green">0</dd>
+
+                            <dt class="text-muted">Com 地址</dt>
+                            <dd class="text-green">2</dd>
+
+                            <dt class="text-muted">优先级</dt>
+                            <dd class="text-green">A</dd>*@
+                    </dl>
+                </div>
+                <div class="tab-pane" id="tab_2">
+                    <dl class="dl-horizontal">
+                        @*<dt class="text-muted">设备名称</dt>
+                            <dd class="text-green">临商银行生活低区</dd>
+
+                            <dt class="text-muted">安装位置</dt>
+                            <dd class="text-green">山东省临沂市北城新区北京路37号</dd>
+
+                            <dt class="text-muted">Gis 坐标</dt>
+                            <dd class="text-green">118.353059,35.109041</dd>
+
+                            <dt class="text-muted">设备编号</dt>
+                            <dd class="text-green">1009025</dd>
+
+                            <dt class="text-muted">通讯编号</dt>
+                            <dd class="text-green">13900007431</dd>
+
+                            <dt class="text-muted">IP 端口</dt>
+                            <dd class="text-green">0</dd>
+
+                            <dt class="text-muted">Com 地址</dt>
+                            <dd class="text-green">2</dd>
+
+                            <dt class="text-muted">优先级</dt>
+                            <dd class="text-green">A</dd>*@
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=28068084e71b4dac1344e8d5c9451629&plugin=AMap.DistrictSearch,AMap.MarkerClusterer"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script>
+        $(function () {
+            $('#planData').show();
+            $("#taskData").hide();
+            GetPlanWatchDetail();
+            $("#type").change(function () {
+                GetPlanWatchDetail();
+            });
+            $("#close").click(function () {
+                $("#taskData").hide();
+            });
+        });
+        var map = new AMap.Map('container');
+        var PlanID =@ViewBag.PlanID;
+        var checkID=0;
+        var equipID=0;
+        //表格数据加载  1619561957067
+        function GetPlanWatchDetail() {
+            $.post("/Wo/AssignmentPlan/WatchPlanDetail", { PlanID: PlanID, type: $("#type").val() }, function (data) {
+                if (data != "") {
+                    var json = JSON.parse(data);
+                    $("#tabletada").empty();
+                    var appenddata = "";
+                    for (var i = 0; i < json.length; i++) {
+                        var state = "";
+                        var eqState = "";
+                        if (json[i].FeedBackState == true) {
+                            state = "<i class='fa fa-circle text-green'></i>";
+                        }
+                        else {
+                            state = "<i class='fa fa-circle'></i>";
+                        }
+
+                        if (json[i].ForwardState == 1) {
+                            eqState = "转发中";
+                        } else if (json[i].ForwardState == 2) {
+                             eqState = "已转发";
+                        }
+
+                        if (json[i].ModifyTime != null) {
+                            appenddata += "<tr data-value='" + json[i].ID + "' data-equipid='" + json[i].EquipmentID + "' data-gis='" + json[i].Gis + "'><td>" + json[i].rownum + "</td><td>" + json[i].DeviceName + "</td><td>" + json[i].Gis + "</td><td>" + state + "</td><td>" + json[i].ModifyTime.replace("T", " ") + "</td><td>" + eqState + "</td><td  style='text-align: left; color: Gray' class='zlw_bl'><span onclick='Deal("+ json[i].ID+")'>驳回</span></td></tr>";
+                        }
+                        else {
+                            appenddata += "<tr data-value='" + json[i].ID + "'  data-equipid='" + json[i].EquipmentID + "' data-gis='" + json[i].Gis + "'><td>" + json[i].rownum + "</td><td>" + json[i].DeviceName + "</td><td>" + json[i].Gis + "</td><td>" + state + "</td><td>无</td><td>" + eqState + "</td><td></td></tr>";
+                        }
+                    }
+                    $("#tabletada").html(appenddata);
+                    $("#recordNum").html(json.length);
+                } else {
+                    var html = '<img src="~/images/null.png" />';
+                    $("table-responsive").html(html);
+                }
+            });
+        }
+
+        //详情数据加载
+        $(document).on("click", "#tabletada tr", function () {
+
+            checkID = $(this).data("value");
+            equipID = $(this).data("equipid").toString();
+            if (checkID == null || checkID == "") {
+                checkID = 0;
+            }
+            if (equipID == null || equipID == "") {
+                equipID = 0;
+            }
+            var checkgis = $(this).data("gis");
+            if (checkgis != "") {
+                if (checkgis.indexOf(",") != -1) {
+                    var ss = checkgis.split(",");
+                    DisPlayOneRtu(ss[0], ss[1]);
+                }
+            }
+
+            if (checkID == 0) {
+                layer.msg("未反馈");
+            } else {
+                $("#taskData").show();
+                taskdetail(checkID);
+                deviceDetail(equipID);
+            }
+        });
+
+        function taskdetail(id) {
+            $.post("/Wo/AssignmentPlan/GetTaskDetail", { feedID: id, }, function (data) {
+                if (data.dataInfos != "" && data.dataInfos != "null") {
+                    var json = JSON.parse(data.feedbackData);
+                    var datainfoList = JSON.parse(data.dataInfos);
+                    $("#tab_1 dl").empty();
+                    var appenddata = "";
+                    if (data.GISLocation != "") {
+                        var aa=data.gisLocation == null ? "--" : data.gisLocation
+                        appenddata += '<dt class="text-muted">巡检定位</dt><dd class="text-green">' + (data.gisLocation == null ? "--" : data.gisLocation) +'</dd >';
+                    }
+
+                    for (var i = 0; i < datainfoList.length; i++) {
+                        var feedvalue = "";
+                        if (json != null) {
+                            if (json[datainfoList[i].FeedBackName] != undefined) {
+                                feedvalue = json[datainfoList[i].FeedBackName];
+                                if (feedvalue == true) {
+                                    feedvalue = "是";
+                                }
+                                else {
+                                    if (feedvalue == false) {
+                                        feedvalue = "否";
+                                    }
+                                }
+                            }
+                        }
+                        appenddata += '<dt class="text-muted">' + datainfoList[i].FeedBackName + '</dt><dd class="text-green">' + (feedvalue == null ? "--" : feedvalue) + '</dd >';;
+                    }
+                    $("#tab_1 dl").append(appenddata);
+                }
+                else {
+                    $("#tab_1 dl").empty();
+                }
+                if (data.imgelist.length > 0) {
+                    $("#carousel-example-generic").css("display", "block");
+                    var str1 = "", str2 = "";
+                    for (var i = 0; i < data.imgelist.length; i++) {
+                        if (i == 0) {
+                            str1 += '<li data-target="#carousel-example-generic" data-slide-to="' + i + '" class="active"></li>';
+                            str2 += '<div class="item active"><img src = "' + data.imgelist[0] + '" /></div >';
+                            
+                        } else {
+                            str1 = '<li data-target="#carousel-example-generic" data-slide-to="' + i + '"></li>';
+                            str2 += '<div class="item"><img src = "' + data.imgelist[i] + '" /></div >'
+                        }
+                    }
+                    $(".carousel-indicators").html(str1);
+                    $(".carousel-inner").html(str2);
+                } else {
+                    //$(".carousel slide").css("display","none");
+                    $("#carousel-example-generic").css("display","none");
+                }
+            });
+        }
+
+        function deviceDetail(id) {
+            $("#tab_2 dl").empty();
+            $.post("/Wo/AssignmentPlan/GetDeviceDetail", { deviceId: id }, function (result) {
+                var data = JSON.parse(result.data);
+                if (data != null) {
+                    var appenddata = "<dt class='text-muted'>设备名称</dt><dd class='text-green'>" + (data.DeviceName == null ? '' : data.DeviceName) + "</dd>";
+                    appenddata += "<dt class='text-muted'>所属泵房</dt><dd class='text-green'>" + (data.StationName == null ? '' : data.StationName) + "</dd>";
+                    appenddata += "<dt class='text-muted'>Gis坐标</dt><dd class='text-green'>" + (data.Gis == null ? '' : data.Gis) + "</dd>";
+                    appenddata += "<dt class='text-muted'>设备编号</dt><dd class='text-green'>" + (data.DeviceNum == null ? '' : data.DeviceNum) + "</dd>";
+
+                    appenddata += "<dt class='text-muted'>通讯编号</dt><dd class='text-green'>" + (data.ComNum == null ? '' : data.ComNum) + "</dd>";
+                    appenddata += "<dt class='text-muted'>IP端口</dt><dd class='text-green'>" + (data.IPPort == null ? '' : data.IPPort) + "</dd>";
+                    appenddata += "<dt class='text-muted'>Com地址</dt><dd class='text-green'>" + (data.ComAddress == null ? '' : data.ComAddress) + "</dd>";
+                    $("#tab_2 dl").html(appenddata);
+                }
+            });
+        }
+
+        //显示某个设备
+        function DisPlayOneRtu(Lng, Lat) {
+            map.clearMap();
+
+            //创建标记点
+            var m1 = new AMap.Marker({
+                position: [Lng, Lat]
+            });
+            var markericon1 = '' +
+                '<div>' +
+                '<div class="wfybf">  ' +
+                '<div class="circle">' +
+                '<img src="../../../images/bftb.png" />' +
+                '</div> ' +
+                '<div class="circle_bottom animation "></div>' +
+                '<div class="circle_bottom2 animation2 "></div>' +
+                '</div>' +
+                '</div>';
+            m1.setContent(markericon1);
+            map.add(m1);
+            map.setFitView();
+        }
+        //处理驳回
+        function Deal(id) {
+            layer.confirm("确定要驳回？",
+                        {
+                            btn: ["确定", "取消"]
+                        },
+                        function () {
+                            $.post("/Wo/AssignmentPlan/AuditEq", { id: id }, function (result) {
+                                if (result == "ok") {
+                                    layer.msg("驳回成功");
+                                    GetPlanWatchDetail();
+                                } else {
+                                    layer.msg("驳回失败");
+                                }
+                            });
+                },
+                function () { }
+            );
+        }
+         //标记完成
+        function DealFinish() {
+            $.post("/Wo/AssignmentPlan/AuditAssFinish",
+                {
+                    planid: PlanID
+                },
+                function (res) {
+                    if (res == "ok") {
+                        layer.msg("标记完成成功", function () { 
+                            parent.refresh();
+                        });
+                    } else if (res == "isFinish") {
+                        layer.alert("请勿重复标记");
+                    } else if (res == "isnoChecked") {
+                        layer.alert("有未巡检的设备");
+                    } else {
+                        layer.alert("标记失败");
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

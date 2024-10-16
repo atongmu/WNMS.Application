@@ -1,0 +1,494 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>角色管理</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap-table.min.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <!-- bootstrap -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <!-- 树 -->
+    <link href="~/lib/ztree/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/css/bootstrap-switch.min.css">
+    <script src="//cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/js/bootstrap-switch.min.js"></script>
+    <style>
+        .zlw_manageconrgconyi {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            height: 100%;
+            margin-top: 7px;
+        }
+
+        .zlw_manageconrgconsan {
+            height: 100%
+        }
+
+            .zlw_manageconrgconsan .bootstrap3 {
+                height: calc(100% - 50px);
+                margin-top: 10px
+            }
+
+        .fixed-table-container {
+            height: calc(100% - 100px)
+        }
+    </style>
+    <script type="text/javascript">
+        var $table;
+        $(function () {
+            //初始化bootstrap-table的内容
+            InitMainTable();
+            document.onkeydown = keyDownSearch;
+            function keyDownSearch(e) {
+                // 兼容FF和IE和Opera    
+                var theEvent = e || window.event;
+                var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                // 13 代表 回车键
+                if (code == 13) {
+                    // 要执行的函数 或者点击事件
+                    var temp = {                        //页面大小
+                        pageNumber: 1,   //页码
+                    };
+                    $table.bootstrapTable('refresh', temp);
+                }
+                return true;
+            }
+            $("#btnSelect").click(function () {
+                var temp = {                        //页面大小
+                    pageNumber: 1,   //页码
+                };
+                $table.bootstrapTable('refresh', temp);
+            });
+            //添加角色
+            $("#AddBtn_role").click(function () {
+                AddRole();
+            });
+            //编辑角色
+            $("#EditBtn_role").click(function () {
+                EditRole();
+            });
+            //删除角色
+            $("#DeleteBtn_role").click(function () {
+                DeleteRole();
+            });
+            //为角色分配权限
+            $("#RoleBtn_action").click(function () {
+                RoleAction();
+            });
+            //为角色分配用户
+            $("#RoleBtn_user").click(function () {
+                RoleUser();
+            });
+        })
+        function InitMainTable() {
+            //记录页面bootstrap-table全局变量$table，方便应用
+            var queryUrl = '/Sys/Sys_Role/LoadInfoList';
+            $table = $('#tabledata').bootstrapTable({
+                url: queryUrl,                      //请求后台的URL（*）
+                method: 'GET',                      //请求方式（*）
+                //toolbar: '#toolbar',              //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 20,                     //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索
+                //strictSearch: true,
+                //showColumns: true,                  //是否显示所有的列（选择显示的列）
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: true,                //是否启用点击选中行
+                height: $(window).height() - 50,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "Sort",                     //每一行的唯一标识，一般为主键列
+                //showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+                //cardView: false,                    //是否显示详细视图
+                //detailView: false,                  //是否显示父子表
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        pageSize: params.limit,                         //页面大小
+                        pageIndex: (params.offset / params.limit) + 1,   //页码
+                        //sort: params.sort,      //排序列名
+                        sort: params.sort == undefined ? "Sort" : params.sort,      //排序列名
+                        sortOrder: params.order, //排位命令（desc，asc）
+                        roleName: $("#roleName").val(),
+                    };
+                    return temp;
+                },
+                columns: [{
+                    checkbox: true,
+                    visible: true
+                }, {
+                    field: 'RoleId',
+                    title: '编号',
+                    width: 100,
+                    //sortable: true
+                }, {
+                    field: 'RoleName',
+                    title: '名称',
+                    sortable: true,
+                    width: 200
+                }, {
+                    field: 'Sort',
+                    title: '序号',
+                    width: 100
+                    //sortable: true
+                }, {
+                    field: 'IsEnable',
+                    title: '有效',
+                    //sortable: true
+                    formatter: project_status,
+                    width: 130
+                }, {
+                    field: 'Remark',
+                    title: '备注',
+                    //sortable: true
+                }],
+                responseHandler(res) {
+                    // 修改返回
+                    return {
+                        "rows": JSON.parse(res.rows), //单页查询返回的数据,
+                        "total": res.total
+                    };
+                },
+                onLoadSuccess: function (res) {
+                    initSwitch();
+                },
+                onLoadError: function () {
+                },
+                onDblClickRow: function (row, $element) {
+                    var id = row.ID;
+                },
+            });
+        };
+        function initSwitch() {
+            //$('#project_status_switch').bootstrapSwitch({
+            $("[id='project_status_switch']").bootstrapSwitch({
+                onText: "启用",      // 设置ON文本
+                offText: "禁用",    // 设置OFF文本
+                onColor: "success",// 设置ON文本颜色(info/success/warning/danger/primary)
+                offColor: "warning",  // 设置OFF文本颜色 (info/success/warning/danger/primary)
+                size: "mini",    // 设置控件大小,从小到大  (mini/small/normal/large)
+                // 当开关状态改变时触发
+                onSwitchChange: function (event, state) {
+                    UpdateStatus(this.value, state);
+                }
+            })
+        }
+        function project_status(value, row, index) {
+            var roleid = row.RoleId;
+            if (value == true) {
+                var value1 = '<input value="' + roleid + '" type="checkbox" id="project_status_switch" name="my-checkbox1" checked/>';
+                return value1;
+            } else {
+                return '<input value="' + roleid + '" type="checkbox" id="project_status_switch"  name="my-checkbox2" />';
+            }
+            ////if (ststus == 'true') {
+            //    result += "<input type='checkbox' id='project_status'>"
+            //    return "<div class='switch' id='mySwitch'><input value='" + roleid + "'  type='checkbox' checked id='project_status_switch' name='mycheck'></div>";
+            //    return "<input value='" + roleid + "'  type='checkbox' checked id='project_status_switch' name='mycheck'>";
+            ////} else {
+            ////    result += "<input type='checkbox' id='project_status'>"
+            ////    return "<div class='switch' id='mySwitch'><input value='" + roleid + "'  type='checkbox'  id='project_status_switch' name='mycheck'></div>";
+            ////    return "<input value='" + roleid + "'  type='checkbox' checked id='project_status_switch' checked name='mycheck'>";
+            ////}
+
+        }
+        function UpdateStatus(roleid, status) {
+            $.post("/Sys/Sys_Role/UpdateStatus", { roleid: roleid, status: status }, function (data) {
+                if (data == "ok") {
+                    //$table.bootstrapTable('refresh', null);
+                } else {
+
+                }
+            })
+        }
+        function Refresh() {
+            $table.bootstrapTable('refresh', null);
+        }
+        //加载添加角色页面方法
+        function AddRole() {
+            iframe("添加角色", "800px", "450px", "/Sys/Sys_Role/AddPage");
+            //iframe("添加角色", "40%", "80%", "/Sys/Sys_Role/TestZtree");
+        }
+        //加载编辑角色页面方法
+        function EditRole() {
+            var row = $("#tabledata").bootstrapTable('getAllSelections');
+            if (row.length != 1) {
+                layer.msg("请选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                iframe("编辑角色", "800px", "450px", "/Sys/Sys_Role/EditPage/" + row[0].RoleId);
+            }
+        }
+        //删除角色方法
+        function DeleteRole() {
+            var row = $("#tabledata").bootstrapTable('getAllSelections');
+            if (row.length <= 0) {
+                layer.msg("请至少选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                var id = "";
+                for (i = 0; i < row.length; i++) {
+                    id += row[i].RoleId + ",";
+                }
+                id = id.substring(0, id.length - 1);
+                layer.confirm("确定要删除角色？", {
+                    btn: ["确定", "取消"]
+                },
+                    function () {
+                        deleteRole(id);
+                    },
+                    function () { }
+                );
+            }
+        }
+        //删除角色
+        function deleteRole(ids) {
+            $.post("/Sys/Sys_Role/DeleteRole", { requestRoleids: ids }, function (data) {
+                if (data == "ok") {
+                    layer.alert("删除角色成功！");
+                    Refresh();
+                }
+                else {
+                    if (data.indexOf("角色") > -1) {
+                        layer.alert(data);
+                        Refresh();
+                    }
+                    else {
+                        if (data == "false") {
+                            layer.alert("所选所有角色均被占用，无法删除。");
+                            Refresh();
+                        }
+                        else {
+                            layer.alert("删除角色失败！");
+                            Refresh();
+                        }
+                    }
+                }
+            });
+        }
+        //为角色分配权限
+        function RoleAction() {
+            var row = $("#tabledata").bootstrapTable('getAllSelections');
+            if (row.length != 1) {
+                layer.msg("请选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                noiframe("分配权限", "40%", "80%", "/Sys/Sys_Role/RoleAction/" + row[0].RoleId);
+            }
+        }
+        //为角色分配用户
+        function RoleUser() {
+            var row = $("#tabledata").bootstrapTable('getAllSelections');
+            if (row.length != 1) {
+                layer.msg("请选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                noiframe("分配用户", "60%", "80%", "/Sys/Sys_Role/AllotUserRole/" + row[0].RoleId);
+            }
+        }
+        //定义layer层
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+                    window.frames[0].saveForm();
+                },
+                cancel: function (index) {
+                }
+            });
+        }
+        //定义layer层
+        function noiframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                yes: function (index, layero) {
+                    window.frames[0].saveForm();
+                },
+                cancel: function (index) {
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="zlw_manage">
+
+        <!-- star right -->
+        <div class="zlw_manageconrg">
+            <div class="zlw_manageconrgcon">
+                <!-- star 查询 -->
+                <div class="left">
+                    <ul class="clearfloat ml10px mt10px">
+                        <li>
+                            <input id="roleName" type="text" class="hyl_input" placeholder="输入角色名称">
+                            <button class="hyl_btn" id="btnSelect">
+                                <i class="fa fa-search"></i> 查询
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 查询 end -->
+                <div class="zlw_manageconrgconer" style="border-bottom:1px solid #ddd;height:51px">
+
+                    <div class="btn-group mar10px pull-right">
+                        @await Component.InvokeAsync("ModuleButtons")
+                        @*<button type="button" id="AddBtn_role" class="btn btn-default"><i class="fa fa-plus"></i>&nbsp添加</button>
+                            <button type="button" id="EditBtn_role" class="btn btn-default"><i class="fa fa-pencil-square-o"></i>&nbsp修改</button>
+                            <button type="button" id="DeleteBtn_role" class="btn btn-default"><i class="fa fa-trash-o"></i>&nbsp删除</button>
+
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-reorder"></i>&nbsp更多
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a id="RoleBtn_action">功能授权</a></li>
+                                    <li><a id="RoleBtn_user">添加成员</a></li>
+                                </ul>
+                            </div>*@
+                    </div>
+                </div>
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan">
+                    <table id="tabledata" class=" table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- right end -->
+
+    </div>
+    <script>
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+    </script>
+    <script>
+        // 按钮切换样式
+        $(function () {
+            $(".zlw_time_con li").click(function () {
+                $(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+            });
+            // 数据
+
+            $('.fixed-table-loading').hide()
+        });
+    </script>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        模态框（Modal）标题
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    角色名：<input type="text">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</body>
+</html>

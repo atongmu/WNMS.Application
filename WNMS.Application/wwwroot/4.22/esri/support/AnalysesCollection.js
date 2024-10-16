@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define("exports ../chunks/_rollupPluginBabelHelpers ../chunks/tslib.es6 ../core/Logger ../core/accessorSupport/ensureType ../core/arrayUtils ../core/has ../core/accessorSupport/set ../core/accessorSupport/decorators/subclass ../core/support/OwningCollection".split(" "),function(a,f,g,l,m,n,p,q,h,k){a.AnalysesCollection=function(d){function b(){return d.apply(this,arguments)||this}f._inheritsLoose(b,d);var e=b.prototype;e._own=function(c){c.parent=this.owner};e._release=function(c){c.parent=null};
+return b}(k.OwningCollection);a.AnalysesCollection=g.__decorate([h.subclass("esri.support.AnalysesCollection")],a.AnalysesCollection);Object.defineProperty(a,"__esModule",{value:!0})});

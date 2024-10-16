@@ -1,0 +1,511 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="/css/iconfont.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="~/lib/layer/layer.js"></script>
+    <link rel="stylesheet" href="../../css/ziti.css">
+    <link rel="stylesheet" href="../../css/gdmap.css">
+    <!-- 高德地图 -->
+    <link href="~/4.22/esri/themes/light/main.css" rel="stylesheet" />
+    <script src="~/4.22/init.js"></script>
+    <style>
+
+         .esri-popup__footer, .esri-popup__button--dock {
+            display: none;
+        }
+        .esri-popup__content {
+            margin-top: -20px;
+        }
+        .chaochu {
+            padding-left: 20px !important;
+        }
+
+        .icon-bengfang {
+            top: -2px !important
+        }
+
+        .maplist li span {
+            width: 20%;
+            font-size: 12px;
+            float: left;
+            text-align: center;
+        }
+
+        .orangeColor {
+            background: linear-gradient(0deg, #e89f43 0%, #f5c060 56%);
+        }
+
+        .round div {
+            background: #f7951d;
+        }
+
+        .orange {
+            color: #f7951d;
+        }
+
+        .bgRed {
+            background: linear-gradient(0deg, rgb(234, 180, 25) 0%, rgb(255, 198, 71) 56%);
+        }
+
+        .iconfont {
+            font-size: 14px;
+        }
+        /*.custom-input-card {
+            width: 18rem;
+        }
+
+            .custom-input-card .btn:last-child {
+                margin-left: 1rem;
+            }
+
+        .content-window-card {
+            position: relative;
+            width: 23rem;
+            padding: 0.75rem 0 0 1.25rem;
+            box-shadow: none;
+            bottom: 0;
+            left: 0;
+        }
+
+
+            .chaochu i {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 10px;
+                margin-right: 6px;
+                background: #0fd10a
+            }
+
+        .ls {
+            background: #0fd10a !important
+        }
+
+        .hs {
+            background: #ff0202 !important
+        }
+
+        .huis {
+            background: #666 !important
+        }
+
+        .content-window-card p {
+            height: 2rem;
+        }
+
+        .clearfloat:after {
+            content: "";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+
+        .clearfloat {
+            zoom: 1;
+        }*/
+    </style>
+</head>
+<body>
+    <div class="zlw_control">
+        <div class="zlw_controlcon">
+            <div class="zlw_controlconlf">
+                <div class="zlw_controlconlf_nr">
+                    <!-- 点击按钮 -->
+                    <div class="zlw-content-lfdj"></div>
+                    <div class="zlw_controlconlf_nryi">
+                        <div class="zlw_controlconlf_nryicon">
+                            <i class="glyphicon glyphicon-search" onclick="LoadStationList()"></i>
+
+                            <input id="stationName" type="text" placeholder="搜索泵房" class="zlw-ssk" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="zlw_controlconlf_nrer">
+                        <div class="zlw-tree pt5px">
+                            <ul class="sxt_list" id="dataList">
+                                @{
+                                    var stationSates = ViewBag.stationState as IEnumerable<dynamic>;
+                                    if (stationSates.Count() > 0)
+                                    {
+                                        var States = stationSates.ToList();
+                                        for (var i = 0; i < States.Count; i++)
+                                        {
+
+                                            <li data-key="@States[i].StationID" data-state="@States[i].state">
+                                                <em class="iconfont icon-bengfang"></em>
+                                                <span class="chaochu">@States[i].StationName</span>
+
+                                            </li>
+
+                                        }
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="zlw_controlconrg">
+                <div class="left-icon"></div>
+                <div class="zlw_controlconrgcon" style="padding:0">
+
+                    <div class="zlw_map_layer">
+                        <div id="map_monitor"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+       
+        $(function () {
+              // 点击按钮门禁左侧宽度为0
+            $(".zlw-content-lfdj").click(function () {
+                $(".zlw-content-lfdj").hide();
+                $(".left-icon").css("display", "block");
+                $(".zlw_controlconlf").css({ "width": "0", "padding": "0" });
+                $(".zlw_controlconrg").css("width", "100%");
+            });
+            $(".left-icon").click(function () {
+                $(".zlw-content-lfdj").fadeIn();
+                $(".left-icon").css("display", "none");
+                $(".zlw_controlconlf").css({ "width": "220px", "padding": "0px" });
+                $(".zlw_controlconrg").css("width", "calc(100% - 220px)");
+            })
+       
+               //左侧树查询回车事件
+            $("#stationName").keydown(function(e) {
+           if (e.keyCode == 13) {
+               LoadStationList();
+               return false;
+           }
+        });
+           
+        })
+         //左侧泵房查询
+        function LoadStationList() {
+            var searchText = $("#stationName").val();
+
+                $.post("/Com/AccessoryMap/SearchStationList", { stationName: searchText }, function (res) {
+                    $("#dataList").empty();
+                    if (res.data.length > 0) {
+                        var appends = "";
+                        var States = res.data;
+                        for (var i = 0; i < States.length; i++) {
+
+
+                                 appends += ' <li   data-key="'+States[i].StationID+'">' +
+                                    '<em class="iconfont icon-bengfang"></em>' +
+                                    '<span class="chaochu">' + States[i].StationName + '</span>' +
+
+                                    '</li>';
+
+
+                        }
+                         $("#dataList").html(appends);
+                    }
+
+                })
+
+        }
+
+
+        
+        
+        
+
+
+    </script>
+    <script>
+        require(["esri/config", "esri/Map", "esri/views/MapView", "esri/layers/TileLayer", "esri/Graphic", "esri/layers/GraphicsLayer", "esri/geometry/Point", "esri/symbols/TextSymbol",
+            "esri/symbols/SimpleLineSymbol"],
+            function (esriConfig, Map, MapView, TileLayer, Graphic, GraphicsLayer, Point, on, TextSymbol) {
+                var image, position, Graphic1, markerAtr,zoomlevel=-1;
+                var graphic_id = -1;
+                var layer = new TileLayer({
+                    url:"@ViewBag.ArcgisUrl" //自己的底图地址
+                });
+                var graphicsLayer = new GraphicsLayer();
+
+                var map = new Map({
+                    basemap: "",
+                    layers: [layer, graphicsLayer]
+                });
+
+                var view = new MapView({
+                    map: map,
+                    zoom:@ViewBag.zoom, // Zoom level
+                    container: "map_monitor", // Div element
+                    constraints: {
+                        minZoom: 2
+
+                    }
+                   
+                });
+                var pt = new Point({
+                    x: @ViewBag.lng,
+                    y: @ViewBag.lat,
+                    spatialReference: 2436
+                });
+                view.center = pt;
+                view.watch("stationary", function (e) {
+                    if (e == true) {
+                        if (zoomlevel != this.zoom) {
+                            zoomlevel = this.zoom;
+                            if (zoomlevel <= 5) {
+                                graphicsLayer.removeAll();
+                                QueryMarkData();
+
+                            }
+                            else {
+
+                                graphicsLayer.removeAll();
+                                QueryDetailMarkData();
+                            }
+                        }
+                    }
+                });
+                
+                view.on("pointer-move", (event) => {
+                    view.hitTest(event).then(function (response) {
+                        if (response.results.length) {
+                           
+                            var graphic = response.results[0].graphic;
+                            if (graphic.attributes != null) {
+                                if (graphic_id != graphic.attributes.id) {
+                                   
+                                    graphic_id = graphic.attributes.id;
+                                    PopupInfo(graphic);
+                                }
+                            }
+
+                        }
+                        else {
+                            if (graphic_id != -1) {
+                                graphic_id = -1;
+                            }
+                            //view.popup.close();
+                        }
+                    });
+                });
+                function QueryMarkData() {
+
+                    $.post("/Com/AccessoryMap/SearchStationList", { stationName: "" }, function (res) {
+
+                        for (var i = 0; i < res.data.length; i++) {
+
+                            var imgeurl = "/images/green.gif";
+                            if (res.data[i].state > 0) {
+                                imgeurl = "/images/red.gif";
+                            }
+                            image = {
+                                type: 'picture-marker',
+                                url: imgeurl,
+                                width: '32px',
+                                height: '32px',
+                            };
+                            markerAtr = {
+                                id: res.data[i].StationID,
+                                name: res.data[i].StationName,
+                                state:res.data[i].state,
+                                x: res.data[i].Lng,
+                                y: res.data[i].Lat
+                            };
+
+                            //设置点的位置
+                            position = {
+                                type: 'point',
+                                x: res.data[i].Lng,
+                                y: res.data[i].Lat,
+                                spatialReference: 2436
+                            };
+                            //将点的样式和位置放在Graphic里面
+                            Graphic1 = new Graphic({
+                                geometry: position,
+                                symbol: image,
+                                attributes: markerAtr
+                            });
+                            graphicsLayer.add(Graphic1);
+
+                        }
+                    })
+
+                }
+                function QueryDetailMarkData() {
+
+                     $.post("/Com/AccessoryMap/SearchStationList", { stationName: "" }, function (res) {
+
+                        for (var i = 0; i < res.data.length; i++) {
+
+                            var imgeurl = "/images/green.gif";
+                            if (res.data[i].state > 0) {
+                                imgeurl = "/images/red.gif";
+                            }
+                            image = {
+                                type: 'picture-marker',
+                                url: imgeurl,
+                                width: '32px',
+                                height: '32px',
+                            };
+                            markerAtr = {
+                                id: res.data[i].StationID,
+                                name: res.data[i].StationName,
+                                state:res.data[i].state,
+                                x: res.data[i].Lng,
+                                y: res.data[i].Lat
+                            };
+
+                            //设置点的位置
+                            position = {
+                                type: 'point',
+                                x: res.data[i].Lng,
+                                y: res.data[i].Lat,
+                                spatialReference: 2436
+                            };
+                            //将点的样式和位置放在Graphic里面
+                            Graphic1 = new Graphic({
+                                geometry: position,
+                                symbol: image,
+                                attributes: markerAtr
+                            });
+                            graphicsLayer.add(Graphic1);
+                            var textSymbol = {
+                                type: "text", 
+                                text: res.data[i].StationName,
+                                color: "black",
+                                xoffset: "20px",
+                                yoffset: "20px",
+                                font: {  // autocasts as new Font()
+                                    size: 12
+                                    
+                                }
+                              
+                            };
+                            var Graphic2 = new Graphic({
+                                geometry: position,
+                                symbol: textSymbol
+                            });
+                             graphicsLayer.add(Graphic2);
+                        }
+                    })
+
+                }
+                function MapPosition(state, stationname, stationid) {
+                    $.post("/Com/AccessoryMap/QueryAccessBYStationid", { stationid: stationid }, function (res) {
+
+                        var colordata = "green";
+                        if (state > 0) {
+                            colordata = "red";
+                        }
+
+                        var table = '<div class="makercon overflow clearfloat pad10px">';
+
+                        table += "<div class='maptitle'><i class='iconfont f24px icon-bengfang " + colordata + "'></i><p><span class='fb f16px'>" + stationname + "</span></p></div>";
+                        table += '<ul class="maplist">';
+                        table += '<li class="maplistnr1" ><span>器件名称</span><span>器件编号</span><span>型号</span><span>设备名称</span><span>数量</span></li>';
+
+                        if (res.data.length > 0) {
+                            for (var i = 0; i < res.data.length; i++) {
+
+                                var a_no = res.data[i].AccessoriesNo.length == undefined ? "--" : res.data[i].AccessoriesNo;
+                                table += '<li><span>' + res.data[i].Name + '</span><span>' + a_no + '</span><span>' + res.data[i].Type + '</span><span>' + res.data[i].ItemName + '</span><span>' + res.data[i].quantity + '</span>';
+
+                                table += '</li>'
+                            }
+                        }
+                       var div = document.createElement("div");
+                        div.innerHTML = table;
+                        var position1 = {
+                            x: res.data[0].Lng,
+                            y: res.data[0].Lat,
+                            spatialReference: 2436
+                        };
+                        graphic_id = -1;
+                        view.popup.open({
+                            location: position1,  // location of the click on the view
+                            content: div
+
+                        });
+                        view.goTo({
+                            center: new Point({
+                                x: res.data[0].Lng,
+                                y: res.data[0].Lat,
+                                spatialReference: 2436
+                            })
+                        });
+                    })
+                }
+                view.popup.autoOpenEnabled = false;
+                function PopupInfo(graphic0) {
+                    var attr = graphic0.attributes;
+                    $.post("/Com/AccessoryMap/QueryAccessBYStationid", { stationid: attr.id }, function (res) {
+
+                        var colordata = "green";
+                        if (attr.state > 0) {
+                            colordata = "red";
+                        }
+                        var table = '<div class="makercon overflow clearfloat pad10px">';
+
+                        table += "<div class='maptitle'><i class='iconfont f24px icon-bengfang " + colordata + "'></i><p><span class='fb f16px'>" + attr.name + "</span></p></div>";
+                        table += '<ul class="maplist">';
+                        table += '<li class="maplistnr1" ><span>器件名称</span><span>器件编号</span><span>型号</span><span>设备名称</span><span>数量</span></li>';
+                        if (res.data.length > 0) {
+                            for (var i = 0; i < res.data.length; i++) {
+                                var a_no = res.data[i].AccessoriesNo.length == undefined ? "--" : res.data[i].AccessoriesNo;
+                                table += '<li><span>' + res.data[i].Name + '</span><span>' + a_no + '</span><span>' + res.data[i].Type + '</span><span>' + res.data[i].ItemName + '</span><span>' + res.data[i].quantity + '</span>';
+
+                                table += '</li>'
+                            }
+                        }
+                        var div = document.createElement("div");
+                        div.innerHTML = table;
+                        var position1 = {
+                            x: attr.x,
+                            y: attr.y,
+                            spatialReference: 2436
+                        };
+
+                        view.popup.open({
+                            location: position1,  // location of the click on the view
+                            content: div
+
+                        });
+                    
+
+                    })
+                }
+                $(document).on('click', '.sxt_list li', function () {
+                    $(this).addClass('on').siblings('li').removeClass('on');
+                    var stationid = $(this).data("key");
+                    var stationname = $(this).find("span").text();
+                    var statedata = $(this).data("state");
+                    MapPosition(statedata, stationname, stationid);
+                });
+
+            })
+
+    </script>
+</body>
+</html>

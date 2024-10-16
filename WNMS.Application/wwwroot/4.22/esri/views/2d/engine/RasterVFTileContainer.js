@@ -1,0 +1,6 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define("exports ../../../chunks/_rollupPluginBabelHelpers ../../../geometry/support/aaBoundingRect ./RasterVFTile ./webgl/enums ./webgl/TileContainer ./webgl/brushes/raster/BrushVectorField".split(" "),function(h,l,m,n,k,e,p){e=function(c){function f(){var a=c.apply(this,arguments)||this;a.isCustomTilingScheme=!1;a.symbolTypes=["triangle"];return a}l._inheritsLoose(f,c);var d=f.prototype;d.createTile=function(a){const b=this._tileInfoView.getTileBounds(m.create(),a),[g,q]=this._tileInfoView.tileInfo.size;
+return new n.RasterVFTile(a,b[0],b[3],g,q)};d.destroyTile=function(){};d.prepareRenderPasses=function(a){const b=a.registerRenderPass({name:"imagery (vf tile)",brushes:[p],target:()=>this.children.map(g=>g.tileData),drawPhase:k.WGLDrawPhase.MAP});return[...c.prototype.prepareRenderPasses.call(this,a),b]};d.doRender=function(a){this.visible&&a.drawPhase===k.WGLDrawPhase.MAP&&this.symbolTypes.forEach(b=>{a.renderPass=b;c.prototype.doRender.call(this,a)})};return f}(e.default);h.RasterVFTileContainer=
+e;Object.defineProperty(h,"__esModule",{value:!0})});

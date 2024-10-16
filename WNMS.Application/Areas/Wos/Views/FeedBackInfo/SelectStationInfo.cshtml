@@ -1,0 +1,205 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SelectStationInfo</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap-table.min.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <!-- bootstrap -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .zlw_manageconrgconyi {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            height: 100%;
+            margin-top: 10px;
+        }
+
+        .zlw_manageconrgconsan {
+            height: 100%
+        }
+
+            .zlw_manageconrgconsan .bootstrap3 {
+                height: calc(100% - 50px)
+            }
+
+        .fixed-table-container {
+            height: calc(100% - 100px)
+        }
+    </style>
+    <script type="text/javascript">
+        var $table;
+        var index = parent.layer.getFrameIndex(window.name);
+        $(function () {
+            //初始化bootstrap-table的内容
+            InitMainTable();
+            $("#btnSelect").click(function () {
+                Refresh();
+            });
+            $("#stationName").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    Refresh();
+                    return false;
+                }
+        });
+
+        })
+        function InitMainTable() {
+            //记录页面bootstrap-table全局变量$table，方便应用
+            var queryUrl = '/Wos/FeedBackInfo/LoadStationList';
+            $table = $('#tabledata').bootstrapTable({
+                url: queryUrl,                      //请求后台的URL（*）
+                method: 'GET',                      //请求方式（*）
+                //toolbar: '#toolbar',              //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                singleSelect: true,
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 10,                     //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索
+                //strictSearch: true,
+                //showColumns: true,                  //是否显示所有的列（选择显示的列）
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: true,                //是否启用点击选中行
+                height: $(window).height() - 100,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "StationId",                     //每一行的唯一标识，一般为主键列
+                //showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+                //cardView: false,                    //是否显示详细视图
+                //detailView: false,                  //是否显示父子表
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        pageSize: params.limit,                         //页面大小
+                        pageIndex: (params.offset / params.limit) + 1,   //页码
+                        //sort: params.sort,      //排序列名
+                        sort: params.sort == undefined ? "State" : params.sort,      //排序列名
+                        sortOrder: params.order, //排位命令（desc，asc）
+                        searchText: $("#stationName").val(),
+                        //doorID: $(parent.$('iframe')[0].contentDocument).find('#DoorID').val(),
+                        stationid:$(parent.$('iframe')[0].contentDocument).find('#StationId').val()
+                    };
+                    return temp;
+                },
+                columns: [{
+                    field:"State",
+                    checkbox: true,
+                    visible: true,
+                     formatter: function (value, row, index) {
+                        return changeCheckboxFormat(value)
+                    }
+                }, {
+                    field: 'StationNum',
+                    title: '泵房编号',
+                    width: 100,
+                }, {
+                    field: 'StationName',
+                    title: '泵房名称'
+                }, {
+                    field: 'StationTypeName',
+                    title: '泵房类型',
+
+                }],
+                responseHandler(res) {
+                    // 修改返回
+                    return {
+                        "rows": JSON.parse(res.rows), //单页查询返回的数据,
+                        "total": res.total
+                    };
+                },
+                onLoadSuccess: function (res) {
+
+                },
+                onLoadError: function () {
+                },
+                onDblClickRow: function (row, $element) {
+                },
+            });
+        };
+        function Refresh() {
+           var opt = {
+                      pageNumber: 1,
+
+                  };
+                   $table.bootstrapTable('refresh', opt);
+        }
+        function changeCheckboxFormat(cellval) {
+            if (cellval == 1) {
+                return {
+                    checked:true
+                }
+            }
+        }
+
+
+        function saveForm1(func) {
+
+            var row = $("#tabledata").bootstrapTable('getAllSelections');
+            if (row.length != 1) {
+                //layer.msg("请选中一行", {
+                //    offset: 't',
+                //    anim: 6
+                //});
+                func(0,"");
+            } else {
+
+                func(row[0].StationID,row[0].StationName);
+            }
+
+        }
+    </script>
+</head>
+<body>
+    <div class="zlw_manage">
+
+        <!-- star right -->
+        <div class="zlw_manageconrg">
+            <div class="zlw_manageconrgcon">
+                <!-- star 查询 -->
+                <div class="mt10px ml10px mb10px">
+                    <ul class="clearfloat">
+                        <li>
+                            <label class="hyl_label">快速查询 </label>
+                            <input id="stationName" type="text" class="hyl_input ml10px" placeholder="输入泵房名称、泵房编号" autocomplete="off" />
+                            <button class="hyl_btn" id="btnSelect"> <i class="fa fa-search"></i> 查询</button>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 查询 end -->
+                @*<div class="zlw_manageconrgconer" style="height:65px">
+                    </div>*@
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan">
+                    <table id="tabledata" class=" table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- right end -->
+
+    </div>
+</body>
+</html>
+

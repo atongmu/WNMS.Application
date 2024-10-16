@@ -1,0 +1,299 @@
+﻿@using WNMS.Model.CustomizedClass;
+@model IEnumerable<StationJkInfo>
+<div class="zlw_xxzl_lb zlw_xxzl_lbxs">
+
+    @foreach (var item in Model)
+    {
+        var queeid = "p" + item.StationID;
+        var alarmflag = 0;
+
+
+        var starP = "";
+        if (item.Attention == true)
+        {
+            starP = "fa fa-star orange";
+        }
+        else
+        {
+            starP = "fa fa-star-o";
+        }
+        var stationidflag = "s" + item.StationID;
+
+        <div class="zlw_list" id="@stationidflag">
+            <div class="zlw_listyi clearfloat">
+                <div class="zlw_listyilfyi clearfloat left">
+                    @*<img src="/adminlte/images/main.png" alt="">*@
+                    @if (item.State == "正常")
+                    {
+                        <em class="iconfont green icon-bengfang"></em>
+                    }
+                    else if (item.State == "离线")
+                    {
+                        <em class="iconfont gray icon-bengfang"></em>
+                    }
+                    else
+                    {
+                        <em class="iconfont red icon-bengfang"></em>
+                        alarmflag = 1;
+                    }
+                    <i id="@item.StationID" class="@starP ml10px" onclick="OperateAttention(@item.StationID,'')"></i>
+                    <p>@item.StationName</p>
+                </div>
+                <div class="zlw_listyilf clearfloat left">
+                    <div class="zlw_listyilfcon">
+                        <div class="zlw_listyilfer left">
+                            <p>总出水瞬时流量： @item.allinflow m³/h</p>
+                        </div>
+                        <div class="elembox" id="@queeid">
+                            <ul>
+                                @{
+                                    foreach (var it in item.eventlist)
+                                    {
+                                       
+                                        <li class="zlw_listyilfsan left clearfloat">
+                                            <p>分区：<i>@it.RegionName</i></p>
+                                            <p>报警内容：<i>@it.EventMessage</i></p>
+                                            <p>报警时间：<i>@it.EventTime</i></p>
+                                        </li>
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="zlw_listyirg right">
+                    @*@if (item.CameraMonitor == true)
+                    {
+                        <button type="button" class="layui-btn" onclick="ShowCarema(@item.StationID,'@item.StationName')">视频</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="layui-btn disableclass" disabled="disabled">视频</button>
+                    }*@
+                    @if (item.ControlMonitor == true)
+                    {
+                        <button type="button" class="layui-btn" onClick="window.top.homeAddTab('sta'+@item.StationID,'@item.StationName','/Sws/Sws_Detail/ShowDetail?id=@item.StationID&showTab=3');">控制</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="layui-btn disableclass" disabled="disabled">控制</button>
+                    }
+                    <a href="javascript:void(0);" onClick="window.top.homeAddTab('sta'+@item.StationID,'@item.StationName','/Sws/Sws_Detail/Index/'+@item.StationID);"><i class="fa fa-sign-in kp_gd"></i></a>
+                </div>
+            </div>
+            <div class="zlw_lister">
+                <ul class="clearfloat">
+                    <li class="list_head">
+                        <div>采集时间</div>
+                        <div>分区</div>
+                        <div>进水/出水/设定压力(MPa)</div>
+                        <div>泵运行状态</div>
+                        <div>泵运行时长(h)</div>
+                        <div>频率(Hz)</div>
+                        <div>瞬时流量(m³/h)</div>
+                        <div>泵电流(A)</div>
+                        <div>累计流量(m³)</div>
+                        <div>累计电量(kW·h)</div>
+                    </li>
+                    @{
+                        foreach (var it in item.deviceJKs)
+                        {
+                            <li class="list_body">
+                                <div title="@it.datetime">@it.datetime</div>
+                                <div class="zlw_fq">
+                                    @if (it.State == "正常")
+                                    {
+                                        <i style="background:#1CC800"></i>
+                                    }
+                                    else if (it.State == "故障")
+                                    {
+                                        <i style="background:#FF0202"></i>
+                                    }
+                                    else
+                                    {
+                                        <i style="background:#999"></i>
+                                    }
+                                    @it.devicename
+                                </div>
+                                <div>
+                                    @if (it.PressIN.Value == true)
+                                    {
+                                        <span style="color:red">@it.PressIN.Key</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@it.PressIN.Key</span>
+                                    }
+                                    <span> / </span>
+                                    @if (it.PressOut.Value == true)
+                                    {
+                                        <span style="color:red">@it.PressOut.Key</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@it.PressOut.Key</span>
+                                    }
+                                    <span> / </span>
+                                    @if (it.PressSet.Value == true)
+                                    {
+                                        <span style="color:red">@it.PressSet.Key</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@it.PressSet.Key</span>
+                                    }
+                                </div>
+
+                                <div class="zlw_yxzt">
+                                    <span>
+                                        @foreach (var ii in it.pumpState)
+                                        {
+                                            if (ii == "变频" || ii == "恒频" )
+                                            {
+                                                //<i class="iconfont icon-chilun binpin rotates"></i>
+                                                <img alt="" src="~/images/蓝.svg" class="rotates" style="width:17px;height:17px;display:inline-block;">
+                                            }
+                                            else if (ii == "工频")
+                                            {
+                                                // <i class="iconfont icon-chilun  gongpin rotates"></i>
+                                                <img alt="" src="~/images/绿.svg" class="rotates" style="width:17px;height:17px;display:inline-block;">
+                                            }
+                                            else if (ii == "停止")
+                                            {
+                                                // <i class="iconfont icon-chilun tingzhi"></i>
+                                                <img alt="" src="~/images/灰.svg" style="width:17px;height:17px;display:inline-block;">
+                                            }
+                                            else
+                                            {
+                                                // <i class="iconfont icon-chilun guzhang"></i>
+                                                <img alt="" src="~/images/红.svg"  style="width:17px;height:17px;display:inline-block;">
+                                            }
+                                        }
+
+                                    </span>
+                                </div>
+                                <div>
+
+                                    @for (var i = 0; i < it.pumpdatas.Count; i++)
+                                    {
+                                        if (i == it.pumpdatas.Count - 1)
+                                        {
+                                            if (it.pumpdatas[i].runtime.Value == true)
+                                            {
+                                                <span class="red">@it.pumpdatas[i].runtime.Key</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span>@it.pumpdatas[i].runtime.Key</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (it.pumpdatas[i].runtime.Value == true)
+                                            {
+                                                <span class="red">@it.pumpdatas[i].runtime.Key</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span>@it.pumpdatas[i].runtime.Key</span>
+                                            }
+                                            <span> / </span>
+                                        }
+
+                                    }
+
+                                </div>
+                                <div>
+
+                                    @for (var i = 0; i < it.pumpdatas.Count; i++)
+                                    {
+                                        if (i == it.pumpdatas.Count - 1)
+                                        {
+                                            if (it.pumpdatas[i].frequency.Value == true)
+                                            {
+                                                <span class="red">@it.pumpdatas[i].frequency.Key</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span>@it.pumpdatas[i].frequency.Key</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (it.pumpdatas[i].frequency.Value == true)
+                                            {
+                                                <span class="red">@it.pumpdatas[i].frequency.Key</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span>@it.pumpdatas[i].frequency.Key</span>
+                                            }
+                                            <span> / </span>
+                                        }
+
+                                    }
+                                </div>
+                                <div>@it.inflow</div>
+                                <div>
+                                    @for (var i = 0; i < it.pumpdatas.Count; i++)
+                                    {
+                                        if (i == it.pumpdatas.Count - 1)
+                                        {
+                                            if (it.pumpdatas[i].eletric.Value == true)
+                                            {
+                                                <span class="red">@it.pumpdatas[i].eletric.Key</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span>@it.pumpdatas[i].eletric.Key</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (it.pumpdatas[i].eletric.Value == true)
+                                            {
+                                                <span class="red">@it.pumpdatas[i].eletric.Key</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span>@it.pumpdatas[i].eletric.Key</span>
+                                            }
+                                            <span> / </span>
+                                        }
+
+                                    }
+                                </div>
+                                <div>@it.totalflow</div>
+                                <div>@it.totalpower</div>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+        <script type="text/javascript">
+                                $(function () {
+
+
+                                    var queeids="p"+ @item.StationID;
+                                    if (@alarmflag == 1) {
+                                        $("#" + queeids + "").kxbdMarquee({
+                                            direction: "up",
+                                            isEqual: true,
+                                            scrollDelay: 90
+                                        });
+                                    }
+                                    })
+        </script>
+    }
+</div>

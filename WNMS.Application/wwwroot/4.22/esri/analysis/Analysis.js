@@ -1,0 +1,6 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define("../chunks/_rollupPluginBabelHelpers ../chunks/tslib.es6 ../core/Accessor ../core/Identifiable ../core/accessorSupport/decorators/property ../core/arrayUtils ../core/has ../core/accessorSupport/ensureType ../core/accessorSupport/decorators/subclass".split(" "),function(g,b,a,h,d,m,n,p,k){let l=0;a=function(f){function e(c){c=f.call(this,c)||this;c.id=`${Date.now().toString(16)}-analysis-${l++}`;c.title=null;c.parent=null;c.visible=!0;return c}g._inheritsLoose(e,f);e.prototype.cloneBaseAnalysisProperties=
+function(){return{title:this.title,visible:this.visible}};return e}(h.IdentifiableMixin(a));b.__decorate([d.property({type:String,constructOnly:!0})],a.prototype,"id",void 0);b.__decorate([d.property({type:String})],a.prototype,"title",void 0);b.__decorate([d.property({readOnly:!0})],a.prototype,"type",void 0);b.__decorate([d.property()],a.prototype,"parent",void 0);b.__decorate([d.property({readOnly:!0})],a.prototype,"extent",void 0);b.__decorate([d.property({type:Boolean})],a.prototype,"visible",
+void 0);return a=b.__decorate([k.subclass("esri.analysis.Analysis")],a)});

@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/hyl2.css" />
+    <script src="../js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: Microsoft YaHei;
+        }
+
+        .hyl_ditu {
+            width: 100%;
+            height: 100%;
+        }
+
+        .hyl_wbox {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 9;
+            width: 100%;
+            height: 100%;
+        }
+
+        .wz1 {
+            fill: #143a82;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        div {
+            position: relative;
+        }
+
+        /**
+         * 参数-box
+        */
+        .parameter-box {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            height: 90%;
+            display: flex;
+            flex-flow: column;
+            flex-wrap: wrap;
+        }
+
+            .parameter-box .item {
+                width: 200px;
+                margin-right: 10px;
+                margin-bottom: 10px;
+                background-color: rgba(255, 255, 255, .5);
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,.5);
+                overflow: hidden;
+            }
+
+            .parameter-box .title {
+                font-size: 16px;
+                line-height: 36px;
+                text-align: center;
+                color: #fff;
+                background-color: #56c5ff;
+            }
+
+        .list-parameter {
+            padding: 10px;
+        }
+
+            .list-parameter .item-parameter {
+                margin-top: 5px;
+            }
+
+            .list-parameter .name {
+                float: left;
+                /*color: #56c5ff*/
+            }
+    </style>
+</head>
+<body>
+    <img id="guiInfo" src="../img/3DPum.jpg" style="width: 100%;height: 100%;" />
+
+    <div class="parameter-box">
+
+    </div>
+
+
+    <script>
+        var sid = window.parent.sid;
+        $(function () {
+            //LoadStationJKPartuion1();
+             LoadStationJKPartuion();
+        })
+        function LoadStationJKPartuion() {
+            $.post("/Sws/Sws_Detail/LoadAllDataByPar", { sid: sid }, function (data) {
+                var jsondata = data.data;
+                console.log(data.data);
+                if (data.guiInfo != null) {
+                    $("#guiInfo").attr('src', data.guiInfo);
+                }
+
+                //var jsondata = [
+                //    {
+                //        title: '低区',
+                //        parameter: [
+                //            { name: '进水压力', value: '40Mpa' },
+                //            { name: '进水压力', value: '40Mpa' },
+                //            { name: '进水压力', value: '40Mpa' },
+                //            { name: '进水压力', value: '40Mpa' },
+                //        ]
+                //    },
+                //    {
+                //        title: '低区',
+                //        parameter: [
+                //            { name: '进水压力', value: '40Mpa' },
+                //            { name: '进水压力', value: '40Mpa' },
+                //            { name: '进水压力', value: '40Mpa' },
+                //            { name: '进水压力', value: '40Mpa' },
+                //        ]
+                //    },
+                //    {
+                //        title: '高区',
+                //        parameter: [
+                //            { name: '进水压力', value: '40Mpa' },
+                //            { name: '进水压力', value: '40Mpa' },
+                //            { name: '进水压力', value: '40Mpa' },
+                //            { name: '进水压力', value: '40Mpa' },
+                //        ]
+                //    }
+                //];
+
+                var html = '';
+
+                if (jsondata.count < 1) return false;
+
+                jsondata.forEach(function (item, index) {
+                    html += '<div class="item">';
+                    html += '<div class="title">' + item.partition + '</div>';
+
+                    if (item.partitionDatdids.length > 0) {
+                        html += '<div class="list-parameter">';
+
+                        item.partitionDatdids.forEach(function (item2, index2) {
+                            html += '<div class="item-parameter">';
+                            html += '<div class="name">' + item2.cnname + '：</div>';
+                            html += '<div class="value">' + item2.keyValue + " " + item2.unit + '</div>';
+                            html += '</div>';
+                        });
+
+                        html += '</div>';
+                    }
+
+                    html += '</div>';
+                });
+
+                
+
+                $('.parameter-box').html(html);
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>巡检制定</title>
+    <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/lib/webuploader/webuploader.css" rel="stylesheet" />
+
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <style>
+        #filePicker div:nth-child(2) {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        html, body {
+            height: 100% !important;
+            overflow: hidden
+        }
+
+        .form-horizontal .form-group {
+            margin: 0
+        }
+
+        .nav-tabs-custom > .nav-tabs > li {
+            margin-right: 0
+        }
+
+        .nav-tabs-custom {
+            box-shadow: none;height:100%
+        }
+
+        label.error {
+            top: 60px;
+        }
+
+        .prompt {
+            font-size: 14px;
+            height: 40px;
+            line-height: 40px;
+            background: #F0F8FF;
+            border: 1px solid #ccc;
+            padding-left: 10px;
+            color: #8F5700;
+        }
+        .tab-content>.active{height:100% !important}
+    </style>
+</head>
+<body>
+    <!-- Custom Tabs -->
+    <div class="nav-tabs-custom">
+        <div class="tab-content" style="padding:20px 20px 0;height:100%">
+            <div class="tab-pane active" id="tab_1" style="overflow:hidden">
+                <div>
+                    <div class="prompt" style="margin:5px 0px 10px">
+                        基础信息
+                    </div>
+                    <form id="inspectionfrom" class="">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="StationID">所属泵房</label>
+                                                <input type="text" placeholder="选择泵房" class=" form-control" name="StationName" onclick="SelectPumpSation()" id="StationName" autocomplete="off">
+                                                <input id="StationId" type="hidden" name="StationId" />
+                                            </div>
+                                        </div>
+                                        @*<div class="col-sm-4">
+                                                <div class="form-group mr15px">
+                                                    <label for="Num">巡检编号</label>
+                                                    <input type="text" class="form-control" id="Num" name="Num" placeholder="请输入：XJ-2020-0001" autocomplete="off">
+                                                </div>
+                                            </div>*@
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="InspectionUser">巡检人</label>
+                                                <select id="InspectionUser" name="InspectionUser" class="form-control">
+                                                    @{
+                                                        IEnumerable<SysUser> wbUser = ViewBag.wbUser as IEnumerable<SysUser>;
+                                                        foreach (var item in wbUser)
+                                                        {
+
+                                                            <option value="@item.UserId">@item.Account</option>
+
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="InspectionTime">巡检时间</label>
+                                                <input type="text" class="form-control" name="InspectionTime" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" value="@ViewBag.nowTime" placeholder="请选择巡检日期">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="row">
+
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="PumpState">泵运行状态</label>
+                                                <select id="PumpState" name="PumpState" class="form-control">
+                                                    <option value="1">正常</option>
+                                                    <option value="2">停止</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label for="TaskDescription">任务描述</label>
+                                                <div>
+                                                    <textarea id="TaskDescription" name="TaskDescription" style="height:100px" class="form-control" placeholder=""></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="prompt" style="margin:5px 0px 10px">
+                        事件信息
+                    </div>
+                    <form id="eventfrom" class="">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="ReportUser">上报人</label>
+                                                <select id="ReportUser" name="ReportUser" class="form-control">
+                                                    @{
+                                                        IEnumerable<SysUser> reUser = ViewBag.wbUser as IEnumerable<SysUser>;
+                                                        foreach (var it in reUser)
+                                                        {
+                                                            <option value="@it.UserId">@it.Account</option>
+
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="ReportTime">上报时间</label>
+                                                <input type="text" class="form-control" name="ReportTime" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" value="@ViewBag.nowTime" placeholder="请选择上报日期">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </form>
+                    @*<input id="subInfo" type="button" value="提交">*@
+                    <button type="button" id="AddInfo" class="btn btn-default" style="float:right"><i class="fa fa-plus"></i>&nbsp提交</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/adminlte.lite.js"></script>
+    <script>
+        $(function () {
+            //表单提交
+            $("#AddInfo").click(function () {
+                saveForm();
+            })
+        })
+        var $h = $(window).height() - 70;
+        $(".tab-pane").height($h)
+        function execute() {
+            if ($("input.error").length > 0) {
+                return;
+            }
+            var baseinfo = JSON.stringify($("#inspectionfrom").serializeObject());
+            var requinfo = JSON.stringify($("#eventfrom").serializeObject());
+
+            if ($("input.error").length == 0) {
+                $.post("/Wos/Planning/SetInspectionInfo", {
+                    inspectioninfo: baseinfo, eventinfo: requinfo
+                }, function (data) {
+                    if (data == "ok") {
+                        layer.confirm("上报成功",
+                            {
+                                btn: ["确定"]
+                            },
+                            function () {
+                                window.location.reload();
+                            },
+                            function () { }
+                        );
+                    } else {
+                        layer.alert("上报失败");
+                    }
+
+                })
+            }
+        }
+        function validateForm() {
+            $("#inspectionfrom").validate({
+                submitHandler: function (form) {
+                    execute();
+                },
+                ignore: "",
+                rules: {
+                    StationName: { required: true }
+
+                },
+                messages: {
+                    StationName: "请选择泵房",
+
+                }
+            });
+            $("#eventfrom").validate({
+                submitHandler: function (form) {
+                    //execute();
+                },
+                ignore: "",
+                rules: {
+
+                },
+                messages: {
+
+                }
+            });
+        }
+
+        function saveForm() {
+
+            validateForm();
+            $("#inspectionfrom").submit();
+        }
+
+
+
+        //选中泵房
+        function SelectPumpSation() {
+            iframe1("二供泵房", "60%", "70%", "/Sws/Sws_DeviceInfo01/StationInfo?type=0");
+        }
+        function iframe1(title, width, height, url, func) {
+            window.parent.layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+                    parent.window.frames[1].saveForm();
+                    //$(parent.$('iframe')[1]).saveForm();
+                },
+                cancel: function (index) {
+                }
+            })
+        };
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+        function isNumber(obj) {
+            var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+            var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+            if (regPos.test(obj) || regNeg.test(obj)) {
+                return true;
+            } else {
+                return false;
+
+            }
+        }
+    </script>
+</body>
+
+</html>

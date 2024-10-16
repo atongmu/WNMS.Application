@@ -1,0 +1,52 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Model.CustomizedClass;
+@model IEnumerable<DptUser>
+<thead>
+    <tr>
+        <th data-radio="true"></th>
+        <th data-field="UserId" data-visible="false"></th>
+        <th data-sortable="true" data-field="Account">账号</th>
+        <th data-field="NickName">姓名</th>
+        <th data-field="Gender">性别</th>
+        <th data-field="DptName">部门</th>
+        <th data-field="Phone">手机</th>
+        <th data-field="SerialNumber">GPS设备编号</th>
+        <th data-field="IsEnable">是否启用</th>
+        <th data-sortable="true" data-field="CreateTime">创建时间</th>
+        <th data-field="Remark">备注</th>
+    </tr>
+</thead>
+<tbody>
+    @{
+        foreach (var item in Model)
+        {
+            <tr>
+                <td data-radio="true"></td>
+                <td data-visible="false">@item.UserId</td>
+                <td>@item.Account</td>
+                <td>@item.NickName</td>
+                <td>@(item.Gender == false ? "男" : "女")</td>
+                <td>@item.DptName</td>
+                <td>@item.Phone</td>
+                <td>@item.SerialNumber</td>
+                <td>
+                    @{
+                        if (item.IsEnable == true)
+                        {
+                            <input value="@item.UserId" type="checkbox" id="project_status_switch" name="my-checkbox1" checked />
+
+                        }
+                        else
+                        {
+                            <input value="@item.UserId" type="checkbox" id="project_status_switch"  name="my-checkbox2" />
+                        }
+                    }
+                </td>
+                <td>@item.CreateTime</td>
+                <td>@item.Remark</td>
+            </tr>
+        }
+    }
+</tbody>

@@ -1,0 +1,482 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../css/hyl.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../css/iconfont.css">
+    <link rel="stylesheet" href="../../css/ziti.css">
+    <link rel="stylesheet" href="../../css/gdmap.css">
+    <!--<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />-->
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <!-- 高德地图 -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=28068084e71b4dac1344e8d5c9451629"></script>
+
+</head>
+<body>
+   <div class="zlw_map">
+       <!-- star 地图层 -->
+       <div class="zlw_map_layer">
+            <div id="map_monitor"></div> 
+       </div>
+       <!-- 地图层 end -->
+       <!-- star 数据层 -->
+       <div class="data_layer">
+           <div class="data_layercon">
+                <div class="data_layeryi">
+                        <div class="data_layeryitop">
+                            <ul class="clearfloat">
+                                <li>
+                                    <div class="data_layeryitopyi clearfloat">
+                                        <img src="/adminlte/images/泵房.png" alt="">
+                                        <i>泵房数量</i>
+                                    </div>
+                                    <div class="data_layeryitoper">
+                                        <p><span>39</span>个</p> 
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="data_layeryitopyi clearfloat">
+                                        <img src="/adminlte/images/泵房1.png" alt="">
+                                        <i>机组数量</i>   
+                                    </div>
+                                    <div class="data_layeryitoper">
+                                        <p><span>50</span>个</p> 
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="data_layerer">
+                        <ul>
+                            <li class="clearfloat">
+                                <div class="zlw_tj_yi">
+                                    <i></i>正常运行
+                                </div>
+                                <div class="zlw_tj_er">
+                                    <p> <i>17</i>个</p>
+                                </div>
+                            </li>
+                            <li class="clearfloat">
+                                <div class="zlw_tj_yi">
+                                    <i></i>报警
+                                </div>
+                                <div class="zlw_tj_er">
+                                    <p> <i>11</i>个</p>
+                                </div>
+                            </li>
+                            <li class="clearfloat">
+                                <div class="zlw_tj_yi">
+                                    <i></i>离线
+                                </div>
+                                <div class="zlw_tj_er">
+                                    <p> <i>6</i>个</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="data_layersan">
+                        <div class="data_layersancon">
+                            <div class="data_layersan_title">
+                                <p>实时监测数据</p>
+                            </div>
+                            <div class="data_layersan_nr">
+                                <div class="data_layersan_nrbt clearfloat">
+                                    <span>二供泵房</span>
+                                    <span>采集时间</span>
+                                    <span>操作</span>
+                                </div>
+                                <div class="data_layersan_nrcon">
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">清江山水</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">智慧园</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">黑龙江省嫩江县自来水江湾国际</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                     <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">金科世界城-低区</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">上海金山南圩新村</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                     <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">上海金山钟楼小区</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                     <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">义乌自来水</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">上海金山临源一村</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">清江山水</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">智慧园</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">黑龙江省嫩江县自来水江湾国际</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                     <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">金科世界城-低区</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">上海金山南圩新村</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                     <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">上海金山钟楼小区</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                     <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">义乌自来水</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">上海金山临源一村</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">清江山水</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">智慧园</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">黑龙江省嫩江县自来水江湾国际</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                     <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">金科世界城-低区</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">上海金山南圩新村</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                     <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">上海金山钟楼小区</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                     <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">义乌自来水</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                    <div class="data_layersan_item clearfloat">
+                                        <span class="chaochu">上海金山临源一村</span>
+                                        <span>2020.01.06 12:00</span>
+                                        <span><a href="">详情</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+           </div>
+       </div>
+       <!-- 数据层 end  -->
+       <!-- star 筛选层 -->
+       <div class="shuai_layui">
+            <div class="shuai_layui_yi clearfloat">
+                <!-- 搜索框 -->
+                <div class="shuai_layui_sea left">
+                    <input type="text" placeholder="搜索">
+                </div>
+                <!-- 复选 -->
+                <div class="shuai_layui_fux left">
+                    <ul class="clearfloat">
+                        <li>
+                            <input type="checkbox"><i></i>正常
+                        </li>
+                        <li>
+                            <input type="checkbox"><i></i>报警
+                        </li>
+                        <li>
+                            <input type="checkbox"><i></i>离线
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="shuai_layui_er">
+                <span>单位说明</span>
+                <p>压力：MPa</p>
+                <p>瞬流：m³/h</p>
+            </div>
+       </div>
+       <!-- 收缩按钮 -->
+       <div class="zlw_ss"></div>
+
+
+
+       <!-- 筛选层 end -->
+   </div>
+   <script>
+       var map = new AMap.Map('map_monitor', {
+            center: [116.397428, 39.90923],
+            layers: [//使用多个图层
+                new AMap.TileLayer.Satellite(),
+                new AMap.TileLayer.RoadNet()
+            ],
+            zooms: [4,10],//设置地图级别范围
+            zoom: 13
+       });
+       var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(12, -35)});
+       //自定义maker图标
+           var markericon1 = '' +
+               '<div>' +
+               '<img src="../../images/bj.png">' +
+               '</div>';
+           var markerContent1 = '' +
+               '<div class="makercon overflow pad10px">' +
+               '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang blue"></i><p class="mt5px">二供泵房</p></div>' +
+               '<div class="makercon-right">' +
+               '<p class="f16px fb ellipsis1">万象新城</p>' +
+               '<div class="green f16px fb tb-f"><span>4.31</span><span>0.85</span><span>0.81</span></div>' +
+               '<div class="tb-f f12px"><span>出瞬流</span><span>低区</span><span>中区</span></div>' +
+               '</div > ' +
+               '</div>' +
+               '<div class="sj"></div>';
+
+
+           var marker1 = new AMap.Marker({                       
+           //    // 以 icon 的 [center bottom] 为原点
+               offset: new AMap.Pixel(-10, -40),
+               content: markericon1,     //自定义marker点
+               position: new AMap.LngLat(116.368904, 39.923423),
+           });
+
+           // 将 markers 添加到地图
+           map.add(marker1);
+           marker1.on('click', function (e) {           
+    	        infoWindow.setContent(markerContent1);   	       
+    	        infoWindow.open(map, e.target.getPosition());
+           });
+
+       
+       var markericon2 = '' +
+               '<div>' +
+               '<img src="../../images/zx.png">' +
+               '</div>';
+           var markerContent2 = '' +
+               '<div class="makercon overflow pad10px">' +
+               '<div class="maptitle"><i class="iconfont f24px icon-bengfang blue"></i><p><span class="fb f16px">二供泵房</span><span class="pl10px">(出瞬流：<em class="green">0.00</em>)</span></p></div>' +
+                '<ul class="maplist">' +
+                        //报警 给<span class="red">,绿色 <span class="green">
+                    '<li><span>分区</span><span>进压力</span><span>出压力</span><span>进瞬时</span></li>' +
+                    '<li><span>低区</span><span>0.13</span><span class="red">0.7</span><span>0.00</span></li>' +
+                    '<li><span>中区</span><span>0.13</span><span class="green">0.7</span><span>0.00</span></li>' +
+                    '<li><span>高区</span><span>0.13</span><span>0.7</span><span>0.00</span></li>' +
+                '</ul > ' +              
+               '<div class="sj"></div>';
+
+           var marker2 = new AMap.Marker({                       
+           //    // 以 icon 的 [center bottom] 为原点
+               offset: new AMap.Pixel(-10, -40),
+               content: markericon2,     //自定义marker点
+               position: new AMap.LngLat(116.368904, 42.923423),
+           });
+           // 将 markers 添加到地图
+           map.add(marker2);
+
+           marker2.on('click', function (e) {             
+    	        infoWindow.setContent(markerContent2);   	       
+    	        infoWindow.open(map, e.target.getPosition());
+            });
+
+
+       var markericon3 = '' +
+               '<div>' +
+               '<img src="../../images/lx.png">' +
+               '</div>';
+           var markerContent3 = '' +
+               '<div class="makercon overflow pad10px">' +
+               '<div class="maptitle"><i class="iconfont f24px icon-bengfang blue"></i><p><span class="fb f16px">二供泵房</span><span class="pl10px">(出瞬流：<em class="green">0.00</em>)</span></p></div>' +
+                '<ul class="maplist">' +
+                        //报警 给<span class="red">,绿色 <span class="green">
+                    '<li><span>分区</span><span>进压力</span><span>出压力</span><span>进瞬时</span></li>' +
+                    '<li><span>低区</span><span>0.13</span><span class="red">0.7</span><span>0.00</span></li>' +
+                    '<li><span>中区</span><span>0.13</span><span class="green">0.7</span><span>0.00</span></li>' +
+                   // '<li><span>高区</span><span>0.13</span><span>0.7</span><span>0.00</span></li>' +
+                '</ul > ' +              
+               '<div class="sj"></div>';
+
+           var marker3 = new AMap.Marker({                       
+           //    // 以 icon 的 [center bottom] 为原点
+               offset: new AMap.Pixel(-10, -40),
+               content: markericon3,     //自定义marker点
+               position: new AMap.LngLat(118.368904, 41.923423),
+           });
+           // 将 markers 添加到地图
+           map.add(marker3);
+
+           marker3.on('click', function (e) {             
+    	        infoWindow.setContent(markerContent3);   	       
+    	        infoWindow.open(map, e.target.getPosition());
+           });
+
+       var markericon4 = '' +
+                //报警 替换下面bgGreen 为 bgRed 离线为 bgGray
+               '<div class="mapiconbox overflow bgGreen">' +
+                    '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><span class="left">出瞬流 0.70</span>' +
+               '</div>';
+           var markerContent4 = '' +
+               '<div class="makercon overflow pad10px">' +
+               '<div class="maptitle"><i class="iconfont f24px icon-bengfang blue"></i><p><span class="fb f16px">二供泵房</span><span class="pl10px">(出瞬流：<em class="green">0.00</em>)</span></p></div>' +
+                '<ul class="maplist">' +
+                        //报警 给<span class="red">,绿色 <span class="green">
+                    '<li><span>分区</span><span>进压力</span><span>出压力</span><span>进瞬时</span></li>' +
+                    '<li><span>低区</span><span>0.13</span><span class="red">0.7</span><span>0.00</span></li>' +
+                    '<li><span>中区</span><span>0.13</span><span class="green">0.7</span><span>0.00</span></li>' +
+                   // '<li><span>高区</span><span>0.13</span><span>0.7</span><span>0.00</span></li>' +
+                '</ul > ' +              
+               '<div class="sj"></div>';
+
+           var marker4 = new AMap.Marker({                       
+           //    // 以 icon 的 [center bottom] 为原点
+               offset: new AMap.Pixel(-45, -33),
+               content: markericon4,     //自定义marker点
+               position: new AMap.LngLat(118.368904, 38.923423),
+           });
+           // 将 markers 添加到地图
+           map.add(marker4);
+
+           marker4.on('click', function (e) {             
+    	        infoWindow.setContent(markerContent4);   	       
+    	        infoWindow.open(map, e.target.getPosition());
+            });
+
+       var markericon5 = '' +
+               '<div class="makercon overflow pad10px">' +
+                    '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang blue"></i><p class="mt5px">二供泵房</p></div>' +
+                    '<div class="makercon-right">' +
+                        '<p class="f16px fb ellipsis1">万象新城</p>' +
+                            '<div class="green f16px fb tb-f"><span>4.31</span><span>0.85</span><span>0.81</span></div>' +
+                            '<div class="tb-f f12px"><span>出瞬流</span><span>低区</span><span>中区</span></div>' +
+                    '</div > ' +
+               '</div>' +
+               '<div class="sj"></div>';
+           var markerContent5 = '' +
+               '<div class="makercon overflow pad10px">' +
+               '<div class="maptitle"><i class="iconfont f24px icon-bengfang blue"></i><p><span class="fb f16px">二供泵房</span><span class="pl10px">(出瞬流：<em class="green">0.00</em>)</span></p></div>' +
+                '<ul class="maplist">' +
+                        //报警 给<span class="red">,绿色 <span class="green">
+                    '<li><span>分区</span><span>进压力</span><span>出压力</span><span>进瞬时</span></li>' +
+                    '<li><span>低区</span><span>0.13</span><span class="red">0.7</span><span>0.00</span></li>' +
+                    '<li><span>中区</span><span>0.13</span><span class="green">0.7</span><span>0.00</span></li>' +
+                   // '<li><span>高区</span><span>0.13</span><span>0.7</span><span>0.00</span></li>' +
+                '</ul > ' +              
+               '<div class="sj"></div>';
+
+           var marker5 = new AMap.Marker({                       
+           //    // 以 icon 的 [center bottom] 为原点
+               offset: new AMap.Pixel(-128, -150),
+               content: markericon5,     //自定义marker点
+               position: new AMap.LngLat(115.068904, 38.023423),
+           });
+           // 将 markers 添加到地图
+           map.add(marker5);
+
+           marker5.on('click', function (e) {             
+    	        infoWindow.setContent(markerContent5);   	       
+    	        infoWindow.open(map, e.target.getPosition());
+            });
+
+        $(function(){
+            var layui_yi = $('.data_layeryi').height();
+            var layui_er = $('.data_layerer').height();
+            var layuisanpadding = (layui_yi+layui_er+30)+'px';
+            $('.data_layersan').css('padding-top',layuisanpadding)
+            // 搜索框点击变长
+            $(".shuai_layui_sea input").focus(function(){
+                $('.shuai_layui_sea input').css('width','200px')
+            });
+            $(".shuai_layui_sea input").blur(function(){
+                $('.shuai_layui_sea input').css('width','60px')
+            });
+            // 点击收缩
+            $('.zlw_ss').click(function(){
+                if($(".zlw_ss").hasClass("ss_active")){
+                    $('.data_layer').css('right','0px');
+                    $('.shuai_layui').css('right','385px');
+                    $('.zlw_ss').css('right','378px').removeClass('ss_active');
+                    $('.zlw_ss').css('background-image','url(/adminlte/images/收缩-触发-白色.svg)')
+                }else {
+                    $('.data_layer').css('right','-380px');
+                    $('.shuai_layui').css('right','0px');
+                    $('.zlw_ss').css('right','-2px').addClass('ss_active');
+                    $('.zlw_ss').css('background-image','url(/adminlte/images/展开-未触发-白色.svg)')
+                } 
+
+
+                
+            })
+         
+        })
+        
+   </script>
+   <script>
+       $(function () {
+           $(".icon-img").click(function () {
+               $(".mapbox").css("width", "100%");
+               $(".mapcjs").fadeOut();
+               $(this).addClass("hidden");
+               $(".icon-img2").removeClass("hidden");
+           });
+           $(".icon-img2").click(function () {
+               $(".mapbox").css("width", "calc(100% - 400px)");
+               $(".icon-img").removeClass("hidden");
+               $(".mapcjs").show();
+               $(this).addClass("hidden");
+           });
+
+          
+           
+
+       })
+   </script>
+</body>
+</html>

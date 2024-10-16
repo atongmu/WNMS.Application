@@ -1,0 +1,90 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>计划制定</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+
+
+    <link rel="stylesheet" href="~/css/bootstrap-table.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <!-- bootstrap -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        iframe {
+            height:100%;border:none
+        }
+        .sxt_list li{padding:0}
+        .sxt_list li span{width:100%}
+        .sxt_list .active{border-left:4px solid #0094ff;background:#eee;transition: all 0.3s;}
+    </style>
+</head>
+<body>
+    <div class="zlw_manage">
+        <div class="zlw_managecon">
+            <!-- star left -->
+            <div class="zlw_manageconlf">
+                <div class="zlw_manageconlfcon">
+                    <div class="zlw_managecontitle">
+                        <p style="margin:0 !important"> <i class="fa fa-address-card"></i> 维保管理</p>
+                    </div>
+                    <div id="treeDemo" class="ztree">
+                        <ul class="sxt_list" id="listtem">
+                            <li  onclick="LoadInPlan('1')"><span class="chaochu active">巡检任务制定</span></li>
+                            <li onclick="LoadInPlan('2')"><span class="chaochu">保养任务制定</span></li>
+                            <li onclick="LoadInPlan('3')"><span class="chaochu">维修上报</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- left end -->
+            <!-- star right -->
+            <div class="zlw_manageconrg">
+                <div class="zlw_manageconrgcon">
+                    <iframe id="ifame" src="/Wos/Planning/LoadInspection"></iframe>
+                    @*<iframe src="/Wos/Planning/LoadMaintain"></iframe>*@
+                    @*<iframe id="ifame" src="/Wos/Planning/LoadRepair"></iframe>*@
+                </div>
+            </div>
+            <!-- right end -->
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(function () {
+            // GetTableData();
+            $(".sxt_list li span").click(function () {
+                $(this).addClass("active").parents("li").siblings("li").find("span").removeClass("active");
+            })
+        })
+        function LoadInPlan(id) {
+            if (id == '1') { 
+                 $("#ifame").attr("src", "/Wos/Planning/LoadInspection");
+            } else if (id == '2') {
+                $("#ifame").attr("src", "/Wos/Planning/LoadMaintain");
+            } else {
+                $("#ifame").attr("src", "/Wos/Planning/LoadRepair");
+            }
+        }
+    </script>
+</body>
+</html>

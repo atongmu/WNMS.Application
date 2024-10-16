@@ -1,0 +1,89 @@
+﻿input.error,select.error{ border: 1px solid red;border-bottom-right-radius:4px !important;border-top-right-radius:4px !important }
+label.error {
+    background: url("unchecked.gif") no-repeat 0px 3px;
+    padding-left: 16px;
+    font-weight: normal;
+    color: #EA5200;
+    display: block;text-indent: .5em;
+    position:absolute;top:61px;
+}
+.zlw_manage label.error, .xiugai label.error,.box-danger label.error {
+    top: 36px !important;text-indent: .5em;
+}
+    label .checked {
+    
+    background: url("unchecked.gif") no-repeat 0px 0px;
+}
+ .form-group {
+            margin-left: 0px;
+            margin-right: 0px;position:relative;
+        }
+        #div div{
+            margin-left:0;
+            margin-right:0;
+            position: relative;
+        }
+        .form-control1 {
+            width:100%;
+            float: right;
+        }
+        #inputDiv:after{
+               content: "020"; 
+              display: block; 
+              height: 0; 
+              clear: both; 
+              visibility: hidden; 
+        }
+        #inputDiv{
+              zoom: 1;
+              padding:0
+        }
+        #inputDiv a{
+            line-height: 45px;
+            color:#333
+
+        }
+        #inputDiv input{
+             
+        }
+        #inputDiv input[type=checkbox]{width:6%;margin-top:9px;float:right;height:17px;}
+        /*label{
+            float:left;
+            text-align:right;
+        }*/
+        #inputDiv1{
+            display:none;
+        }
+.div_x{font-size:16px;position:absolute;right:8%;display:none;margin-top: -50px;cursor:pointer;}
+#inputDiv1 .obox:hover .div_x{display:block;text-decoration:none;}
+.form_information table{margin-bottom:40px;}
+.form_information table tr td:first-child{padding:15px 0 !important;text-align:center;}
+.form_information table td ul,.form_information table td ol{padding:0;}
+.form_information table td ul li{list-style:none;awhite-space:nowrap;}
+.form_information table td ol li{text-align:left;}
+.form_information .form_bot{text-align:right;position: fixed;bottom: 0;width: 100%;background:rgba(0,0,0,0.1);padding:3px 10px;}
+.form_information .form_bot .btn_xg{float:left;border:1px solid #009AFF;color:#009AFF;font-size:12px;}
+.form_information .form_bot .btn_sc{float:left;border:1px solid #FF7466;color:#FF7466;margin-left:10px;font-size:12px;}
+.form_information .form_bot .btn_left{margin-left:10px;}
+.form_information .form_bot span{font-size:12px;}
+.profile_1{height:100%;background:#f9f9f9;padding-top:15px;}
+.profile_1 ul{}
+.profile_1 li{padding:15px 0;list-style:none;font-family:'微软雅黑';font-size:16px !important;}
+
+.tab-pane_top{background:#5392aa;color:#fff;}
+.tab-pane_top h4 span{font-size:14px;}
+.tab-pane_box{padding:5px}
+.tab-pane_box h4{color:#5eacca;}
+.tab-pane_box .tab-pane{background:#fff;margin-bottom:20px;border:#ddd solid 1px;padding:3px;}
+.tab-pane_box .tab-pane h4{color:#4f6d79;margin:0}
+/*.tab-pane_box .tab-pane p{padding-left:20px;color:#cdcdcd;font-size:14px;line-height:30px;border-bottom:1px solid #ddd;}*/
+.tab-pane_box .tab-pane p{padding-left:20px;color: #5A5151;font-size:14px;line-height:30px;border-bottom:1px solid #ddd;}
+.tab-pane_box .tab-pane p span{color: #0E0C0C;}
+
+
+
+@media screen and (max-width:768px){
+    .form-control1{width:90%}
+    #inputDiv input[type=checkbox]{width:10%;margin-top:9px;float:right;height:17px;}
+    .div_x {right:12%;}
+}

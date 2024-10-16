@@ -1,0 +1,350 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>设备管理</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap-table.min.css">
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="../../css/anniu.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <script src="../../lib/layer/layer.css"></script>
+    <!-- bootstrap -->
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../lib/layer/layer.js"></script>
+    <style>
+        .selct select {
+            height: 30px;
+            width: 150px;
+            line-height: 30px;
+            border: 1px #999 solid;
+            border-radius: 5px;
+            margin-right: 15px;
+            outline: none
+        }
+
+        .zlw_manageconrgconyi {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            height: 100%;
+            margin-top: 7px;
+        }
+
+        /*.zlw_manageconrgconsan .bootstrap3 {
+            height: calc(100% - 60px);margin-top:10px
+        }*/
+
+        .fixed-table-container {
+            height: calc(100% - 115px);
+            overflow: auto
+        }
+    </style>
+</head>
+
+<body>
+    <div class="zlw_manage">
+        <!-- star right -->
+        <div class="zlw_manageconrg">
+            <div class="zlw_manageconrgcon">
+                <!-- star 查询 -->
+                <div class="mt10px ml10px left">
+                    <ul class="clearfloat">
+                        <li>
+                            <input type="text" id="DeviceName" class="hyl_input" placeholder="输入设备名称" autocomplete="off">
+                            <button class="hyl_btn" id="deviceSearch_Btn"> <i class="fa fa-search"></i> 查询</button>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- 查询 end -->
+                <div class="zlw_manageconrgconer" style="height:50px;border-bottom:1px solid #ddd">
+                    <div class="btn-group mar10px pull-right">
+                        @await Component.InvokeAsync("ModuleButtons")
+                        @*<button type="button" id="device_AddBtn" class="btn btn-default"><i class="fa fa-plus mr5px"></i>添加</button>
+                            <button type="button" id="device_EditBtn" class="btn btn-default"><i class="fa fa-edit mr5px"></i>修改</button>
+                            <button type="button" id="device_DelBtn" class="btn btn-default"><i class="fa fa-trash-o mr5px"></i>删除</button>
+
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-reorder"></i>更多
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button class="btn btn-sm btn-success fileinput-button" style="background-color:#428bca;border-color:#428bca">
+                                            <form id="upfile" enctype="multipart/form-data" method="POST">
+                                                <input type="file" name="excelfile" onchange="DeviceImport()" />
+
+                                            </form>
+                                        </button>
+                                    </li>
+                                    <li><a id="DeviceExport">导出</a></li>
+                                </ul>
+                            </div>*@
+                    </div>
+                </div>
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan" id="tablebox" style="height:calc(100% - 50px);margin-top:10px">
+                    <table id="tabledata" data-toggle="table" data-pagination="true" data-side-pagination="server" data-page-list="[10, 25, 50, 100]" data-page-size="10" class="table-striped">
+                        <tr></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- right end -->
+    </div>
+    <script>
+        $table = $("#tabledata");
+        $(function () {
+            // 按钮切换样式
+            $(".zlw_time_con li").click(function () {
+                $(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+            });
+
+            //初次加载数据
+            var options = $table.bootstrapTable('getOptions');
+            LoadData(options.pageNumber, options.pageSize, "", "desc");
+
+            //查询列表
+            $("#deviceSearch_Btn").click(function () {
+                LoadData(1, options.pageSize, "", "desc");
+            });
+            $("#DeviceName").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    LoadData(1, options.pageSize, "", "desc");
+                }
+            });
+
+            //添加设备
+            $("#device_AddBtn").click(function () {
+                iframeWithBtns("添加设备", "50%", "70%", "/Sws/Sws_DeviceInfo02/AddDevicePage", false, function (formIndex, formLayer) {
+                    var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm(function (data) {
+                        if (data == "ok") {
+                            layer.close(formIndex);
+                            LoadData(options.pageNumber, options.pageSize, "", "desc");
+                        } else {
+                            if (data = "false") {
+                                layer.alert("选择的泵房分区已经存在，请重新输入。")
+                            } else {
+                                layer.alert("添加失败，刷新页面后重试。")
+                            }
+                        }
+                    });
+                });
+            });
+
+            //编辑设备
+            $("#device_EditBtn").click(function () {
+                var selects = $table.bootstrapTable('getSelections');
+                if (selects.length != 1) {
+                    layer.msg("请选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    iframeWithBtns("编辑设备", "50%", "70%", "/Sws/Sws_DeviceInfo02/EditDevicePage/" + selects[0].DeviceID, false, function (formIndex, formLayer) {
+                        var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                        currentIframe.saveForm(function (data) {
+                            if (data == "ok") {
+                                layer.close(formIndex);
+                                LoadData(options.pageNumber, options.pageSize, "", "desc");
+                            } else {
+                                if (data = "false") {
+                                    layer.alert("选择的泵房分区已经存在，请重新输入。")
+                                } else {
+                                    layer.alert("编辑失败，刷新页面后重试。")
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+
+            //删除设备
+            $("#device_DelBtn").click(function () {
+                var selects = $table.bootstrapTable('getAllSelections');
+                if (selects.length < 1) {
+                    layer.msg("请至少选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    var id = "";
+                    for (i = 0; i < selects.length; i++) {
+                        id += selects[i].DeviceID + ",";
+                    }
+                    id = id.substring(0, id.length - 1);
+                    layer.confirm("确定要删除设备？",
+                        {
+                            btn: ["确定", "取消"]
+                        },
+                        function () {
+                            DeleteDevice(id);
+                        },
+                        function () { }
+                    );
+                }
+            });
+
+            //导出数据
+            $("#DeviceExport").click(function () {
+                DeviceExport();
+            });
+            //导入数据
+            $("#DeviceImport").click(function () {
+                DeviceImport();
+            });
+
+            $('.fixed-table-loading').hide()
+        });
+
+        //加载数据
+        function LoadData(index, pagesize, sort, order) {
+            $.post('/Sws/Sws_DeviceInfo02/LoadDevice02Info', {
+                deviceName: $("#DeviceName").val(),
+                pageindex: index || 1,
+                pagesize: pagesize,
+                sortName: sort,
+                sortOrder: order
+            }, function (res) {
+                //添加table
+                $("#tablebox").html('<table id="tabledata" data-sort-name="' + res.sortName + '" class="table table-striped" data-pagination="true" data-page-list="[10, 15,20]" data-toggle="table"  data-side-pagination="server"  ' +
+                    'data-total-rows="' + res.total + '" data-sort-order="' + res.order + '"  data-page-size="' + res.pageSize + '"   data-page-number="' + res.pageIndex + '">' + res.dataTable + '</table>')
+                $table = $("#tabledata").bootstrapTable({
+                    smartDisplay: false
+                });
+
+                //分页
+                $table.on('page-change.bs.table', function (e, number, size) {
+                    LoadData(number, size, sort, order)
+                });
+
+                //排序
+                $table.on('sort.bs.table', function (e, field, order) {
+                    LoadData(index, pagesize, field, order)
+                });
+            });
+        }
+
+        //删除数据
+        function DeleteDevice(id) {
+            $.post("/Sws/Sws_DeviceInfo02/DeleteDevice", { deviceId: id }, function (res) {
+                if (res == "ok") {
+                    layer.alert("删除设备成功。");
+                    var option = $table.bootstrapTable('getOptions');
+                    LoadData(option.pageNumber, option.pageSize, "", "desc");
+                } else {
+                    layer.alert("删除设备失败。");
+                }
+            });
+        }
+
+        //刷新数据
+        function Refresh() {
+            var option = $table.bootstrapTable('getOptions');
+            LoadData(option.pageNumber, option.pageSize, "", "desc");
+        };
+
+        //导出数据
+        function DeviceExport() {
+            window.location.href = "/Sws/Sws_DeviceInfo02/ExportData?deviceName=" + $("#deviceName").val() + "&sort=DeviceId" + "&sortOrder=desc" + "";
+        }
+        //导入数据
+        function DeviceImport() {
+            //$("#upfile").submit();
+            var formData = new FormData($("#upfile")[0]);
+            $.ajax({
+                url: '/Sws/Sws_DeviceInfo02/Import',
+                type: 'POST',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (res) {
+                if (res == "ok") {
+                    Refresh();
+                    //location.reload()
+                    removeFile();
+                    layer.alert("导入成功！");
+                }
+                else if (res == "error") {
+                    removeFile();
+                    layer.alert("导入失败！");
+                }
+                else if (res == "typeno") {
+                    layer.alert("文件类型不对！");
+                }
+                else if (res == "not") {
+                    removeFile();
+                    layer.alert("文件不存在！");
+                }
+                else if (res == "exception") {
+                    removeFile();
+                    layer.alert("请检查数据格式！");
+                } else {
+                    removeFile();
+                    layer.alert(res);
+                }
+            });
+        }
+        //清空文件域
+        function removeFile() {
+            var file = $('input[name="excelfile"]');
+            file.after(file.clone().val(""));
+            file.remove();
+        }
+        //弹出层
+        function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                skin: 'layui-ext-skin01',
+                type: 2,
+                title: title,
+                shadeClose: false,
+                closeBtn: 0,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url
+            });
+        }
+    </script>
+</body>
+</html>

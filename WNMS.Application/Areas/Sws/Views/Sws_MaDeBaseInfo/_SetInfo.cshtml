@@ -1,0 +1,286 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+@model SwsMaDeBaseInfo
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_SetInfo</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+        <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <style>
+        .star {
+            font-size: 25px;
+            color: red;
+            position: absolute;
+            top: -4px;
+            left: 60px
+        }
+
+        .form-group {
+            position: relative
+        }
+
+
+
+        .zlw_gs label {
+            /*line-height: 35px;*/
+            margin-bottom: 2px;
+        }
+
+            .zlw_gs label span {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                padding-top: 5px;
+                float: left;
+                margin-left: 5px;
+            }
+
+            .zlw_gs label i {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                float: left;
+                font-weight: bold;
+            }
+    </style>
+</head>
+<body>
+    <div class="xiugai" style="padding:20px 30px">
+        <form action="/Sws/Sws_MaDeBaseInfo/SetBaseInfo" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body zlw_gs">
+                <input id="Id" type="hidden" name="Id" value="@Model.Id" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>厂商</label>
+
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </div>
+
+                                <select id="Manufacturer" name="Manufacturer" class="form-control">
+                                    @{
+                                        IEnumerable<SysDataItemDetail> types = ViewBag.DataItemDetail as IEnumerable<SysDataItemDetail>;
+
+                                        IEnumerable<SysDataItemDetail> manulist = types.Where(r => r.FItemId == 7);
+                                        foreach (var item in manulist)
+                                        {
+                                            if (Model.Manufacturer == int.Parse(item.ItemValue))
+                                            {
+                                                <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.ItemValue">@item.ItemName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>水泵品牌</label>
+
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </div>
+                                <select id="PumpBrand" name="PumpBrand" class="form-control">
+                                    @{
+                                        IEnumerable<SysDataItemDetail> pumpBrands = types.Where(r => r.FItemId == 31);
+                                        foreach (var item in pumpBrands)
+                                        {
+                                            if (Model.PumpBrand == int.Parse(item.ItemValue))
+                                            {
+                                                <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.ItemValue">@item.ItemName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group relative">
+                            <label>流量(m³) <em class="star">*</em></label>
+
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </div>
+                                <input type="text" class="form-control" id="WaterFlow" name="WaterFlow" value="@Model.WaterFlow" autocomplete="off" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group relative">
+                            <label>扬程(m) <em class="star">*</em></label>
+
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </div>
+                                <input type="text" class="form-control" id="HighLift" name="HighLift" value="@Model.HighLift" autocomplete="off" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group relative">
+                            <label>泵效率(%) <em class="star" style="left:70px">*</em></label>
+
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </div>
+                                <input type="text" class="form-control" id="PumpEff" name="PumpEff" value="@Model.PumpEff" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group relative">
+                            <label>电机效率(%) <em class="star" style="left:80px">*</em></label>
+
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </div>
+                                <input type="text" class="form-control" id="MotorEff" name="MotorEff" value="@Model.MotorEff" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script type="text/javascript">
+       
+        $(function () {
+          
+              validateForm();
+        })
+        var myfunc;
+         function saveForm(func) {
+
+             $("form").submit();
+             myfunc = func;
+        }
+         function validateForm() {
+            $("#MFForm").validate({
+                debug: true,
+                ignore: "",
+                rules: {
+                    Manufacturer: {
+                        required: true,
+                        digits: true
+                    },
+                    PumpBrand: {
+                         required: true,
+                        digits: true
+                    },
+                    WaterFlow: {
+                        required: true,
+                        number: true,
+                        min:0
+                    },
+                    HighLift: {
+                        required: true,
+                        number: true,
+                        min:0
+                    },
+                   PumpEff: {
+                        required: true,
+                        number: true,
+                        min:0
+                    },
+                    MotorEff: {
+                        required: true,
+                        number: true,
+                        min:0
+                    }
+  
+                },
+                messages: {
+                    Manufacturer: "请选择厂商",
+                    PumpBrand: "请选择水泵品牌",
+                    WaterFlow: {
+                        required: "请输入流量",
+                        number: "请输入数字",
+                        min:"输入的值应大于等于0"
+                    },
+                    HighLift: {
+                          required: "请输入扬程",
+                        number: "请输入数字",
+                        min:"输入的值应大于等于0"
+                    },
+                    PumpEff: {
+                          required: "请输入泵效率",
+                        number: "请输入数字",
+                        min:"输入的值应大于等于0"
+                    },
+                    MotorEff: {
+                          required: "请输入电机效率",
+                        number: "请输入数字",
+                        min:"输入的值应大于等于0"
+                    }
+                }
+            });
+        }
+         function _addFun(data) {
+             if (data == "ok") {
+                 myfunc();
+
+
+             }
+             else if (data == "no") {
+
+                 layer.msg("操作失败");
+
+
+             }
+             else {
+                 layer.msg("已存在相同厂商和水泵品牌的信息");
+             }
+        }
+    </script>
+</body>
+</html>

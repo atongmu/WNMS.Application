@@ -1,0 +1,315 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>工单处理</title>
+    <link rel="stylesheet" href="~/lib/dist/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="~/lib/dist/css.css">
+    <link href="/css/hyl.css" rel="stylesheet" />
+    <link href="/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" />
+    <link href="/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="/lib/layer/layer.css"></script>
+    <style>
+        .labels {
+            border-radius: 100%;
+            /* margin-left: 20px; */
+            padding: 0;
+            display: inline-block;
+            color: #ff0000;
+            line-height: 20px;
+            width: 24px;
+            text-align: center;
+            border: 2px solid #ff0000
+        }
+
+        .labelsc {
+            border-radius: 100%;
+            /* margin-left: 20px; */
+            padding: 0;
+            display: inline-block;
+            color: #FFB800;
+            line-height: 20px;
+            width: 24px;
+            text-align: center;
+            border: 2px solid #FFB800
+        }
+
+        .zlw_row td {
+            text-align: center
+        }
+
+        .zlw_wxglmainyi {
+            height: 100%;
+            padding: 5px;
+            border-bottom: none;
+        }
+
+        .zlw_wxglmainer {
+            padding: 0;
+        }
+
+        .zlw_wxglmainercon {
+            height: calc(100% - 40px);
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .pagination {
+            margin: 9px 0 0;
+        }
+
+        .laypage_total label {
+            display: inline-block;
+            height: 26px;
+            line-height: 26px;
+        }
+
+        .table > tbody > tr:nth-child(odd) {border-top: 1px solid #000;}
+
+        .table > tbody > tr > td {
+            text-align: center;
+            border-top: 1px solid #ccc;
+            border-left: 1px solid #ccc;
+        }
+
+        .table-striped > tbody > tr:nth-child(4n + 1),
+        .table-striped > tbody > tr:nth-child(4n + 2) {
+            background-color: #e6e6e6;
+        }
+
+        .table-striped > tbody > tr:nth-child(4n + 3),
+        .table-striped > tbody > tr:nth-child(4n + 4) {
+            background-color: #fff;
+        }
+
+        .zlw_wxglmainer {
+            position: relative;
+        }
+
+        .table-fixed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            width: 100%;
+            text-align: center;
+            background-color: #fff;
+            border-bottom: 2px solid #ddd;
+        }
+
+            .table-fixed .th {
+                float: left;
+                padding: 8px;
+                font-size: 14px;
+                line-height: 1.42857143;
+            }
+    </style>
+</head>
+<body>
+    <div class="zlw_wxgl clearfloat">
+        <!-- 内容区 -->
+        <div class="zlw_wxglmain">
+            <div class="zlw_wxglmainyi">
+                <div class="zlw_wxglmainnryi clearfloat">
+                    <label class="hyl_label left">发布时间：</label>
+                    <ul class="clearfloat left" id="zlw_hg">
+                        <li data-value="0" class="gd_zdyact" id=""><span>全部</span></li>
+                        <li data-value="1" id="昨天" class=""><span>昨天</span></li>
+                        <li data-value="2" id="本周" class=""><span>本周</span></li>
+                        <li data-value="3" id="上周" class=""><span>上周</span></li>
+                        <li data-value="4" id="本月" class=""><span>本月</span></li>
+                        <li data-value="5" id="上月" class=""><span>上月</span></li>
+                        <li data-value="6" id="自定义" class=""><span>自定义</span></li>
+                    </ul>
+                    <input id="datevalue" style="display:none;" value="0" />
+                    <div class="hyl_ycbf">
+                    </div>
+                </div>
+                <div class="zlw_wxglmainnryi clearfloat" style="padding-top:10px;">
+                    <div class="zlw_zdxzsan zlw_zdxzyiselect clearfloat left">
+                        <span>工单状态：</span>
+                        <select name="" id="statevalue">
+                            <option value="-2">全部</option>
+                            <option value="-1">未派发</option>
+                            <option value="0">待接收</option>
+                            <option value="1">已接收</option>
+                            <option value="2">已到场</option>
+                            <option value="3">处理中</option>
+                            <option value="4">已完工</option>
+                            <option value="5">已审核</option>
+                            <option value="7">已退单</option>
+                        </select>
+                    </div>
+                    <div class="zlw_zdxzsi zlw_zdxzyiselect clearfloat left">
+                        <span>快速索引：</span>
+                        <input id="message" type="text" class="zlw_kssy " placeholder="请输入事件编号、工单编号等">
+                        <i class="zlw_kssy_tj fa fa-paper-plane"></i>
+                        <i class="zlw_kssy_dc fa fa-search" id="selectData" style="height:30px;line-height:30px;margin-top:0;padding:0 7px">查询</i>
+                    </div>
+                    <div class="zlw_manageconrgconer jz" style="border-bottom:1px solid #ddd;height:51px;">
+
+                        <div class="btn-group mar15px pull-right mr10px" style="margin: 0;">
+                            <button type="button" id="wo_AddBtn" class="btn btn-default"><i class="fa fa-plus"></i> 添加派单</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- table主题内容 -->
+                <div class="zlw_wxglmainer">
+                    <div class="table-fixed">
+                        <div class="tr">
+                            <div class="th">序号</div>
+                            <div class="th">工单编号</div>
+                            <div class="th">紧急程度</div>
+                            <div class="th">处理级别</div>
+                            @*<div class="th">状态</div>*@
+                            <div class="th">设备名称</div>
+                            <div class="th">发布时间</div>
+                            <div class="th">接收人</div>
+                            <div class="th">事件内容</div>
+                            <div class="th">事件类型</div>
+                            <div class="th">是否审核</div>
+                            <div class="th">交办意见</div>
+                        </div>
+                    </div>
+                    <div class="zlw_wxglmainercon">
+
+                        <table class="table table-striped" id="tablebox">
+                        </table>
+                    </div>
+                    <div class="overflow pagination">
+                        <div class="left" id="page_JK"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="~/lib/dist/jquery-1.12.4.min.js"></script>
+        <script src="~/lib/dist/bootstrap.min.js"></script>
+        <script src="~/lib/dist/bootstrap-table.min.js"></script>
+        <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+        <script src="~/lib/laypage/laypage.js"></script>
+        <script src="../../lib/layer/layer.js"></script>
+        <script>
+            var sort = "desc";//定义排序方式（升降序）
+            var sorttd = "ReleaseTime";       //定义要排序的变量
+            var pageSize = 10;
+            $(function () {
+
+                var a1 = $('.zlw_wxglmainyi ul li')//条件筛选切换
+                for (var i = 0; i < a1.length; i++) {
+                    a1[i].index = i;
+                    a1[i].onclick = function () {
+                        for (var i = 0; i < a1.length; i++) {
+                            a1[i].className = ''
+                        }
+                        this.className = 'gd_zdyact';
+                        if ($(this).data('value') == 6) {
+                            $('.hyl_ycbf #BeginTime').remove();
+                            $('.hyl_ycbf #EndTime').remove();
+                            $('.hyl_ycbf').append('<input id="BeginTime" readonly=”readonly” type="text" class="hyl_input hyl_input-sm" onClick = "WdatePicker({dateFmt:\'yyyy-MM-dd\'})" placeholder="开始时间"/> ' +
+                                '<input id="EndTime" type="text" readonly=”readonly” class="hyl_input ml10px hyl_input-sm" onClick = "WdatePicker({dateFmt:\'yyyy-MM-dd\'})" placeholder="结束时间"/> '
+                            );
+                        }
+                        else {
+                            $('.hyl_ycbf #BeginTime').remove();
+                            $('.hyl_ycbf #EndTime').remove();
+                            getTableData(1);
+                        }
+                        getTableData(1);
+                    }
+                }
+
+                getTableData(1);
+            });
+            $('#zlw_hg li').on('click', function () {
+                $('#datevalue').val($(this).data('value'));
+                var type = $(this).data('type');
+                //active[type] ? active[type].call(this) : '';
+            });
+            $("#selectData").click(function () {
+                getTableData(1);
+            });
+            //table
+            function getTableData(curr) {
+                $.post("/Wo/WorkHandle/GetWorkOrderData", {
+                    date: $('#datevalue').val(),
+                    State: $('#statevalue').val(),
+                    MyDateTime: $("#BeginTime").val(),
+                    field: sorttd,
+                    order: sort,
+                    message: $('#message').val(),
+                    eventsType: 0,
+                    UserID: 0,
+                    BeginTime: $("#BeginTime").val(),
+                    EndTime: $("#EndTime").val(),
+                    pageIndex: curr || 1,
+                    pageSize: pageSize
+                }, function (res) {
+                    $("#tablebox").html(res.dataTable);
+                    $("#total").text("共" + res.total + "条")
+                    laypage({
+                        skin: 'molv',
+                        cont: 'page_JK',
+                        pages: res.totalPage,
+                        skip: true,
+                        curr: curr || 1,
+                        jump: function (obj, first) {
+                            if (!first) {
+                                getTableData(obj.curr);
+                            }
+                        }
+                    });
+                    console.log('表格加载完毕');
+
+                    $('#tablebox thead tr:first-child th').each(function () {
+                        var index = $(this).index(),
+                            thisWidth = $(this).width();
+                        $('.table-fixed .th').eq(index).width(thisWidth);
+                    });
+                });
+            }
+
+            //处理
+            function Deal(woid) {
+                iframes(['工单处理'], "90%", "90%", "/Wo/WorkHandle/LoadWODetails/" + woid);
+            }
+            function iframes(title, width, height, url) {
+                layer.open({
+                    type: 2,
+                    title: title,
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: [width, height],
+                    content: url
+                });
+            }
+            //添加工单
+            $("#wo_AddBtn").click(function () {
+                iframe(['派发工单'], "60%", "603px", "/Wo/WorkHandle/ManualDispatch");
+            });
+            function iframe(title, width, height, url) {
+                layer.open({
+                    type: 2,
+                    title: title,
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: [width, height],
+                    content: url,
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        window.frames[0].SubmitData();
+                    }, cancel: function (index) {
+
+                    }
+                });
+            }
+        </script>
+</body>
+</html>

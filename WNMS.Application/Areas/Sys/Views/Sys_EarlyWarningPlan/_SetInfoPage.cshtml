@@ -1,0 +1,158 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SetRole</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap-table.min.css">
+    @*<link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <!-- bootstrap -->
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+
+</head>
+<body>
+    @model SysEarlyWarningPlan
+    <div style="padding:20px" class="xiugai">
+        <form id="FormMaintenance" class="" action="/Sys/Sys_EarlyWarningPlan/SetInfo" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun">
+            <div class="box-body">
+                
+                <div class="">
+                    <input name="Id" for="Id" value="@Model.Id" style="display:none;" />
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="Title">标题</label>
+                                <input type="text" class="form-control" id="Title" name="Title" placeholder="请输入标题" value="@Model.Title" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="Contents">内容</label>
+                                <div class="form-group ml15px">
+                                    <input type="text" class="form-control" id="Contents" name="Contents" placeholder="请输入内容" value="@Model.Contents" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="Solution">解决方案</label>
+                                <div class="form-group ml15px">
+                                    <textarea id="Solution" style="height:180px" name="Solution" class="form-control" placeholder="">@Model.Solution</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <script>
+        var index = parent.layer.getFrameIndex(window.name);
+        
+            $(function () {
+                if (ID == 0) {
+                } else {
+                    $('#AccessoriesDetailId').val(ID);
+                    $('#Name').val(Name);
+                }
+                validateForm();
+            });
+        function saveForm() {
+            validateForm();
+            $("form").submit();
+        }
+
+        function validateForm() {
+            $("#FormMaintenance").validate({
+                rules: {
+                    Title: {
+                        required: true,
+                    },
+                    Contents: {
+                        required: true,
+                    },
+                    Solution: {
+                        required: true,
+                    } 
+                },
+                messages: {
+                    Title: {
+                        required: "请输入标题"
+                        //minlength:"请输入3位数字",
+                        //maxlength: "请输入3位数字",
+                        //digits: "请输入整数"
+                    }, Contents: {
+                        required: "请输入内容"
+                        //minlength:"请输入3位数字",
+                        //maxlength: "请输入3位数字",
+                        //digits: "请输入整数"
+                    }, Solution: {
+                        required: "请输入解决方案"
+                        //minlength:"请输入3位数字",
+                        //maxlength: "请输入3位数字",
+                        //digits: "请输入整数"
+                    } 
+
+                }
+            });
+        }
+        function _addFun(data) {
+            if (data == "ok") {
+                window.parent.refreshTable();
+                parent.layer.close(index);
+            } else {
+                layer.alert("提交失败！");
+            }
+        }
+
+ 
+
+        function iframe1(title, width, height, url, func) {
+            window.parent.layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+                    parent.window.frames[1].saveForm();
+                    //$(parent.$('iframe')[1]).saveForm();
+                },
+                cancel: function (index) {
+                }
+            })
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,391 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>用户管理</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap-table.min.css">
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="../../css/anniu.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/css/bootstrap-switch.min.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <script src="../../lib/layer/layer.css"></script>
+    <script src="//cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/js/bootstrap-switch.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../lib/layer/layer.js"></script>
+    <style>
+        .selct select {
+            height: 30px;
+            width: 150px;
+            line-height: 30px;
+            border: 1px #999 solid;
+            border-radius: 5px;
+            margin-right: 15px;
+            outline: none
+        }
+
+        .zlw_manageconrgconyi {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            height: 100%;
+            margin-top: 7px;
+        }
+
+        .zlw_manageconrgconsan .bootstrap3 {
+            height: calc(100% - 70px)
+        }
+
+        .zlw_manageconrgconsan .fixed-table-container {
+            height: calc(100% - 40px) !important;
+            overflow: auto
+        }
+
+        .jz .mar15px {
+            margin: 10px
+        }
+    </style>
+</head>
+
+<body>
+    <div class="zlw_manage">
+        <!-- star right -->
+        <div class="zlw_manageconrg">
+            <div class="zlw_manageconrgcon">
+                <!-- star 查询 -->
+                <div class="left">
+                    <ul class="clearfloat mt10px ml10px">
+                        <li>
+                            <select class="hyl_select" id="DepartMent">
+                                <option value="">==请选择部门==</option>
+                                @{
+                                    List<SysDepartMent> dp = ViewBag.Department as List<SysDepartMent>;
+                                    foreach (var item in dp)
+                                    {
+                                    <option value="@item.DepartmentId">@item.DptName</option>
+                                    }
+                                }
+                            </select>
+                            <input type="text" id="UserName" class="hyl_input ml10px" placeholder="输入账户名称">
+                            <button class="hyl_btn" id="userSearch_Btn"> <i class="fa fa-search"></i> 查询</button>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- 查询 end -->
+                <div class="zlw_manageconrgconer jz" style="border-bottom:1px solid #ddd;height:51px;">
+
+                    <div class="btn-group mar15px pull-right mr10px">
+                        @await Component.InvokeAsync("ModuleButtons")
+                        @*<button type="button" id="user_AddBtn" class="btn btn-default"><i class="fa fa-plus"></i> 添加</button>
+                            <button type="button" id="user_EditBtn" class="btn btn-default"><i class="fa fa-pencil-square-o"></i> 修改</button>
+                            <button type="button" id="user_DelBtn" class="btn btn-default"><i class="fa fa-trash-o"></i> 删除</button>
+
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-reorder"></i>
+                                    更多
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a id="user_AllotRtuBtn">分配设备</a></li>
+                                    <li><a id="user_AllotRoleBtn">分配权限</a></li>
+                                </ul>
+                            </div>*@
+                    </div>
+                </div>
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan mt10px" id="tablebox" style="height:100%">
+                    <table id="tabledata" data-toggle="table" data-pagination="true" data-side-pagination="server" data-page-list="[10, 25, 50, 100]" data-page-size="10" class="table-striped">
+                        <tr></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- right end -->
+    </div>
+    <script>
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+    </script>
+    <script>
+        $table = $("#tabledata");
+        var options = $table.bootstrapTable('getOptions');
+        $(function () {
+            // 按钮切换样式
+            $(".zlw_time_con li").click(function () {
+                $(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+            });
+
+            //初次加载数据
+            LoadData(options.pageNumber, options.pageSize, "", "desc");
+
+            //查询列表
+            $("#userSearch_Btn").click(function () {
+                LoadData(1, options.pageSize, "", "desc");
+            });
+            $("#UserName").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    LoadData(1, options.pageSize, "", "desc");
+                }
+            });
+
+            //添加用户
+            $("#user_AddBtn").click(function () {
+                iframeWithBtns("添加用户", "800px", "700px", "/Sys/User/AddUserPage", false, function (formIndex, formLayer) {
+                    var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm(function (data) {
+                        if (data == "ok") {
+                            layer.close(formIndex);
+                            LoadData(options.pageNumber, options.pageSize, "", "desc");
+                        } else {
+                            if (data = "false") {
+                                layer.alert("账户名称已经存在，请重新输入。")
+                            } else {
+                                layer.alert("添加失败，刷新页面后重试。")
+                            }
+                        }
+                    });
+                });
+            });
+
+            //编辑用户
+            $("#user_EditBtn").click(function () {
+                var selects = $table.bootstrapTable('getSelections');
+                if (selects.length != 1) {
+                    layer.msg("请选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    iframeWithBtns("编辑用户", "800px", "700px", "/Sys/User/EditUserPage/" + selects[0].UserId, false, function (formIndex, formLayer) {
+                        var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                        currentIframe.saveForm(function (data) {
+                            if (data == "ok") {
+                                layer.close(formIndex);
+                                LoadData(options.pageNumber, options.pageSize, "", "desc");
+                            } else {
+                                if (data = "false") {
+                                    layer.alert("账户不存在，请刷新页面重试。")
+                                } else {
+                                    layer.alert("编辑失败，刷新页面后重试。")
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+
+            //删除用户
+            $("#user_DelBtn").click(function () {
+                var selects = $table.bootstrapTable('getAllSelections');
+                if (selects.length != 1) {
+                    layer.msg("请选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    layer.confirm("确定要删除用户？",
+                        {
+                            btn: ["确定", "取消"]
+                        },
+                        function () {
+                            DeleteUser(selects[0].UserId);
+                        },
+                        function () { }
+                    );
+                }
+            });
+
+            //分配权限
+            $("#user_AllotRoleBtn").click(function () {
+                var selects = $table.bootstrapTable('getAllSelections');
+                if (selects.length != 1) {
+                    layer.msg("请选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    iframe('分配权限', "40%", "80%", "/Sys/User/UserAction/" + selects[0].UserId);
+                };
+            });
+
+            //分配设备
+            $("#user_AllotRtuBtn").click(function () {
+                var selects = $table.bootstrapTable('getAllSelections');
+                if (selects.length != 1) {
+                    layer.msg("请选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    iframe('分配设备', "1000px", "720px", "/Sys/User/AllotStation/" + selects[0].UserId);
+                };
+            });
+
+            $('.fixed-table-loading').hide()
+        });
+
+        //加载数据
+        function LoadData(index, pagesize, sort, order) {
+            $.post('/Sys/User/GetDate', {
+                department: $("#DepartMent").val(),
+                name: $("#UserName").val(),
+                pageindex: index || 1,
+                pagesize: pagesize,
+                sortName: sort,
+                order: order
+            }, function (res) {
+                //添加table
+                $("#tablebox").html('<table id="tabledata" data-sort-name="' + res.sortName + '" class="table table-striped" data-pagination="true" data-smartDisplay="false" data-page-list="[10, 15,20]"   data-toggle="table"  data-side-pagination="server"  ' +
+                    'data-total-rows="' + res.total + '" data-sort-order="' + res.order + '"  data-page-size="' + res.pageSize + '"     data-page-number="' + res.pageIndex + '">' + res.dataTable + '</table>')
+                $table = $("#tabledata").bootstrapTable({
+                    smartDisplay: false
+                });
+                options = $table.bootstrapTable('getOptions');
+
+                //分页
+                $table.on('page-change.bs.table', function (e, number, size) {
+                    LoadData(number, size, sort, order)
+                });
+
+                //排序
+                $table.on('sort.bs.table', function (e, field, order) {
+                    LoadData(index, pagesize, field, order)
+                });
+                initSwitch();
+                //加载成功事件
+                $table.on('load-success.bs.table', function (e, data) {
+                    initSwitch();
+                });
+            });
+        }
+
+        //删除数据
+        function DeleteUser(id) {
+            $.post("/Sys/User/DeleteUser", { userId: id }, function (res) {
+                if (res == "ok") {
+                    layer.alert("删除用户成功。");
+                    var option = $table.bootstrapTable('getOptions');
+                    LoadData(option.pageNumber, option.pageSize, "", "desc");
+                } else {
+                    layer.alert("删除用户失败。");
+                }
+            });
+        }
+
+        //刷新数据
+        function Refresh() {
+            var option = $table.bootstrapTable('getOptions');
+            LoadData(option.pageNumber, option.pageSize, "", "desc");
+        };
+
+        //启用禁用
+        function initSwitch() {
+            $("[id='project_status_switch']").bootstrapSwitch({
+                onText: "启用",
+                offText: "禁用",
+                onColor: "success",
+                offColor: "warning",
+                size: "mini",
+                onSwitchChange: function (event, state) {
+                    $.post("/Sys/User/UpdateStatus", { userId: this.value, status: state });
+                }
+            })
+        }
+        //弹出层
+        function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                skin: 'layui-ext-skin01',
+                type: 2,
+                title: title,
+                shadeClose: false,
+                closeBtn: 0,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url
+            });
+        }
+    </script>
+</body>
+</html>

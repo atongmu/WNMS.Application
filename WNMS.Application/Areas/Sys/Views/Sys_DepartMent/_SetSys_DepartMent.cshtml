@@ -1,0 +1,370 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+@model SysDepartMent;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_SetSys_DepartMent</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
+    @*<link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <!-- 树 -->
+    <link href="~/lib/ztree/zTreeStyle.css" rel="stylesheet" />
+   
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <style>
+        .star {
+            position: absolute;
+            left: 59px;
+            top: -4px;
+            font-size: 25px;
+            color: red
+        }
+
+        .z-indx .col-sm-6 {
+            position: relative;
+            z-index: 1
+        }
+
+       
+    </style>
+</head>
+<body>
+    <div style="padding:20px" class="xiugai">
+        <form action="/Sys/Sys_DepartMent/SetDepart" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body">
+                <input id="DepartmentId" name="DepartmentId" type="hidden" value="@Model.DepartmentId" />
+                <input id="Pid" name="Pid" type="hidden" value="@Model.Pid" />
+                <div class="row">
+
+
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>部门名称 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="DptName" name="DptName" value="@Model.DptName" autocomplete="off">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>上级</label>
+                                    <div class="input-group relative">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-sitemap"></i>
+                                        </div>
+                                        <input type="button" class="form-control" id="PIDName" name="PIDName" value="@ViewBag.PIDName" style="border-radius:4px;border-top-left-radius: 0;border-bottom-left-radius: 0;">
+                                        <div class="treeslide opacity0">
+                                            <div id="treeDemo" class="ztree">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group" style="position:relative;">
+                                    <label>部门性质</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="Type" name="Type">
+                                            @{
+                                                var departtypes = ViewBag.departTypeList as IEnumerable<SysDataItemDetail>;
+                                                foreach (var item in departtypes)
+                                                {
+                                                    if (Model != null && Model.Type == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group" style="position:relative;">
+                                    <label>负责人</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user-circle-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Manager" name="Manager" value="@Model.Manager" autocomplete="off">
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group" style="position:relative;">
+                                    <label>手机号</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-phone"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="OuterPhone" name="OuterPhone" value="@Model.OuterPhone" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group" style="position:relative;">
+                                    <label>座机号</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-phone"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="InnerPhone" name="InnerPhone" value="@Model.InnerPhone" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>邮箱</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-envelope"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Email" name="Email" value="@Model.Email" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>传真</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-fax"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Fax" name="Fax" value="@Model.Fax" autocomplete="off">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>排序 <span class="star" style="left:32px">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-sort-amount-asc"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Sort" name="Sort" value="@Model.Sort" autocomplete="off">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                            </div>
+                           
+                        </div>
+
+                    </div>
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="Remark">备注</label>
+                                            <textarea id="Reamrk" name="Reamrk" rows="2" cols="20" class="form-control">@Model.Reamrk</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+
+                    </div>
+                </div>
+
+        </form>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $(".treeslide").click(function (e) {
+                e.stopPropagation();               
+            })
+
+            $(document).click(function () {
+                $(".treeslide").addClass("opacity0").css("z-index","99");;
+            })
+     // 手机号码验证    
+    jQuery.validator.addMethod("isMobile", function(value, element) {    
+      var length = value.length;    
+      return this.optional(element) || (length == 11 && /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(value));    
+    }, "请正确填写您的手机号码。");
+
+
+    // 电话号码验证    
+    jQuery.validator.addMethod("isPhone", function(value, element) {    
+      var tel = /^(\d{3,4}-?)?\d{7,9}$/g;    
+      return this.optional(element) || (tel.test(value));    
+    }, "请正确填写您的电话号码。");
+      //邮箱验证
+  jQuery.validator.addMethod("isEmail", function(value, element) {    
+      var tel = /^[a-zA-Z0-9_\-]{1,}@@[a-zA-Z0-9_\-]{1,}\.[a-zA-Z0-9_\-.]{1,}$/;    
+        
+      return this.optional(element) || (tel.test(value));    
+  }, "请正确填写的邮箱。");
+      
+
+
+        })
+
+        var setting = {
+            data:{
+                simpleData: {
+                    enable: true
+                }
+            },callback:{
+                onClick: zTreeOnClick
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: false
+                
+            }
+        };
+        var zNodes = @ViewBag.treenodes;
+        var treeObj;
+        var index = parent.layer.getFrameIndex(window.name);
+        function saveFormChirldren() {
+
+            $("form").submit();
+        }
+
+        $(function () {
+             validateForm();
+             treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+        })
+         $("#PIDName").click(function (e) {
+
+             $(".treeslide").removeClass("opacity0").parents(".col-sm-6").css("z-index", "1000");
+               e.stopPropagation();
+
+             var pid = $("#Pid").val();
+             if (pid != 0) {
+                 var node = treeObj.getNodeByParam("id", pid, null);
+                 treeObj.selectNode(node);
+             }
+            });
+        function zTreeOnClick(event, treeId, treeNode) {
+            if (treeNode.id == -1) {
+                 $("#Pid").val(0);
+                $("#PIDName").val("");
+            }
+            else {
+                $("#Pid").val(treeNode.id);
+                $("#PIDName").val(treeNode.name);
+            }
+            $(".treeslide").addClass("opacity0");
+        };
+         function validateForm() {
+             $("#MFForm").validate({
+                 debug: true,
+                 ignore: "",
+                 rules: {
+                     DptName: "required",
+
+                     Sort: {
+                         required: true,
+
+                         digits: true
+                     },
+                     OuterPhone: {
+                         isMobile: true
+                     },
+                     InnerPhone: {
+                         isPhone: true
+                     },
+                     Email: {
+                         isEmail: true
+                     },
+                     Fax: {
+                         isPhone: true
+                     }
+
+                },
+                messages: {
+                    DptName: "请输入部门名称",
+                   
+                    Sort: "请输入排序",
+                    OuterPhone: "输入正确的手机号",
+                    InnerPhone: "输入正确的座机号",
+                    Email: "请输入正确的邮箱",
+                    Fax:"请输入正确的传真"
+
+
+                }
+            });
+        }
+        function _addFun(data) {
+            if (data == "ok") {
+
+                parent.layer.close(index);
+                parent.refreshTable();
+
+            }
+            else {
+               
+                    layer.msg("操作失败");
+                
+
+            }
+        }
+
+    </script>
+</body>
+</html>

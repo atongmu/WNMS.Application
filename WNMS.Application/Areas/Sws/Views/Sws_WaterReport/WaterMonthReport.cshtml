@@ -1,0 +1,308 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WaterMonthReport</title>
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/sl.css">
+    <link rel="stylesheet" href="../../css/hyl.css">
+    <link href="../../css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <script src="../../js/jquery-3.3.1.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <link href="~/lib/bootstrap-table1.16.0/bootstrap-table-fixed-columns.min.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap-table1.16.0/bootstrap-table-fixed-columns.min.js"></script>
+
+    <!--echart-->
+    <script src="../../js/echarts.min.js"></script>
+    <script src="../../lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="../../lib/layer/layer.js"></script>
+    <style>
+        .table {
+            table-layout: fixed;
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        .nav-tab li {
+            float: left;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 5px 10px;
+            color: #999;
+            margin-left: 10px;
+            cursor: pointer
+        }
+
+        #mychart {
+            width: 100%;
+            height: 100%
+        }
+
+        .tab-chart {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            z-index: 9
+        }
+
+        .bootstrap-table, .fixed-table-container {
+            height: 100% !important
+        }
+
+        .nav-tab .on, .tab-chart .on {
+            background: #3c8dbc;
+            color: #fff;
+            border: 1px solid #3c8dbc;
+        }
+
+        .tab-chart li {
+            cursor: pointer;
+            border: 1px solid #fff;
+            border-radius: 3px;
+            margin-right: 10px;
+            padding: 5px 10px;
+            color: #999;
+            float: left
+        }
+
+        .tab-chart .on:hover {
+            border: 1px solid #3c8dbc;
+        }
+
+        .tab-chart li:hover {
+            border: 1px solid #999
+        }
+    </style>
+</head>
+<body>
+    <div class="pad10px overflow" style="border-bottom:1px solid #ddd;height:51px">
+        <div class="pull-left">
+            <label class="hyl_label">日期：</label>
+            <input type="text" class="hyl_input hyl_input-sm" id="beginTime" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd'});" value="@ViewBag.beginDate" />
+            -
+            <input type="text" class="hyl_input hyl_input-sm" id="endTime" onclick="WdatePicker({dateFmt: 'yyyy-MM-dd' })" value="@ViewBag.endDate" />
+            <button class="hyl_btn" id="searchBtn"><i class="fa fa-search mr5px"></i>查询</button>
+            <button class="hyl_btn" id="exportData"><i class="fa fa-search mr5px"></i>导出</button>
+        </div>
+        <div class="btn-group pull-right" role="group" aria-label="...">
+            <button type="button" class="btn btn-default on" id="btn_Table"><i class="fa fa-table" style="color:#333 !important"></i> 表格</button>
+            <button type="button" class="btn btn-default" id="btn_charts"><i class="fa fa-bar-chart" style="color: #333 !important"></i> 图表</button>
+        </div>
+    </div><!--/头部-->
+    <div id="tab-chart" style="height:calc(100% - 57px)">
+        <section class="pad10px" style="height:100%;box-sizing:border-box" id="tablebox">
+            <table id="tableData" class="table-striped"></table>
+        </section>
+        <section class="hidden relative" style="height:calc(100% - 10px);">
+            <ul class="tab-chart">
+                <li class="on" data-value="mg/L">余氯</li>
+                <li data-value="NTU">浊度</li>
+                <li data-value="#">PH</li>
+                <li data-value="MV">ORP</li>
+                <li data-value="ppm">盐度</li>
+                <li data-value="mg/L">溶解氧</li>
+                <li data-value="#">电导率</li>
+            </ul>
+            <div id="mychart" style="width:500px;height:600px"></div>
+        </section>
+    </div>
+    <script type="text/javascript">
+        //图表配置
+        var chartName = "余氯";
+        var valueName = "mg/L";
+
+
+        var option = {
+            title: {
+                left: '15px',
+                top: "15px",
+                text: '标题标题',
+            },
+            grid: {
+                left: '5%',    //左上角x轴距盒子边框的距离
+                right: '5%',    //左上角Y轴距盒子边框的距离
+                top: '12%',    //右下角x轴距盒子边框的距离
+                bottom: '8%',     //右下角Y轴距盒子边框的距离
+                borderWidth: 1
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                orient: 'vertical',
+
+                bottom: 'bottom',
+
+                data: []
+            },
+            calculable: true,
+            xAxis: [{
+                axisLabel: {
+                    // rotate: 30,
+                    interval: 0
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#CECECE'
+                    }
+                },
+                type: 'category',
+                boundaryGap: false,
+                data: []
+            }],
+            yAxis: [{
+                name: "余氯(mg/l)",
+                type: 'value',
+                axisLine: {
+                    lineStyle: {
+                        color: '#CECECE'
+                    }
+                },
+                min: function (value) {
+                    return value.min - value.min * 0.02;
+                },
+                max: function (value) {
+                    return value.max + value.max * 0.02;
+                }
+            }],
+            series: []
+        };
+
+        $(function () {
+            //切换表格图表模式
+            $(".btn-group button").click(function () {
+                $(this).addClass("on").siblings("button").removeClass("on");
+                var $indx = $(this).index();
+                $("#tab-chart section").eq($indx).removeClass("hidden").siblings("section").addClass("hidden");
+                if ($indx == 0) {
+                    getTableData();
+                } else {
+                    LoadChart("余氯");
+                }
+            });
+
+            //获取表格数据
+            getTableData();
+
+            //余氯 浊度 PH 切换
+            $(".tab-chart li").click(function () {
+                $(this).addClass("on").siblings("li").removeClass("on");
+                chartName = $(this).html();
+                valueName = $(this).data("value");
+                var indx = $(this).index();
+                LoadChart(chartName);
+            });
+
+            //查询按钮点击事件
+            $("#searchBtn").click(function () {
+                getTableData()
+            });
+
+            //数据导出
+            $("#exportData").click(function () {
+                var begin = $("#beginTime").val();
+                var end = $("#endTime").val();
+                var nodes = parent.zTreeObj.getCheckedNodes();
+                var ids = "";
+                if (nodes.length > 0) {
+                    for (var i = 0; i < nodes.length; i++) {
+                        ids += nodes[i].id + ",";
+                    }
+                    ids = ids.substring(0, ids.length - 1);
+                    window.location.href = "/Sws/Sws_WaterReport/GetMonthExportData?beginDate=" + begin + "&endDate=" + end + "&ids=" + ids + "";
+                } else {
+                    layer.msg("请至少选中一个泵房", { offset: 't', anim: 6 });
+                }
+            });
+            $('.fixed-table-loading').hide();
+        });
+
+        //获取table数据
+        function getTableData() {
+            var nodes = parent.zTreeObj.getCheckedNodes();
+            var ids = "";
+            if (nodes.length > 0) {
+                for (var i = 0; i < nodes.length; i++) {
+                    ids += nodes[i].id + ",";
+                }
+                ids = ids.substring(0, ids.length - 1);
+                $.post("/Sws/Sws_WaterReport/GetMonthReportData", {
+                    beginDate: $("#beginTime").val(),
+                    endDate: $("#endTime").val(),
+                    ids: ids
+                }, function (res) {
+                    //添加table
+                    $("#tablebox").html('<table id="tabledata"  class="table table-striped" data-pagination="false" data-toggle="table" data-fixed-number="1"  data-fixed-columns="true" ' +
+                        'data-height="' + ($(window).height() - 150) + '">' + res.dataTable + '</table > ');
+                    $('#tabledata').bootstrapTable();
+                });
+            } else {
+                layer.msg("请至少选中一个泵房", { offset: 't', anim: 6 });
+            }
+        }
+
+        //图表查询
+        function LoadChart(name) {
+            var w = $("#tab-chart").width();
+            var h = $("#tab-chart").height() - 10;
+            $("#mychart").css({ "width": w, "height": h });
+            var myChart = echarts.init(document.getElementById("mychart"));
+            var nodes = parent.zTreeObj.getCheckedNodes();
+            var ids = "";
+            if (nodes.length > 0) {
+                for (var i = 0; i < nodes.length; i++) {
+                    ids += nodes[i].id + ",";
+                }
+                ids = ids.substring(0, ids.length - 1);
+                $.post("/Sws/Sws_WaterReport/GetMonthLineData", {
+                    beginDate: $("#beginTime").val(),
+                    endDate: $("#endTime").val(),
+                    ids: ids,
+                    typeName: name
+                }, function (result) {
+                    if (result != "") {
+                        var json = JSON.parse(result);
+                        option.legend.data = json.legend;
+                        option.xAxis[0].data = json.xAxis;
+                        option.yAxis[0].name = chartName + "(" + valueName + ")";
+                        var seriesdata = new Array();
+                        for (var i = 0; i < json.data.length; i++) {
+                            var aa = {
+                                name: '',
+                                type: 'line',
+                                smooth: true,
+                                data: []
+                            };
+                            aa.name = json.data[i]["Name"];
+                            aa.data = json.data[i]["Data"];
+                            seriesdata.push(aa);
+                        }
+                        option.series = seriesdata;
+                        myChart.clear();
+                        // 使用刚指定的配置项和数据显示图表。
+                        myChart.setOption(option);
+                    } else {
+                        $("#main").text("暂无数据");
+                    }
+                });
+            } else {
+                layer.msg("请至少选中一个泵房", { offset: 't', anim: 6 });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>门禁监控</title>
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../css//iconfont.css">
+	<script src="../../js/jquery-1.12.4.min.js"></script>
+	<!-- 日历 -->
+	<script src="../../lib/My97DatePicker/WdatePicker.js"></script>
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="../../css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+</head>
+<body>
+    <div class="zlw_control">
+        <div class="zlw_controlcon">
+            <div class="zlw_controlconlf">
+                <div class="zlw_controlconlf_nr">
+                    <!-- 点击按钮 -->
+                    <div class="zlw-content-lfdj"></div>
+                    <div class="zlw_controlconlf_nryi">
+                        <div class="zlw_controlconlf_nryicon">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input id="selname" type="text" placeholder="请输入搜索的内容" class="zlw-ssk">
+                        </div>
+                    </div>
+                    <div class="zlw_controlconlf_nrer">
+                        <div class="zlw-tree pt5px">
+                            <ul class="sxt_list" id="dataList">
+                                <li class="on">
+                                    <em class="clcle-red"></em>
+                                    <span class="chaochu">锦绣蓝山</span>
+                                    <i class="iconfont icon-menjinfangkeguanli"></i>
+                                </li>
+                                <li>
+                                    <em class="clcle-green"></em>
+                                    <span class="chaochu">锦绣蓝山</span>
+                                    <i class="iconfont icon-menjinfangkeguanli"></i>
+                                </li>
+                                <li>
+                                    <em class="clcle-gray"></em>
+                                    <span class="chaochu">锦绣蓝山兰山公证处</span>
+                                    <i class="iconfont icon-menjinfangkeguanli"></i>
+                                </li>
+                                <li>
+                                    <em class="clcle-red"></em>
+                                    <span class="chaochu">锦绣蓝山</span>
+                                    <i class="iconfont icon-menjinfangkeguanli"></i>
+                                </li>
+                                <li>
+                                    <em class="clcle-red"></em>
+                                    <span class="chaochu">锦绣蓝山</span>
+                                    <i class="iconfont icon-menjinfangkeguanli"></i>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="zlw_controlconrg">
+                <div class="left-icon"></div>
+                <div class="zlw_controlconrgcon">
+                    <div class="zlw_mjkzyi clearfloat">
+                        <h4>时间列表：</h4>
+                        <ul class="clearfloat">
+                            <li class="sjlbxz"><span>全部</span></li>
+                            <li><span>本月</span></li>
+                            <li><span>上月</span></li>
+                            <li><span>本周</span></li>
+                            <li><span>上周</span></li>
+                            <li><span>自定义</span></li>
+                        </ul>
+                    </div>
+                    <div class="zlw_mjkzer clearfloat">
+                        <h4>快速检索：</h4>
+                        <ul class="clearfloat">
+                            <li><input type="text" class="zlw_mjformbd" placeholder="请输入卡号"></li>
+                            <li><input type="submit" value="提交" class="zlw_mjformtj"></li>
+                            <li><input type="reset" value="重置" class="zlw_mjformcz"></li>
+                        </ul>
+                    </div>
+                    <div class="zlw_mjkzsan">
+                        <table id="tabledata" class=" table-striped">
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <script>
+        $(function () {
+            // 点击按钮门禁左侧宽度为0
+            $(".zlw-content-lfdj").click(function () {
+                $(".zlw-content-lfdj").hide();
+                $(".left-icon").css("display", "block");
+                $(".zlw_controlconlf").css({ "width": "0", "padding": "0" });
+                $(".zlw_controlconrg").css("width", "100%");
+            });
+            $(".left-icon").click(function () {
+                $(".zlw-content-lfdj").fadeIn();
+                $(".left-icon").css("display", "none");
+                $(".zlw_controlconlf").css({ "width": "220px", "padding": "0px" });
+                $(".zlw_controlconrg").css("width", "calc(100% - 220px)");
+            })
+            $(document).on('click', '.sxt_list li', function () {
+                $(this).addClass('on').siblings('li').removeClass('on');
+            });
+            // 时间选择
+            $(".zlw_mjkzyi ul li").click(function() {
+                $(this).siblings('.zlw_mjkzyi ul li').removeClass('sjlbxz');  // 删除其他兄弟元素的样式
+                $(this).addClass('sjlbxz');                            // 添加当前元素的样式
+            });
+
+        })
+        $(function(){
+            $('#tabledata').bootstrapTable({
+            // url: '/json/data.json',        // 表格数据来源
+            // showColumns:true,
+            columns: [{
+                field: 'id',
+                title: '序号',
+                align: 'center',
+                backgroundColor:'#449d44'
+            }, {
+                field: 'column0',
+                title: '持卡人'
+            }, {
+                field: 'column1',
+                title: '卡号'
+            },{
+                field: 'column2',
+                title: '门号'
+            },{
+                field: 'column3',
+                title: '操作' 
+            },{
+                field: 'column4',
+                title: '进出状态'
+            },{
+                field: 'column5',
+                title: '时间'
+            }
+            ],
+            data:[
+            {
+                id:1,
+                column0:'张木木',
+                column1:'1546249513',
+                column2:'001',
+                column3:'密码开门',
+                column4:'未知',
+                column5:'2020.01.19 08:00'
+            },
+            {
+                id:2,
+                column0:'',
+                column1:'1546249513',
+                column2:'001',
+                column3:'密码开门',
+                column4:'未知',
+                column5:'2020.01.19 08:00'
+
+            },
+            {
+                id:3,
+                column0:'张木木',
+                column1:'1546249513',
+                column2:'001',
+                column3:'密码开门',
+                column4:'未知',
+                column5:'2020.01.19 10:05'
+            },
+            ]
+        });
+        $('.fixed-table-loading').hide()
+        });
+    </script>
+</body>
+</html>

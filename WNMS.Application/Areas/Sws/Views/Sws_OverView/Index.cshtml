@@ -1,0 +1,475 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>机组总览</title>
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/ziti.css">
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            color: #636366;
+        }
+
+        .sl_control_main {
+            background-color: #eeeeee;
+        }
+    </style>
+</head>
+<body>
+    <div class="sl_control_main">
+        <!-- 情况统计 -->
+        <div class="sl_control_top">
+            <div class="sl_col_top_itemBf zlw_sbzlbd">
+                <p><i class="fa fa-home" style="margin-right: 8px;color: #25cfe9;"></i>泵房情况</p>
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <h6>泵房总数</h6>
+                    <span><i style="font-size: 30px;" id="ststionCount">0</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-2">
+                    <div class="sl_fgx"></div>
+                </div>
+                <div class="col-md-4">
+                    <h6>机组总数</h6>
+                    <span><i style="font-size: 30px;" id="deviceCount">0</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <div class="sl_col_top_itemAf  zlw_sbzlbd">
+                <p><i class="fa fa-shield" style="margin-right: 8px;color: #25cfe9;"></i>安防情况</p>
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <h6>门禁安装率</h6>
+                    <span><i style="font-size: 30px;" id="mjRate"></i>&nbsp;%</span>
+                </div>
+                <div class="col-md-2">
+                    <div class="sl_fgx"></div>
+                </div>
+                <div class="col-md-4">
+                    <h6>视频安装率</h6>
+                    <span><i style="font-size: 30px;" id="cameraRate">0</i>&nbsp;%</span>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <div class="sl_col_top_itemSx  zlw_sbzlbd">
+                <p><i class="fa fa-bath" style="margin-right: 8px;color: #25cfe9;"></i>水箱情况</p>
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <h6>水箱总数</h6>
+                    <span><i style="font-size: 30px;" id="waterCount">0</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-2">
+                    <div class="sl_fgx"></div>
+                </div>
+                <div class="col-md-4">
+                    <h6>已消毒占比</h6>
+                    <span><i style="font-size: 30px;">0</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <div class="sl_col_top_itemSz  zlw_sbzlbd">
+                <p><i class="fa fa-dashboard" style="margin-right: 8px;color: #25cfe9;"></i>水质情况</p>
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <h6>监测仪个数</h6>
+                    <span><i style="font-size: 30px;" id="jcycount">0</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-2">
+                    <div class="sl_fgx"></div>
+                </div>
+                <div class="col-md-4">
+                    <h6>监测仪安装率</h6>
+                    <span><i style="font-size: 30px;" id="disinfectionRate">0</i>&nbsp;%</span>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+        <!-- 泵房图表 -->
+        <div class="sl_control_mid">
+            <div class="sl_control_mainItem left" style="margin-left: 0px;">
+                <div style="position: relative;">
+                    <p class="sl_item_title">泵房类型统计</p>
+                </div>
+                <!-- 泵房类型统计图表 -->
+                <div id="sl_ech_type">
+                </div>
+            </div>
+            <div class="sl_control_mainItem left">
+                <div style="position: relative;">
+                    <p class="sl_item_title">泵房类使用年限统计</p>
+                </div>
+                <!-- 泵房类使用年限统计图表 -->
+                <div id="sl_ech_time">
+                </div>
+            </div>
+            <div class="sl_control_mainItem left">
+                <div style="position: relative;">
+                    <p class="sl_item_title">机组水泵品牌统计</p>
+                </div>
+                <!-- 泵房类使用年限统计图表 -->
+                <div id="sl_ech_brand">
+                </div>
+            </div>
+            <div class="sl_control_mainItem left" style="margin-left: 0px;">
+                <div style="position: relative;">
+                    <p class="sl_item_title">机组分区统计</p>
+                </div>
+                <!-- 泵房厂家统计图表 -->
+                <div id="sl_ech_business">
+                </div>
+            </div>
+            <div class="sl_control_mainItem left">
+                <div style="position: relative;">
+                    <p class="sl_item_title">泵房质保情况统计</p>
+                </div>
+                <!-- 泵房质保情况统计图表 -->
+                <div id="sl_ech_quality">
+                </div>
+            </div>
+            <div class="sl_control_mainItem left">
+                <div style="position: relative;">
+                    <p class="sl_item_title">机组类型情况统计</p>
+                </div>
+                <!-- 机组设备类型情况统计图表 -->
+                <div id="sl_ech_equipment">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/echarts.min.js"></script>
+    <script src="~/js/sl_main.js"></script>
+    <script>
+        //  echarts 泵房类型统计
+        var sl_ech_type = echarts.init(document.getElementById('sl_ech_type'));
+        var stationTypeOption = {
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 10,
+                data: []
+            },
+            color: ['#2c7afa', '#15a3f9', '#25cfe9', '#04ccae', '#78dca9'],
+            series: [
+                {
+                    name: '泵房类型',
+                    type: 'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '14',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data: [
+                        {
+                            value: 335, name: '常规泵房', itemStyle: {
+                                color: '#2c7afa'
+                            }
+                        },
+                        {
+                            value: 310, name: '调峰泵房', itemStyle: {
+                                color: '#15a3f9'
+                            }
+                        },
+                        {
+                            value: 234, name: '二次供水泵房', itemStyle: {
+                                color: '#25cfe9'
+                            }
+                        },
+                        {
+                            value: 135, name: '微型泵房', itemStyle: {
+                                color: '#04ccae'
+                            }
+                        },
+                        {
+                            value: 1548, name: '其他泵房', itemStyle: {
+                                color: '#78dca9'
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+        //泵房使用年限统计
+        var sl_ech_time = echarts.init(document.getElementById('sl_ech_time'));
+        var stationYearsOption = ({
+            color: ['#3398DB'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: ['1年以内', '1到2年', '2到5年', '5到10年', '10年以上'],
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '泵房',
+                    type: 'bar',
+                    barWidth: '20%',
+                    data: [10, 4, 3, 14, 3, 2, 26]
+                }
+            ]
+        })
+        //机组水泵品牌统计
+        var sl_ech_brand = echarts.init(document.getElementById('sl_ech_brand'));
+        var brandsetOption = ({
+            //dataset: {
+            //    source: [
+            //        ['score', '数量', 'product'],
+            //        [89.3, 2, '格兰富'],
+            //        [57.1, 1, '东方'],
+            //        [89.7, 2, '安邦'],
+            //        [68.1, 7, '三利'],
+            //        [19.6, 1, 'Orange'],
+            //        [32.7, 1, 'Walnut']
+            //    ]
+            //},
+            grid: { containLabel: true },
+            xAxis: { name: '数量' },
+            color: ['#2c7afa', '#15a3f9', '#25cfe9', '#04ccae', '#78dca9'],
+            yAxis: { type: 'category', data: [] },
+            visualMap: {
+                show: false,
+                left: 'center',
+                min: 10,
+                max: 100,
+                text: ['High Score', 'Low Score'],
+                // Map the score column to color
+                dimension: 0,
+                inRange: {
+                    //color: ['#2c7afa', '#78dca9']
+                }
+            },
+            series: [
+                {
+                    type: 'bar',
+                    barWidth: '50%',
+                    encode: {
+                        // Map the "amount" column to X axis.
+                        x: '数量',
+                        // Map the "product" column to Y axis
+                        y: 'product'
+                    },
+                    data: []
+                }
+            ]
+        })
+        //机组设备类型统计
+        var sl_ech_equipment = echarts.init(document.getElementById('sl_ech_equipment'));
+        var equipmentsetOption = ({
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            }, color: ['#2c7afa', '#15a3f9', '#25cfe9', '#04ccae', '#78dca9'],
+            legend: {
+                orient: 'vertical',
+                left: 10,
+                data: []
+            },
+            series: [
+                {
+                    name: '泵房类型',
+                    type: 'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '14',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data: [
+                    ]
+                }
+            ]
+        });
+        //泵房质保情况统计图表
+        var sl_ech_quality = echarts.init(document.getElementById('sl_ech_quality'));
+        var qualitysetOption = ({
+            color: ['#25cfe9'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: ['半年以内', '0.5-1年', '1到2年', '2到3年', '3年以上'],
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '泵房',
+                    type: 'bar',
+                    barWidth: '20%',
+                    data: [10, 4, 3, 14, 3, 2, 26]
+                }
+            ]
+        });
+        //机组分区统计
+        var sl_ech_partition = echarts.init(document.getElementById('sl_ech_business'));
+        var partitionOption = ({
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b}: {c} ({d}%)'
+            }, color: ['#2c7afa', '#15a3f9', '#25cfe9', '#04ccae', '#78dca9'],
+            legend: {
+                orient: 'vertical',
+                left: 10,
+                data: []
+            },
+            series: [
+                {
+                    name: '机组分区',
+                    type: 'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '14',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data: []
+                }
+            ]
+        })
+
+        $(function () {
+            loadCount();
+            loadDeviceCount();
+        })
+        //泵房数据数量查询
+        function loadCount() {
+            $.post("/Sws/Sws_OverView/LoadCount", {}, function (data) {
+                var jsData = JSON.parse(data);
+                $("#ststionCount").html(jsData.stationCount);
+                $("#mjRate").html(jsData.mjRate);
+                $("#cameraRate").html(jsData.cameraRate);
+                $("#waterCount").html(jsData.waterCount);
+                $("#jcycount").html(jsData.disinfectionCount);
+                $("#disinfectionRate").html(jsData.disinfectionRate);
+                //泵房类型
+                stationTypeOption.legend.data = jsData.staNametList;
+                stationTypeOption.series[0].data = jsData.stalist;
+                sl_ech_type.setOption(stationTypeOption);
+                //泵房使用年限
+                stationYearsOption.series[0].data = jsData.yearInt;
+                sl_ech_time.setOption(stationYearsOption);
+                //泵房质保情况
+                qualitysetOption.series[0].data = jsData.zbInt;
+                sl_ech_quality.setOption(qualitysetOption);
+            })
+        }
+        //设备数据数量查询
+        function loadDeviceCount() {
+            $.post("/Sws/Sws_OverView/LoadDeviceChart", {}, function (data) {
+                var jsData = JSON.parse(data);
+                $("#deviceCount").html(jsData.deviceCount);
+                //机组品牌
+                brandsetOption.yAxis.data = jsData.deviceNametList;
+                brandsetOption.series[0].data = jsData.devicecountList;
+                sl_ech_brand.setOption(brandsetOption);
+                //机组设备类型
+                equipmentsetOption.legend.data = jsData.devicetypeNatList;
+                equipmentsetOption.series[0].data = jsData.devicetypelist;
+                sl_ech_equipment.setOption(equipmentsetOption);
+                //机组设备分区
+                partitionOption.legend.data = jsData.partitionNatList;
+                partitionOption.series[0].data = jsData.partitionlist;
+                sl_ech_partition.setOption(partitionOption);
+            })
+        }
+    </script>
+</body>
+</html>

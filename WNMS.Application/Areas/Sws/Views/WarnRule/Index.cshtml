@@ -1,0 +1,263 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>预警规则管理</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap-table.min.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <!-- bootstrap -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+   
+   
+    <style>
+        .zlw_manageconrgconyi {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            height: 100%;
+            margin-top: 7px;
+        }
+
+        .zlw_manageconrgconsan {
+            height: 100%
+        }
+
+            .zlw_manageconrgconsan .bootstrap3 {
+                height: calc(100% - 50px);
+                margin-top: 10px
+            }
+
+        .fixed-table-container {
+            height: calc(100% - 100px)
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div class="zlw_manage">
+
+        <!-- star right -->
+        <div class="zlw_manageconrg">
+            <div class="zlw_manageconrgcon">
+                <!-- star 查询 -->
+                <div class="left">
+                    <ul class="clearfloat ml10px mt10px">
+                        <li>
+                            <input id="SearchTxt" type="text" class="hyl_input" placeholder="输入关键字" autocomplete="off">
+                            <button class="hyl_btn" id="btnSelect">
+                                <i class="fa fa-search"></i> 查询
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 查询 end -->
+                <div class="zlw_manageconrgconer" style="border-bottom:1px solid #ddd;height:51px">
+
+                    <div class="btn-group mar10px pull-right">
+                        @await Component.InvokeAsync("ModuleButtons")
+                        @*<button type="button" id="AddBtn_Rule" class="btn btn-default"><i class="fa fa-plus"></i>&nbsp添加</button>
+                            <button type="button" id="EditBtn_Rule" class="btn btn-default"><i class="fa fa-pencil-square-o"></i>&nbsp编辑</button>
+                            <button type="button" id="DeleteBtn_RUle" class="btn btn-default"><i class="fa fa-trash-o"></i>&nbsp删除</button>*@
+
+                    </div>
+                </div>
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan">
+                    <table id="tabledata" class=" table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- right end -->
+
+    </div>
+    <script type="text/javascript">
+        var pageindex = 1;
+        var order = "", sort = "";
+        $(function () {
+            var $table = $("#tabledata");
+            $table.bootstrapTable({
+                method: "post",
+                url: "/Sws/WarnRule/QueryTable",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                height: $(window).height() - 60,
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 15, 20],        //可供选择的每页的行数（*）
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        pagesize: params.limit,   //每页条数
+                        pageindex: (params.offset / params.limit) + 1, //页码
+                        SearchText: $("#SearchTxt").val(),
+                        order: params.order,
+                        sort: params.sort == undefined ? "RuleId" : params.sort 
+                    };
+                    order = params.order;
+                    sort = params.sort == undefined ? "RuleId" : params.sort;
+                    pageindex = (params.offset / params.limit) + 1;
+                    return temp;
+                },//传递参数（*）
+                uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+
+                responseHandler: function (res) {
+                    var aa = JSON.parse(res.rows);
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+                },
+                columns: [
+                    {
+                        checkbox: true
+                    },
+                    {
+                        sortable: true,
+                        field: 'RuleId',
+                        title: '规则编号'
+                    }, {
+                       
+                        field: 'RuleText',
+                        title: '规则详情'
+                    }
+                   
+                ]
+
+            });
+
+        })
+        //查询
+        $("#btnSelect").click(function () {
+            pageindex = 1;
+            RefreshTable();
+
+        })
+        //添加
+        $("#AddBtn_Rule").click(function () {
+             noiframe("添加规则", "60%", "70%", "/Sws/WarnRule/AllotRule");
+
+        })
+        //修改
+        $("#EditBtn_Rule").click(function () {
+
+            var lenthcheck = $("#tabledata").bootstrapTable('getSelections');
+            if (lenthcheck.length == 1) {
+                var RuleId = lenthcheck[0].RuleId;
+
+                noiframe("编辑规则", "60%", "70%", "/Sws/WarnRule/AllotRule/" + RuleId);
+            }
+            else {
+                layer.alert("请选中一行");
+            }
+        })
+        //删除规则
+        $("#DeleteBtn_RUle").click(function () {
+            var lenthcheck = $("#tabledata").bootstrapTable('getSelections');
+            if (lenthcheck.length <= 0) {
+                layer.msg("请至少选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                var id = "";
+                for (i = 0; i < lenthcheck.length; i++) {
+                    id += lenthcheck[i].RuleId + ",";
+                }
+                id = id.substring(0, id.length - 1);
+                layer.confirm("确定要删除规则？", {
+                    btn: ["确定", "取消"]
+                },
+                    function () {
+                        deleteRules(id);
+                    },
+                    function () { }
+                );
+            }
+        })
+        function deleteRules(ids) {
+            $.post("/Sws/WarnRule/DeleteRules", { ids: ids }, function (res) {
+                if (res == "ok") {
+                    layer.msg("删除成功");
+                    pageindex = 1;
+                    RefreshTable();
+                }
+                else {
+                    layer.alert("删除失败");
+                }
+            });
+        }
+        function RefreshTable() {
+           
+             var opt = {
+                pageNumber: pageindex
+            };
+            $("#tabledata").bootstrapTable('refresh', opt);
+        }
+
+        //定义layer层
+        function noiframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                yes: function (index, layero) {
+                    window.frames[0].saveForm();
+                },
+                cancel: function (index) {
+                }
+            });
+        }
+        function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+    </script>
+</body >
+</html >

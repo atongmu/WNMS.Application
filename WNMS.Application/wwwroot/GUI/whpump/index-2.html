@@ -1,0 +1,1449 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>2泵工艺图</title>
+    <link rel="stylesheet" type="text/css" href="../css/hyl2.css" />
+    <script src="../js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/svg-pan-zoom.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: Microsoft YaHei;
+        }
+
+        .hyl_ditu {
+            width: 100%;
+            height: 100%;
+        }
+
+        .hyl_wbox {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 9;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body style="position:relative;">
+    <!-- 工艺图底图图层  -->
+    <!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+    <div class="hyl_ditu">
+        <svg id="svg1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 1920 1080" style="display: inline; width: inherit; min-width: inherit; max-width: inherit; height: inherit; min-height: inherit; max-height: inherit;">
+            <defs>
+                <style>
+                    .cls-1, .cls-6 {
+                        fill: #f2f2f2;
+                    }
+
+                    .cls-2 {
+                        fill: #2585ef;
+                    }
+
+                    .cls-18, .cls-20, .cls-3, .cls-36, .cls-7, .cls-8 {
+                        fill: #143a82;
+                    }
+
+                    .cls-10, .cls-24, .cls-25, .cls-26, .cls-27, .cls-28, .cls-29, .cls-31, .cls-32, .cls-4, .cls-43, .cls-45, .cls-46, .cls-48, .cls-49, .cls-5, .cls-50, .cls-54, .cls-55, .cls-56, .cls-57, .cls-64, .cls-65 {
+                        fill: none;
+                    }
+
+                    .cls-31, .cls-4, .cls-5, .cls-8, .cls-9 {
+                        stroke: #143a82;
+                    }
+
+                    .cls-10, .cls-13, .cls-24, .cls-25, .cls-26, .cls-27, .cls-28, .cls-29, .cls-31, .cls-32, .cls-37, .cls-38, .cls-39, .cls-4, .cls-40, .cls-41, .cls-42, .cls-44, .cls-45, .cls-46, .cls-48, .cls-49, .cls-5, .cls-50, .cls-54, .cls-55, .cls-56, .cls-57, .cls-58, .cls-59, .cls-6, .cls-60, .cls-61, .cls-62, .cls-63, .cls-64, .cls-65, .cls-8, .cls-9 {
+                        stroke-miterlimit: 10;
+                    }
+
+                    .cls-24, .cls-25, .cls-26, .cls-27, .cls-28, .cls-29, .cls-32, .cls-37, .cls-38, .cls-39, .cls-4, .cls-40, .cls-41, .cls-42, .cls-44, .cls-48, .cls-49, .cls-50, .cls-54, .cls-56, .cls-62 {
+                        stroke-width: 2px;
+                    }
+
+                    .cls-56, .cls-6 {
+                        stroke: #333f4f;
+                    }
+                
+                    .cls-7 {
+                        font-size: 2.93px;
+                    }
+
+                    .cls-36, .cls-51, .cls-7 {
+                        font-family: Benmo-Chenhei, Benmo Chenhei;
+                    }
+
+                    .cls-10, .cls-31, .cls-57, .cls-8, .cls-9 {
+                        stroke-width: 3px;
+                    }
+
+                    .cls-9 {
+                        fill: #e6e6e6;
+                    }
+
+                    .cls-10 {
+                        stroke: #b3b3b3;
+                    }
+
+                    .cls-11 {
+                        fill: #333f4f;
+                    }
+
+                    .cls-12 {
+                        fill: #868686;
+                    }
+
+                    .cls-13 {
+                        fill: #334c68;
+                        stroke: #20363f;
+                        stroke-width: 0.1px;
+                    }
+
+                    .cls-14 {
+                        fill: #5276aa;
+                    }
+
+                    .cls-15, .cls-16 {
+                        fill: #7f91aa;
+                    }
+
+                    .cls-16 {
+                        font-size: 8.65px;
+                        font-family: AdobeSongStd-Light-GBpc-EUC-H, Adobe Song Std;
+                        letter-spacing: -0.09em;
+                    }
+
+                    .cls-17 {
+                        fill: #cee6f9;
+                    }
+
+                    .cls-18, .cls-19 {
+                        font-size: 21px;
+                    }
+
+                    .cls-18, .cls-19, .cls-20 {
+                        font-weight: bold;
+                    }
+
+                    .cls-19 {
+                        fill: #db4516;
+                    }
+
+                    .cls-20 {
+                        font-size: 14px;
+                    }
+
+                    .cls-21 {
+                        fill: #07a307;
+                    }
+
+                    .cls-22 {
+                        fill: #af0800;
+                    }
+
+                    .cls-23 {
+                        fill: #474747;
+                    }
+
+                    .cls-24 {
+                        stroke: url(#未命名的渐变_15);
+                    }
+
+                    .cls-25 {
+                        stroke: url(#未命名的渐变_15-2);
+                    }
+
+                    .cls-26 {
+                        stroke: url(#未命名的渐变_15-3);
+                    }
+
+                    .cls-27 {
+                        stroke: url(#未命名的渐变_15-4);
+                    }
+
+                    .cls-28 {
+                        stroke: url(#未命名的渐变_15-5);
+                    }
+
+                    .cls-29 {
+                        stroke: url(#未命名的渐变_15-6);
+                    }
+
+                    .cls-30 {
+                        fill: #df592f;
+                    }
+
+                    .cls-32 {
+                        stroke: #10397a;
+                    }
+
+                    .cls-33 {
+                        fill: #0e3773;
+                    }
+
+                    .cls-34 {
+                        fill: #4676a5;
+                    }
+
+                    .cls-35 {
+                        fill: #a1d5ff;
+                    }
+
+                    .cls-36 {
+                        font-size: 2.7px;
+                    }
+
+                    .cls-37, .cls-38, .cls-39, .cls-40, .cls-41, .cls-42, .cls-44, .cls-45, .cls-46, .cls-54, .cls-55, .cls-57 {
+                        stroke: #01579b;
+                    }
+                   .cls-46, .cls-54, .cls-55, .cls-57 {
+                        stroke: #000000;
+                    }
+                    .cls-37 {
+                        fill: url(#未命名的渐变_21);
+                    }
+
+                    .cls-38 {
+                        fill: url(#未命名的渐变_21-2);
+                    }
+
+                    .cls-39 {
+                        fill: url(#未命名的渐变_21-3);
+                    }
+
+                    .cls-40 {
+                        fill: url(#未命名的渐变_21-4);
+                    }
+
+                    .cls-41 {
+                        fill: url(#未命名的渐变_31);
+                    }
+
+                    .cls-42 {
+                        fill: #ccc;
+                    }
+
+                    .cls-44 {
+                        fill: url(#未命名的渐变_31-2);
+                    }
+
+                    .cls-45, .cls-58, .cls-59, .cls-60, .cls-61, .cls-63, .cls-64, .cls-65 {
+                        stroke-width: 0.5px;
+                    }
+
+                    .cls-47 {
+                        fill: url(#orange_red);
+                    }
+
+                    .cls-48 {
+                        stroke: url(#未命名的渐变_15-7);
+                    }
+
+                    .cls-49 {
+                        stroke: url(#未命名的渐变_15-8);
+                    }
+
+                    .cls-50 {
+                        stroke: url(#未命名的渐变_15-9);
+                    }
+
+                    .cls-51 {
+                        font-size: 7.04px;
+                        fill: #000000;
+                    }
+
+                    .cls-52 {
+                        fill: #000000;
+                    }
+
+                    .cls-53 {
+                        fill: #000000;
+                    }
+
+                    .cls-55 {
+                        stroke-width: 1.5px;
+                    }
+
+                    .cls-58, .cls-59, .cls-60, .cls-61, .cls-62, .cls-63 {
+                        stroke: #0977af;
+                    }
+
+                    .cls-58 {
+                        fill: url(#未命名的渐变_54);
+                    }
+
+                    .cls-59 {
+                        fill: url(#未命名的渐变_54-2);
+                    }
+
+                    .cls-60 {
+                        fill: url(#未命名的渐变_54-3);
+                    }
+
+                    .cls-61 {
+                        fill: url(#未命名的渐变_54-4);
+                    }
+
+                    .cls-62 {
+                        fill: #caeafc;
+                    }
+
+                    .cls-63 {
+                        fill: url(#未命名的渐变_54-5);
+                    }
+
+                    .cls-64 {
+                        stroke: #618cd1;
+                    }
+
+                    .cls-65 {
+                        stroke: #fff;
+                    }
+
+                    .cls-66 {
+                        fill: #10397a;
+                    }
+
+                    .cls-67, .cls-68 {
+                        font-size: 2.1px;
+                        letter-spacing: 0.18em;
+                    }
+
+                    .cls-67, .cls-68, .cls-69 {
+                        fill: #fff;
+                    }
+
+                    .cls-67 {
+                        font-family: MicrosoftYaHei-Bold, Microsoft YaHei;
+                        font-weight: 700;
+                    }
+
+                    .cls-68, .cls-69 {
+                        font-family: MicrosoftYaHei, Microsoft YaHei;
+                    }
+
+                    .cls-69 {
+                        font-size: 1.38px;
+                        letter-spacing: 0.18em;
+                    }
+
+                    .cls-70 {
+                        letter-spacing: 0.19em;
+                    }
+
+                    .cls-71 {
+                        letter-spacing: 0.18em;
+                    }
+                </style>
+                <linearGradient id="orange_red" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:rgb(144,202,249);
+                    stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:rgb(41,115,207);
+                    stop-opacity:1" />
+                </linearGradient>
+                <lineargradient id="未命名的渐变_15" x1="1218.68" y1="835.33" x2="1303.79" y2="835.33" gradientunits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#4f6c99" />
+                    <stop offset="0.16" stop-color="#526f9c" />
+                    <stop offset="0.29" stop-color="#5b78a6" />
+                    <stop offset="0.4" stop-color="#6c87b6" />
+                    <stop offset="0.5" stop-color="#829dcd" />
+                    <stop offset="0.59" stop-color="#9fb8ea" />
+                    <stop offset="0.62" stop-color="#a9c2f4" />
+                    <stop offset="1" stop-color="#718dbe" />
+                </lineargradient>
+                <lineargradient id="未命名的渐变_15-2" x1="1127.06" y1="872.41" x2="1212.18" y2="872.41" xlink:href="#未命名的渐变_15" />
+                <lineargradient id="未命名的渐变_15-3" x1="1127.06" y1="836.14" x2="1212.18" y2="836.14" xlink:href="#未命名的渐变_15" />
+                <lineargradient id="未命名的渐变_15-4" x1="1593.1" y1="200.64" x2="1678.22" y2="200.64" xlink:href="#未命名的渐变_15" />
+                <lineargradient id="未命名的渐变_15-5" x1="593.4" y1="393.72" x2="678.52" y2="393.72" xlink:href="#未命名的渐变_15" />
+                <lineargradient id="未命名的渐变_15-6" x1="1504.12" y1="480.09" x2="1589.23" y2="480.09" xlink:href="#未命名的渐变_15" />
+                <lineargradient id="未命名的渐变_21" x1="-4.19" y1="1939.05" x2="28.53" y2="1939.05" gradienttransform="translate(58.04 -1410.97) rotate(-16.65)" gradientunits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#fff" />
+                    <stop offset="1" stop-color="#ccc" />
+                </lineargradient>
+                <lineargradient id="未命名的渐变_21-2" x1="16" y1="1932.1" x2="22.8" y2="1932.1" gradienttransform="translate(610.84 -1497.54)" xlink:href="#未命名的渐变_21" />
+                <lineargradient id="未命名的渐变_21-3" x1="-10746.87" y1="-1273.81" x2="-10714.15" y2="-1273.81" gradienttransform="matrix(-0.96, -0.29, -0.29, 0.96, -10285.41, -1410.97)" xlink:href="#未命名的渐变_21" />
+                <lineargradient id="未命名的渐变_21-4" x1="-10726.68" y1="-1280.76" x2="-10719.89" y2="-1280.76" gradienttransform="matrix(0, -1, -1, 0, -925.52, -10288.72)" xlink:href="#未命名的渐变_21" />
+                <lineargradient id="未命名的渐变_31" x1="335.93" y1="524.24" x2="650.76" y2="524.24" gradientunits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#fff" />
+                    <stop offset="1" stop-color="#e6e6e6" />
+                </lineargradient>
+                <lineargradient id="未命名的渐变_31-2" x1="446.86" y1="393.73" x2="486.53" y2="393.73" xlink:href="#未命名的渐变_31" />
+                <lineargradient id="未命名的渐变_15-7" x1="1127.06" y1="253.79" x2="1212.18" y2="253.79" xlink:href="#未命名的渐变_15" />
+                <lineargradient id="未命名的渐变_15-8" x1="1218.68" y1="217.73" x2="1303.79" y2="217.73" xlink:href="#未命名的渐变_15" />
+                <lineargradient id="未命名的渐变_15-9" x1="1127.06" y1="217.52" x2="1212.18" y2="217.52" xlink:href="#未命名的渐变_15" />
+                <lineargradient id="未命名的渐变_54" x1="1070.51" y1="558.9" x2="1082.49" y2="558.9" gradientunits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#3f84a7" />
+                    <stop offset="0.21" stop-color="#4286a9" />
+                    <stop offset="0.37" stop-color="#4c8eb1" />
+                    <stop offset="0.51" stop-color="#5c9cbe" />
+                    <stop offset="0.64" stop-color="#73aed0" />
+                    <stop offset="0.76" stop-color="#90c6e7" />
+                    <stop offset="0.82" stop-color="#a1d4f5" />
+                    <stop offset="1" stop-color="#529dc4" />
+                </lineargradient>
+                <lineargradient id="未命名的渐变_54-2" x1="1039.74" y1="532.97" x2="1111.52" y2="532.97" xlink:href="#未命名的渐变_54" />
+                <lineargradient id="未命名的渐变_54-3" x1="1039.74" y1="455.75" x2="1111.52" y2="455.75" xlink:href="#未命名的渐变_54" />
+                <lineargradient id="未命名的渐变_54-4" x1="1039.74" y1="495.98" x2="1111.52" y2="495.98" xlink:href="#未命名的渐变_54" />
+                <lineargradient id="未命名的渐变_54-5" x1="1065.63" y1="569.7" x2="1087.98" y2="569.7" xlink:href="#未命名的渐变_54" />
+            </defs>
+            <title>2台泵无负压工艺图 副本</title>
+            <g id="图层_1" data-name="图层 1">
+                <rect class="cls-1" x="1118.46" y="805.51" width="195.07" height="88.34" />
+                <rect class="cls-2" x="1509.35" y="125.43" width="246.98" height="14" />
+                <rect class="cls-3" x="295.71" y="124.16" width="0.63" height="2.18" />
+                <rect class="cls-3" x="290.08" y="125.83" width="0.63" height="2.18" transform="translate(-15.77 208.79) rotate(-38.58)" />
+                <rect class="cls-3" x="301.2" y="126.15" width="0.63" height="2.18" transform="translate(156.64 -166.21) rotate(40.84)" />
+                <rect class="cls-3" x="304.51" y="131.74" width="0.63" height="2.18" transform="translate(402.72 -184.94) rotate(83.58)" />
+                <rect class="cls-3" x="286.46" y="131.68" width="0.63" height="2.18" transform="translate(115.92 398.62) rotate(-82.12)" />
+                <rect class="cls-3" x="294.45" y="124.11" width="0.33" height="1.21" transform="translate(-18.34 58.29) rotate(-10.96)" />
+                <rect class="cls-3" x="297.18" y="124.11" width="0.33" height="1.21" transform="translate(33.32 -60.37) rotate(12.28)" />
+                <rect class="cls-3" x="298.38" y="124.36" width="0.33" height="1.21" transform="translate(60.97 -94.81) rotate(20.06)" />
+                <rect class="cls-3" x="299.53" y="124.77" width="0.33" height="1.21" transform="translate(93.24 -125.45) rotate(27.84)" />
+                <rect class="cls-3" x="300.62" y="125.33" width="0.33" height="1.21" transform="translate(129.64 -151.62) rotate(35.62)" />
+                <rect class="cls-3" x="302.51" y="126.87" width="0.33" height="1.21" transform="translate(212.3 -188.26) rotate(51.19)" />
+                <rect class="cls-3" x="303.28" y="127.82" width="0.33" height="1.21" transform="translate(257.07 -197.8) rotate(58.97)" />
+                <rect class="cls-3" x="303.92" y="128.86" width="0.33" height="1.21" transform="translate(303.02 -201.02) rotate(66.75)" />
+                <rect class="cls-3" x="304.41" y="129.98" width="0.33" height="1.21" transform="translate(349.22 -197.77) rotate(74.54)" />
+                <rect class="cls-3" x="304.95" y="131.16" width="0.33" height="1.21" transform="translate(394.91 -188.22) rotate(82.32)" />
+                <rect class="cls-3" x="305.32" y="133.4" width="0.33" height="1.21" transform="translate(440.03 -171.25) rotate(90.1)" />
+                <rect class="cls-3" x="305.33" y="134.62" width="0.33" height="1.21" transform="translate(481.34 -148.83) rotate(97.88)" />
+                <rect class="cls-3" x="305.17" y="135.83" width="0.33" height="1.21" transform="translate(519.15 -120.71) rotate(105.67)" />
+                <rect class="cls-3" x="293.31" y="124.37" width="0.33" height="1.21" transform="translate(-24.45 99.07) rotate(-18.41)" />
+                <rect class="cls-3" x="292.21" y="124.79" width="0.33" height="1.21" transform="translate(-25.42 140.06) rotate(-25.86)" />
+                <rect class="cls-3" x="291.17" y="125.34" width="0.33" height="1.21" transform="translate(-21.31 180.65) rotate(-33.3)" />
+                <rect class="cls-3" x="288.72" y="127.01" width="0.33" height="1.21" transform="translate(2.44 260.62) rotate(-48.74)" />
+                <rect class="cls-3" x="287.91" y="128.15" width="0.33" height="1.21" transform="translate(24.05 301.54) rotate(-57.28)" />
+                <rect class="cls-3" x="286.86" y="129.39" width="0.33" height="1.21" transform="translate(50.9 338.63) rotate(-65.83)" />
+                <rect class="cls-3" x="286.42" y="130.72" width="0.33" height="1.21" transform="translate(82.91 371.93) rotate(-74.37)" />
+                <rect class="cls-3" x="286.14" y="133.49" width="0.33" height="1.21" transform="translate(159.54 423.73) rotate(-91.46)" />
+                <rect class="cls-3" x="286.11" y="134.88" width="0.33" height="1.21" transform="translate(202.58 440.95) rotate(-100)" />
+                <rect class="cls-3" x="286.49" y="136.23" width="0.33" height="1.21" transform="matrix(-0.32, -0.95, 0.95, -0.32, 248.11, 452.12)" />
+                <rect class="cls-3" x="293.29" y="147.36" width="5.62" height="3.7" />
+                <rect class="cls-3" x="293.29" y="172.7" width="5.62" height="9.59" />
+                <rect class="cls-3" x="293.29" y="155.88" width="5.62" height="2.72" />
+                <rect class="cls-3" x="292.69" y="171.53" width="6.78" height="1.27" />
+                <polygon class="cls-3" points="300.51 160.97 291.71 160.97 293.29 158.8 298.91 158.8 300.51 160.97" />
+                <polygon class="cls-3" points="298.47 150.66 293.72 150.66 291.35 153.11 293.72 155.56 298.47 155.56 300.84 153.11 298.47 150.66" />
+                <polygon class="cls-3" points="299.54 161.22 292.67 161.22 289.24 166.16 292.67 171.11 299.54 171.11 302.97 166.16 299.54 161.22" />
+                <rect class="cls-3" x="287.67" y="162.24" width="2.81" height="8.92" />
+                <rect class="cls-3" x="286.85" y="163.31" width="1.62" height="6.53" />
+                <rect class="cls-3" x="284.7" y="165.09" width="2.32" height="3.16" />
+                <rect class="cls-3" x="279.54" y="165.6" width="1.15" height="2.8" rx="0.37" />
+                <rect class="cls-3" x="283.32" y="163.15" width="1.04" height="7.8" />
+                <rect class="cls-3" x="281.01" y="163.15" width="2.76" height="1.73" rx="0.44" />
+                <rect class="cls-3" x="281.01" y="166.02" width="2.76" height="1.73" rx="0.44" />
+                <rect class="cls-3" x="281.01" y="169.22" width="2.76" height="1.73" rx="0.44" />
+                <circle class="cls-4" cx="295.71" cy="133.87" r="13.34" />
+                <path class="cls-5" d="M285.47,137.73a12.28,12.28,0,0,1-.57-3.69,10.75,10.75,0,0,1,.56-3.23,10.9,10.9,0,1,1,20.68,6.89" />
+                <polygon class="cls-3" points="293.56 136.44 292.44 134.53 296.25 133.28 302.1 130.07 302.23 130.33 296.47 133.61 293.56 136.44" />
+                <circle class="cls-6" cx="295.63" cy="133.86" r="0.84" />
+                <text class="cls-7" transform="translate(292.03 142.31)">
+                    MPA
+                </text>
+                <rect class="cls-3" x="1554.99" y="404.36" width="0.63" height="2.18" transform="translate(1960.76 -1149.85) rotate(90)" />
+                <rect class="cls-3" x="1553.32" y="398.74" width="0.63" height="2.18" transform="translate(897.37 -1064.06) rotate(51.42)" />
+                <rect class="cls-3" x="1553" y="409.86" width="0.63" height="2.18" transform="translate(2880.07 -495.35) rotate(130.84)" />
+                <rect class="cls-3" x="1547.41" y="413.17" width="0.63" height="2.18" transform="translate(3132.08 652.79) rotate(173.58)" />
+                <rect class="cls-3" x="1547.47" y="395.11" width="0.63" height="2.18" transform="translate(68.97 -208.54) rotate(7.88)" />
+                <rect class="cls-3" x="1555.68" y="403.44" width="0.33" height="1.21" transform="translate(1656.72 -1200.24) rotate(79.04)" />
+                <rect class="cls-3" x="1555.68" y="406.17" width="0.33" height="1.21" transform="translate(2284.13 -1027) rotate(102.28)" />
+                <rect class="cls-3" x="1555.43" y="407.37" width="0.33" height="1.21" transform="translate(2472.35 -913.33) rotate(110.06)" />
+                <rect class="cls-3" x="1555.02" y="408.52" width="0.33" height="1.21" transform="translate(2643.25 -774.97) rotate(117.84)" />
+                <rect class="cls-3" x="1554.45" y="409.61" width="0.33" height="1.21" transform="translate(2793.56 -614.55) rotate(125.62)" />
+                <rect class="cls-3" x="1552.91" y="411.5" width="0.33" height="1.21" transform="translate(3021.54 -240.19) rotate(141.19)" />
+                <rect class="cls-3" x="1551.97" y="412.27" width="0.33" height="1.21" transform="translate(3094.98 -33.41) rotate(148.97)" />
+                <rect class="cls-3" x="1550.92" y="412.91" width="0.33" height="1.21" transform="translate(3139.46 181.25) rotate(156.75)" />
+                <rect class="cls-3" x="1549.8" y="413.4" width="0.33" height="1.21" transform="translate(3154.21 399.74) rotate(164.54)" />
+                <rect class="cls-3" x="1548.63" y="413.94" width="0.33" height="1.21" transform="translate(3139.1 618.33) rotate(172.32)" />
+                <rect class="cls-3" x="1546.39" y="414.31" width="0.33" height="1.21" transform="translate(3092.37 832.56) rotate(-179.9)" />
+                <rect class="cls-3" x="1545.16" y="414.32" width="0.33" height="1.21" transform="matrix(-0.99, -0.14, 0.14, -0.99, 3019.14, 1037.88)" />
+                <rect class="cls-3" x="1543.95" y="414.16" width="0.33" height="1.21" transform="translate(2918.88 1231.07) rotate(-164.33)" />
+                <rect class="cls-3" x="1555.41" y="402.3" width="0.33" height="1.21" transform="translate(1446.63 -1200.31) rotate(71.59)" />
+                <rect class="cls-3" x="1555" y="401.2" width="0.33" height="1.21" transform="translate(1238.51 -1172.91) rotate(64.14)" />
+                <rect class="cls-3" x="1554.45" y="400.16" width="0.33" height="1.21" transform="translate(1035.93 -1118.58) rotate(56.7)" />
+                <rect class="cls-3" x="1552.78" y="397.71" width="0.33" height="1.21" transform="translate(648.23 -925.23) rotate(41.26)" />
+                <rect class="cls-3" x="1551.64" y="396.9" width="0.33" height="1.21" transform="translate(461.01 -775.64) rotate(32.72)" />
+                <rect class="cls-3" x="1550.4" y="395.85" width="0.33" height="1.21" transform="translate(298.28 -600.15) rotate(24.17)" />
+                <rect class="cls-3" x="1549.07" y="395.41" width="0.33" height="1.21" transform="translate(163.95 -402.69) rotate(15.63)" />
+                <rect class="cls-3" x="1546.29" y="395.13" width="0.33" height="1.21" transform="translate(-9.59 39.55) rotate(-1.46)" />
+                <rect class="cls-3" x="1544.9" y="395.1" width="0.33" height="1.21" transform="translate(-45.25 274.44) rotate(-10)" />
+                <rect class="cls-3" x="1543.56" y="395.48" width="0.33" height="1.21" transform="translate(-45.81 511.66) rotate(-18.55)" />
+                <rect class="cls-3" x="1528.54" y="403.68" width="5.62" height="3.7" transform="translate(1936.88 -1125.82) rotate(90)" />
+                <rect class="cls-3" x="1500.25" y="400.73" width="5.62" height="9.59" transform="translate(1908.59 -1097.53) rotate(90)" />
+                <rect class="cls-3" x="1520.51" y="404.17" width="5.62" height="2.72" transform="translate(1928.85 -1117.79) rotate(90)" />
+                <rect class="cls-3" x="1505" y="404.88" width="6.78" height="1.27" transform="translate(1913.9 -1102.87) rotate(90)" />
+                <polygon class="cls-3" points="1519.59 409.95 1519.59 401.14 1521.76 402.72 1521.76 408.34 1519.59 409.95" />
+                <polygon class="cls-3" points="1529.9 407.9 1529.9 403.15 1527.45 400.78 1525 403.15 1525 407.9 1527.45 410.28 1529.9 407.9" />
+                <polygon class="cls-3" points="1519.33 408.97 1519.33 402.11 1514.39 398.67 1509.45 402.11 1509.45 408.97 1514.39 412.41 1519.33 408.97" />
+                <rect class="cls-3" x="1512.45" y="394.05" width="2.81" height="8.92" transform="translate(1912.37 -1115.35) rotate(90)" />
+                <rect class="cls-3" x="1513.18" y="393.83" width="1.62" height="6.53" transform="translate(1911.08 -1116.89) rotate(90)" />
+                <rect class="cls-3" x="1512.72" y="393.71" width="2.32" height="3.16" transform="translate(1909.17 -1118.59) rotate(90)" />
+                <rect class="cls-3" x="1512.98" y="388.15" width="1.15" height="2.8" rx="0.37" transform="translate(1903.11 -1124.01) rotate(90)" />
+                <rect class="cls-3" x="1512.99" y="389.37" width="1.04" height="7.8" transform="translate(1906.78 -1120.24) rotate(90)" />
+                <rect class="cls-3" x="1515.17" y="390.96" width="2.76" height="1.73" rx="0.44" transform="translate(1908.37 -1124.73) rotate(90)" />
+                <rect class="cls-3" x="1512.29" y="390.96" width="2.76" height="1.73" rx="0.44" transform="translate(1905.5 -1121.85) rotate(90)" />
+                <rect class="cls-3" x="1509.09" y="390.96" width="2.76" height="1.73" rx="0.44" transform="translate(1902.3 -1118.65) rotate(90)" />
+                <circle class="cls-4" cx="1546.69" cy="405.14" r="13.34" />
+                <path class="cls-5" d="M1542.83,394.9a12.66,12.66,0,0,1,3.69-.57,11.08,11.08,0,0,1,3.23.56,10.9,10.9,0,0,1-6.89,20.68" />
+                <polygon class="cls-3" points="1544.12 403 1546.03 401.87 1547.27 405.68 1550.49 411.53 1550.23 411.67 1546.95 405.9 1544.12 403" />
+                <circle class="cls-6" cx="1546.69" cy="405.07" r="0.84" />
+                <text class="cls-7" transform="translate(1538.25 401.47) rotate(90)">
+                    MPA
+                </text>
+                <rect class="cls-2" x="417.33" y="343.31" width="298.49" height="14" transform="translate(916.88 -216.27) rotate(90)" />
+                <path class="cls-2" d="M549.34,194.85H178.94c-3.51,0-6.36-3.13-6.36-7h0c0-3.87,2.85-7,6.36-7h370.4c3.52,0,6.37,3.13,6.37,7h0C555.71,191.72,552.86,194.85,549.34,194.85Z" />
+                <rect class="cls-2" x="370.25" y="613.94" width="197.55" height="14" transform="translate(1089.96 151.91) rotate(90)" />
+                <rect class="cls-2" x="460.08" y="601.73" width="574.99" height="14" transform="translate(1356.31 -138.85) rotate(90)" />
+                <rect class="cls-2" x="1119.28" y="517.58" width="743.96" height="14" transform="translate(2015.84 -966.68) rotate(90)" />
+                <rect class="cls-2" x="483.59" y="729.73" width="263.74" height="14" />
+                <rect class="cls-2" x="767.14" y="909.6" width="260.16" height="14" />
+                <rect class="cls-2" x="1118.04" y="909.6" width="362.1" height="14" />
+                <rect class="cls-3" x="1646.01" y="88.32" width="2.97" height="9.2" />
+                <rect class="cls-3" x="1621.81" y="88.32" width="2.68" height="9.2" />
+                <rect class="cls-3" x="1618.46" y="120.4" width="34.39" height="22.59" />
+                <polygon class="cls-3" points="1656.02 136.92 1653.35 143.49 1653.35 120.9 1656.02 127.31 1656.02 136.92" />
+                <polygon class="cls-3" points="1615.27 136.92 1617.94 143.49 1617.94 120.9 1615.27 127.31 1615.27 136.92" />
+                <rect class="cls-3" x="1658.27" y="123.24" width="3.01" height="18.6" />
+                <rect class="cls-3" x="1662.4" y="123.24" width="3.01" height="18.6" />
+                <rect class="cls-3" x="1605.91" y="123.24" width="3.01" height="18.6" />
+                <rect class="cls-3" x="1610.04" y="123.24" width="3.01" height="18.6" />
+                <rect class="cls-3" x="1628.55" y="115.86" width="14.34" height="5.51" rx="0.4" />
+                <rect class="cls-3" x="1629.56" y="107.39" width="11.97" height="3.32" rx="0.4" />
+                <rect class="cls-3" x="1629.67" y="103.22" width="11.97" height="3.57" rx="0.4" />
+                <rect class="cls-3" x="1632.58" y="109.22" width="5.99" height="7.73" rx="0.4" />
+                <circle class="cls-8" cx="1635.73" cy="93.01" r="11.18" />
+                <circle class="cls-9" cx="1635.53" cy="93.19" r="7.97" />
+                <circle class="cls-10" cx="1635.71" cy="93.25" r="10.32" />
+                <rect class="cls-3" x="1620.39" y="89.93" width="2.76" height="1.69" />
+                <rect class="cls-3" x="1620.39" y="94.23" width="2.76" height="1.69" />
+                <rect class="cls-11" x="1630.2" y="91.35" width="10.75" height="3.82" />
+                <polygon class="cls-12" points="1633.08 95.16 1630.2 95.16 1630.2 91.35 1635.88 91.35 1633.08 95.16" />
+                <path class="cls-3" d="M1633,126.56l-9.13-3.58a.43.43,0,0,1-.11-.73l7.66-6.12a.43.43,0,0,1,.69.27l1.47,9.69A.43.43,0,0,1,1633,126.56Z" />
+                <path class="cls-3" d="M1638.53,126.56l9.12-3.58a.42.42,0,0,0,.11-.73l-7.65-6.12a.43.43,0,0,0-.69.27l-1.47,9.69A.43.43,0,0,0,1638.53,126.56Z" />
+                <rect class="cls-3" x="463.11" y="181.09" width="67.24" height="12.45" />
+                <polygon class="cls-3" points="495.39 210.79 471.02 199.35 519.75 199.35 495.39 210.79" />
+                <rect class="cls-13" x="517.04" y="169.47" width="2.49" height="29.88" rx="0.2" />
+                <rect class="cls-3" x="470.48" y="169.47" width="49.81" height="32.37" rx="0.4" />
+                <rect class="cls-14" x="516.6" y="169.47" width="1.68" height="32.37" />
+                <rect class="cls-14" x="513.52" y="169.47" width="1.68" height="32.37" />
+                <rect class="cls-14" x="475.63" y="169.47" width="1.68" height="32.37" />
+                <rect class="cls-14" x="472.56" y="169.47" width="1.68" height="32.37" />
+                <rect class="cls-14" x="480.45" y="207.01" width="29.88" height="4.98" rx="0.2" />
+                <ellipse class="cls-3" cx="495.39" cy="201.01" rx="16.19" ry="7.47" />
+                <rect class="cls-15" x="479.3" y="201.84" width="32.37" height="8.01" rx="0.1" />
+                <rect class="cls-3" x="479.2" y="201.6" width="32.37" height="6.88" />
+                <rect class="cls-14" x="484.66" y="210.54" width="2.49" height="2.49" />
+                <rect class="cls-14" x="491.3" y="210.54" width="2.49" height="2.49" />
+                <rect class="cls-14" x="497.95" y="210.54" width="2.49" height="2.49" />
+                <rect class="cls-14" x="504.59" y="210.54" width="2.49" height="2.49" />
+                <rect class="cls-14" x="479.41" y="176.94" width="31.2" height="14.94" rx="1" />
+                <text class="cls-16" transform="translate(480.63 181.73) scale(1.14 1)">
+                    ----------
+                    <tspan x="2.51" y="3.35">
+                        --------
+                    </tspan>
+                    <tspan x="5.02" y="6.7">
+                        ------
+                    </tspan>
+                </text>
+                <rect class="cls-3" x="522.88" y="179.85" width="7.47" height="14.94" rx="0.1" />
+                <rect class="cls-3" x="460.62" y="179.85" width="7.47" height="14.94" rx="0.1" />
+                <rect class="cls-3" x="1217.48" y="906.9" width="24.9" height="17.43" />
+                <rect class="cls-17" x="1219.97" y="909.39" width="2.49" height="12.54" />
+                <rect class="cls-17" x="1237.41" y="909.1" width="2.49" height="12.74" />
+                <rect class="cls-17" x="1229.57" y="905.49" width="0.74" height="20.08" transform="translate(1254.59 2448.61) rotate(-127.58)" />
+                <polygon class="cls-3" points="1218.09 903 1245.8 903 1231.94 897.69 1231.94 897.69 1231.94 900.34 1218.09 900.34 1218.09 903" />
+                <text class="cls-18" transform="translate(463.62 243.65)">
+                    过滤器
+                </text>
+                <text class="cls-18" transform="translate(955.27 900.35)">
+                    2#泵
+                </text>
+                <text class="cls-18" transform="translate(342.69 243.65)">
+                    进水阀门
+                </text>
+                <text class="cls-18" transform="translate(1500.85 282.59)">
+                    出水阀门
+                </text>
+                <text class="cls-18" transform="translate(1504.01 767.48)">
+                    压力控制器
+                </text>
+                <text class="cls-19" transform="translate(155.12 161.96)" style="font-size:20px;">
+                    市政进水
+                </text>
+                <text class="cls-19" transform="translate(1681.66 107.25)" style="font-size:20px;">
+                    供水入户
+                </text>
+                <text class="cls-18" transform="translate(1602.66 185.98)" style="font-size:25px;">
+                    流量计
+                </text>
+                <rect class="cls-1" x="1621.06" y="802.49" width="186" height="113.65" />
+                <text class="cls-20" transform="translate(1635.41 833.8)">
+                    状态说明
+                </text>
+                <text class="cls-20" transform="translate(1735.43 833.8)">
+                    运行状态
+                </text>
+                <text class="cls-20" transform="translate(1735.43 861.35)">
+                    故障状态
+                </text>
+                <text class="cls-20" transform="translate(1735.43 888.32)">
+                    停止状态
+                </text>
+                <path class="cls-21" d="M1714.15,821.18a7.16,7.16,0,1,0,7.17,7.16,7.16,7.16,0,0,0-7.17-7.16Zm0,13.2a6,6,0,1,1,6-6,6,6,0,0,1-6,6Zm2.87,2.89" />
+                <path class="cls-21" d="M1710.42,827.43c-1.31.66-2.18,2.19-1.31,3.07,1.53,1.53,2.19-.66,3.28-1.32.68-.41,1.32-.87,1.32-1.31s-2-1.1-3.29-.44Zm5,2.18c-.69-.38-1.42-.7-1.8-.48s0,2.25,1.27,3.06,3,.8,3.31-.39c.56-2.1-1.67-1.57-2.78-2.19Zm-.56-1c.38.22,1.93-1.16,2-2.63s-.8-3-2-2.67c-2.09.56-.53,2.23-.5,3.5,0,.79.1,1.58.48,1.8Zm0,0" />
+                <path class="cls-22" d="M1714.15,848.14a7.16,7.16,0,1,0,7.17,7.17,7.17,7.17,0,0,0-7.17-7.17Zm0,13.21a6,6,0,1,1,6-6,6,6,0,0,1-6,6Zm2.87,2.88" />
+                <path class="cls-22" d="M1710.42,854.4c-1.31.66-2.18,2.19-1.31,3.06,1.53,1.54,2.19-.65,3.28-1.31.68-.41,1.32-.88,1.32-1.32s-2-1.09-3.29-.43Zm5,2.18c-.69-.38-1.42-.7-1.8-.48s0,2.25,1.27,3.06,3,.8,3.31-.39c.56-2.1-1.67-1.57-2.78-2.19Zm-.56-1c.38.22,1.93-1.16,2-2.62s-.8-3-2-2.67c-2.09.56-.53,2.22-.5,3.5,0,.79.1,1.58.48,1.79Zm0,0" />
+                <path class="cls-23" d="M1714.15,875.11a7.16,7.16,0,1,0,7.17,7.16,7.17,7.17,0,0,0-7.17-7.16Zm0,13.2a6,6,0,1,1,6-6,6,6,0,0,1-6,6Zm2.87,2.89" />
+                <path class="cls-23" d="M1710.42,881.37c-1.31.65-2.18,2.18-1.31,3.06,1.53,1.53,2.19-.66,3.28-1.31.68-.41,1.32-.88,1.32-1.32s-2-1.09-3.29-.43Zm5,2.18c-.69-.39-1.42-.7-1.8-.49s0,2.26,1.27,3.07,3,.8,3.31-.4c.56-2.09-1.67-1.57-2.78-2.18Zm-.56-1c.38.22,1.93-1.16,2-2.62s-.8-3-2-2.67c-2.09.56-.53,2.22-.5,3.5,0,.79.1,1.57.48,1.79Zm0,0" />
+                <rect class="cls-24" x="1219.68" y="820.23" width="83.11" height="30.2" />
+                <rect class="cls-25" x="1128.06" y="857.31" width="175.11" height="30.2" />
+                <rect class="cls-26" x="1128.06" y="821.04" width="83.11" height="30.2" />
+                <rect class="cls-27" x="1595.1" y="202.54" width="250.11" height="42.2" />
+                <rect class="cls-27" x="1595.1" y="260.54" width="250.11" height="42.2" />
+                <text class="cls-18" transform="translate(1610.12 376.85)" style="font-size:25px;">
+                    出水压力表
+                </text>
+                <text class="cls-18" transform="translate(259.81 242.89)">
+                    负压表
+                </text>
+                <rect class="cls-28" x="174.4" y="328.62" width="150.11" height="42.2" />
+                <text class="cls-18" transform="translate(185.96 309.54)" style="font-size:25px;">
+                    进水压力表
+                </text>
+                <rect class="cls-29" x="1595.12" y="394.99" width="160.11" height="42.2" />
+                <polygon class="cls-30" points="592.72 225.09 592.72 256.58 592.72 262.6 584.53 259.13 594.31 282.27 604.08 259.13 595.89 262.6 595.89 256.58 595.89 225.09 592.72 225.09" />
+                <polygon class="cls-30" points="164.25 234.88 195.73 234.88 201.75 234.88 198.28 243.06 221.43 233.29 198.28 223.52 201.75 231.71 195.73 231.71 164.25 231.71 164.25 234.88" />
+                <polygon class="cls-30" points="1697.07 168.49 1728.56 168.49 1734.58 168.49 1731.1 176.68 1754.25 166.91 1731.1 157.13 1734.58 165.32 1728.56 165.32 1697.07 165.32 1697.07 168.49" />
+                <polygon class="cls-30" points="820.93 954 852.42 954 858.44 954 854.96 962.18 878.11 952.41 854.96 942.64 858.44 950.83 852.42 950.83 820.93 950.83 820.93 954" />
+                <polygon class="cls-30" points="551.63 765.74 583.11 765.74 589.13 765.74 585.66 773.93 608.8 764.15 585.66 754.38 589.13 762.57 583.11 762.57 551.63 762.57 551.63 765.74" />
+                <polygon class="cls-30" points="1393.62 954 1425.1 954 1431.12 954 1427.65 962.18 1450.79 952.41 1427.65 942.64 1431.12 950.83 1425.1 950.83 1393.62 950.83 1393.62 954" />
+                <polygon class="cls-30" points="1525.72 615.97 1525.72 584.49 1525.72 578.47 1533.91 581.94 1524.14 558.79 1514.37 581.94 1522.55 578.47 1522.55 584.49 1522.55 615.97 1525.72 615.97" />
+                <path class="cls-2" d="M559.45,207.63l14.87.13a26.83,26.83,0,0,0-27.56-26.95v14.27a12.58,12.58,0,0,1,8.18,2.78A13,13,0,0,1,559.45,207.63Z" />
+                <rect class="cls-2" x="543.25" y="179.53" width="3.8" height="16.56" transform="translate(1090.3 375.62) rotate(-180)" />
+                <rect class="cls-2" x="564.9" y="200.67" width="3.8" height="16.56" transform="translate(775.75 -357.86) rotate(90)" />
+                <path class="cls-2" d="M767,306.14q.06-7.44.13-14.87a26.85,26.85,0,0,0-26.95,27.57h14.27a12.58,12.58,0,0,1,2.78-8.19A13,13,0,0,1,767,306.14Z" />
+                <rect class="cls-2" x="745.3" y="312.16" width="3.8" height="16.56" transform="translate(1067.64 -426.76) rotate(90)" />
+                <rect class="cls-2" x="766.44" y="290.51" width="3.8" height="16.56" />
+                <path class="cls-2" d="M1510.89,140.2l.12-14.86a26.83,26.83,0,0,0-26.94,27.56h14.27a12.55,12.55,0,0,1,2.78-8.18A13,13,0,0,1,1510.89,140.2Z" />
+                <rect class="cls-2" x="1489.16" y="146.23" width="3.8" height="16.56" transform="translate(1645.57 -1336.56) rotate(90)" />
+                <rect class="cls-2" x="1510.31" y="124.57" width="3.8" height="16.56" />
+                <path class="cls-2" d="M754.29,897.15,739.43,897A26.81,26.81,0,0,0,767,924V909.71a12.61,12.61,0,0,1-8.18-2.78A13,13,0,0,1,754.29,897.15Z" />
+                <rect class="cls-2" x="766.69" y="908.7" width="3.8" height="16.56" />
+                <rect class="cls-2" x="745.04" y="887.56" width="3.8" height="16.56" transform="translate(-148.9 1642.78) rotate(-90)" />
+                <path class="cls-2" d="M1471.82,909.88l-.12,14.87a26.83,26.83,0,0,0,26.94-27.56h-14.27a12.56,12.56,0,0,1-2.78,8.18A13,13,0,0,1,1471.82,909.88Z" />
+                <rect class="cls-2" x="1489.74" y="887.3" width="3.8" height="16.56" transform="translate(596.06 2387.23) rotate(-90)" />
+                <rect class="cls-2" x="1468.6" y="908.96" width="3.8" height="16.56" transform="translate(2941.01 1834.47) rotate(-180)" />
+                <path class="cls-2" d="M476.35,717l-14.86-.12a26.83,26.83,0,0,0,27.56,26.94V729.53a12.55,12.55,0,0,1-8.18-2.78A13,13,0,0,1,476.35,717Z" />
+                <rect class="cls-2" x="488.75" y="728.52" width="3.8" height="16.56" />
+                <rect class="cls-2" x="467.1" y="707.38" width="3.8" height="16.56" transform="translate(-246.66 1184.66) rotate(-90)" />
+                <rect class="cls-3" x="398.65" y="179.72" width="3.48" height="15.76" />
+                <rect class="cls-3" x="403.42" y="179.72" width="3.48" height="15.76" />
+                <rect class="cls-3" x="365.5" y="179.72" width="3.48" height="15.76" />
+                <rect class="cls-3" x="370.27" y="179.72" width="3.48" height="15.76" />
+                <circle class="cls-31" cx="385.86" cy="145.72" r="12.98" />
+                <rect class="cls-3" x="379.6" y="135.03" width="1.83" height="10.15" rx="0.91" transform="translate(748.65 -29.89) rotate(135)" />
+                <rect class="cls-3" x="390.83" y="146.25" width="1.83" height="10.15" rx="0.91" transform="translate(775.75 -18.67) rotate(135)" />
+                <rect class="cls-3" x="382.96" y="129.8" width="6.59" height="3.25" />
+                <polygon class="cls-3" points="385.11 167.14 383.56 167.61 380 161.49 381.54 161.02 385.11 167.14" />
+                <polygon class="cls-3" points="388.19 167.14 389.73 167.61 392.9 161.53 391.75 161.02 388.19 167.14" />
+                <rect class="cls-3" x="385.7" y="160.72" width="1.67" height="6.63" transform="translate(773.08 328.07) rotate(180)" />
+                <rect class="cls-3" x="398.1" y="141.42" width="3.69" height="7.92" />
+                <rect class="cls-3" x="379.52" y="158.9" width="13.63" height="3.72" rx="0.72" />
+                <rect class="cls-3" x="383.46" y="168.72" width="6.45" height="7.65" rx="0.72" />
+                <rect class="cls-3" x="379.77" y="166.23" width="13.73" height="1.57" rx="0.44" />
+                <rect class="cls-3" x="379.77" y="167.93" width="13.73" height="1.57" rx="0.42" />
+                <rect class="cls-3" x="369.48" y="146.2" width="3.03" height="3.14" />
+                <rect class="cls-3" x="369.48" y="141.93" width="3.03" height="3.14" />
+                <circle class="cls-32" cx="386.13" cy="145.72" r="3.33" />
+                <circle class="cls-33" cx="386.18" cy="145.72" r="2.22" />
+                <rect class="cls-3" x="390.83" y="135.03" width="1.83" height="10.15" rx="0.91" transform="translate(569.68 516.17) rotate(-135)" />
+                <rect class="cls-3" x="379.6" y="146.25" width="1.83" height="10.15" rx="0.91" transform="translate(542.57 527.4) rotate(-135)" />
+                <rect class="cls-3" x="379.67" y="172.5" width="13.48" height="24.85" rx="4.98" />
+                <rect class="cls-3" x="391.92" y="171" width="3.31" height="27.82" rx="1.66" />
+                <rect class="cls-3" x="377.66" y="171" width="3.31" height="27.82" rx="1.66" />
+                <circle class="cls-34" cx="386.18" cy="145.72" r="1.33" />
+                <circle class="cls-35" cx="386.18" cy="145.72" r="0.94" />
+                <rect class="cls-3" x="1489.64" y="245.15" width="3.48" height="15.76" transform="translate(1744.41 -1238.34) rotate(90)" />
+                <rect class="cls-3" x="1489.64" y="249.92" width="3.48" height="15.76" transform="translate(1749.18 -1233.58) rotate(90)" />
+                <rect class="cls-3" x="1489.64" y="212" width="3.48" height="15.76" transform="translate(1711.26 -1271.49) rotate(90)" />
+                <rect class="cls-3" x="1489.64" y="216.77" width="3.48" height="15.76" transform="translate(1716.02 -1266.73) rotate(90)" />
+                <circle class="cls-31" cx="1533.26" cy="238.5" r="12.98" />
+                <rect class="cls-3" x="1537.96" y="228.08" width="1.83" height="10.15" rx="0.91" transform="translate(2462.16 1486.18) rotate(-135)" />
+                <rect class="cls-3" x="1526.74" y="239.31" width="1.83" height="10.15" rx="0.91" transform="translate(2435.05 1497.4) rotate(-135)" />
+                <rect class="cls-3" x="1544.26" y="237.27" width="6.59" height="3.25" transform="translate(1786.45 -1308.66) rotate(90)" />
+                <polygon class="cls-3" points="1511.84 237.75 1511.37 236.2 1517.49 232.64 1517.96 234.18 1511.84 237.75" />
+                <polygon class="cls-3" points="1511.84 240.83 1511.37 242.37 1517.45 245.54 1517.96 244.39 1511.84 240.83" />
+                <rect class="cls-3" x="1514.11" y="235.86" width="1.67" height="6.63" transform="translate(1275.76 1754.12) rotate(-90)" />
+                <rect class="cls-3" x="1531.76" y="248.63" width="3.69" height="7.92" transform="translate(1786.19 -1281.02) rotate(90)" />
+                <rect class="cls-3" x="1511.41" y="237.11" width="13.63" height="3.72" rx="0.72" transform="translate(1757.2 -1279.25) rotate(90)" />
+                <rect class="cls-3" x="1503.21" y="235.5" width="6.45" height="7.65" rx="0.72" transform="translate(1745.76 -1267.11) rotate(90)" />
+                <rect class="cls-3" x="1505.09" y="238.49" width="13.73" height="1.57" rx="0.44" transform="translate(1751.24 -1272.68) rotate(90)" />
+                <rect class="cls-3" x="1503.39" y="238.49" width="13.73" height="1.57" rx="0.42" transform="translate(1749.54 -1270.99) rotate(90)" />
+                <rect class="cls-3" x="1529.7" y="222.07" width="3.03" height="3.14" transform="translate(1754.85 -1307.58) rotate(90)" />
+                <rect class="cls-3" x="1533.97" y="222.07" width="3.03" height="3.14" transform="translate(1759.12 -1311.85) rotate(90)" />
+                <circle class="cls-32" cx="1533.26" cy="238.77" r="3.33" />
+                <circle class="cls-33" cx="1533.26" cy="238.82" r="2.22" />
+                <rect class="cls-3" x="1537.96" y="239.31" width="1.83" height="10.15" rx="0.91" transform="translate(277.92 1159.73) rotate(-45)" />
+                <rect class="cls-3" x="1526.74" y="228.08" width="1.83" height="10.15" rx="0.91" transform="translate(282.58 1148.51) rotate(-45)" />
+                <rect class="cls-3" x="1487.32" y="226.63" width="13.48" height="24.85" rx="4.98" transform="translate(1733.11 -1255.01) rotate(90)" />
+                <rect class="cls-3" x="1492.42" y="232.31" width="3.31" height="27.82" rx="1.66" transform="matrix(0, 1, -1, 0, 1740.29, -1247.85)" />
+                <rect class="cls-3" x="1492.42" y="218.05" width="3.31" height="27.82" rx="1.66" transform="translate(1726.03 -1262.11) rotate(90)" />
+                <circle class="cls-34" cx="1533.26" cy="238.82" r="1.33" />
+                <circle class="cls-35" cx="1533.26" cy="238.82" r="0.94" />
+                <rect class="cls-3" x="931.3" y="908.93" width="3.48" height="15.76" />
+                <rect class="cls-3" x="936.07" y="908.93" width="3.48" height="15.76" />
+                <rect class="cls-3" x="898.15" y="908.93" width="3.48" height="15.76" />
+                <rect class="cls-3" x="902.91" y="908.93" width="3.48" height="15.76" />
+                <circle class="cls-31" cx="918.51" cy="874.93" r="12.98" />
+                <rect class="cls-3" x="912.25" y="864.23" width="1.83" height="10.15" rx="0.91" transform="translate(2173.56 838.3) rotate(135)" />
+                <rect class="cls-3" x="923.48" y="875.46" width="1.83" height="10.15" rx="0.91" transform="translate(2200.67 849.53) rotate(135)" />
+                <rect class="cls-3" x="915.61" y="859.01" width="6.59" height="3.25" />
+                <polygon class="cls-3" points="917.75 896.35 916.21 896.82 912.64 890.7 914.19 890.23 917.75 896.35" />
+                <polygon class="cls-3" points="920.83 896.35 922.38 896.82 925.55 890.74 924.4 890.23 920.83 896.35" />
+                <rect class="cls-3" x="918.35" y="889.93" width="1.67" height="6.63" transform="translate(1838.37 1786.49) rotate(180)" />
+                <rect class="cls-3" x="930.75" y="870.62" width="3.69" height="7.92" />
+                <rect class="cls-3" x="912.16" y="888.1" width="13.63" height="3.72" rx="0.72" />
+                <rect class="cls-3" x="916.11" y="897.93" width="6.45" height="7.65" rx="0.72" />
+                <rect class="cls-3" x="912.42" y="895.44" width="13.73" height="1.57" rx="0.44" />
+                <rect class="cls-3" x="912.42" y="897.14" width="13.73" height="1.57" rx="0.42" />
+                <rect class="cls-3" x="902.13" y="875.4" width="3.03" height="3.14" />
+                <rect class="cls-3" x="902.13" y="871.14" width="3.03" height="3.14" />
+                <circle class="cls-32" cx="918.78" cy="874.93" r="3.33" />
+                <circle class="cls-33" cx="918.82" cy="874.93" r="2.22" />
+                <rect class="cls-3" x="923.48" y="864.23" width="1.83" height="10.15" rx="0.91" transform="translate(963.34 2137.65) rotate(-135)" />
+                <rect class="cls-3" x="912.25" y="875.46" width="1.83" height="10.15" rx="0.91" transform="translate(936.23 2148.88) rotate(-135)" />
+                <rect class="cls-3" x="912.32" y="901.71" width="13.48" height="24.85" rx="4.98" />
+                <rect class="cls-3" x="924.57" y="900.21" width="3.31" height="27.82" rx="1.66" />
+                <rect class="cls-3" x="910.31" y="900.21" width="3.31" height="27.82" rx="1.66" />
+                <circle class="cls-34" cx="918.82" cy="874.93" r="1.33" />
+                <circle class="cls-35" cx="918.82" cy="874.93" r="0.94" />
+                <rect class="cls-3" x="1360.21" y="908.93" width="3.48" height="15.76" />
+                <rect class="cls-3" x="1364.98" y="908.93" width="3.48" height="15.76" />
+                <rect class="cls-3" x="1327.06" y="908.93" width="3.48" height="15.76" />
+                <rect class="cls-3" x="1331.83" y="908.93" width="3.48" height="15.76" />
+                <circle class="cls-31" cx="1347.42" cy="874.93" r="12.98" />
+                <rect class="cls-3" x="1341.16" y="864.23" width="1.83" height="10.15" rx="0.91" transform="translate(2905.76 535.02) rotate(135)" />
+                <rect class="cls-3" x="1352.39" y="875.46" width="1.83" height="10.15" rx="0.91" transform="translate(2932.86 546.24) rotate(135)" />
+                <rect class="cls-3" x="1344.52" y="859.01" width="6.59" height="3.25" />
+                <polygon class="cls-3" points="1346.67 896.35 1345.12 896.82 1341.56 890.7 1343.1 890.23 1346.67 896.35" />
+                <polygon class="cls-3" points="1349.74 896.35 1351.29 896.82 1354.46 890.74 1353.31 890.23 1349.74 896.35" />
+                <rect class="cls-3" x="1347.26" y="889.93" width="1.67" height="6.63" transform="translate(2696.19 1786.49) rotate(180)" />
+                <rect class="cls-3" x="1359.66" y="870.62" width="3.69" height="7.92" />
+                <rect class="cls-3" x="1341.07" y="888.1" width="13.63" height="3.72" rx="0.72" />
+                <rect class="cls-3" x="1345.02" y="897.93" width="6.45" height="7.65" rx="0.72" />
+                <rect class="cls-3" x="1341.33" y="895.44" width="13.73" height="1.57" rx="0.44" />
+                <rect class="cls-3" x="1341.33" y="897.14" width="13.73" height="1.57" rx="0.42" />
+                <rect class="cls-3" x="1331.04" y="875.4" width="3.03" height="3.14" />
+                <rect class="cls-3" x="1331.04" y="871.14" width="3.03" height="3.14" />
+                <circle class="cls-32" cx="1347.69" cy="874.93" r="3.33" />
+                <circle class="cls-33" cx="1347.73" cy="874.93" r="2.22" />
+                <rect class="cls-3" x="1352.39" y="864.23" width="1.83" height="10.15" rx="0.91" transform="translate(1695.53 2440.93) rotate(-135)" />
+                <rect class="cls-3" x="1341.16" y="875.46" width="1.83" height="10.15" rx="0.91" transform="translate(1668.43 2452.16) rotate(-135)" />
+                <rect class="cls-3" x="1341.23" y="901.71" width="13.48" height="24.85" rx="4.98" />
+                <rect class="cls-3" x="1353.48" y="900.21" width="3.31" height="27.82" rx="1.66" />
+                <rect class="cls-3" x="1339.22" y="900.21" width="3.31" height="27.82" rx="1.66" />
+                <circle class="cls-34" cx="1347.73" cy="874.93" r="1.33" />
+                <circle class="cls-35" cx="1347.73" cy="874.93" r="0.94" />
+                <rect class="cls-3" x="531.13" y="381.91" width="0.58" height="2" />
+                <rect class="cls-3" x="525.96" y="383.45" width="0.58" height="2" transform="translate(-124.89 412.07) rotate(-38.58)" />
+                <rect class="cls-3" x="536.18" y="383.75" width="0.58" height="2" transform="translate(382.26 -257.16) rotate(40.84)" />
+                <rect class="cls-3" x="539.22" y="388.88" width="0.58" height="2" transform="translate(866.59 -189.85) rotate(83.58)" />
+                <rect class="cls-3" x="522.63" y="388.83" width="0.58" height="2" transform="translate(65.05 854.34) rotate(-82.12)" />
+                <rect class="cls-3" x="529.97" y="381.86" width="0.3" height="1.11" transform="translate(-63.04 107.76) rotate(-10.96)" />
+                <rect class="cls-3" x="532.48" y="381.86" width="0.3" height="1.11" transform="translate(93.49 -104.5) rotate(12.28)" />
+                <rect class="cls-3" x="533.58" y="382.1" width="0.3" height="1.11" transform="translate(163.62 -159.85) rotate(20.06)" />
+                <rect class="cls-3" x="534.64" y="382.47" width="0.3" height="1.11" transform="translate(240.79 -205.42) rotate(27.84)" />
+                <rect class="cls-3" x="535.64" y="382.99" width="0.3" height="1.11" transform="matrix(0.81, 0.58, -0.58, 0.81, 323.67, -240.3)" />
+                <rect class="cls-3" x="537.38" y="384.41" width="0.3" height="1.11" transform="translate(500.59 -275.16) rotate(51.19)" />
+                <rect class="cls-3" x="538.09" y="385.28" width="0.3" height="1.11" transform="translate(591.41 -274.27) rotate(58.97)" />
+                <rect class="cls-3" x="538.67" y="386.24" width="0.3" height="1.11" transform="matrix(0.39, 0.92, -0.92, 0.39, 681.54, -260.95)" />
+                <rect class="cls-3" x="539.12" y="387.27" width="0.3" height="1.11" transform="translate(769.27 -235.34) rotate(74.54)" />
+                <rect class="cls-3" x="539.62" y="388.35" width="0.3" height="1.11" transform="translate(853.03 -198.01) rotate(82.32)" />
+                <rect class="cls-3" x="539.97" y="390.41" width="0.3" height="1.11" transform="translate(932.03 -148.47) rotate(90.1)" />
+                <rect class="cls-3" x="539.97" y="391.53" width="0.3" height="1.11" transform="matrix(-0.14, 0.99, -0.99, -0.14, 1002.58, -89.16)" />
+                <rect class="cls-3" x="539.83" y="392.64" width="0.3" height="1.11" transform="translate(1064.38 -20.54) rotate(105.67)" />
+                <rect class="cls-3" x="528.92" y="382.11" width="0.3" height="1.11" transform="translate(-93.77 186.65) rotate(-18.41)" />
+                <rect class="cls-3" x="527.91" y="382.49" width="0.3" height="1.11" transform="translate(-114.19 268.64) rotate(-25.86)" />
+                <rect class="cls-3" x="526.96" y="383" width="0.3" height="1.11" transform="translate(-124.03 352.43) rotate(-33.3)" />
+                <rect class="cls-3" x="524.71" y="384.53" width="0.3" height="1.11" transform="translate(-110.75 525.68) rotate(-48.74)" />
+                <rect class="cls-3" x="523.96" y="385.58" width="0.3" height="1.11" transform="translate(-84.03 618.41) rotate(-57.28)" />
+                <rect class="cls-3" x="523" y="386.72" width="0.3" height="1.11" transform="translate(-44.39 705.98) rotate(-65.83)" />
+                <rect class="cls-3" x="522.59" y="387.94" width="0.3" height="1.11" transform="translate(7.79 787.26) rotate(-74.37)" />
+                <rect class="cls-3" x="522.33" y="390.49" width="0.3" height="1.11" transform="translate(144.88 923.33) rotate(-91.46)" />
+                <rect class="cls-3" x="522.3" y="391.77" width="0.3" height="1.11" transform="translate(226.86 975) rotate(-100)" />
+                <rect class="cls-3" x="522.65" y="393.01" width="0.3" height="1.11" transform="translate(315.99 1014.41) rotate(-108.55)" />
+                <rect class="cls-3" x="528.91" y="403.23" width="5.16" height="3.4" />
+                <rect class="cls-3" x="528.91" y="426.53" width="5.16" height="8.82" />
+                <rect class="cls-3" x="528.91" y="411.07" width="5.16" height="2.5" />
+                <rect class="cls-3" x="528.36" y="425.45" width="6.23" height="1.17" />
+                <polygon class="cls-3" points="535.54 415.74 527.45 415.74 528.91 413.75 534.07 413.75 535.54 415.74" />
+                <polygon class="cls-3" points="533.67 406.27 529.3 406.27 527.12 408.52 529.3 410.77 533.67 410.77 535.85 408.52 533.67 406.27" />
+                <polygon class="cls-3" points="534.65 415.98 528.34 415.98 525.18 420.52 528.34 425.06 534.65 425.06 537.81 420.52 534.65 415.98" />
+                <rect class="cls-3" x="523.74" y="416.91" width="2.59" height="8.2" />
+                <rect class="cls-3" x="522.99" y="417.89" width="1.49" height="6" />
+                <rect class="cls-3" x="521.01" y="419.53" width="2.13" height="2.91" />
+                <rect class="cls-3" x="516.27" y="420" width="1.06" height="2.58" rx="0.37" />
+                <rect class="cls-3" x="519.74" y="417.74" width="0.95" height="7.17" />
+                <rect class="cls-3" x="517.62" y="417.74" width="2.54" height="1.59" rx="0.44" />
+                <rect class="cls-3" x="517.62" y="420.39" width="2.54" height="1.59" rx="0.44" />
+                <rect class="cls-3" x="517.62" y="423.33" width="2.54" height="1.59" rx="0.44" />
+                <circle class="cls-4" cx="531.13" cy="390.84" r="12.26" />
+                <path class="cls-5" d="M521.72,394.38a11.41,11.41,0,0,1-.53-3.39,9.92,9.92,0,0,1,.52-3,10,10,0,0,1,19,6.33" />
+                <polygon class="cls-3" points="529.16 393.2 528.12 391.44 531.63 390.3 537 387.35 537.13 387.58 531.83 390.6 529.16 393.2" />
+                <circle class="cls-6" cx="531.06" cy="390.83" r="0.77" />
+                <text class="cls-36" transform="translate(527.75 398.6)">
+                    MPA
+                </text>
+                <rect class="cls-3" x="564.8" y="390.47" width="2.79" height="15.76" transform="translate(167.84 964.54) rotate(-90)" />
+                <rect class="cls-3" x="564.8" y="387.65" width="2.79" height="15.76" transform="translate(170.66 961.73) rotate(-90)" />
+                <rect class="cls-3" x="564.8" y="399.56" width="2.79" height="15.76" transform="translate(158.75 973.63) rotate(-90)" />
+                <rect class="cls-3" x="564.8" y="396.74" width="2.79" height="15.76" transform="translate(161.57 970.82) rotate(-90)" />
+                <rect class="cls-3" x="467.23" y="620.5" width="2.79" height="15.76" transform="translate(-159.76 1097.01) rotate(-90)" />
+                <rect class="cls-3" x="467.23" y="617.68" width="2.79" height="15.76" transform="translate(-156.94 1094.19) rotate(-90)" />
+                <rect class="cls-3" x="467.23" y="629.59" width="2.79" height="15.76" transform="translate(-168.85 1106.1) rotate(-90)" />
+                <rect class="cls-3" x="467.23" y="626.77" width="2.79" height="15.76" transform="translate(-166.03 1103.28) rotate(-90)" />
+                <path class="cls-37" d="M605.77,435.07a5.42,5.42,0,0,1,1.89-1.47l18.06-8.44c7.08-3.31,14.4,2.69,13.58,11.14l-2.08,21.54" />
+                <ellipse class="cls-38" cx="630.24" cy="434.56" rx="3.4" ry="3.75" transform="translate(-98.09 198.81) rotate(-16.65)" />
+                <path class="cls-39" d="M379.7,435.07a5.29,5.29,0,0,0-1.88-1.47l-18.07-8.44c-7.08-3.31-14.39,2.69-13.57,11.14l2.08,21.54" />
+                <ellipse class="cls-40" cx="355.23" cy="434.56" rx="3.75" ry="3.4" transform="translate(-162.89 650.38) rotate(-73.35)" />
+                <path class="cls-41" d="M619.18,612.74h-249a46.75,46.75,0,0,1-12.89-8.23c-21.86-19.69-21.53-56.36-21.27-85.08,0,0,.41-46,19.18-74.78a22.08,22.08,0,0,1,5.09-5.49,19.94,19.94,0,0,1,7.56-3.12,23.41,23.41,0,0,1,2.33-.31h249a20.84,20.84,0,0,1,7.2,3.43,24.59,24.59,0,0,1,7,8.24,142.43,142.43,0,0,1,12,29.5c5.74,20.35,5.56,36.71,5.29,51.8,0,0-1.2,41.93-17.31,75.12-.7,1.45-1.83,4-4.27,5.58A20.37,20.37,0,0,1,619.18,612.74Z" />
+                <rect class="cls-42" x="405.82" y="612.76" width="17.87" height="66.53" />
+                <rect class="cls-42" x="563.61" y="612.76" width="17.87" height="66.53" />
+                <path class="cls-43" d="M635.13,612.23c-4.71.51-263.62.51-263.62.51s-19.81-.19-32.8-45.89" />
+                <rect class="cls-44" x="446.86" y="352.3" width="39.67" height="82.87" />
+                <rect class="cls-45" x="447.43" y="360.86" width="38.54" height="0.99" />
+                <rect class="cls-45" x="447.43" y="363.42" width="38.54" height="0.99" />
+                <rect class="cls-45" x="447.43" y="365.98" width="38.54" height="0.99" />
+                <rect class="cls-46" x="455.33" y="371.31" width="22.59" height="9.74" />
+                <rect class="cls-46" x="436.81" y="412.67" width="59.82" height="3.11" />
+                <rect class="cls-46" x="436.81" y="417.72" width="59.82" height="3.11" />
+                <path class="cls-47" d="M599,612c13.29-.07,21.14,1.23,27.92-1.75,6.19-3.1,8.56-11.36,11.7-20.57,12.09-35.48,13.88-69.71,9.11-98.7-11.35,1.22-57.83,16.4-81,13.66s-38.55-22.87-103.29-25.18-126,28.15-126,28.15c-1.39,27.82-3.09,59.25,11,85.2.86,1.59,3.18,6.63,12.39,13.83a39,39,0,0,0,7.83,5.16" />
+                <text class="cls-18" transform="translate(603.68 667.79)">
+                    稳流补偿器
+                </text>
+                <rect class="cls-2" x="767.15" y="291.7" width="261.21" height="14" />
+                <rect class="cls-2" x="1118.38" y="293.63" width="369.67" height="14" />
+                <rect class="cls-3" x="1217.48" y="291.59" width="24.9" height="17.43" />
+                <rect class="cls-17" x="1219.97" y="294.08" width="2.49" height="12.54" />
+                <rect class="cls-17" x="1237.41" y="293.78" width="2.49" height="12.74" />
+                <rect class="cls-17" x="1229.57" y="290.18" width="0.74" height="20.08" transform="translate(1742.2 1458) rotate(-127.58)" />
+                <polygon class="cls-3" points="1218.09 287.68 1245.8 287.68 1231.94 282.38 1231.94 282.38 1231.94 285.03 1218.09 285.03 1218.09 287.68" />
+                <text class="cls-18" transform="translate(955.27 281.55)">
+                    1#泵
+                </text>
+                <text class="cls-18" transform="translate(954.27 563.86)">
+                    气压罐
+                </text>
+                <rect class="cls-1" x="1118.46" y="186.89" width="195.07" height="88.34" />
+                <rect class="cls-48" x="1128.06" y="238.69" width="175.11" height="30.2" />
+                <rect class="cls-49" x="1219.68" y="202.63" width="83.11" height="30.2" />
+                <rect class="cls-50" x="1128.06" y="202.42" width="83.11" height="30.2" />
+                <polygon class="cls-30" points="820.93 325.82 852.42 325.82 858.44 325.82 854.96 334.01 878.11 324.24 854.96 314.47 858.44 322.65 852.42 322.65 820.93 322.65 820.93 325.82" />
+                <polygon class="cls-30" points="1393.62 325.82 1425.1 325.82 1431.12 325.82 1427.65 334.01 1450.79 324.24 1427.65 314.47 1431.12 322.65 1425.1 322.65 1393.62 322.65 1393.62 325.82" />
+                <rect class="cls-3" x="931.3" y="290.81" width="3.48" height="15.76" />
+                <rect class="cls-3" x="936.07" y="290.81" width="3.48" height="15.76" />
+                <rect class="cls-3" x="898.15" y="290.81" width="3.48" height="15.76" />
+                <rect class="cls-3" x="902.91" y="290.81" width="3.48" height="15.76" />
+                <circle class="cls-31" cx="918.51" cy="256.81" r="12.98" />
+                <rect class="cls-3" x="912.25" y="246.12" width="1.83" height="10.15" rx="0.91" transform="translate(1736.48 -216.89) rotate(135)" />
+                <rect class="cls-3" x="923.48" y="257.34" width="1.83" height="10.15" rx="0.91" transform="translate(1763.59 -205.66) rotate(135)" />
+                <rect class="cls-3" x="915.61" y="240.89" width="6.59" height="3.25" />
+                <polygon class="cls-3" points="917.75 278.23 916.21 278.7 912.64 272.58 914.19 272.11 917.75 278.23" />
+                <polygon class="cls-3" points="920.83 278.23 922.38 278.7 925.55 272.62 924.4 272.11 920.83 278.23" />
+                <rect class="cls-3" x="918.35" y="271.81" width="1.67" height="6.63" transform="translate(1838.37 550.25) rotate(180)" />
+                <rect class="cls-3" x="930.75" y="252.51" width="3.69" height="7.92" />
+                <rect class="cls-3" x="912.16" y="269.98" width="13.63" height="3.72" rx="0.72" />
+                <rect class="cls-3" x="916.11" y="279.81" width="6.45" height="7.65" rx="0.72" />
+                <rect class="cls-3" x="912.42" y="277.32" width="13.73" height="1.57" rx="0.44" />
+                <rect class="cls-3" x="912.42" y="279.02" width="13.73" height="1.57" rx="0.42" />
+                <rect class="cls-3" x="902.13" y="257.29" width="3.03" height="3.14" />
+                <rect class="cls-3" x="902.13" y="253.02" width="3.03" height="3.14" />
+                <circle class="cls-32" cx="918.78" cy="256.81" r="3.33" />
+                <circle class="cls-33" cx="918.82" cy="256.81" r="2.22" />
+                <rect class="cls-3" x="923.48" y="246.12" width="1.83" height="10.15" rx="0.91" transform="translate(1400.41 1082.45) rotate(-135)" />
+                <rect class="cls-3" x="912.25" y="257.34" width="1.83" height="10.15" rx="0.91" transform="translate(1373.31 1093.68) rotate(-135)" />
+                <rect class="cls-3" x="912.32" y="283.59" width="13.48" height="24.85" rx="4.98" />
+                <rect class="cls-3" x="924.57" y="282.09" width="3.31" height="27.82" rx="1.66" />
+                <rect class="cls-3" x="910.31" y="282.09" width="3.31" height="27.82" rx="1.66" />
+                <circle class="cls-34" cx="918.82" cy="256.81" r="1.33" />
+                <circle class="cls-35" cx="918.82" cy="256.81" r="0.94" />
+                <rect class="cls-3" x="1360.21" y="290.81" width="3.48" height="15.76" />
+                <rect class="cls-3" x="1364.98" y="290.81" width="3.48" height="15.76" />
+                <rect class="cls-3" x="1327.06" y="290.81" width="3.48" height="15.76" />
+                <rect class="cls-3" x="1331.83" y="290.81" width="3.48" height="15.76" />
+                <circle class="cls-31" cx="1347.42" cy="256.81" r="12.98" />
+                <rect class="cls-3" x="1341.16" y="246.12" width="1.83" height="10.15" rx="0.91" transform="translate(2468.68 -520.17) rotate(135)" />
+                <rect class="cls-3" x="1352.39" y="257.34" width="1.83" height="10.15" rx="0.91" transform="translate(2495.79 -508.95) rotate(135)" />
+                <rect class="cls-3" x="1344.52" y="240.89" width="6.59" height="3.25" />
+                <polygon class="cls-3" points="1346.67 278.23 1345.12 278.7 1341.56 272.58 1343.1 272.11 1346.67 278.23" />
+                <polygon class="cls-3" points="1349.74 278.23 1351.29 278.7 1354.46 272.62 1353.31 272.11 1349.74 278.23" />
+                <rect class="cls-3" x="1347.26" y="271.81" width="1.67" height="6.63" transform="translate(2696.19 550.25) rotate(180)" />
+                <rect class="cls-3" x="1359.66" y="252.51" width="3.69" height="7.92" />
+                <rect class="cls-3" x="1341.07" y="269.98" width="13.63" height="3.72" rx="0.72" />
+                <rect class="cls-3" x="1345.02" y="279.81" width="6.45" height="7.65" rx="0.72" />
+                <rect class="cls-3" x="1341.33" y="277.32" width="13.73" height="1.57" rx="0.44" />
+                <rect class="cls-3" x="1341.33" y="279.02" width="13.73" height="1.57" rx="0.42" />
+                <rect class="cls-3" x="1331.04" y="257.29" width="3.03" height="3.14" />
+                <rect class="cls-3" x="1331.04" y="253.02" width="3.03" height="3.14" />
+                <circle class="cls-32" cx="1347.69" cy="256.81" r="3.33" />
+                <circle class="cls-33" cx="1347.73" cy="256.81" r="2.22" />
+                <rect class="cls-3" x="1352.39" y="246.12" width="1.83" height="10.15" rx="0.91" transform="translate(2132.61 1385.74) rotate(-135)" />
+                <rect class="cls-3" x="1341.16" y="257.34" width="1.83" height="10.15" rx="0.91" transform="translate(2105.51 1396.97) rotate(-135)" />
+                <rect class="cls-3" x="1341.23" y="283.59" width="13.48" height="24.85" rx="4.98" />
+                <rect class="cls-3" x="1353.48" y="282.09" width="3.31" height="27.82" rx="1.66" />
+                <rect class="cls-3" x="1339.22" y="282.09" width="3.31" height="27.82" rx="1.66" />
+                <circle class="cls-34" cx="1347.73" cy="256.81" r="1.33" />
+                <circle class="cls-35" cx="1347.73" cy="256.81" r="0.94" />
+                <text class="cls-51" transform="translate(1058.18 136.39)">
+                    SANLEY
+                </text>
+                <ellipse class="cls-52" cx="1096.16" cy="177.52" rx="2.44" ry="2.37" />
+                <circle class="cls-53" cx="1096.16" cy="177.52" r="2.12" />
+                <circle class="cls-52" cx="1096.16" cy="177.52" r="1.65" />
+                <circle class="cls-53" cx="1096.16" cy="177.52" r="1.18" />
+                <ellipse class="cls-52" cx="1096.16" cy="185.51" rx="2.44" ry="2.37" />
+                <circle class="cls-53" cx="1096.16" cy="185.51" r="2.12" />
+                <circle class="cls-52" cx="1096.16" cy="185.51" r="1.65" />
+                <circle class="cls-53" cx="1096.16" cy="185.51" r="1.18" />
+                <rect class="cls-54" x="1047.34" y="144.45" width="53.19" height="67.31" rx="10.76" />
+                <rect class="cls-54" x="1046.72" y="124.1" width="54.01" height="86.88" rx="10.76" />
+                <rect class="cls-55" x="1047.5" y="150.72" width="9.39" height="52.12" />
+                <rect class="cls-55" x="1091.33" y="150.72" width="9.39" height="52.12" />
+                <rect class="cls-46" x="1058.85" y="144.06" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1063.54" y="144.06" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1068.24" y="144.06" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1072.94" y="144.06" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1077.63" y="144.06" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1082.33" y="144.06" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1087.03" y="144.06" width="2.35" height="67.31" />
+                <path class="cls-54" d="M1105.32,202.72H1102l-1.1-1.1V178.77l1.1-1.1h3.28l1.1,1.1v22.85Z" />
+                <rect class="cls-54" x="1049.39" y="211.76" width="48.21" height="10.96" />
+                <rect class="cls-54" x="1058.46" y="211.76" width="5.48" height="10.96" />
+                <rect class="cls-54" x="1085.07" y="211.76" width="5.48" height="10.96" />
+                <rect class="cls-54" x="1036.86" y="223.5" width="73.57" height="3.91" rx="1.1" />
+                <rect class="cls-54" x="1038.43" y="227.41" width="70.44" height="3.13" rx="1.1" />
+                <rect class="cls-54" x="1045.86" y="230.94" width="55.57" height="3.91" rx="1.1" />
+                <rect class="cls-56" x="1052.91" y="297.47" width="40.69" height="3.91" rx="1.1" />
+                <rect class="cls-54" x="1051.34" y="328.77" width="44.61" height="3.91" rx="1.1" />
+                <rect class="cls-54" x="1057.99" y="234.85" width="31.31" height="23.48" />
+                <rect class="cls-57" x="1048.21" y="258.33" width="50.87" height="7.83" rx="1.1" />
+                <rect class="cls-54" x="1054.39" y="266.16" width="38.58" height="31.31" />
+                <rect class="cls-54" x="1053.69" y="301.38" width="39.28" height="27.39" />
+                <rect class="cls-54" x="1058.39" y="266.16" width="30.52" height="31.31" rx="0.6" />
+                <rect class="cls-54" x="1040.57" y="288.02" width="12.34" height="20.8" />
+                <rect class="cls-54" x="1093.61" y="288.02" width="12.34" height="20.8" />
+                <rect class="cls-54" x="1036.34" y="282.21" width="4.24" height="32.69" rx="0.4" />
+                <rect class="cls-54" x="1029.02" y="282.21" width="4.24" height="32.69" rx="0.4" />
+                <rect class="cls-54" x="1113.52" y="282.21" width="4.24" height="32.69" rx="0.4" />
+                <rect class="cls-54" x="1106.2" y="282.21" width="4.24" height="32.69" rx="0.4" />
+                <text class="cls-51" transform="translate(1057.77 753.15)">
+                    SANLEY
+                </text>
+                <ellipse class="cls-52" cx="1095.74" cy="794.28" rx="2.44" ry="2.37" />
+                <circle class="cls-53" cx="1095.74" cy="794.28" r="2.12" />
+                <circle class="cls-52" cx="1095.74" cy="794.28" r="1.65" />
+                <circle class="cls-53" cx="1095.74" cy="794.28" r="1.18" />
+                <ellipse class="cls-52" cx="1095.74" cy="802.26" rx="2.44" ry="2.37" />
+                <circle class="cls-53" cx="1095.74" cy="802.26" r="2.12" />
+                <circle class="cls-52" cx="1095.74" cy="802.26" r="1.65" />
+                <circle class="cls-53" cx="1095.74" cy="802.26" r="1.18" />
+                <rect class="cls-54" x="1046.92" y="761.21" width="53.19" height="67.31" rx="10.76" />
+                <rect class="cls-54" x="1046.3" y="740.86" width="54.01" height="86.88" rx="10.76" />
+                <rect class="cls-55" x="1047.09" y="767.48" width="9.39" height="52.12" />
+                <rect class="cls-55" x="1090.92" y="767.48" width="9.39" height="52.12" />
+                <rect class="cls-46" x="1058.44" y="760.81" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1063.13" y="760.81" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1067.83" y="760.81" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1072.52" y="760.81" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1077.22" y="760.81" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1081.92" y="760.81" width="2.35" height="67.31" />
+                <rect class="cls-46" x="1086.61" y="760.81" width="2.35" height="67.31" />
+                <path class="cls-54" d="M1104.91,819.47h-3.28l-1.1-1.1V795.53l1.1-1.1h3.28l1.1,1.1v22.84Z" />
+                <rect class="cls-54" x="1048.97" y="828.52" width="48.21" height="10.96" />
+                <rect class="cls-54" x="1058.04" y="828.52" width="5.48" height="10.96" />
+                <rect class="cls-54" x="1084.66" y="828.52" width="5.48" height="10.96" />
+                <rect class="cls-54" x="1036.45" y="840.26" width="73.57" height="3.91" rx="1.1" />
+                <rect class="cls-54" x="1038.01" y="844.17" width="70.44" height="3.13" rx="1.1" />
+                <rect class="cls-54" x="1045.45" y="847.69" width="55.57" height="3.91" rx="1.1" />
+                <rect class="cls-56" x="1052.5" y="914.22" width="40.69" height="3.91" rx="1.1" />
+                <rect class="cls-54" x="1050.93" y="945.53" width="44.61" height="3.91" rx="1.1" />
+                <rect class="cls-54" x="1057.58" y="851.61" width="31.31" height="23.48" />
+                <rect class="cls-57" x="1047.8" y="875.09" width="50.87" height="7.83" rx="1.1" />
+                <rect class="cls-54" x="1053.97" y="882.91" width="38.58" height="31.31" />
+                <rect class="cls-54" x="1053.28" y="918.13" width="39.28" height="27.39" />
+                <rect class="cls-54" x="1057.97" y="882.91" width="30.52" height="31.31" rx="0.6" />
+                <rect class="cls-54" x="1040.16" y="904.77" width="12.34" height="20.8" />
+                <rect class="cls-54" x="1093.19" y="904.77" width="12.34" height="20.8" />
+                <rect class="cls-54" x="1035.92" y="898.97" width="4.24" height="32.69" rx="0.4" />
+                <rect class="cls-54" x="1028.6" y="898.97" width="4.24" height="32.69" rx="0.4" />
+                <rect class="cls-54" x="1113.11" y="898.97" width="4.24" height="32.69" rx="0.4" />
+                <rect class="cls-54" x="1105.79" y="898.97" width="4.24" height="32.69" rx="0.4" />
+                <rect class="cls-2" x="750.41" y="572.64" width="743.97" height="14" />
+                <rect class="cls-3" x="898.74" y="570.42" width="24.9" height="17.43" />
+                <rect class="cls-17" x="901.23" y="572.91" width="2.49" height="12.54" />
+                <rect class="cls-17" x="918.66" y="572.62" width="2.49" height="12.74" />
+                <rect class="cls-17" x="910.83" y="569.01" width="0.74" height="20.08" transform="translate(1008.09 1654.31) rotate(-127.58)" />
+                <polygon class="cls-3" points="899.35 566.52 927.05 566.52 913.2 561.21 913.2 561.21 913.2 563.86 899.35 563.86 899.35 566.52" />
+                <polygon class="cls-30" points="826.19 610.94 857.67 610.94 863.7 610.94 860.22 619.13 883.37 609.36 860.22 599.58 863.7 607.77 857.67 607.77 826.19 607.77 826.19 610.94" />
+                <polygon class="cls-30" points="1292.21 610.94 1323.69 610.94 1329.71 610.94 1326.24 619.13 1349.39 609.36 1326.24 599.58 1329.71 607.77 1323.69 607.77 1292.21 607.77 1292.21 610.94" />
+                <rect class="cls-3" x="1246.47" y="571.53" width="3.48" height="15.76" />
+                <rect class="cls-3" x="1251.24" y="571.53" width="3.48" height="15.76" />
+                <rect class="cls-3" x="1213.32" y="571.53" width="3.48" height="15.76" />
+                <rect class="cls-3" x="1218.08" y="571.53" width="3.48" height="15.76" />
+                <circle class="cls-31" cx="1233.68" cy="537.52" r="12.98" />
+                <rect class="cls-3" x="1227.42" y="526.83" width="1.83" height="10.15" rx="0.91" transform="translate(2473.01 39.47) rotate(135)" />
+                <rect class="cls-3" x="1238.65" y="538.06" width="1.83" height="10.15" rx="0.91" transform="translate(2500.11 50.68) rotate(135)" />
+                <rect class="cls-3" x="1230.78" y="521.61" width="6.59" height="3.25" />
+                <polygon class="cls-3" points="1232.92 558.95 1231.38 559.41 1227.82 553.3 1229.36 552.83 1232.92 558.95" />
+                <polygon class="cls-3" points="1236 558.95 1237.55 559.41 1240.72 553.33 1239.57 552.83 1236 558.95" />
+                <rect class="cls-3" x="1233.52" y="552.52" width="1.67" height="6.63" transform="translate(2468.71 1111.68) rotate(180)" />
+                <rect class="cls-3" x="1245.92" y="533.22" width="3.69" height="7.92" />
+                <rect class="cls-3" x="1227.33" y="550.7" width="13.63" height="3.72" rx="0.72" />
+                <rect class="cls-3" x="1231.28" y="560.52" width="6.45" height="7.65" rx="0.72" />
+                <rect class="cls-3" x="1227.59" y="558.04" width="13.73" height="1.57" rx="0.44" />
+                <rect class="cls-3" x="1227.59" y="559.74" width="13.73" height="1.57" rx="0.42" />
+                <rect class="cls-3" x="1217.3" y="538" width="3.03" height="3.14" />
+                <rect class="cls-3" x="1217.3" y="533.74" width="3.03" height="3.14" />
+                <circle class="cls-32" cx="1233.95" cy="537.53" r="3.33" />
+                <circle class="cls-33" cx="1233.99" cy="537.52" r="2.22" />
+                <rect class="cls-3" x="1238.65" y="526.83" width="1.83" height="10.15" rx="0.91" transform="translate(1739.94 1784.53) rotate(-135)" />
+                <rect class="cls-3" x="1227.42" y="538.06" width="1.83" height="10.15" rx="0.91" transform="translate(1712.84 1795.75) rotate(-135)" />
+                <rect class="cls-3" x="1227.49" y="564.3" width="13.48" height="24.85" rx="4.98" />
+                <rect class="cls-3" x="1239.74" y="562.81" width="3.31" height="27.82" rx="1.66" />
+                <rect class="cls-3" x="1225.48" y="562.81" width="3.31" height="27.82" rx="1.66" />
+                <circle class="cls-34" cx="1233.99" cy="537.52" r="1.33" />
+                <circle class="cls-35" cx="1233.99" cy="537.52" r="0.94" />
+                <rect class="cls-58" x="1070.51" y="548.43" width="11.98" height="20.94" />
+                <path class="cls-59" d="M1111.52,534.47c0,14.49-16.07,23.23-35.89,23.23s-35.89-8.74-35.89-23.23,16.07-26.22,35.89-26.22S1111.52,520,1111.52,534.47Z" />
+                <path class="cls-60" d="M1111.52,454.75c0,12.1-16.07,21.91-35.89,21.91s-35.89-9.81-35.89-21.91,16.07-19.91,35.89-19.91S1111.52,442.65,1111.52,454.75Z" />
+                <rect class="cls-61" x="1039.74" y="455.05" width="71.78" height="81.85" />
+                <rect class="cls-62" x="1058.1" y="469.26" width="36.7" height="17.8" />
+                <rect class="cls-63" x="1065.63" y="566.76" width="22.35" height="5.89" />
+            </g>
+            <g id="图层_5" data-name="图层 5">
+                <rect class="cls-5" x="1520.14" y="703.4" width="32.29" height="29.43" rx="2.35" transform="translate(2254.4 -818.17) rotate(90)" />
+                <rect class="cls-3" x="1521.4" y="704.96" width="29.95" height="26.32" rx="1.91" transform="translate(2254.49 -818.26) rotate(90)" />
+                <ellipse class="cls-64" cx="1525.92" cy="705.65" rx="0.99" ry="1.03" />
+                <ellipse class="cls-64" cx="1525.92" cy="730.36" rx="0.99" ry="1.03" />
+                <ellipse class="cls-64" cx="1547.06" cy="705.65" rx="0.99" ry="1.03" />
+                <ellipse class="cls-64" cx="1547.06" cy="730.36" rx="0.99" ry="1.03" />
+                <rect class="cls-65" x="1523.54" y="722.24" width="3.54" height="4.63" transform="translate(2249.87 -800.76) rotate(90)" />
+                <rect class="cls-3" x="1513.4" y="716.95" width="12.83" height="1.22" transform="translate(2237.38 -802.26) rotate(90)" />
+                <rect class="cls-66" x="1501.64" y="707.55" width="12.83" height="20.12" rx="0.25" transform="translate(2225.67 -790.45) rotate(90)" />
+                <rect class="cls-14" x="1507.47" y="711.76" width="5.77" height="11.7" rx="0.15" transform="translate(2227.97 -792.74) rotate(90)" />
+                <text class="cls-67" transform="translate(1545.31 712.87) rotate(90) scale(1.09 1)">
+                    压力开关
+                </text>
+                <rect class="cls-14" x="1526.89" y="713.64" width="20.54" height="10.06" transform="translate(2255.83 -818.49) rotate(90)" />
+                <text class="cls-68" transform="translate(1539.78 708.84) rotate(90) scale(1.09 1)">
+                    CSS
+                </text>
+                <text class="cls-69" transform="translate(1537.02 709.85) rotate(90) scale(1.09 1)">
+                    asdsanmlopq
+                    <tspan class="cls-70" x="11.59" y="0">
+                        r
+                    </tspan>
+                    <tspan class="cls-71" x="12.38" y="0">
+                        st
+                    </tspan>
+                </text>
+                <text class="cls-69" transform="translate(1534.25 709.85) rotate(90) scale(1.09 1)">
+                    asdsanmlopq
+                    <tspan class="cls-70" x="11.59" y="0">
+                        r
+                    </tspan>
+                    <tspan class="cls-71" x="12.38" y="0">
+                        st
+                    </tspan>
+                </text>
+            </g>
+
+
+
+
+        </svg>
+
+    </div>
+
+    <div class="hyl_wbox">
+        <svg id="svg2" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" style="display: inline; width: inherit; min-width: inherit; max-width: inherit; height: inherit; min-height: inherit; max-height: inherit;">
+            <path class="path1" d="M 175 188 H360" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1" d="M 415 188 H455" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1" d="M 535 187 H550 Q567 187 567 220 V385" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+
+            <path class="path1" d="M 567 415 V435" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+
+
+            <!--<path class="path1"  d="M 469 660 V736 H747" stroke-linecap="round" stroke-width="11"  stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>-->
+            <path class="path1" d="M 469 655 V720 Q469 737 489 737 H747" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>-->
+
+            <path class="path1 beng3" d="M 747.5 738 V890 Q747 916 767 916.5 H890" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1 beng3" d="M 950 916.5 H1020" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1 beng3" d="M 1123 916.5 H1210" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1 beng3" d="M 1250 916.5 H1320" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1 beng3" d="M 1375 916.5 H1470 Q1486 916 1491.1 903 V600" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+
+
+            <path class="path1 beng1" d="M 747.5 592 V320 Q747 299 765 299 H885" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1 beng1" d="M 950 299 H1020" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1 beng1" d="M 1130 300 H1205" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1 beng1" d="M 1250 300 H1315" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1 beng1" d="M 1380 300 H1490" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+
+
+            <path id="ok2stop1" class="path1" d="M 747.5 736 V592" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="qiyaguan" d="M 760 579.8 H890" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="qiyaguan" d="M 938 579.8 H1210" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="qiyaguan" d="M 1270 579.8 H1492" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+
+            <path class="pangtong" d="M 1491.1 565 V305" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1" d="M 1491.1 295 V270" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+            <path class="path1" d="M 1491.1 205 V152.5 Q1492 135.5 1507 132.5 H1600" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>-->
+
+
+
+            <path class="path1" d="M 1675 132.5 H1740" stroke-linecap="round" stroke-width="11" stroke="#79c5fa" stroke-dasharray='30 30' fill="none"></path>
+
+            <!-- 压力表进水对应值 -->
+            <text class="" id="yalibiao" transform="translate(186.29 362.65)" style="font-size:25px;font-weight:bold;fill:#2585ef;">
+                13.5MPa
+            </text>
+            <!--泵1#-->
+            <text class="" id="beng1_1" transform="translate(1136.27 224.55)" style="font-size:18px;font-weight:bold;fill:#143a82;">
+                41.6Hz
+            </text>
+            <text class="" id="beng1_2" transform="translate(1234.27 224.55)" style="font-size:18px;font-weight:bold;fill:#143a82;">
+                6.1A
+            </text>
+            <text class="" id="beng1_3" transform="translate(1136.27 259.55)" style="font-size:18px;font-weight:bold;fill:#143a82;">
+                11.3h
+            </text>
+            <!--泵2#-->
+            <text class="" id="beng2_1" transform="translate(1136.27 842.55)" style="font-size:18px;font-weight:bold;fill:#143a82;">
+                41.6Hz
+            </text>
+            <text class="" id="beng2_2" transform="translate(1234.27 842.55)" style="font-size:18px;font-weight:bold;fill:#143a82;">
+                6.1A
+            </text>
+            <text class="" id="beng2_3" transform="translate(1136.27 877.55)" style="font-size:18px;font-weight:bold;fill:#143a82;">
+                11.3h
+            </text>
+
+            <!--压力表供水入户-->
+            <text class="" id="yalibiao_2" transform="translate(1612.2 427.75)" style="font-size:18px;font-weight:bold;fill:#ff001e;font-size:25px; ">
+                12.3MPa
+            </text>
+            <!--  瞬时流量计-->
+            <text class="" id="liuliangji" transform="translate(1604.47 236.29)" style="font-size:18px;font-weight:bold;fill:#2585ef;font-size:25px; ">
+                0m³
+            </text>
+            <!--  累计流量计-->
+            <text class="" id="leiji" transform="translate(1604.47 292.29)" style="font-size:18px;font-weight:bold;fill:#2585ef;font-size:25px; ">
+                0m³
+            </text>
+            <text id="pumState1" class="cls-61" transform="translate(1057.02 320.5)" style="fill:#143a82;stroke: #143a82;">
+                变频
+            </text>
+
+            <symbol id="cl1" preserveAspectRatio="xMinYMin slice" viewBox="0 0 1920 1080">
+                <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 761.8c-173.3 0-313.8-140.5-313.8-313.8S338.7 198.2 512 198.2 825.8 338.7 825.8 512 685.3 825.8 512 825.8zM751 486c21 0 40.7 5.9 57.4 16.1-1.8-57.2-19.6-110.3-49.4-154.9-15.8 41.5-55.9 71-103 71-60.8 0-110.2-49.3-110.2-110.2 0-33.7 15.2-63.9 39.1-84.2-23.4-5.9-47.8-9.1-73-9.1s-49.6 3.2-73 9.1C462.8 244 478 274.2 478 308c0 60.8-49.3 110.2-110.2 110.2-47 0-87.2-29.5-103-71-30.3 45.5-48.3 99.8-49.4 158.3 17.8-12.3 39.3-19.5 62.6-19.5 60.8 0 110.2 49.3 110.2 110.2 0 57.5-44 104.6-100.2 109.7 30.9 35.6 70.2 63.7 114.7 81.3-0.7-4.8-1-9.7-1-14.8 0-60.8 49.3-110.2 110.2-110.2s110.2 49.3 110.2 110.2c0 5-0.4 9.9-1 14.8 44.8-17.7 84.2-46 115.2-81.9-53.9-7.2-95.5-53.3-95.5-109.2 0-60.7 49.4-110.1 110.2-110.1z m-239 93.3c-32.8 0-59.3-26.6-59.3-59.3 0-32.8 26.6-59.3 59.3-59.3 32.8 0 59.3 26.6 59.3 59.3 0 32.7-26.5 59.3-59.3 59.3z" fill="#07a307" p-id="781">
+                    <animateTransform attributeType="XML" attributeName="transform" begin="0s" dur="1.1s" type="rotate" from="0 512 512" to="360 512 512" repeatCount="indefinite" />
+                </path>
+            </symbol>
+            <use xlink:href="#cl1" x="1059" y="268" width="30" height="30" class="" id="chilun1" />
+            <!--1泵停止旋转-->
+            <symbol id="cl2" preserveAspectRatio="xMinYMin slice" viewBox="0 0 1920 1080">
+                <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 761.8c-173.3 0-313.8-140.5-313.8-313.8S338.7 198.2 512 198.2 825.8 338.7 825.8 512 685.3 825.8 512 825.8zM751 486c21 0 40.7 5.9 57.4 16.1-1.8-57.2-19.6-110.3-49.4-154.9-15.8 41.5-55.9 71-103 71-60.8 0-110.2-49.3-110.2-110.2 0-33.7 15.2-63.9 39.1-84.2-23.4-5.9-47.8-9.1-73-9.1s-49.6 3.2-73 9.1C462.8 244 478 274.2 478 308c0 60.8-49.3 110.2-110.2 110.2-47 0-87.2-29.5-103-71-30.3 45.5-48.3 99.8-49.4 158.3 17.8-12.3 39.3-19.5 62.6-19.5 60.8 0 110.2 49.3 110.2 110.2 0 57.5-44 104.6-100.2 109.7 30.9 35.6 70.2 63.7 114.7 81.3-0.7-4.8-1-9.7-1-14.8 0-60.8 49.3-110.2 110.2-110.2s110.2 49.3 110.2 110.2c0 5-0.4 9.9-1 14.8 44.8-17.7 84.2-46 115.2-81.9-53.9-7.2-95.5-53.3-95.5-109.2 0-60.7 49.4-110.1 110.2-110.1z m-239 93.3c-32.8 0-59.3-26.6-59.3-59.3 0-32.8 26.6-59.3 59.3-59.3 32.8 0 59.3 26.6 59.3 59.3 0 32.7-26.5 59.3-59.3 59.3z" fill="#AF0800" p-id="782">
+                    <animateTransform attributeType="XML" attributeName="transform" begin="0s" dur="1.1s" type="rotate" from="0 512 512" to="0 512 512" repeatCount="indefinite" />
+                </path>
+            </symbol>
+            <use xlink:href="#cl2" x="1059" y="268" width="30" height="30" class="hide" id="chilun2" />
+            <!--1泵故障旋转-->
+            <symbol id="cl3" preserveAspectRatio="xMinYMin slice" viewBox="0 0 1920 1080">
+                <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 761.8c-173.3 0-313.8-140.5-313.8-313.8S338.7 198.2 512 198.2 825.8 338.7 825.8 512 685.3 825.8 512 825.8zM751 486c21 0 40.7 5.9 57.4 16.1-1.8-57.2-19.6-110.3-49.4-154.9-15.8 41.5-55.9 71-103 71-60.8 0-110.2-49.3-110.2-110.2 0-33.7 15.2-63.9 39.1-84.2-23.4-5.9-47.8-9.1-73-9.1s-49.6 3.2-73 9.1C462.8 244 478 274.2 478 308c0 60.8-49.3 110.2-110.2 110.2-47 0-87.2-29.5-103-71-30.3 45.5-48.3 99.8-49.4 158.3 17.8-12.3 39.3-19.5 62.6-19.5 60.8 0 110.2 49.3 110.2 110.2 0 57.5-44 104.6-100.2 109.7 30.9 35.6 70.2 63.7 114.7 81.3-0.7-4.8-1-9.7-1-14.8 0-60.8 49.3-110.2 110.2-110.2s110.2 49.3 110.2 110.2c0 5-0.4 9.9-1 14.8 44.8-17.7 84.2-46 115.2-81.9-53.9-7.2-95.5-53.3-95.5-109.2 0-60.7 49.4-110.1 110.2-110.1z m-239 93.3c-32.8 0-59.3-26.6-59.3-59.3 0-32.8 26.6-59.3 59.3-59.3 32.8 0 59.3 26.6 59.3 59.3 0 32.7-26.5 59.3-59.3 59.3z" fill="#474747" p-id="782">
+                    <animateTransform attributeType="XML" attributeName="transform" begin="0s" dur="1.1s" type="rotate" from="0 512 512" to="0 512 512" repeatCount="indefinite" />
+                </path>
+            </symbol>
+            <use xlink:href="#cl3" x="1059" y="268" width="30" height="30" class="hide" id="chilun3" />
+
+            <!--2泵正常旋转-->
+            <symbol id="bl1" preserveAspectRatio="xMinYMin slice" viewBox="0 0 1920 1080">
+                <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 761.8c-173.3 0-313.8-140.5-313.8-313.8S338.7 198.2 512 198.2 825.8 338.7 825.8 512 685.3 825.8 512 825.8zM751 486c21 0 40.7 5.9 57.4 16.1-1.8-57.2-19.6-110.3-49.4-154.9-15.8 41.5-55.9 71-103 71-60.8 0-110.2-49.3-110.2-110.2 0-33.7 15.2-63.9 39.1-84.2-23.4-5.9-47.8-9.1-73-9.1s-49.6 3.2-73 9.1C462.8 244 478 274.2 478 308c0 60.8-49.3 110.2-110.2 110.2-47 0-87.2-29.5-103-71-30.3 45.5-48.3 99.8-49.4 158.3 17.8-12.3 39.3-19.5 62.6-19.5 60.8 0 110.2 49.3 110.2 110.2 0 57.5-44 104.6-100.2 109.7 30.9 35.6 70.2 63.7 114.7 81.3-0.7-4.8-1-9.7-1-14.8 0-60.8 49.3-110.2 110.2-110.2s110.2 49.3 110.2 110.2c0 5-0.4 9.9-1 14.8 44.8-17.7 84.2-46 115.2-81.9-53.9-7.2-95.5-53.3-95.5-109.2 0-60.7 49.4-110.1 110.2-110.1z m-239 93.3c-32.8 0-59.3-26.6-59.3-59.3 0-32.8 26.6-59.3 59.3-59.3 32.8 0 59.3 26.6 59.3 59.3 0 32.7-26.5 59.3-59.3 59.3z" fill="#07a307" p-id="781">
+                    <animateTransform attributeType="XML" attributeName="transform" begin="0s" dur="1.1s" type="rotate" from="0 512 512" to="360 512 512" repeatCount="indefinite" />
+                </path>
+            </symbol>
+            <use xlink:href="#bl1" x="1059" y="885" width="30" height="30" class="" id="chiluns1" />
+            <!--2泵停止旋转-->
+            <symbol id="bl2" preserveAspectRatio="xMinYMin slice" viewBox="0 0 1920 1080">
+                <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 761.8c-173.3 0-313.8-140.5-313.8-313.8S338.7 198.2 512 198.2 825.8 338.7 825.8 512 685.3 825.8 512 825.8zM751 486c21 0 40.7 5.9 57.4 16.1-1.8-57.2-19.6-110.3-49.4-154.9-15.8 41.5-55.9 71-103 71-60.8 0-110.2-49.3-110.2-110.2 0-33.7 15.2-63.9 39.1-84.2-23.4-5.9-47.8-9.1-73-9.1s-49.6 3.2-73 9.1C462.8 244 478 274.2 478 308c0 60.8-49.3 110.2-110.2 110.2-47 0-87.2-29.5-103-71-30.3 45.5-48.3 99.8-49.4 158.3 17.8-12.3 39.3-19.5 62.6-19.5 60.8 0 110.2 49.3 110.2 110.2 0 57.5-44 104.6-100.2 109.7 30.9 35.6 70.2 63.7 114.7 81.3-0.7-4.8-1-9.7-1-14.8 0-60.8 49.3-110.2 110.2-110.2s110.2 49.3 110.2 110.2c0 5-0.4 9.9-1 14.8 44.8-17.7 84.2-46 115.2-81.9-53.9-7.2-95.5-53.3-95.5-109.2 0-60.7 49.4-110.1 110.2-110.1z m-239 93.3c-32.8 0-59.3-26.6-59.3-59.3 0-32.8 26.6-59.3 59.3-59.3 32.8 0 59.3 26.6 59.3 59.3 0 32.7-26.5 59.3-59.3 59.3z" fill="#AF0800" p-id="781">
+                    <!--<animateTransform attributeType="XML" attributeName="transform" begin="0s" dur="1.1s" type="rotate" from="0 512 512" to="360 512 512" repeatCount="indefinite" />-->
+                </path>
+            </symbol>
+            <use xlink:href="#bl2" x="1059" y="885" width="30" height="30" class="hide" id="chiluns2" />
+            <!--2泵故障旋转-->
+            <symbol id="bl3" preserveAspectRatio="xMinYMin slice" viewBox="0 0 1920 1080">
+                <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 761.8c-173.3 0-313.8-140.5-313.8-313.8S338.7 198.2 512 198.2 825.8 338.7 825.8 512 685.3 825.8 512 825.8zM751 486c21 0 40.7 5.9 57.4 16.1-1.8-57.2-19.6-110.3-49.4-154.9-15.8 41.5-55.9 71-103 71-60.8 0-110.2-49.3-110.2-110.2 0-33.7 15.2-63.9 39.1-84.2-23.4-5.9-47.8-9.1-73-9.1s-49.6 3.2-73 9.1C462.8 244 478 274.2 478 308c0 60.8-49.3 110.2-110.2 110.2-47 0-87.2-29.5-103-71-30.3 45.5-48.3 99.8-49.4 158.3 17.8-12.3 39.3-19.5 62.6-19.5 60.8 0 110.2 49.3 110.2 110.2 0 57.5-44 104.6-100.2 109.7 30.9 35.6 70.2 63.7 114.7 81.3-0.7-4.8-1-9.7-1-14.8 0-60.8 49.3-110.2 110.2-110.2s110.2 49.3 110.2 110.2c0 5-0.4 9.9-1 14.8 44.8-17.7 84.2-46 115.2-81.9-53.9-7.2-95.5-53.3-95.5-109.2 0-60.7 49.4-110.1 110.2-110.1z m-239 93.3c-32.8 0-59.3-26.6-59.3-59.3 0-32.8 26.6-59.3 59.3-59.3 32.8 0 59.3 26.6 59.3 59.3 0 32.7-26.5 59.3-59.3 59.3z" fill="#474747" p-id="781">
+                    <!--<animateTransform attributeType="XML" attributeName="transform" begin="0s" dur="1.1s" type="rotate" from="0 512 512" to="360 512 512" repeatCount="indefinite" />-->
+                </path>
+            </symbol>
+            <use xlink:href="#bl3" x="1059" y="885" width="30" height="30" class="hide" id="chiluns3" />
+
+
+            <text id="pumState2" class="cls-61" transform="translate(1056.61 938.26)" style="fill:#143a82;stroke: #143a82;">
+                变频
+            </text>
+
+
+
+        </svg>
+
+
+    </div>
+
+    <div class="aside-info">
+        <div class="item">
+            <div class="name">更新时间：</div>
+            <div class="value" id="updateTime"></div>
+        </div>
+    </div>
+
+    <script src="../js/jquery.wavify.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/wavify.js" type="text/javascript" charset="utf-8"></script>
+
+    <SCRIPT LANGUAGE="JavaScript">
+        function fresh() {
+            if (location.href.indexOf("?reload=true") < 0) {
+                location.href += "?reload=true";
+            }
+        }
+        setTimeout("fresh()", 50);
+    </SCRIPT>
+
+    <script type="text/javascript">
+        var sid = window.parent.sid;
+        var parid = window.parent.parid;
+        //var myVar;
+        $(function () {
+            //关闭1泵
+            $(".guanbi1").click(function () {
+                //alert("111")
+                $("#jinshuiyali").html("0 MPa");	//测试修改MPa
+                $(".beng1").addClass("hide");
+                $("#chilun1").addClass("hide");		//if 停止 隐藏蓝色
+                $("#chilun2").removeClass("hide");	//if 停止 显示红色
+                //$("#chilun3").removeClass("hide");	//if 故障 显示灰色
+            })
+            //开启1泵
+            $(".kaiqi1").click(function () {
+                //alert("111")
+                $(".beng1").removeClass("hide");	//显示流水
+                $("#chilun1").removeClass("hide");	//更换泵叶绿色
+                $("#chilun2").addClass("hide");	//隐藏报警
+                //$("#chilun3").addClass("hide");		//隐藏故障
+            });
+
+            //关闭3泵
+            $(".guanbi2").click(function () {
+                //alert("111")
+                //$("#jinshuiyali").html("0 MPa");	//测试修改MPa
+                $(".beng3").addClass("hide");
+                $("#chiluns1").addClass("hide");		//if 停止 隐藏蓝色
+                $("#chiluns2").removeClass("hide");	//if 停止 显示红色
+                //$("#chiluns3").removeClass("hide");	//if 故障 显示灰色
+            })
+            //开启1泵
+            $(".kaiqi2").click(function () {
+                //alert("111")
+                $(".beng3").removeClass("hide");	//显示流水
+                $("#chiluns1").removeClass("hide");	//更换泵叶绿色
+                $("#chiluns2").addClass("hide");	//隐藏报警
+                //$("#chiluns3").addClass("hide");		//隐藏故障
+            })
+
+            LoadStationJKPartuion();
+            //myVar = setInterval(function () { LoadStationJKPartuion(); }, $("#timelevle", window.parent.document).val() * 1000);
+
+        })
+
+        //获取工艺图信息
+        function LoadStationJKPartuion() {
+            $.post("/Sws/Sws_Detail/LoadStationJKPartuionNew", { sid: sid, partionid: parid }, function (data) {
+                if (data != "") {
+
+                    console.log(data);
+                    $("#updateTime").html(data.jkdata.datetime);
+
+                    $("#jinshuiyali").html(data.jkdata.pressIN.Key);
+                    $("#yalibiao").html(data.jkdata.pressIN.Key + "MPa");
+                    if (data.jkdata.pressIN.Value == true) {
+                        $("#jinshuiyali, #yalibiao").css("fill", "#ff001e");
+                    } else {
+                        $("#jinshuiyali, #yalibiao").css("fill", "#2585ef");
+                    }
+
+                    $("#chushuiyali").html(data.jkdata.pressOut.Key);
+                    $("#yalibiao_2").html(data.jkdata.pressOut.Key + "MPa");
+                    if (data.jkdata.pressOut.Value == true) {
+                        $("#chushuiyali, #yalibiao_2").css("fill", "#ff001e");
+                    } else {
+                        $("#chushuiyali, #yalibiao_2").css("fill", "#2585ef");
+                    }
+
+                    $("#PH").html(data.jkdata.ph);
+                    $("#yulv").html(data.jkdata.cl);
+                    $("#shidu").html(data.jkdata.humidity);
+                    $("#zaoyin").html(data.jkdata.noise);
+                    $("#zhuodu").html(data.jkdata.turbidity);
+                    $("#shedingyali").html(data.jkdata.pressureSet);
+                    $("#leijidianliang").html(data.jkdata.totalpower);
+                    $("#shunshiliuliang").html(data.jkdata.inflow);
+                    $("#liuliangji").html(data.jkdata.inflow + "m³/h");
+                    $("#leiji").html(data.jkdata.totalflow + "m³");
+                    $("#beng1_1").html(data.jkdata.pumpdatas[0].frequency.Key + "Hz");
+                    $("#beng2_1").html(data.jkdata.pumpdatas[1].frequency.Key + "Hz");
+                    $("#beng1_2").html(data.jkdata.pumpdatas[0].eletric.Key + "A");
+                    $("#beng2_2").html(data.jkdata.pumpdatas[1].eletric.Key + "A");
+                    $("#beng1_3").html(data.jkdata.pumpdatas[0].runtime.Key + "h");
+                    $("#beng2_3").html(data.jkdata.pumpdatas[1].runtime.Key + "h");
+                    //泵状态id="pumState1"
+                    if (data.jkdata.pumpState[0] == "变频") {
+                        $("#chilun1").removeClass("hide");
+                        $("#chilun2").addClass("hide");
+                        $("#chilun3").addClass("hide");
+                        $(".beng1").removeClass("hide");
+                    } else if (data.jkdata.pumpState[0] == "工频") {
+                        $("#chilun1").removeClass("hide");
+                        $("#chilun2").addClass("hide");
+                        $("#chilun3").addClass("hide");
+                        $(".beng1").removeClass("hide");
+                    } else if (data.jkdata.pumpState[0] == "停止") {
+                        $("#chilun1").addClass("hide");
+                        $("#chilun2").addClass("hide");
+                        $("#chilun3").removeClass("hide");
+                        $(".beng1").addClass("hide");
+                    } else {
+                        $("#chilun1").addClass("hide");
+                        $("#chilun2").removeClass("hide");
+                        $("#chilun3").addClass("hide");
+                        $(".beng1").addClass("hide");
+                    }
+
+                    if (data.jkdata.pumpState[1] == "变频") {
+                        $("#chiluns1").removeClass("hide");
+                        $("#chiluns2").addClass("hide");
+                        $("#chiluns3").addClass("hide");
+                        $(".beng3").removeClass("hide");
+                    } else if (data.jkdata.pumpState[1] == "工频") {
+                        $("#chiluns1").removeClass("hide");
+                        $("#chiluns2").addClass("hide");
+                        $("#chiluns3").addClass("hide");
+                        $(".beng3").removeClass("hide");
+                    } else if (data.jkdata.pumpState[1] == "停止") {
+                        $("#chiluns1").addClass("hide");
+                        $("#chiluns2").addClass("hide");
+                        $("#chiluns3").removeClass("hide");
+                        $(".beng3").addClass("hide");
+                    } else {//故障
+                        $("#chiluns1").addClass("hide");
+                        $("#chiluns2").removeClass("hide");
+                        $("#chiluns3").addClass("hide");
+                        $(".beng3").addClass("hide");
+                    }
+                    $("#pumState1").html(data.jkdata.pumpState[0]);
+                    $("#pumState2").html(data.jkdata.pumpState[1]);
+
+                    if ((data.jkdata.pumpState[0] == "停止" || data.jkdata.pumpState[0] == "故障") && (data.jkdata.pumpState[1] == "停止" || data.jkdata.pumpState[1] == "故障")) {
+                        $(".qiyaguan").addClass("path1");
+                        $(".pangtong").addClass("path1");
+                    } else {
+                        if (data.jkdata.pumpState[1] == "变频" || data.jkdata.pumpState[1] == "工频" || data.jkdata.pumpState[0] == "变频" || data.jkdata.pumpState[0] == "工频") {
+                            $(".pangtong").removeClass("path1");
+                            $(".qiyaguan").removeClass("path1");
+                            $("#ok2stop1").removeClass("path1");
+                        }
+                        if (data.jkdata.pumpState[1] == "变频" || data.jkdata.pumpState[1] == "工频") {
+                            $(".pangtong").addClass("path1");
+
+                        }
+                        if (data.jkdata.pumpState[0] == "变频" || data.jkdata.pumpState[0] == "工频") {
+
+                            $("#ok2stop1").addClass("path1");
+                        }
+                    }
+
+                    if (data.jkdata.pumpState[1] != "停止" && data.jkdata.pumpState[1] != "故障") {
+                        $(".pangtong").addClass("path1");
+                    }
+
+
+                    //模板信息
+                    var spans = parent.$("#sbzt span");
+                    if (data.equipmentstate.length > 0) {
+                        var json = data.equipmentstate;
+                        var spanlength = spans.length;
+                        jsonEquipmentstate = json;
+                        for (var i = 0; i < spanlength; i++) {
+                            spans[i].innerText = jsonEquipmentstate[i].analogValue;
+                        }
+
+                    }
+                }
+            })
+        }
+    </script>
+    <!--
+      <script type="text/javascript">
+          // Don't use window.onLoad like this in production, because it can only listen to one function.
+          window.onload = function () {
+              // Expose variable to use for testing
+              window.zoomWater = svgPanZoom('#svg1', {
+                  zoomEnabled: true,
+                  controlIconsEnabled: true,
+                  // 同步X,Y轴平移
+                  beforePan: function (oldP, newP) { return { x: true, y: true } },
+              });
+
+              // Expose variable to use for testing
+              window.zoomWater2 = svgPanZoom('#svg2', {
+                  zoomEnabled: true,
+                  controlIconsEnabled: true,
+              });
+
+              zoomWater.setOnZoom(function (level) {
+                  zoomWater2.zoom(level)
+                  zoomWater2.pan(zoomWater.getPan())
+              })
+
+              zoomWater.setOnPan(function (point) {
+                  zoomWater2.pan(point)
+              })
+
+              zoomWater2.setOnZoom(function (level) {
+                  zoomWater.zoom(level)
+                  zoomWater.pan(zoomWater2.getPan())
+              })
+
+              zoomWater2.setOnPan(function (point) {
+                  zoomWater.pan(point)
+              })
+          };
+
+
+      </script>
+        -->
+</body>
+
+
+</html>

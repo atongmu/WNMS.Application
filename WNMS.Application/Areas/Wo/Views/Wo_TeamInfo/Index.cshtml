@@ -1,0 +1,310 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>班组管理</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+
+
+
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/ergongiconfont.css" rel="stylesheet" />
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/laypage/laypage.js"></script>
+    <style>
+
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf">
+                <!-- 搜索框 -->
+                <div class="zlw_datamain_lfconsea">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" id="teamnname" class="form-control" placeholder="搜索&quot;班组&quot;名称" autocomplete="off" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:100%;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+            </div>
+            <div class="sl_rg">
+                <div style="border-bottom:1px solid #ddd;height:51px">
+                    <nav aria-label="Page navigation" style="width:100%">
+                        <div class="overflow pad10px" style="width:100%">
+                          
+                            <div class="left" id="searchcontent">
+                                <input type="text" id="searchtext" class="hyl_input" style="width: 260px;" placeholder="输入人员名称" autocomplete="off" />
+
+                                <button class="hyl_btn" type="button" id="search_btn">
+                                    <i class="fa fa-search mr5px"></i>查询
+                                </button>
+
+
+                            </div>
+                            <div class="btn-group pull-right" id="btnlist">
+                                <button type="button" class="btn btn-default" id="btn_add"><i class="fa fa-plus"></i> 添加</button>
+                                <button type="button" class="btn btn-default" id="btn_edite"><i class="fa fa-pencil-square-o"></i> 修改</button>
+                                <button type="button" class="btn btn-default" id="btn_delete"><i class="fa fa-trash-o"></i> 删除</button>
+                            </div>
+
+
+
+                        </div>
+
+
+
+                    </nav>
+                </div>
+                <div class="cont">
+
+                    <div class="zlw_manageconrgconsan" id="tablebox" style="height:100%;position:relative">
+
+                    </div>
+                    <div class="overflow pt10px" style="position:fixed;bottom:0;background:#fff;width:100%;z-index:9999">
+                        <div class="left">
+                            <span class="pl10px pr10px">每页显示</span>
+                            <select class="mr10px" style="height:26px;line-height:26px;border-radius:2px" id="pagesize">
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                            </select>
+                            <span class="pr10px">条记录</span>
+                        </div>
+                        <div class="left" id="page_JK" style="height:30px"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+            //树配置
+        var zTreeObj;
+          var setting = {
+            data:{
+                simpleData: {
+                    enable: true
+                }
+            },callback: {
+                onClick: zTreeOnClick,
+               
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+               
+              },
+              check: {
+                  enable: true,
+                  chkboxType: { 'Y': 's', 'N': 's' }
+
+              }
+        };
+        var zNodes = @ViewBag.TreeNodes;
+        var teamid = 0;
+        $(function () {
+              zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        })
+         //树节点点击事件
+        function zTreeOnClick(event, treeId, treeNode) {
+            if (treeNode.type == "1") {
+                teamid = treeNode.id.substring(0, treeNode.id.length-1);
+                LoadTableData(1);
+
+            }
+        }
+        $("#search_btn").click(function () {
+            LoadTableData(1);
+
+        })
+        function LoadTableData(curr) {
+            $.post("/Wo/Wo_TeamInfo/GetTableData", {
+                username: $("#searchtext").val(),
+                teamid: teamid,
+                sort: "asc",
+                order: "UserFullName",
+                pageSize: $("#pagesize").val(),
+                pageIndex:curr || 1
+            }, function (res) {
+                    $("#tablebox").html(res.table);
+
+                    laypage({
+                    skin: 'molv',
+                    cont: 'page_JK',
+                    pages: res.totalPage,
+                    skip: true,
+                    curr: curr || 1,
+                    jump: function (obj, first) {
+                        if (!first) {
+                            LoadTableData(obj.curr);
+                            
+                        }
+                    }
+                });
+            });
+
+        }
+        $("#pagesize").change(function () {
+            LoadTableData(1);
+
+        })
+          //左侧树查询回车事件
+        $("#teamnname").keydown(function (e) {
+            if (e.keyCode == 13) {
+                SearchTeamTree();
+                return false;
+            }
+        });
+        function SearchTeamTree() {
+            $.post("/Wo/Wo_TeamInfo/SearchTeamTree", {teamname:$("#teamnname").val()}, function (data) {
+                zTreeObj.destroy();    //清空树
+                var datas = JSON.parse(data);   //数据转json8
+
+                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, datas);   //重新初始化树
+                zTreeObj.expandAll(true);     //初始化数列表展开
+                if (teamid != 0) {
+                    var nodet = zTreeObj.getNodeByParam("id", teamid + "t", null);
+                    if (nodet != null) {
+                        zTreeObj.selectNode(nodet);
+                    }
+                    else {
+                        teamid = 0;
+                    }
+
+                }
+
+            })
+        }
+        $("#btn_add").click(function () {
+           iframeWithBtns("添加班组", "500px", "500px", "/Wo/Wo_TeamInfo/AddPage", false, function (formIndex, formLayer) {
+                    var currentIframe =window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm(function (data) {
+                        if (data == "ok") {
+                           // LoadTableData(1);
+                            SearchTeamTree();
+                        }
+                         layer.close(formIndex);
+                    });
+                });
+        })
+        $("#btn_edite").click(function () {
+              var datas = GetSelectedNodes();
+            if (datas != "") {
+                var dataarray = datas.split(',');
+                if (dataarray.length > 1) {
+                    layer.alert("请勾选一个班组！");
+                }
+                else {
+                    iframeWithBtns("修改班组", "500px", "500px", "/Wo/Wo_TeamInfo/EditePage/"+dataarray[0], false, function (formIndex, formLayer) {
+                    var currentIframe =window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm(function (data) {
+                        if (data == "ok") {
+                            if (dataarray[0] == teamid) {
+                                LoadTableData(1);
+                            }
+                            SearchTeamTree();
+                        }
+                         layer.close(formIndex);
+                    });
+                });
+                }
+            }
+            else {
+                layer.alert("请勾选一个班组！");
+            }
+             
+        })
+        $("#btn_delete").click(function () {
+            var datas = GetSelectedNodes();
+            if (datas != "") {
+               
+                layer.confirm("确定要删除选中的班组？", {
+                    btn: ['确定', '取消'], icon: 3, title: ['提示', 'color:#fff;background: #D04040']
+                }, function () {
+                    deletemodels(datas);
+                }, function () {
+
+                });
+            }
+            else {
+                layer.alert("请勾选一个班组！");
+            }
+        })
+         function deletemodels(id) {
+            $.post("/Wo/Wo_TeamInfo/DeleteInfos", { teamids: id }, function (data) {
+                if (data == "ok") {
+                    layer.alert("删除班组信息成功！");
+                    LoadTableData(1);
+                    SearchTeamTree();
+                } else {
+                    layer.alert("删除班组信息失败！");
+                }
+            });
+        }
+          function GetSelectedNodes() {
+            var selectnodes = "";
+            var nodes = zTreeObj.getCheckedNodes(true);
+            if (nodes.length > 0) {
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i].type == "1") {
+                        selectnodes += nodes[i].id.substring(0, nodes[i].id.length-1)+",";
+
+                    }
+
+                }
+            }
+            if (selectnodes != "") {
+                selectnodes = selectnodes.substring(0, selectnodes.length-1);
+            }
+            return selectnodes;
+        }
+        function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+    </script>
+</body>
+</html>

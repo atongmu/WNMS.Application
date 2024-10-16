@@ -1,0 +1,46 @@
+﻿@using WNMS.Model.CustomizedClass;
+@model IEnumerable<StationJkInfo_simple>
+<div class="zlw_xxzl_lb zlw_xxzl_lbxs">
+
+    <div class="zlw_xxzj_jjcon clearfloat">
+        <ul class="clearfloat">
+            @{
+                foreach (var item in Model)
+                {
+                    var aclass = "";
+                    if (item.State == "正常")
+                    {
+                        aclass = "zlw_xxzj_jjcon_item zlw_xxzj_jjcon_item_gp";
+                    }
+                    else if (item.State == "离线")
+                    {
+                        aclass = "zlw_xxzj_jjcon_item zlw_xxzj_jjcon_item_dx";
+                    }
+                    else
+                    {
+                        aclass = "zlw_xxzj_jjcon_item zlw_xxzj_jjcon_item_gz";
+                    }
+                     var starP = "";
+            if (item.Attention == true)
+            {
+                starP = "fa fa-star orange";
+            }
+            else
+            {
+                starP = "fa fa-star-o";
+            }
+             var stationidflag = "s"+item.StationID;
+                    <li  id="@stationidflag">
+                                    <div class="@aclass">
+                                        <p class="chaochu">@item.StationName</p>
+                                        <span id="@item.StationID" class="@starP ml10px" onclick="OperateAttention(@item.StationID,'')"></span>
+                                    </div>
+                     </li>
+
+                }
+
+            }
+           
+        </ul>
+    </div>
+</div>

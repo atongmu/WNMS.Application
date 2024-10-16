@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>配置模版</title>
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/hyl.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <script src="../../js/bootstrap.min.js"></script>
+    <style>
+        html,body,.tab-pane{height:100%}
+        .sel{height:30px;border:1px solid #999;min-width:120px;border-radius:5px;float:left}
+        .tab-child{height:calc(100% - 20px);margin:15px;overflow:auto}
+        .tab-cslist{overflow:hidden;zoom:1}
+        .tab-cslist li{width:calc(25% - 10px);color:#666;position:relative;padding:0 10px;border-radius:5px;line-height:40px;height:40px;margin:5px;float:left;border:1px solid #ddd}
+        .tab-cslist label{font-weight:400;cursor:pointer;margin:0;display:inline-block;width:100%;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;text-indent:20px}
+        .tab-cslist label:hover{color:#999}
+        .tab-cslist input[type="checkbox"]{position:absolute;top:10px}
+    </style>
+</head>
+<body>
+    <div class="pt15px mb15px pl10px overflow">
+        <select class="sel mr10px">
+            <option value="value">供水设备</option>
+        </select>
+        <select class="sel mr10px">
+            <option value="value">无负压数据模版</option>
+        </select>
+        <input type="text" class="zlw_bmsrmc" placeholder="无负压数据模版" />
+        <button class="zlw_bmcx inline-block">保存</button>
+        <button class="zlw_bmcx inline-block">删除</button>
+    </div>
+
+    <!-- Custom Tabs -->
+    <div class="nav-tabs-custom ml15px mr15px" style="height:calc(100% - 60px)">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1" data-toggle="tab">基本参数</a></li>
+            <li><a href="#tab_2" data-toggle="tab">其他量</a></li>
+            
+           
+        </ul>
+        <div class="tab-content" style="height:calc(100% - 60px)">
+            <div class="tab-pane active" id="tab_1">
+                <div class="tab-child">
+                    <ul class="tab-cslist">
+                        <li>
+                            <input type="checkbox" name="name" id="ck" />
+                            <label for="ck">通讯状态</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="name" id="ck2" />
+                            <label for="ck2">通讯状态1</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="name" id="ck3" />
+                            <label for="ck3">通讯状态222222222222222222</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="name" id="ck4" />
+                            <label for="ck4">通讯状态</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /.tab-pane -->
+            <div class="tab-pane" id="tab_2">
+                <div class="tab-child">
+                    <ul class="tab-cslist">
+                        <li>
+                            <input type="checkbox" name="name" id="sck" />
+                            <label for="sck">通讯状态0</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="name" id="sck2" />
+                            <label for="sck2">通讯状态1</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="name" id="sck3" />
+                            <label for="sck3">通讯状态222222222222222222</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="name" id="sck4" />
+                            <label for="sck4">通讯状态</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /.tab-pane -->
+           
+        </div>
+        <!-- /.tab-content -->
+    </div>
+    <!-- nav-tabs-custom -->
+</body>
+</html>

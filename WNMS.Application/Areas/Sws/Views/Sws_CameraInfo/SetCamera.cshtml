@@ -1,0 +1,432 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>摄像头信息编辑</title>
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    @*<link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/lib/webuploader/webuploader.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <style>
+        #filePicker div:nth-child(2) {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body>
+    @using WNMS.Model.CustomizedClass
+    @model WNMS.Model.DataModels.SwsCamera
+    <!-- Custom Tabs -->
+
+    <div style="padding:20px" class="xiugai">
+        <form id="basefrom" autocomplete="off">
+            <div class="box-body">
+
+                <input id="CameraId" type="hidden" value="@Model.CameraId" name="CameraId" />
+                <input id="Token" type="hidden" value="@Model.Token" name="Token" />
+                <input id="LimitTime" type="hidden" value="@Model.LimitTime" name="LimitTime" />
+                <input id="Pid" type="hidden" value="@Model.Pid" name="Pid" />
+                @*<input id="Numbering" type="hidden" value="@Model.Numbering" name="Numbering" />*@
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="DeviceNum">摄像头名称</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-video-camera"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="CameraName" name="CameraName" placeholder="请输入摄像头名称" value="@Model.CameraName">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="StationID">所属泵房</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-sitemap"></i>
+                                        </div>
+                                        <input type="button" placeholder="选择泵房" class="form-control" autocomplete="off" value="@ViewBag.StationName" name="StationName" onclick="SelectPumpSation()" id="StationName" style="border-bottom-right-radius:4px;border-top-right-radius:4px">
+                                        <input id="StationId" type="hidden" value="@Model.StationId" name="StationId" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="DoorId">门禁</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-tags"></i>
+                                        </div>
+                                        <select id="DoorId" name="DoorId" class="form-control">
+                                            <option value="0">==请选择==</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="CameraType">品牌</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-address-book"></i>
+                                        </div>
+                                        <select id="CameraType" name="CameraType" class="form-control">
+                                            @{
+                                                foreach (int item in System.Enum.GetValues(typeof(CameraType)))
+                                                {
+                                                    if (Model.CameraType == item)
+                                                    {
+                                                        <option value="@item" selected="selected">@System.Enum.GetName(typeof(CameraType), item)</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item">@System.Enum.GetName(typeof(CameraType), item)</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="haikang" class="lmt">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Ip">IP</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-american-sign-language-interpreting"></i>
+                                            </div>
+                                            <input type="text" class="form-control" id="Ip" name="Ip" placeholder="请输入IP地址" value="@Model.Ip">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Port">端口号</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-random"></i>
+                                            </div>
+                                            <input type="text" class="form-control" id="Port" name="Port" placeholder="请输入端口号" value="@Model.Port">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 notlmt">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="UserName">用户名</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                            <input type="text" style="display: none;" />
+                                            @*<input type="password" style="display: none;" disabled autocomplete="off" />*@
+                                            <input type="text" class="form-control" id="UserName" name="UserName" placeholder="请输入用户名" autocomplete="off" value="@Model.UserName">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="PassWord">密码</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-key"></i>
+                                            </div>
+                                            <input type="password" name="PassWord1" id="PassWord2" class="form-control" style="display:none" />
+                                            <input type="password" class="form-control" id="PassWord" name="PassWord" placeholder="请输入密码" value="@Model.PassWord" autocomplete="new-password">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="yingshi" style="display:none">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="AppKey">AppKey</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-check-square-o"></i>
+                                            </div>
+                                            <input type="text" class="form-control" id="AppKey" name="AppKey" placeholder="请输入AppKey" value="@Model.AppKey">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="AppSecret">AppSecret</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-key"></i>
+                                            </div>
+                                            <input type="text" class="form-control" id="AppSecret" name="AppSecret" placeholder="请输入AppSecret" value="@Model.AppSecret">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="SerialNum">序列号</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-file-archive-o"></i>
+                                            </div>
+                                            <input type="text" class="form-control" id="SerialNum" name="SerialNum" placeholder="请输入序列号" value="@Model.SerialNum">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 notlmt">
+                        <div class="form-group">
+                            <label for="ChannelNum">通道号</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-code-fork"></i>
+                                </div>
+                                <input type="text" class="form-control" id="ChannelNum" name="ChannelNum" placeholder="请输入通道号" value="@Model.ChannelNum">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="dhdss" style="display:none">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="Numbering">编号</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-code-fork"></i>
+                                    </div>
+                                    <input type="text" class="form-control" id="Numbering" name="Numbering" placeholder="请输入编号" value="@Model.Numbering">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 notlmt">
+                        <div class="form-group">
+                            <label for="Url">直播地址</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-internet-explorer"></i>
+                                </div>
+                                <input type="text" class="form-control" id="Url" name="Url" placeholder="请输入直播地址" value="@Model.Url">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/adminlte.lite.js"></script>
+    <script>
+        var validate;
+
+        //ip验证
+        jQuery.validator.addMethod("isIP", function (value, element) {
+            var tel = /^(?=(\b|\D))(((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))\.){3}((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))(?=(\b|\D))$/;
+            return this.optional(element) || (tel.test(value));
+        }, "请正确填写的IP。");
+        jQuery.validator.addMethod("isPort", function (value, element) {
+            var tel = /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/;
+            return this.optional(element) || (tel.test(value));
+        }, "请正确填写的端口号。");
+
+
+        $(function () {
+            var $h = $(window).height() - 70;
+            $(".tab-content").css({ "height": $h, "overflow": "auto" })
+        });
+        $(function () {
+            validateForm();
+            if (@Model.CameraId!= 0) {
+                GetContent(@Model.CameraType);
+                setdoor(@Model.StationId);
+            }
+            $("#CameraType").change(function () {
+                var value = $("#CameraType").val();
+                GetContent(value);
+            });
+        });
+
+        function validateForm() {
+            validate=$("#basefrom").validate({
+                ignore: "",
+                rules: {
+                    CameraName: {
+                        required: true
+                    },
+                    CameraType: {
+                        required: true
+                    },
+                    Port: {
+                        number: true,
+                        isPort: true
+                    },
+                    ChannelNum: {
+                        number: true,
+                    },
+                    StationId: {
+                        digits: true,
+                        min:0
+                    },
+                    Ip: {
+                         isIP: true
+                     }
+                },
+                messages: {
+                    CameraName: {
+                        required: "请输入摄像头名称"
+                    },
+                    CameraType: {
+                        required: "请输入摄像头品牌",
+                    },
+                    Port: {
+                        number: "请输入数字",
+                        isPort:"请输入正确的端口号"
+                    },
+                    ChannelNum: {
+                        number: "请输入数字",
+                    },
+                    StationId: {
+                        digits:"请正确选择泵房",
+                        min:"请正确选择泵房"
+                    },
+                    Ip: {
+                         isIP: "请输入正确的IP地址"
+                    }
+                }
+            });
+
+        }
+
+        //提交表单
+        function saveForm(func) {
+            if ($("form").valid()) {
+                $.ajax({
+                    url: '/Sws/Sws_CameraInfo/SetCameraInfo',
+                    type: 'post',
+                    data: $("form").serializeArray(),
+                    success: function (data) {
+                        func(data);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+            }
+        }
+
+        //选择泵房
+        function SelectPumpSation() {
+             parent.iframe1("选择泵房", "80%", "90%", "/Sws/Sws_CameraInfo/StationInfo");
+        }
+
+        //查询门禁
+        function setdoor(id) {
+            $.post("/Sws/Sws_CameraInfo/GetDoorID", { stationID: id }, function (res) {
+                var json = res.list;
+                var str = '<option value="0">==请选择==</option>';
+                if (json.length > 0) {
+                    $("#DoorId").empty();
+                    for (var i = 0; i < json.length; i++) {
+                        if (json[i].doorId ==@(Model.DoorId??0)) {
+                            str += '<option value="' + json[i].doorId + '" selected="selected">' + json[i].accessName + '</option>'
+                        } else {
+                             str += '<option value="' + json[i].doorId + '">' + json[i].accessName + '</option>'
+                        }                       
+                    }
+                    $("#DoorId").html(str);
+                }
+            });
+        }
+
+        //根据摄像头类型，更换表单内容
+        function GetContent(value) {
+            if (value == 0 || value == 1) {
+                $(".notlmt").css("display", "block");
+                $("#haikang").css("display", "block");
+                $("#yingshi").css("display", "none");
+                $("#dhdss").css("display", "none");
+            } else {
+                if (value == 2 || value == 3) {
+                    $(".notlmt").css("display", "block");
+                    $("#haikang").css("display", "none");
+                    $("#yingshi").css("display", "block");
+                    $("#dhdss").css("display", "none");
+                } else {
+                    if (value == 4) {
+                        $(".notlmt").css("display", "block");
+                        $("#haikang").css("display", "block");
+                        $("#dhdss").css("display", "block");
+                        $("#yingshi").css("display", "none");
+                    } else {
+                        if (value == 5) {
+                            $("#haikang").css("display", "block");
+                            $(".notlmt").css("display", "none");
+                            $("#dhdss").css("display", "none");
+                            $("#yingshi").css("display", "block");
+                        } else {
+                            $(".notlmt").css("display", "block");
+                            $("#haikang").css("display", "block");
+                            $("#dhdss").css("display", "none");
+                            $("#yingshi").css("display", "none");
+                        }
+                    }
+
+                }
+            }
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,335 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GDMap</title>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/DataV/layer/layer.js"></script>
+    <link href="~/Swslxl/css_event/gdmap.css" rel="stylesheet" />
+    <!-- Arcgis -->
+    <link href="~/4.22/esri/themes/light/main.css" rel="stylesheet" />
+    <script src="~/4.22/init.js"></script>
+    <style>
+        html,
+        body,
+        #container {   
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+        .content-window-card {
+            position: relative;
+            box-shadow: none;
+            bottom: 0;
+            left: 0;
+            width: auto;
+            padding: 0;
+        }
+
+            .content-window-card p {
+                height: 2rem;
+            }
+
+        .custom-info {
+            border: solid 1px silver;
+        }
+
+        div.info-top {
+            position: relative;
+            background: none repeat scroll 0 0 #F9F9F9;
+            border-bottom: 1px solid #CCC;
+            border-radius: 5px 5px 0 0;
+        }
+
+            div.info-top div {
+                display: inline-block;
+                color: #333333;
+                font-size: 14px;
+                font-weight: bold;
+                line-height: 31px;
+                padding: 0 10px;
+            }
+
+            div.info-top img {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                transition-duration: 0.25s;
+            }
+
+                div.info-top img:hover {
+                    box-shadow: 0px 0px 5px #000;
+                }
+
+        div.info-middle {
+            font-size: 12px;
+            padding: 10px 6px;
+            line-height: 20px;
+        }
+
+        div.info-bottom {
+            height: 0px;
+            width: 100%;
+            clear: both;
+            text-align: center;
+        }
+
+            div.info-bottom img {
+                position: relative;
+                z-index: 104;
+            }
+
+        span {
+            margin-left: 5px;
+            font-size: 20px;
+        }
+
+        .amap-icon img {
+            width: 40px
+        }
+
+        .info-middle img {
+            float: left;
+            margin-right: 6px;
+        }
+
+        .door {
+            line-height: 20px;
+            padding: 5px 0
+        }
+
+        .amap-info-close {
+            right: 6px !important
+        }
+
+        .amap-marker-label {
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #fff;
+            top: 35px !important;
+            left: 0px !important;
+            background: #78ADE5
+        }
+
+        .infoBoxa {
+            border-radius: 20px;
+            background: rgba(37,154,170,0.8) !important;
+            color: white;
+            border: 1px solid white;
+            padding: 20px;
+        }
+
+        .infobox {
+            width: 150px;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: rgba(255,255,255,0.8);
+            padding: 10px;
+        }
+
+            .infobox:hover {
+                z-index: 9999;
+                position: relative;
+            }
+
+
+        .ulinfobox {
+            list-style: none;
+            font-size: 10px;
+            color: #003831;
+        }
+
+
+
+            .ulinfobox li {
+                padding: 2px 0;
+                text-decoration: underline;
+            }
+
+                .ulinfobox li a {
+                    padding-left: 2px;
+                    cursor: pointer;
+                }
+
+                    .ulinfobox li a:hover {
+                        background-color: #69c260;
+                    }
+        .esri-popup_footer, .esri-popup_button--dock, .esri-popup__inline-actions-container {
+            display: none;
+        }
+
+        .esri-view .esri-popup__main-container {width: auto;}
+    </style>
+</head>
+<body>
+    <div id="container"></div> 
+      <script>
+        var map;
+        var rtustate = "正常,离线,故障";
+        var sitetypes = "";
+        var markers = [];
+        var marker = null;
+        var markerClusterer;
+        var adcode = '@ViewBag.adcode';
+        var lng =  @ViewBag.lng;
+        var lat =  @ViewBag.lat;
+        var zoom =  @ViewBag.zoom;
+          var ArcgisUrl = '@ViewBag.ArcgisUrl';
+          var graid = "";
+        //ARCGIS START
+        require(["esri/config", "esri/Map", "esri/views/MapView", "esri/layers/TileLayer", "esri/Graphic",
+            "esri/layers/GraphicsLayer", "esri/rest/locator", "esri/geometry/Point", "esri/geometry/support/webMercatorUtils", "esri/symbols/TextSymbol", "esri/widgets/Popup"], function (esriConfig, Map, MapView, TileLayer, Graphic, GraphicsLayer, Point, locator, webMercatorUtils, TextSymbol, popup) {
+            
+                var layer = new TileLayer({
+                    //url:
+                    //    "https://192.168.0.234:6443/arcgis/rest/services//tile/MapServer" //自己的底图地址
+                    url: ArcgisUrl //自己的底图地址
+                });
+
+                var map = new Map({
+                    basemap: "",
+                    layers: [layer]
+                });
+                let pt = {
+                    x: lng,
+                    y: lat,
+                    spatialReference: 2436
+                };
+                view = new MapView({
+                    map: map,
+                    center: pt, // Longitude, latitude
+                    zoom: zoomend, // Zoom level
+                    container: "container", // Div element
+                    spatialReference: 2436,
+                    constraints: {
+                        minScale: 140000, // User cannot zoom out beyond a scale of 1:500,000
+                        maxScale: 0, // User can overzoom tiles
+                    }
+                });
+
+                graphicsLayer = new GraphicsLayer();
+                map.add(graphicsLayer);
+
+                view.watch("stationary", function (e) { 
+                    if (e == true) {  
+                        $.post("/Sws/Sws_EventData/LoadGZrtu", {}, function (data) {
+                            if (data != "[]" && data != "") { 
+                                var json = JSON.parse(data); 
+                                var jsonLength = json.length;
+                                if (jsonLength > 0) {
+                                    for (var i = 0; i < jsonLength; i++) { 
+                                        const point = { //Create a point118.338223
+                                            type: "point",
+                                            x: json[i].Lng,
+                                            y: json[i].Lat,
+                                            spatialReference: 2436,
+                                        };
+                                        const pictureMarkerSymbol = {
+                                            type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
+                                            url: "/DataV/images/zt2.png",
+                                            width: "20px",
+                                            height: "20px"
+                                        };
+                                        const attributes = {
+                                            Name: json[i].StationId,
+                                            x: json[i].Lng,
+                                            y: json[i].Lat,
+                                        }
+
+                                        const pointGraphic = new Graphic({
+                                            geometry: point,
+                                            symbol: pictureMarkerSymbol,
+                                            attributes: attributes
+                                        });
+                                        graphicsLayer.add(pointGraphic);
+                                    }
+                                }
+                            }
+                        })
+                    }
+                })
+            view.on("pointer-move", function (e) {
+                    var point1 = e.mapPoint;
+                    view.hitTest(e)
+                        .then(res => {
+                            if (res.results.length) {
+                                //let gra = res.results.filter(function (results) {
+                                //    return results.graphic.layer == graphicsLayer;
+                                //})[0].graphic;
+                                var gra = res.results[0].graphic;
+                                if (gra.attributes != null) {
+                                    //PopupInfo(gra, point1);
+                                    if (graid != gra.attributes.Name) {
+                                        graid = gra.attributes.Name;
+                                        PopupInfo(gra, point1);
+                                    }
+                                }
+                            } else {
+                                graid = "";
+                                view.popup.close();
+                            }
+                        }) 
+                });
+                function PopupInfo(gra, point1) {
+                    var arrt = gra.attributes;
+                    $.post('/Sws/Sws_EventData/LoadEventMap', { id: arrt.Name }, function (data) {
+                        var jsondata = JSON.parse(data);
+                        var html = "";
+                        html += "<div class='info-boxs' style='color:#000000'>";
+                        html +=     "<p class='gdinfo-title'>";
+                        html +=         "<span style='width: 120px;'>设备名称</span>";
+                        html +=         "<span style='width: 120px;'>报警名称</span>";
+                        html +=         "<span style='width: 140px;'>报警时间</span>";
+                        html +=         "<span style='width: 50px;'>级别</span>";
+
+                        html += "<ul class='gdinfo-list'>"
+                        if (jsondata.length > 0) {
+                            for (var i = 0; i < jsondata.length; i++) {
+                                var iconClassName = 'bgBlue';
+                                if (jsondata[i].EventLevel == 1) {
+                                    iconClassName = "bgRed";
+                                } else if (jsondata[i].EventLevel == 2) {
+                                    iconClassName = "bgOrange";
+                                }
+
+                                html += "<li>";
+                                html +=     "<span style='width: 120px;' title=" + jsondata[i].DeviceName + ">" + jsondata[i].DeviceName + "</span>";
+                                html +=     "<span style='width: 120px;'>" + jsondata[i].EventMessage + "</span>";
+                                html +=     "<span style='width: 140px;'>" + jsondata[i].EventTime.replace("T", " ") + "</span>";
+                                html +=     "<span style='width: 50px;'><i class='" + iconClassName + "'></i></span>";
+                                html += "</li>";
+
+                            }
+                        }
+                        html += "</ul>"
+                        html += "</div>";
+                        var div = document.createElement("div");
+                        div.innerHTML = html;
+                        const point = {
+                            x: arrt.x,
+                            y: arrt.y,
+                            spatialReference: 2436,
+                        }; 
+                        view.popup.open({
+                            location: point,
+                            content: div
+                        });
+                    }); 
+                } 
+            });
+
+        //ARCGIS END
+
+         
+    </script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>设备管理</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap-table.min.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <!-- bootstrap -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <!-- 树 -->
+    <link href="~/lib/ztree/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <style>
+        .zlw_manageconrgconyi {
+            position: absolute;
+            left: 0px;
+            top: 0;
+            height: 100%;
+            margin: 7px 10px 0;
+        }
+
+        .zlw_manageconrgconsan {
+            height: calc(100% - 50px);
+            margin-top: 10px
+        }
+    </style>
+    <script type="text/javascript">
+        var $table;
+        var sortor;
+        var sortname;
+        $(function () {
+            //初始化bootstrap-table的内容
+            InitMainTable();
+            $("#btnSelect").click(function () {
+                var temp = {                        //页面大小
+                    pageNumber: 1,   //页码
+                };
+                $table.bootstrapTable('refresh', temp);
+            });
+            //添加设备
+            $("#AddBtn_device").click(function () {
+                AddDevice();
+            });
+            //编辑设备
+            $("#EditBtn_device").click(function () {
+                EditDevice();
+            });
+            //删除设备
+            $("#DeleteBtn_device").click(function () {
+                DeleteDevice();
+            });
+            //导出数据
+            $("#DeviceExport").click(function () {
+                DeviceExport();
+            });
+            //导入数据
+            $("#DeviceImport").click(function () {
+                DeviceImport();
+            });
+            //阀门配置
+            $("#Btn_Valve").click(function () {
+                SettingValve();
+            });
+        })
+        function InitMainTable() {
+            //记录页面bootstrap-table全局变量$table，方便应用
+            var queryUrl = '/Sws/Sws_DeviceInfo01/LoadInfoList';
+            $table = $('#tabledata').bootstrapTable({
+                url: queryUrl,                      //请求后台的URL（*）
+                method: 'GET',                      //请求方式（*）
+                //toolbar: '#toolbar',              //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 15,                     //每页的记录行数（*）
+                pageList: [10, 15, 20],        //可供选择的每页的行数（*）
+                search: false,                      //是否显示表格搜索
+                //strictSearch: true,
+                //showColumns: true,                  //是否显示所有的列（选择显示的列）
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: true,                //是否启用点击选中行
+                height: $(window).height() - 50,      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "DeviceId",                     //每一行的唯一标识，一般为主键列
+                //showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+                //cardView: false,                    //是否显示详细视图
+                //detailView: false,                  //是否显示父子表
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        pageSize: params.limit,                         //页面大小
+                        pageIndex: (params.offset / params.limit) + 1,   //页码
+                        //sort: params.sort,      //排序列名
+                        sort: params.sort == undefined ? "DeviceId" : params.sort,      //排序列名
+                        sortOrder: params.order, //排位命令（desc，asc）
+                        deviceName: $("#deviceName").val(),
+                    };
+                    sortor = params.order;
+                    sortname = params.sort == undefined ? "DeviceId" : params.sort;;
+                    return temp;
+                },
+                columns: [{
+                    checkbox: true,
+                    visible: true
+                }, {
+                    field: 'StationName',
+                    title: '所属泵房',
+                    //sortable: true,
+                    width: 200
+                },
+                //{
+                //field: 'DeviceId',
+                //title: '设备ID',
+                //width: 100,
+                ////sortable: true
+                //},
+                {
+                    field: 'DeviceName',
+                    title: '设备名称',
+                    //sortable: true,
+                    width: 200
+                }, {
+                    field: 'DeviceNum',
+                    title: '设备编号',
+                    width: 100
+                    //sortable: true
+                }, {
+                    field: 'RDeviceID',
+                    title: '通讯编号',
+                    width: 100
+                    //sortable: true
+                }, {
+                    field: 'PartitionName',
+                    title: '分区',
+                    //sortable: true
+                    width: 130,
+                }, {
+                    field: 'DeviceTypeName',
+                    title: '设备类型',
+                    //sortable: true
+                }, {
+                    field: 'FrequencyName',
+                    title: '变频分类',
+                    //sortable: true
+                }, {
+                    field: 'ManufacturerName',
+                    title: '厂商',
+                    //sortable: true
+                }, {
+                    field: 'PumpNum',
+                    title: '泵数量',
+                    //sortable: true
+                },  {
+                    field: 'ImportDn',
+                    title: '进口 DN',
+                    //sortable: true
+                }, {
+                    field: 'ExportDn',
+                    title: '出口 DN',
+                    //sortable: true
+                }, {
+                    field: 'ManufactureDate',
+                    title: '出厂日期',
+                    formatter: function (value, row, index) {
+                        return changeDateFormat(value)
+                    }
+                    //sortable: true
+                }
+                ],
+                responseHandler(res) {
+                    // 修改返回
+                    return {
+                        "rows": JSON.parse(res.rows), //单页查询返回的数据,
+                        "total": res.total
+                    };
+                },
+                onLoadSuccess: function (res) {
+
+                },
+                onLoadError: function () {
+                },
+                onDblClickRow: function (row, $element) {
+                    var id = row.ID;
+                },
+            });
+        };
+        function changeDateFormat(cellval) {
+            if (cellval != null) {
+                var date = cellval.replace("T", " ");
+                return date;
+            }
+        }
+        function Refresh() {
+            $table.bootstrapTable('refresh', null);
+        }
+        //加载添加页面方法
+        function AddDevice() {
+            iframe("添加设备", "800px", "80%", "/Sws/Sws_DeviceInfo01/AddPage");
+        }
+        //加载编辑页面方法
+        function EditDevice() {
+            var row = $("#tabledata").bootstrapTable('getAllSelections');
+            if (row.length != 1) {
+                layer.msg("请选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                iframe("编辑设备", "800px", "80%", "/Sws/Sws_DeviceInfo01/EditPage/" + row[0].DeviceId);
+            }
+        }
+        //删除方法
+        function DeleteDevice() {
+            var row = $("#tabledata").bootstrapTable('getAllSelections');
+            if (row.length <= 0) {
+                layer.msg("请至少选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                var id = "";
+                for (i = 0; i < row.length; i++) {
+                    id += row[i].DeviceId + ",";
+                }
+                id = id.substring(0, id.length - 1);
+                layer.confirm("确定要删除设备？", {
+                    btn: ["确定", "取消"]
+                },
+                    function () {
+                        deleteDevice(id);
+                    },
+                    function () { }
+                );
+            }
+        }
+        //删除
+        function deleteDevice(ids) {
+            $.post("/Sws/Sws_DeviceInfo01/DeleteList", { id: ids }, function (data) {
+                if (data == "ok") {
+                    layer.alert("删除成功！");
+                    Refresh();
+                }
+                else {
+                    if (data.indexOf("设备") > -1) {
+                        layer.alert(data);
+                    }
+                    else {
+                        if (data == "false") {
+                            layer.alert("所选所有设备均被占用，无法删除。")
+                        }
+                        else {
+                            layer.alert("设备设备失败！");
+                        }
+                    }
+                }
+            });
+        }
+        //导出数据
+        function DeviceExport() {
+            window.location.href = "/Sws/Sws_DeviceInfo01/ExportData?deviceName=" + $("#deviceName").val() + "&sort=" + sortname + "" + "&sortOrder=" + sortor + "" + "";
+        }
+        //导入数据
+        function DeviceImport() {
+            //$("#upfile").submit();
+            var formData = new FormData($("#upfile")[0]);
+            $.ajax({
+                url: '/Sws/Sws_DeviceInfo01/Import',
+                type: 'POST',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (res) {
+                if (res == "ok") {
+                    layer.alert("导入成功！");
+                    //location.reload()
+                    Refresh();
+                    removeFile();
+                } else
+                    if (res == "error") {
+                        removeFile();
+                        layer.alert("导入失败！");
+                    } else
+                        if (res == "typeno") {
+                            removeFile();
+                            layer.alert("文件类型不对！");
+                        } else
+                            if (res == "not") {
+                                removeFile();
+                                layer.alert("文件不存在！");
+                            } else
+                                if (res == "exception") {
+                                    removeFile();
+                                    layer.alert("请检查数据格式！");
+                                } else {
+                                    removeFile();
+                                    layer.alert(res);
+                                }
+            });
+        }
+
+        //配置设备阀门
+        function SettingValve() {
+            var row = $("#tabledata").bootstrapTable('getAllSelections');
+            if (row.length != 1) {
+                layer.alert("请选中一行");
+            } else {
+                noiframe("阀门配置", "60%", "70%", "/Sws/Sws_DeviceInfo01/AllotValve/" + row[0].DeviceId);
+            }
+        }
+
+        function removeFile() {
+            var file = $('input[name="excelfile"]');
+            file.after(file.clone().val(""));
+            file.remove();
+        }
+        //定义layer层
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+                    window.frames[0].saveForm();
+                },
+                cancel: function (index) {
+                }
+            });
+        }
+        //定义layer层
+        function noiframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                yes: function (index, layero) {
+                    window.frames[0].saveForm();
+                },
+                cancel: function (index) {
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="zlw_manage">
+
+        <!-- star right -->
+        <div class="zlw_manageconrg">
+            <div class="zlw_manageconrgcon">
+                <!-- star 查询 -->
+                <div class="mt10px ml10px left">
+                    <ul class="clearfloat">
+                        <li>
+                            <input id="deviceName" type="text" class="hyl_input" placeholder="输入设备名称">
+                            <button class="hyl_btn" id="btnSelect"> <i class="fa fa-search"></i> 查询</button>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 查询 end -->
+                <div class="zlw_manageconrgconer" style="border-bottom:1px solid #ddd;height:51px">
+                    <div class="btn-group mar10px pull-right">
+                        @await Component.InvokeAsync("ModuleButtons")
+                        @*<button type="button" id="AddBtn_device" class="btn btn-default"><i class="fa fa-plus"></i>&nbsp添加</button>
+                            <button type="button" id="EditBtn_device" class="btn btn-default"><i class="fa fa-pencil-square-o"></i>&nbsp修改</button>
+                            <button type="button" id="DeleteBtn_device" class="btn btn-default"><i class="fa fa-trash-o"></i>&nbsp删除</button>
+
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-reorder"></i>&nbsp更多
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button class="btn btn-sm btn-success fileinput-button" style="background-color:#428bca;border-color:#428bca">
+                                            <form id="upfile" enctype="multipart/form-data" method="POST">
+                                                <input type="file" name="excelfile" onchange="DeviceImport()" />
+                                            </form>
+                                        </button>
+                                    </li>
+                                    <li><a id="DeviceExport">导出</a></li>
+                                </ul>
+                            </div>
+                            <p style="clear:both"></p>*@
+                    </div>
+                </div>
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan">
+                    <table id="tabledata" class=" table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- right end -->
+
+    </div>
+    <script>
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+    </script>
+    <script>
+        // 按钮切换样式
+        $(function () {
+            $(".zlw_time_con li").click(function () {
+                $(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+            });
+            // 数据
+
+            $('.fixed-table-loading').hide()
+        });
+    </script>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        模态框（Modal）标题
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    角色名：<input type="text">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</body>
+</html>

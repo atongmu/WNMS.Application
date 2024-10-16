@@ -1,0 +1,4 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define(["exports","./FeatureReduction","./FeatureReductionCluster","./FeatureReductionSelection"],function(b,a,c,d){b.featureReductionProperty={types:{key:"type",base:a.default,typeMap:{selection:d,cluster:c}},json:{name:"layerDefinition.featureReduction",write:{allowNull:!0},origins:{"web-map":{types:{key:"type",base:a.default,typeMap:{selection:c}}},"web-scene":{types:{key:"type",base:a.default,typeMap:{selection:d}}}}}};Object.defineProperty(b,"__esModule",{value:!0})});

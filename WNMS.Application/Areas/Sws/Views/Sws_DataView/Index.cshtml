@@ -1,0 +1,90 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>二供全览</title>
+    <link rel="Shortcut Icon" href="~/UploadImg/Logo/logo.png" />
+
+    <link href="~/DataV/css/css.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/gdmap.css">
+    <link rel="stylesheet" href="../../css/hyl.css">
+
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+</head>
+<body>
+    <div class="zlw_content data-view-container">
+        <!-- star header -->
+        <div class="zlw_header clearfloat">
+            <div class="zlw_header_lf left clearfloat">
+
+                <img src="~/UploadImg/Logo/@ViewBag.logo" alt="">
+                <p>@ViewBag.sysName</p>
+            </div>
+            <div class="zlw_header_time right">
+                <span id="timem"></span>
+                <span id="timer"></span>
+            </div>
+            <div class="zlw_header_rg right clearfloat">
+                <div class="zlw_header_menu right">
+                    <ul class="clearfloat">
+                        <li class="menuact"><a href="javascript:;" data-href="/Sws/Sws_FullView/Index">二供全览</a></li>
+                        <li><a href="javascript:;" data-href="/Sws/BigScreen_Consump/Index">能耗分析</a></li>
+                        <li><a href="javascript:;" data-href="/Sws/Sws_FlowAnalysis/Index">流量分析</a></li>
+                        @*<li><a href="javascript:;" data-href="/Sws/Sws_WaterQuality/Index">水质分析</a></li>*@
+                        <li><a href="javascript:;" data-href="/Sws/BigScreen_ConCompare/Index">能耗对比</a></li>
+                        <li><a href="javascript:;" data-href="/Sws/Sws_EventData/Index">报警分析</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!-- header end -->
+
+        <iframe id="pageMain" name="page-main" src="/Sws/Sws_FullView/Index" frameborder="0" width="100%" height="100%" marginheight="0px" marginwidth="0px"></iframe>
+    </div>
+
+    <script>
+        $(function() {
+            $('.zlw_header_menu li').click(function() {
+                var href = $(this).children().data('href');
+
+                $(this).addClass('menuact').siblings().removeClass('menuact');
+
+                $('#pageMain').attr('src', href);
+            });
+        });
+        //创建时间函数;
+        !(function clock() {
+            var now = new Date();
+            var Y = now.getFullYear();
+            var m = getRealTime(now.getMonth() + 1);
+            var d = getRealTime(now.getDate());
+            var H = getRealTime(now.getHours());
+            var i = getRealTime(now.getMinutes());
+            var s = getRealTime(now.getSeconds());
+            var now_timem = Y + '-' + m + '-' + d;
+            var now_timer = H + ':' + i + ':' + s;
+            document.getElementById('timem').innerHTML = now_timem;
+            document.getElementById('timer').innerHTML = now_timer;
+
+            //一秒钟运行一次时间函数
+            setTimeout(clock, 1000);
+        })();
+
+        //时间处理函数;
+        function getRealTime(str) {
+            if (str < 10) {
+                return '0' + str;
+            }
+            return str;
+        }
+    </script>
+</body>
+</html>

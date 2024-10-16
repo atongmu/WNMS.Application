@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>能耗分析</title>
+    <link rel="stylesheet" href="css/css.css">
+    <script src="js/jquery-1.12.4.min.js"></script>
+    <script src="js/echarts.min.js"></script>
+</head>
+<body>
+    <div class="zlw_content">
+        <!-- star header -->
+        <div class="zlw_header clearfloat" >
+            <div class="zlw_header_lf left clearfloat">
+                <img src="images/eglogo.png" alt="">
+                <p>智慧水务云平台</p>
+            </div>
+            <div class="zlw_header_time right">
+                <span id="timem"></span>
+                <span id="timer"></span>
+            </div>
+            <div class="zlw_header_rg right clearfloat">
+                <div class="zlw_header_menu right">
+                    <ul class="clearfloat">
+                        <li class=""><a href="index.html">二供全览</a></li>
+                        <li class="menuact"><a href="能耗分析.html">能耗分析</a></li>
+                        <li><a href="流量分析.html">流量分析</a></li>
+                        <li><a href="水质分析.html">水质分析</a></li>
+                        <li><a href="能耗对比.html">能耗对比</a></li>
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+        <!-- header end -->
+        <!-- star  body -->
+        <div class="zlw_xnhfx  clearfloat">
+            <div class="zlw_zcdw">
+                <div id="treeDemo"></div>
+            </div>
+            <div class="zlw-content-lfdj"></div>
+            <div class="zlw_nhfxcon">
+                <!-- star 主体内容 -->
+       <div class="zlw-nhfxcon">
+            <!-- star top -->
+            <div class="zlw-nhfxcontop">
+                <div class="zlw-nhfxcontopk">
+                    <!-- 四个角直角 -->
+                    <div class="dwtopl"></div>
+                    <div class="dwtopr"></div>
+                    <div class="dwbotl"></div>
+                    <div class="dwbotr"></div>
+                    <ul class="clearfloat">
+                        <li>
+                            <div class="zlw-nhqx">
+                                <div class="zlw-nhqxtitle">
+                                    <p>今日能耗</p>
+                                </div>
+                                <div class="zlw-nhqxcon clearfloat">
+                                    <div class="zlw-nhqxconlf left">
+                                        <p>12.2<span>kw.h/m³</span></p>
+                                    </div>
+                                    <div class="zlw-nhqxconrg left">
+                                        <div class="zlw-nhqxconrgyi" id="zlw-nhqxconrgyi"></div>
+                                        <script>
+                                            var myChart01= echarts.init(document.getElementById('zlw-nhqxconrgyi'));
+                                            myChart01.setOption({
+                                                tooltip: { 
+                                                    trigger: 'axis'
+                                                },
+                                                grid: {
+                                                    left: 0,
+                                                    right:10,
+                                                    top:20,
+                                                    bottom: 10,
+                                                    containLabel: true
+                                                },
+                                                xAxis: {
+                                                    type: 'category',
+                                                    axisLine:{//x轴的样式控制
+                                                    　　show: true,　//显示与否
+                                                    　　lineStyle:{//线条样式
+                                                    　　　　color: '#2c345c',
+                                                    　　　　width: 1,
+                                                    　　　　type: 'solid'
+                                                    　　}
+                                                    },
+                                                    axisLabel: {//控制x轴上的文字的样式
+                                                    　　show: true,//显示与否
+                                                    　　textStyle: { 
+                                                            color: '#999bc6',
+                                                            },//控制x轴字体样式
+                                                        fontSize:14,
+                                                        margin:15
+                                                    },
+                                                    data: ['一','二','三','四','五','六','日']
+                                                },
+                                                yAxis: {
+                                                    type: 'value',
+                                                    splitLine: {//控制网格的线条样式
+                                                    　　show:true,
+                                                    　　lineStyle:{
+                                                        　　　　color: {
+                                                                type: 'linear',
+                                                                x: 0,
+                                                                y: 0,
+                                                                x2: 1,
+                                                                y2: 1,
+                                                                colorStops: [{
+                                                                    offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                                                                },
+                                                                {
+                                                                    offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                                                                },
+                                                                {
+                                                                    offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                                                                }],
+                                                                global: false // 缺省为 false
+                                                            },
+                                                    　　　　width: 1,
+                                                    　　　　type: 'solid'
+                                                    　　}
+                                                    },
+                                                    axisLine:{//x轴的样式控制
+                                                    　　show: false,　//显示与否
+                                                    },
+                                                    axisTick:{
+                                                        show:false
+                                                    },
+                                                    axisLabel: {//控制x轴上的文字的样式
+                                                    　　show: false,//显示与否
+                                                    }
+                                                },
+                                                series: [
+                                                    {
+                                                        name:'累计水量',
+                                                        type:'line',
+                                                        stack: '总量',
+                                                        data:[172, 221, 84, 290, 140, 70,140],
+                                                        smooth:true,
+                                                        symbol: 'roundRect', 
+                                                        itemStyle: {
+                                                            color: 'rgba(238, 106, 61,1)'
+                                                        },
+                                                        areaStyle: {
+                                                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                                                offset: 0,
+                                                                color: 'rgba(238, 106, 61,0.3)'
+                                                            }, {
+                                                                offset: 1,
+                                                                color: 'rgba(238, 106, 61,0)'
+                                                            }])
+                                                        }
+                                                    }
+                                                ]
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zlw-nhqx">
+                                <div class="zlw-nhqxtitle">
+                                    <p>昨日能耗</p>
+                                </div>
+                                <div class="zlw-nhqxcon clearfloat">
+                                    <div class="zlw-nhqxconlf left">
+                                        <p>12.2<span>kw.h/m³</span></p>
+                                    </div>
+                                    <div class="zlw-nhqxconrg left">
+                                        <div class="zlw-nhqxconrger" id="zlw-nhqxconrger"></div>
+                                        <script>
+                                            var myChart02= echarts.init(document.getElementById('zlw-nhqxconrger'));
+                                            myChart02.setOption({
+                                                tooltip: { 
+                                                    trigger: 'axis'
+                                                },
+                                                grid: {
+                                                    left: 0,
+                                                    right:10,
+                                                    top:20,
+                                                    bottom: 10,
+                                                    containLabel: true
+                                                },
+                                                xAxis: {
+                                                    type: 'category',
+                                                    axisLine:{//x轴的样式控制
+                                                    　　show: true,　//显示与否
+                                                    　　lineStyle:{//线条样式
+                                                    　　　　color: '#2c345c',
+                                                    　　　　width: 1,
+                                                    　　　　type: 'solid'
+                                                    　　}
+                                                    },
+                                                    axisLabel: {//控制x轴上的文字的样式
+                                                    　　show: true,//显示与否
+                                                    　　textStyle: { 
+                                                            color: '#999bc6',
+                                                            },//控制x轴字体样式
+                                                        fontSize:14,
+                                                        margin:15
+                                                    },
+                                                    data: ['1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00']
+                                                },
+                                                yAxis: {
+                                                    type: 'value',
+                                                    splitLine: {//控制网格的线条样式
+                                                    　　show:true,
+                                                    　　lineStyle:{
+                                                        　　　　color: {
+                                                                type: 'linear',
+                                                                x: 0,
+                                                                y: 0,
+                                                                x2: 1,
+                                                                y2: 1,
+                                                                colorStops: [{
+                                                                    offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                                                                },
+                                                                {
+                                                                    offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                                                                },
+                                                                {
+                                                                    offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                                                                }],
+                                                                global: false // 缺省为 false
+                                                            },
+                                                    　　　　width: 1,
+                                                    　　　　type: 'solid'
+                                                    　　}
+                                                    },
+                                                    axisLine:{//x轴的样式控制
+                                                    　　show: false,　//显示与否
+                                                    },
+                                                    axisTick:{
+                                                        show:false
+                                                    },
+                                                    axisLabel: {//控制x轴上的文字的样式
+                                                    　　show: false,//显示与否
+                                                    }
+                                                },
+                                                series: [
+                                                    {
+                                                        name:'累计水量',
+                                                        type:'line',
+                                                        stack: '总量',
+                                                        data:[40, 172, 221, 84, 290, 140, 70,140],
+                                                        smooth:true,
+                                                        symbol: 'roundRect', 
+                                                        itemStyle: {
+                                                            color: 'rgba(238, 106, 61,1)'
+                                                        },
+                                                        areaStyle: {
+                                                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                                                offset: 0,
+                                                                color: 'rgba(238, 106, 61,0.3)'
+                                                            }, {
+                                                                offset: 1,
+                                                                color: 'rgba(238, 106, 61,0)'
+                                                            }])
+                                                        }
+                                                    }
+                                                ]
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zlw-nhqx">
+                                <div class="zlw-nhqxtitle">
+                                    <p>本周能耗</p>
+                                </div>
+                                <div class="zlw-nhqxcon clearfloat">
+                                    <div class="zlw-nhqxconlf left">
+                                        <p>322<span>kw.h/m³</span></p>
+                                    </div>
+                                    <div class="zlw-nhqxconrg left">
+                                        <div class="zlw-nhqxconrgsan" id="zlw-nhqxconrgsan"></div>
+                                        <script>
+                                            var myChart03= echarts.init(document.getElementById('zlw-nhqxconrgsan'));
+                                            myChart03.setOption({
+                                                tooltip: { 
+                                                    trigger: 'axis'
+                                                },
+                                                grid: {
+                                                    left: 0,
+                                                    right:10,
+                                                    top:20,
+                                                    bottom: 10,
+                                                    containLabel: true
+                                                },
+                                                xAxis: {
+                                                    type: 'category',
+                                                    axisLine:{//x轴的样式控制
+                                                    　　show: true,　//显示与否
+                                                    　　lineStyle:{//线条样式
+                                                    　　　　color: '#2c345c',
+                                                    　　　　width: 1,
+                                                    　　　　type: 'solid'
+                                                    　　}
+                                                    },
+                                                    axisLabel: {//控制x轴上的文字的样式
+                                                    　　show: true,//显示与否
+                                                    　　textStyle: { 
+                                                            color: '#999bc6',
+                                                            },//控制x轴字体样式
+                                                        fontSize:14,
+                                                        margin:15
+                                                    },
+                                                    data: ['一','二','三','四','五','六','日']
+                                                },
+                                                yAxis: {
+                                                    type: 'value',
+                                                    splitLine: {//控制网格的线条样式
+                                                    　　show:true,
+                                                    　　lineStyle:{
+                                                        　　　　color: {
+                                                                type: 'linear',
+                                                                x: 0,
+                                                                y: 0,
+                                                                x2: 1,
+                                                                y2: 1,
+                                                                colorStops: [{
+                                                                    offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                                                                },
+                                                                {
+                                                                    offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                                                                },
+                                                                {
+                                                                    offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                                                                }],
+                                                                global: false // 缺省为 false
+                                                            },
+                                                    　　　　width: 1,
+                                                    　　　　type: 'solid'
+                                                    　　}
+                                                    },
+                                                    axisLine:{//x轴的样式控制
+                                                    　　show: false,　//显示与否
+                                                    },
+                                                    axisTick:{
+                                                        show:false
+                                                    },
+                                                    axisLabel: {//控制x轴上的文字的样式
+                                                    　　show: false,//显示与否
+                                                    }
+                                                },
+                                                series: [
+                                                    {
+                                                        name:'累计水量',
+                                                        type:'line',
+                                                        stack: '总量',
+                                                        data:[172, 221, 84, 290, 140, 70,140],
+                                                        smooth:true,
+                                                        symbol: 'roundRect', 
+                                                        itemStyle: {
+                                                            color: 'rgba(238, 106, 61,1)'
+                                                        },
+                                                        areaStyle: {
+                                                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                                                offset: 0,
+                                                                color: 'rgba(238, 106, 61,0.3)'
+                                                            }, {
+                                                                offset: 1,
+                                                                color: 'rgba(238, 106, 61,0)'
+                                                            }])
+                                                        }
+                                                    }
+                                                ]
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zlw-nhqx">
+                                <div class="zlw-nhqxtitle">
+                                    <p>本月能耗</p>
+                                </div>
+                                <div class="zlw-nhqxcon clearfloat">
+                                    <div class="zlw-nhqxconlf left">
+                                        <p>1215<span>kw.h/m³</span></p>
+                                    </div>
+                                    <div class="zlw-nhqxconrg left">
+                                        <div class="zlw-nhqxconrgsi" id="zlw-nhqxconrgsi"></div>
+                                        <script>
+                                            var myChart04= echarts.init(document.getElementById('zlw-nhqxconrgsi'));
+                                            myChart04.setOption({
+                                                tooltip: { 
+                                                    trigger: 'axis'
+                                                },
+                                                grid: {
+                                                    left: 0,
+                                                    right:10,
+                                                    top:20,
+                                                    bottom: 10,
+                                                    containLabel: true
+                                                },
+                                                xAxis: {
+                                                    type: 'category',
+                                                    axisLine:{//x轴的样式控制
+                                                    　　show: true,　//显示与否
+                                                    　　lineStyle:{//线条样式
+                                                    　　　　color: '#2c345c',
+                                                    　　　　width: 1,
+                                                    　　　　type: 'solid'
+                                                    　　}
+                                                    },
+                                                    axisLabel: {//控制x轴上的文字的样式
+                                                    　　show: true,//显示与否
+                                                    　　textStyle: { 
+                                                            color: '#999bc6',
+                                                            },//控制x轴字体样式
+                                                        fontSize:14,
+                                                        margin:15
+                                                    },
+                                                    data: ['1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00']
+                                                },
+                                                yAxis: {
+                                                    type: 'value',
+                                                    splitLine: {//控制网格的线条样式
+                                                    　　show:true,
+                                                    　　lineStyle:{
+                                                        　　　　color: {
+                                                                type: 'linear',
+                                                                x: 0,
+                                                                y: 0,
+                                                                x2: 1,
+                                                                y2: 1,
+                                                                colorStops: [{
+                                                                    offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                                                                },
+                                                                {
+                                                                    offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                                                                },
+                                                                {
+                                                                    offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                                                                }],
+                                                                global: false // 缺省为 false
+                                                            },
+                                                    　　　　width: 1,
+                                                    　　　　type: 'solid'
+                                                    　　}
+                                                    },
+                                                    axisLine:{//x轴的样式控制
+                                                    　　show: false,　//显示与否
+                                                    },
+                                                    axisTick:{
+                                                        show:false
+                                                    },
+                                                    axisLabel: {//控制x轴上的文字的样式
+                                                    　　show: false,//显示与否
+                                                    }
+                                                },
+                                                series: [
+                                                    {
+                                                        name:'累计水量',
+                                                        type:'line',
+                                                        stack: '总量',
+                                                        data:[40, 172, 221, 84, 290, 140, 70,140],
+                                                        smooth:true,
+                                                        symbol: 'roundRect', 
+                                                        itemStyle: {
+                                                            color: 'rgba(238, 106, 61,1)'
+                                                        },
+                                                        areaStyle: {
+                                                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                                                offset: 0,
+                                                                color: 'rgba(238, 106, 61,0.3)'
+                                                            }, {
+                                                                offset: 1,
+                                                                color: 'rgba(238, 106, 61,0)'
+                                                            }])
+                                                        }
+                                                    }
+                                                ]
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- top end -->
+            <!-- star middle -->
+            <div class="zlw-nhfxconmid clearfloat">
+                <!-- star 本年度能耗分析 -->
+                <div class="zlw-nhfxconmidlf left">
+                    <div class="zlw-nhfxxk">
+                        <!-- 四个角直角 -->
+                        <div class="dwtopl"></div>
+                        <div class="dwtopr"></div>
+                        <div class="dwbotl"></div>
+                        <div class="dwbotr"></div>
+                        <div class="zlw-nhtitle">
+                            <p>本年度能耗统计</p>
+                        </div>
+                        <div class="zlw-nhfxxkcon">
+                            <div class="zlw-nhfxxkconyi" id="zlw-nhfxxkconyi"></div>
+                            <script>
+                                var myChart1 = echarts.init(document.getElementById('zlw-nhfxxkconyi'));
+                                myChart1.setOption({
+                                    grid:{
+                                        top:10,
+                                        left:10,
+                                        right:15,
+                                        bottom:10,
+                                        containLabel: true 
+                                    },
+                                    tooltip: {
+                                        show:'true',
+                                        trigger:'axis',
+                                        axisPointer:{
+                                            type:'cross'
+                                        } 
+                                    },
+                                    color:['#73d3ff'],
+                                    xAxis: {
+                                        type: 'category',
+                                        axisLabel : {
+                                            formatter: '{value} '
+                                        },
+                                        splitLine: {//控制网格的线条样式
+                                            show:true,
+                                        　　lineStyle:{
+                                    　　　　color: '#1a253b',
+                                    　　　　width: 1,
+                                    　　　　type: 'deshed'
+                                        　　}
+                                        },
+                                        axisLabel: {//控制x轴上的文字的样式
+                                        　　show: true,//显示与否
+                                        　　textStyle: { color: '#949fb5' },//控制x轴字体样式
+                                            fontSize:14,
+                                        },
+                                        data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '10月', '11月', '12月']
+                                    },
+                                    yAxis: {
+                                        axisLabel : {
+                                            formatter: '{value} '
+                                        },
+                                        splitLine: {//控制网格的线条样式
+                                            show:true,
+                                        　　lineStyle:{
+                                    　　　　color: '#1a253b',
+                                    　　　　width: 1,
+                                    　　　　type: 'deshed'
+                                        　　}
+                                        },
+                                        axisLabel: {//控制x轴上的文字的样式
+                                        　　show: true,//显示与否
+                                        　　textStyle: { color: '#949fb5' },//控制x轴字体样式
+                                            fontSize:14,
+                                        },
+                                    },
+                                    series: [{
+                                        data: [820, 932, 901, 934, 1290, 760, 1320,820, 932, 901, 934, 1090],
+                                        type: 'bar',
+                                        smooth:'true',
+                                        barWidth:'40%',
+                                        label: {//图形上的文本标签
+                                                normal: {
+                                                  show: true,
+                                                  position: 'top',
+                                                  textStyle: {
+                                                      color: '#a8aab0',
+                                                      fontStyle: 'normal',
+                                                      fontFamily: '微软雅黑',
+                                                      fontSize: 12,   
+                                                  },
+                                                },
+                                            },
+                                        itemStyle: {
+                                            //柱形图圆角，鼠标移上去效果
+                                            emphasis: {
+                                                barBorderRadius: [20, 20, 0, 0],
+                                                color: new echarts.graphic.LinearGradient(
+                                                    0, 0, 0, 1,
+                                                    [
+                                                        {offset: 0, color: '#003e46'},
+                                                        {offset: 0.7, color: '#1b9cb1'},
+                                                        {offset: 1, color: '#73e0f2'}
+                                                    ]
+                                                )
+                                            },
+                                            
+                                            normal: {
+                                                //柱形图圆角，初始化效果
+                                                barBorderRadius:[20, 20, 0, 0],
+                                                color: new echarts.graphic.LinearGradient(
+                                                    0, 0, 0, 1,
+                                                    [
+                                                        {offset: 0, color: '#73e0f2'},
+                                                        {offset: 0.5, color: '#1b9cb1'},
+                                                        {offset: 1, color: '#003e46'}
+                                                    ]
+                                                )
+                                            }
+                                        }
+                                    }]
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <!-- 本年度能耗分析 end --> 
+                <div class="zlw-nhfxconmidmi left">
+                    <div class="zlw-nhfxconmidmik">
+                        <!-- 四个角直角 -->
+                        <div class="dwtopl"></div>
+                        <div class="dwtopr"></div>
+                        <div class="dwbotl"></div>
+                        <div class="dwbotr"></div>
+                        <div class="zlw-nhtitle">
+                            <p>近7天能耗统计</p>
+                        </div>
+                        <div class="zlw-nhfxconmidmikcon">
+                                <div class="zlw-nhfxconmidmikconyi" id="zlw-nhfxconmidmikconyi"></div>
+                                <script>
+                                    var myChart05= echarts.init(document.getElementById('zlw-nhfxconmidmikconyi'));
+                                    myChart05.setOption({
+                                        grid:{
+                                            top:10,
+                                            left:10,
+                                            right:10,
+                                            bottom:10,
+                                            containLabel: true 
+                                        },
+                                        tooltip: {
+                                            show:'true',
+                                            trigger:'axis',
+                                            axisPointer:{
+                                                type:'cross'
+                                            } 
+                                        },
+                                        color:['#73d3ff'],
+                                        xAxis: {
+                                            type: 'category',
+                                            axisLabel : {
+                                                formatter: '{value} '
+                                            },
+                                            splitLine: {//控制网格的线条样式
+                                                show:true,
+                                            　　lineStyle:{
+                                        　　　　color: '#1a253b',
+                                        　　　　width: 1,
+                                        　　　　type: 'deshed'
+                                            　　}
+                                            },
+                                            axisLabel: {//控制x轴上的文字的样式
+                                            　　show: true,//显示与否
+                                            　　textStyle: { color: '#949fb5' },//控制x轴字体样式
+                                                fontSize:14,
+                                                interval:0 
+                                            },
+                                            data: ['周一', '周二', '周三', '周四', '周五', '周六','周日']
+                                        },
+                                        yAxis: {
+                                            axisLabel : {
+                                                formatter: '{value} '
+                                            },
+                                            splitLine: {//控制网格的线条样式
+                                                show:true,
+                                            　　lineStyle:{
+                                        　　　　color: '#1a253b',
+                                        　　　　width: 1,
+                                        　　　　type: 'deshed'
+                                            　　}
+                                            },
+                                            axisLabel: {//控制x轴上的文字的样式
+                                            　　show: true,//显示与否
+                                            　　textStyle: { color: '#949fb5' },//控制x轴字体样式
+                                                fontSize:14,
+                                            },
+                                        },
+                                        series: [{
+                                            data: [20, 32, 41, 34, 29, 45, 20],
+                                            type: 'bar',
+                                            smooth:'true',
+                                            barWidth:'25%',
+                                            label: {//图形上的文本标签
+                                                normal: {
+                                                  show: true,
+                                                  position: 'top',
+                                                  textStyle: {
+                                                      color: '#a8aab0',
+                                                      fontStyle: 'normal',
+                                                      fontFamily: '微软雅黑',
+                                                      fontSize: 12,   
+                                                  },
+                                                },
+                                            },
+                                            itemStyle: {
+                                                //柱形图圆角，鼠标移上去效果
+                                                emphasis: {
+                                                    barBorderRadius: [20, 20, 0, 0],
+                                                    color: new echarts.graphic.LinearGradient(
+                                                        0, 0, 0, 1,
+                                                        [
+                                                            {offset: 0, color: '#2378f7'},
+                                                            {offset: 0.7, color: '#2378f7'},
+                                                            {offset: 1, color: '#83bff6'}
+                                                        ]
+                                                    )
+                                                },
+                                                
+                                                normal: {
+                                                    //柱形图圆角，初始化效果
+                                                    barBorderRadius:[20, 20, 0, 0],
+                                                    color: new echarts.graphic.LinearGradient(
+                                                        0, 0, 0, 1,
+                                                        [
+                                                            {offset: 0, color: '#83bff6'},
+                                                            {offset: 0.5, color: '#188df0'},
+                                                            {offset: 1, color: '#0063f8'}
+                                                        ]
+                                                    )
+                                                }
+                                            },
+                                        }]
+                                    });
+                                </script>
+                        </div>
+                    </div>
+                </div>
+                <!-- star 本月对比 -->
+                <div class="zlw-nhfxconmidrg right">
+                    <div class="zlw-nhfxconmidrgk clearfloat">
+                        <!-- 四个角直角 -->
+                        <div class="dwtopl"></div>
+                        <div class="dwtopr"></div>
+                        <div class="dwbotl"></div>
+                        <div class="dwbotr"></div>
+                        <div class="zlw-nhtitle">
+                            <p>一周单吨能耗分析</p>
+                        </div>
+                        <div class="zlw-nhfxconmidrgkcon">
+                            <div class="zlw-nhfxconmidrgkconyi" id="zlw-nhfxconmidrgkconyi"></div>
+                            <script>
+                                    var myChart06= echarts.init(document.getElementById('zlw-nhfxconmidrgkconyi'));
+                                    myChart06.setOption({
+                                        grid: {
+                                            left: '12%',
+                                            top: '5%',
+                                            bottom: '12%',
+                                            right: '8%'
+                                        },
+                                        xAxis: {
+                                            data: ['周一', '周二', '周三', '周四', '周五', '周六','周日'],
+                                        axisTick: {
+                                                show: false
+                                            },
+                                            axisLine: {
+                                                lineStyle: {
+                                                    color: 'rgba(255, 129, 109, 0.1)',
+                                                    width: 1 //这里是为了突出显示加上的
+                                                }
+                                            },
+                                            axisLabel: {
+                                                textStyle: {
+                                                    color: '#999',
+                                                    fontSize: 12
+                                                }
+                                            }
+                                        },
+                                        yAxis: [{
+                                                splitNumber: 2,
+                                                axisTick: {
+                                                    show: false
+                                                },
+                                                axisLine: {
+                                                    lineStyle: {
+                                                        color: 'rgba(255, 129, 109, 0.1)',
+                                                        width: 1 //这里是为了突出显示加上的
+                                                    }
+                                                },
+                                                axisLabel: {
+                                                    textStyle: {
+                                                        color: '#999'
+                                                    }
+                                                },
+                                                splitArea: {
+                                                    areaStyle: {
+                                                        color: 'rgba(255,255,255,.5)'
+                                                    }
+                                                },
+                                                splitLine: {
+                                                    show: true,
+                                                    lineStyle: {
+                                                        color: 'rgba(255, 129, 109, 0.1)',
+                                                        width: 0.5,
+                                                        type: 'dashed'
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        series: [{
+                                            name: 'hill',
+                                            type: 'pictorialBar',
+                                            barCategoryGap: '0%',
+                                            symbol: 'path://M0,10 L10,10 C5.5,10 5.5,5 5,0 C4.5,5 4.5,10 0,10 z',
+                                            label: {
+                                                show: true,
+                                                position: 'top',
+                                                distance: 15,
+                                                color: '#fb8e00',
+                                                fontWeight: 'bolder',
+                                                fontSize: 15,
+                                            },
+                                            itemStyle: {
+                                                normal: {
+                                                    color: {
+                                                        type: 'linear',
+                                                        x: 0,
+                                                        y: 0,
+                                                        x2: 0,
+                                                        y2: 1,
+                                                        colorStops: [{
+                                                                offset: 0,
+                                                                color: 'rgba(255, 148, 10, 1)' //  0%  处的颜色
+                                                            },
+                                                            {
+                                                                offset: 1,
+                                                                color: 'rgba(255, 148, 10, .1)' //  100%  处的颜色
+                                                            }
+                                                        ],
+                                                        global: false //  缺省为  false
+                                                    }
+                                                },
+                                                emphasis: {
+                                                    opacity: 1
+                                                }
+                                            },
+                                            data: [123, 60, 95, 18, 35, 9,24],
+                                            z: 10
+                                        }]
+                                    });
+                                </script>
+                        </div>
+                    </div>
+                </div>
+                <!-- 本月对比 end -->
+            </div>
+            <!-- middle end -->
+            <!-- star end -->
+            <div class="zlw-nhfxconbot clearfloat">
+                <!-- star 近七天 -->
+                <div class="zlw-nhfxqt left">
+                    <div class="zlw-nhfxqtk">
+                        <!-- 四个角直角 -->
+                        <div class="dwtopl"></div>
+                        <div class="dwtopr"></div>
+                        <div class="dwbotl"></div>
+                        <div class="dwbotr"></div>
+                        <div class="zlw-nhtitle">
+                            <p>总累计流量/总累计电量</p>
+                        </div>
+                        <div class="zlw-nhfxqtkcon clearfloat">
+                            <div class="zlw-nhfxqtkconlf left">
+                                <div class="zlw-nhfxqtkconlfyi" id="zlw-nhfxqtkconlfyi"></div>
+                                    <script>
+                                        var myChart07 = echarts.init(document.getElementById('zlw-nhfxqtkconlfyi'));
+                                        // 指定图表的配置项和数据
+
+                                        myChart07.setOption({
+                                            tooltip: { //弹窗组件
+                                                formatter: "{a} <br/>{b} : {c}Kw.h"
+                                            },
+                                            series: [{
+                                                name: '完成率',
+                                                type: 'gauge',
+                                                radius: '70%',
+                                                center:['50%','44%'],
+                                                min: 0,
+                                                max: 200,
+                                                axisLine: { // 坐标轴线
+                                                    lineStyle: { // 属性lineStyle控制线条样式
+                                                        color: [
+                                                            [0.2, '#0df8f8'],
+                                                            [0.8, '#058bfc'],
+                                                            [1, '#00ffcb']
+                                                        ],
+                                                        width:3, //表盘宽度
+                                                        shadowBlur: 10
+                                                    }
+                                                },
+                                                axisTick: { // 坐标轴小标记
+                                                    length: 8, // 属性length控制线长
+                                                    lineStyle: { // 属性lineStyle控制线条样式
+                                                        color: 'transparent',
+                                                        shadowColor: 'transparent', //默认透明
+                                                        shadowBlur: 10
+                                                    }
+                                                },
+                                                splitLine:{
+                                                    show:true,
+                                                    length:5
+                                                },
+                                                detail:{
+                                                    show:true,
+                                                    fontSize:17,
+                                                    color:'#FFF',
+                                                    formatter:'{value} kW.h',
+                                                    offsetCenter:[0,'100%']
+                                                },
+                                                pointer:{
+                                                    show:true,
+                                                    length:'60%'
+                                                },
+                                                title: {
+                                                    offsetCenter:[0,'130%'],
+                                                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                                                        fontWeight: 'bolder',
+                                                        fontSize: 18,
+                                                        fontStyle: 'normal',
+                                                        color: '##00c0ff',
+                                                        shadowColor: '#fff', //默认透明
+                                                        shadowBlur: 10,
+                                                        
+                                                    }
+                                                },
+                                                data: [{value: 70, name: '总累计流量'}]
+                                            }]
+                                        });        
+                                    </script>
+                            </div>
+                            <div class="zlw-nhfxqtkconrg right">
+                                <div class="zlw-nhfxqtkconrgyi" id="zlw-nhfxqtkconrgyi"></div>
+                                    <script>
+                                        var myChart08 = echarts.init(document.getElementById('zlw-nhfxqtkconrgyi'));
+                                        // 指定图表的配置项和数据
+                                        var dataArr = 44;
+                                        var colorSet = {
+                                            color: '#468EFD'
+                                        };
+                                        myChart08.setOption({
+                                            tooltip: { //弹窗组件
+                                                formatter: "{a} <br/>{b} : {c}Kw.h"
+                                            },
+                                            series: [{
+                                                name: '完成率',
+                                                type: 'gauge',
+                                                radius: '70%',
+                                                center:['50%','44%'],
+                                                min: 0,
+                                                max: 1000,
+                                                axisLine: { // 坐标轴线
+                                                    lineStyle: { // 属性lineStyle控制线条样式
+                                                        color: [
+                                                            [0.2, '#47fd00'],
+                                                            [0.8, '#fcba42'],
+                                                            [1, '#ff0000']
+                                                        ],
+                                                        width:3, //表盘宽度
+                                                        shadowBlur: 10
+                                                    }
+                                                },
+                                                axisTick: { // 坐标轴小标记
+                                                    length: 8, // 属性length控制线长
+                                                    lineStyle: { // 属性lineStyle控制线条样式
+                                                        color: 'transparent',
+                                                        shadowColor: 'transparent', //默认透明
+                                                        shadowBlur: 10
+                                                    }
+                                                },
+                                                splitLine:{
+                                                    show:true,
+                                                    length:5
+                                                },
+                                                detail:{
+                                                    show:true,
+                                                    fontSize:17,
+                                                    color:'#FFF',
+                                                    formatter:'{value} kW.h',
+                                                    offsetCenter:[0,'100%']
+                                                },
+                                                pointer:{
+                                                    show:true,
+                                                    length:'60%'
+                                                },
+                                                title: {
+                                                    offsetCenter:[0,'130%'],
+                                                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                                                        fontWeight: 'bolder',
+                                                        fontSize: 18,
+                                                        fontStyle: 'normal',
+                                                        color: '##00c0ff',
+                                                        shadowColor: '#fff', //默认透明
+                                                        shadowBlur: 10,
+                                                        
+                                                    }
+                                                },
+                                                data: [{value: 445, name: '总累计电量'}]
+                                            }]
+                                        });        
+                                    </script>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- 近七天 end -->
+                <!-- stra 数据滚动 -->
+                <div class="zlw-nhsjgd left">
+                    <div class="zlw-nhsjgdk">
+                        <!-- 四个角直角 -->
+                        <div class="dwtopl"></div>
+                        <div class="dwtopr"></div>
+                        <div class="dwbotl"></div>
+                        <div class="dwbotr"></div>
+                        <div class="zlw-nhsjgdkcon">
+                            <ul class="clearfloat">
+                                <li>
+                                    <span>时间</span>
+                                    <span>1#泵用电量(kw.h)</span>
+                                    <span>2#泵用电量(kw.h)</span>
+                                    <span>3#泵用电量(kw.h)</span>
+                                    <span>4#泵用电量(kw.h)</span>
+                                    <span>总电量(kw.h)</span>
+                                </li>
+                                <li>
+                                    <div><span>平均值</span></div>
+                                    <div><p>830.8</p></div>
+                                    <div><p>727.23</p></div>
+                                    <div><p>854.12</p></div>
+                                    <div><p>365.23</p></div>
+                                    <div><p>985.56</p></div>
+                                </li>
+                                <li>
+                                    <div><span>最大时间</span></div>
+                                    <div><p>2019.7.16</p></div>
+                                    <div><p>2019.7.14</p></div>
+                                    <div><p>2019.7.16</p></div>
+                                    <div><p>2019.7.12</p></div>
+                                    <div><p>2019.7.21</p></div>
+                                </li>
+                                <li>
+                                    <div><span>最大值</span></div>
+                                    <div><p>830.8</p></div>
+                                    <div><p>727.23</p></div>
+                                    <div><p>854.12</p></div>
+                                    <div><p>365.23</p></div>
+                                    <div><p>985.56</p></div>
+                                </li>
+                                <li>
+                                    <div><span>最小时间</span></div>
+                                    <div><p>2019.7.16</p></div>
+                                    <div><p>2019.7.14</p></div>
+                                    <div><p>2019.7.16</p></div>
+                                    <div><p>2019.7.12</p></div>
+                                    <div><p>2019.7.21</p></div>
+                                </li>
+                                <li>
+                                    <div><span>最小值</span></div>
+                                    <div><p>12.8</p></div>
+                                    <div><p>42.23</p></div>
+                                    <div><p>35.12</p></div>
+                                    <div><p>21.23</p></div>
+                                    <div><p>19.56</p></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- 数据滚动 end -->
+                <script>
+                    $(function(){
+                        // top
+                        var na = $(".zlw-nhqxconlf").height();
+                        var nb = (na-56)/2+'px';
+                        $('.zlw-nhqxconlf p').css('padding-top',nb);
+                        // 数据滚动
+                        var nc = $('.zlw-nhsjgdkcon ul').height();
+                        var nd = nc/6+'px';
+                        $('.zlw-nhsjgdkcon ul li').css('line-height',nd);
+                        $('.zlw-nhsjgdkcon ul li').css('height',nd);
+
+                    })
+                    $(window).resize(function(){
+                        // top
+                        var na = $(".zlw-nhqxconlf").height();
+                        var nb = (na-56)/2+'px';
+                        $('.zlw-nhqxconlf p').css('padding-top',nb);
+                        // 数据滚动
+                        var nc = $('.zlw-nhsjgdkcon ul').height();
+                        var nd = nc/6+'px';
+                        $('.zlw-nhsjgdkcon ul li').css('line-height',nd);
+                        $('.zlw-nhsjgdkcon ul li').css('height',nd);
+                    });
+                </script>
+                <!-- star 能耗占比 -->
+                <div class="zlw-nhzb left">
+                    <div class="zlw-nhzbk">
+                        <!-- 四个角直角 -->
+                        <div class="dwtopl"></div>
+                        <div class="dwtopr"></div>
+                        <div class="dwbotl"></div>
+                        <div class="dwbotr"></div>
+                        <div class="zlw-nhtitle">
+                            <p>近一个月各泵能耗对比</p>
+                        </div>
+                        <div class="zlw-nhzbkcon">
+                            <div class="zlw-nhzbkconyi" id="zlw-nhzbkconyi"></div>
+                            <script>
+                                var myChart3= echarts.init(document.getElementById('zlw-nhzbkconyi'));
+                               
+                                myChart3.setOption({
+                                        tooltip : {
+                                            trigger: 'item',
+                                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                                        },
+                                        color:['#00d8c5','#2699e8','#ee6a3d','#64a750','#bda73e'],
+                                        legend: {
+                                            x : 'center',
+                                            y : 'bottom',
+                                            type:'scroll',
+                                            textStyle:{
+                                                color:'#fff'
+                                            }
+                                            // ,
+                                            // data: [
+                                            //     {
+                                            //     name: 'rose1',
+                                            //     icon: 'rect',
+                                            //     },
+                                            //     {
+                                            //     name: 'rose2',
+                                            //     icon: 'triangle',
+                                            //     }
+                                            // ]
+                                        },
+                                        toolbox: {
+                                            show : true,
+                                            feature : {
+                                                mark : {show: true},
+                                                dataView : {show: true, readOnly: false},
+                                                magicType : {
+                                                    show: true, 
+                                                    type: ['pie', 'funnel']
+                                                },
+                                                restore : {show: true},
+                                                saveAsImage : {show: true}
+                                            }
+                                        },
+                                        calculable : true,
+                                        series : [
+                                            {
+                                                name:'能耗对比',
+                                                type:'pie',
+                                                radius : ['40%','55%'],
+                                                center : ['50%', '50%'],
+                                                roseType : 'area',
+                                                x: '50%',               // for funnel
+                                                max: 40,                // for funnel
+                                                sort : 'ascending',     // for funnel
+                                                data:[
+                                                    {value:10, name:'1#泵'},
+                                                    {value:5, name:'2#泵'},
+                                                    {value:15, name:'3#泵'},
+                                                    {value:25, name:'4#泵'}
+                                                ]
+                                            }
+                                        ]
+                                    });
+                    
+                            </script>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- 能耗占比 end -->
+            </div>
+            <!-- end end -->
+       </div>
+       <!-- 主体内容 end -->
+            </div>
+        </div>
+        <!-- body end -->
+    </div>
+    <script>
+        // 左侧伸缩按钮
+        $('.zlw-content-lfdj').click(function () {
+            if ($(".zlw-content-lfdj").hasClass("ss_active")) {
+                $('.zlw_zcdw').css('left', '0px');
+                $('.zlw-content-lfdj').css('left', '244px').removeClass('ss_active');
+                $('.zlw-content-lfdj').css('background-image', 'url(images/dwleft.png)');
+                $('.zlw_xnhfx').css('padding-left','260px')
+            } else {
+                $('.zlw_zcdw').css('left', '-260px');
+                $('.zlw-content-lfdj').css('left', '0px').addClass('ss_active');
+                $('.zlw-content-lfdj').css('background-image', 'url(images/jt_lefth.png)');
+                $('.zlw_xnhfx').css('padding',0)
+                
+            }
+        });
+
+    </script>
+    <script>        
+            //创建时间函数;
+            !(function clock(){
+                var now = new Date();
+                var Y = now.getFullYear();
+                var m = getRealTime(now.getMonth()+1);
+                var d = getRealTime(now.getDate());
+                var H = getRealTime(now.getHours());
+                var i = getRealTime(now.getMinutes());
+                var s = getRealTime(now.getSeconds());
+                var now_timem = Y +'-'+ m +'-'+ d ;
+                var now_timer = H +':'+ i +':'+ s;
+                document.getElementById('timem').innerHTML = now_timem;
+                document.getElementById('timer').innerHTML = now_timer;
+
+                //一秒钟运行一次时间函数
+                setTimeout(clock,1000);
+            })();
+
+            //时间处理函数;
+            function getRealTime(str){
+                if(str < 10){
+                    return '0'+str;
+                }
+                return str;
+            }
+            // 添加class
+            $(function(){
+                $(".zlw_header_menu  ul li").click(function() {
+                    $(this).siblings('.zlw_header_menu  ul li').removeClass('menuact');  // 删除其他兄弟元素的样式
+                    $(this).addClass('menuact');                            // 添加当前元素的样式
+                });
+            }); 
+    </script>
+    <script>
+        window.onresize = function () {
+            myChart01.resize();
+            myChart02.resize();
+            myChart03.resize();
+            myChart04.resize();
+            myChart05.resize();
+            myChart06.resize();
+            myChart07.resize();
+            myChart08.resize();
+            myChart1.resize();
+            myChart3.resize();
+        }
+    </script>
+    <script src="js/jt.js"></script>
+    <script>
+        $("#zlw-nhfxxkconyi").resize(function(){
+            myChart1.resize();
+        });
+    </script>
+
+</body>
+</html>

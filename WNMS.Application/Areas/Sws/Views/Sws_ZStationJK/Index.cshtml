@@ -1,0 +1,585 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    @*<link href="~/css/layui.css" rel="stylesheet" />*@
+    @*<script src="~/js/jquery.min.js"></script>*@
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.kxbdMarquee.js"></script>
+    @*<script src="~/js/layui.js"></script>*@
+    <script src="~/lib/laypage/laypage.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/js/pinterest_grid.js"></script>
+    <style>
+        html, body {
+            height: 100%
+        }
+
+        .icon-bengfang {
+            font-size: x-large;
+        }
+
+        .zlw_listyilfyi em {
+            float: left;
+            padding: 0 0 0 10px;
+        }
+
+        #tablist .ons span {
+            font-weight: bold;
+            color: #0084da;
+        }
+
+        .elembox {
+            overflow: hidden;
+            height: 30px;
+            position: relative;
+            top: 8px
+        }
+
+            .elembox ul li {
+                float: left
+            }
+
+        .sx-select {
+            height: 25px;
+            border-radius: 5px
+        }
+
+        .disableclass {
+            cursor: not-allowed !important;
+            box-shadow: none;
+            opacity: .65;
+        }
+
+        .zlw_home {
+            height: 100%
+        }
+
+        .zlw_xinxi_main {
+            height: calc(100% - 80px);
+            overflow: auto;
+            padding: 10px 10px 40px;
+        }
+
+        .zlw_list1_itemmid ul li div:nth-of-type(2) {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .removeline {
+            border-bottom: none;
+        }
+
+        .zlw_list1_itemtop {
+            padding: 17px 0;
+        }
+
+            .zlw_list1_itemtop > em {
+                bottom: 15px !important
+            }
+
+            .zlw_list1_itemtop .kp_gd {
+                top: 18px !important
+            }
+    </style>
+</head>
+<body>
+    <div class="zlw_home">
+        <!-- star searchtop -->
+        <div class="zlw_home_yi clearfloat">
+            <div class="zlw_home_yi_lf left">
+                <form action="">
+                    <div class="sea_k">
+                        <i class="fa fa-search sea_tubi ml5px mr5px" id="searchbtn"></i>
+                        <input type="text" class="hyl_input" style="height:26px !important;text-indent:0.75em" id="searchtext" placeholder="泵房机组等关键词">
+                    </div>
+                </form>
+            </div>
+            <div class="zlw_home_yi_rg right clearfloat">
+                <div class="zlw_home_yi_rg_time left">
+                    <span>刷新频率：</span>
+                    <select class="hyl_select" id="refreshtime" style="height:26px !important;">
+                        <option value="30">30秒</option>
+                        <option value="60" selected="selected">1分钟</option>
+                        <option value="300">5分钟</option>
+                    </select>
+                </div>
+                <div class="zlw_home_yi_rg_moshi left clearfloat">
+                    <span class="zlw_lbbtn zlw_moshiact" id="list">列表模式</span>
+                    <span class="zlw_kpbtn" id="card">卡片模式</span>
+                    <span class="zlw_jjbtn" id="simple">精简模式</span>
+                </div>
+            </div>
+        </div>
+        <!-- searchtop end -->
+        <!-- sar zonglantop -->
+        <div class="zlw_home_er clearfloat">
+            <div class="zlw_home_er_lf left clearfloat">
+                <ul class="clearfloat" id="tablist" style="margin-bottom:0">
+                    <li class="ons" id="all"><span>全部泵房(<span id="allNum">0</span>)</span></li>
+                    <li id="attention"><i></i><span>我的关注(<span id="attentionNum">0</span>)</span></li>
+                    <li id="online"><i></i><span>正常运行(<span id="onlineNum">0</span>)</span></li>
+                    <li id="alarm"><i></i><span>报警(<span id="alarmNum">0</span>)</span></li>
+                    <li id="offline"><i></i><span>离线(<span id="offlineNum">0</span>)</span></li>
+                </ul>
+            </div>
+            <div class="zlw_home_er_rg right clearfloat">
+                <ul class="clearfloat" style="margin-bottom:0">
+                    @*<li><i class="iconfont icon-chilun"></i>工频</li>
+                        <li><i class="iconfont icon-chilun"></i>变频</li>
+                        <li><i class="iconfont icon-chilun"></i>故障</li>
+                        <li><i class="iconfont icon-chilun"></i>停止</li>*@
+                </ul>
+            </div>
+        </div>
+        <!-- zonglantop end -->
+        <!-- star 内容 -->
+        <div class="zlw_xinxi_main">
+
+
+        </div>
+        <div class="overflow pt10px" style="position: fixed; left: 0; bottom: 0; background: #fff; width: 100%;z-index:9999">
+            <div class="left">
+                <span class="pl10px pr10px">每页显示</span>
+                <select class="mr10px" style="height:26px;line-height:26px;border-radius:2px" id="pagesize">
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option> 
+                </select>
+                <span class="pr10px">条记录</span>
+            </div>
+            <div class="left" id="page_JK" style="height:30px"></div>
+        </div>
+        <!-- 内容 end -->
+    </div>
+    <script type="text/javascript">
+       
+           var el = document.querySelector('input');
+            el.addEventListener("keydown", function(e) {
+                var keyCode = e.keyCode || e.which;
+                if (keyCode === 9) {
+                    var start = el.selectionStart,
+                        end = el.selectionEnd, 
+                        value = el.value;
+                    var lineStart = value.lastIndexOf('\n', start),
+                        lineEnd = value.indexOf('\n', end),
+                        offset = 0;
+                    if (lineStart === -1) lineStart = 0;
+                    if (lineEnd === -1) lineEnd = value.length;
+                    if (lineStart === lineEnd);
+                    else if (lineStart !== 0) lineStart += 1;
+                    lines = value.substring(lineStart, lineEnd).split('\n');
+                    console.log([lineStart, lineEnd], lines);
+                    if (lines.length > 1) {
+                        offset = lines.length;
+                        lines = '\t' + lines.join('\n\t');
+                        el.value = value.substring(0, lineStart) + lines + value.substring(lineEnd);
+                        el.selectionStart = start + 1;
+                        el.selectionEnd = end + offset;
+                    } else {
+                        offset = 1;
+                        lines = lines[0];
+                        el.value = value.substring(0, start) + '\t' + value.substring(end);
+                        el.selectionStart = el.selectionEnd = start + offset;
+                    }
+                    e.preventDefault();
+                }
+            })
+       
+    </script>
+    <script>
+        var tabtype = "all";
+        var myVar;
+        var displayType = "list";
+        var pageindex = 1;
+        // 列表切换
+        $(document).on('click', '.zlw_home_yi_rg_moshi span', function () {
+            $(this).addClass('zlw_moshiact').siblings('span').removeClass('zlw_moshiact');
+            displayType = $(this)[0].id;
+            pageindex = 1;
+            if (displayType == "list") {
+                LoadData_List();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_List(pageindex); }, $("#refreshtime").val() * 1000);
+            }
+            else if (displayType == "card") {
+
+                LoadData_card();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_card(pageindex); }, $("#refreshtime").val() * 1000);
+            }
+            else {
+                LoadData_simple();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_simple(pageindex); }, $("#refreshtime").val() * 1000);
+
+            }
+        });
+        $(document).on('click', '#tablist li', function () {
+            $(this).addClass("ons").siblings("li").removeClass("ons");
+        })
+
+
+
+
+        $(function () {
+            $(".zlw_lbbtn").click(function () {
+                $('.zlw_xxzl_lb').addClass('zlw_xxzl_lbxs');
+                $('.zlw_xxzl_kp').removeClass('zlw_xxzl_kpxs');
+                $('.zlw_xxzl_jj').removeClass('zlw_xxzl_jjxs');
+            });
+            $('.zlw_kpbtn').click(function () {
+                $('.zlw_xxzl_kp').addClass('zlw_xxzl_kpxs');
+                $('.zlw_xxzl_lb').removeClass('zlw_xxzl_lbxs');
+                $('.zlw_xxzl_jj').removeClass('zlw_xxzl_jjxs');
+            })
+            $('.zlw_jjbtn').click(function () {
+                $('.zlw_xxzl_jj').addClass('zlw_xxzl_jjxs');
+                $('.zlw_xxzl_lb').removeClass('zlw_xxzl_lbxs');
+                $('.zlw_xxzl_kp').removeClass('zlw_xxzl_kpxs');
+            })
+            // 鼠标移入
+            $('.zlw_list1_item').hover(function () {
+                $('.zlw_list1_item::before').css("width", "100%");
+            })
+            LoadData_List();
+            myVar = setInterval(function () { LoadData_List(pageindex); }, $("#refreshtime").val() * 1000);
+            document.onkeydown = keyDownSearch;
+            function keyDownSearch(e) {
+                // 兼容FF和IE和Opera    
+                var theEvent = e || window.event;
+                var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                // 13 代表 回车键
+                if (code == 13) {
+                    pageindex = 1;
+                    if (displayType == "list") {
+                        LoadData_List();
+                        clearInterval(myVar);
+                        myVar = setInterval(function () { LoadData_List(pageindex); }, $("#refreshtime").val() * 1000);
+                    }
+                    else if (displayType == "card") {
+
+                        LoadData_card();
+                        clearInterval(myVar);
+                        myVar = setInterval(function () { LoadData_card(pageindex); }, $("#refreshtime").val() * 1000);
+                    }
+                    else {
+                        LoadData_simple();
+                        clearInterval(myVar);
+                        myVar = setInterval(function () { LoadData_simple(pageindex); }, $("#refreshtime").val() * 1000);
+
+                    }
+                    return false;
+                }
+            }
+        })
+
+        $("#pagesize").change(function () {
+            pageindex = 1;
+            if (displayType == "list") {
+                LoadData_List();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_List(pageindex); }, $("#refreshtime").val() * 1000);
+            }
+            else if (displayType == "card") {
+
+                LoadData_card();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_card(pageindex); }, $("#refreshtime").val() * 1000);
+            }
+            else {
+                LoadData_simple();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_simple(pageindex); }, $("#refreshtime").val() * 1000);
+
+            }
+        })
+
+        //加载数据列表数据
+        function LoadData_List(curr) {
+            $.post('/Sws/Sws_ZStationJK/QuerySJKTableList', {
+                pageindex: curr || 1,
+                pagesize: $("#pagesize").val(),
+                searchText: $("#searchtext").val(),
+                type: tabtype
+            }, function (res) {
+                $("#allNum").text(res.allNum);
+                $("#attentionNum").text(res.attentionNum);
+                $("#onlineNum").text(res.onlineNum);
+                $("#alarmNum").text(res.alarmNum);
+                $("#offlineNum").text(res.offLineNum);
+                //添加table
+                $(".zlw_xinxi_main").html(res.dataTable);
+                   var mypageindex = curr || 1;
+                    if (res.totalPage < mypageindex&&res.totalPage!=0) {
+                        pageindex = 1;
+                       
+                        LoadData_List(1);
+                    }
+                laypage({
+                    skin: 'molv',
+                    cont: 'page_JK',
+                    pages: res.totalPage,
+                    skip: true,
+                    curr: curr || 1,
+                    jump: function (obj, first) {
+                        if (!first) {
+                            LoadData_List(obj.curr);
+                        }
+                    }
+                });
+
+            });
+        }
+        //加载card数据
+        function LoadData_card(curr) {
+            var widthflag = $(".zlw_home").width();
+            
+            if (widthflag > 50) {
+                $.post('/Sws/Sws_ZStationJK/QuerySJKTable_card', {
+                    pageindex: curr || 1,
+                    pagesize: $("#pagesize").val(),
+                    searchText: $("#searchtext").val(),
+                    type: tabtype
+                }, function (res) {
+                    $("#allNum").text(res.allNum);
+                    $("#attentionNum").text(res.attentionNum);
+                    $("#onlineNum").text(res.onlineNum);
+                    $("#alarmNum").text(res.alarmNum);
+                    $("#offlineNum").text(res.offLineNum);
+                    //添加table
+                    $(".zlw_xinxi_main").html(res.dataTable);
+                    var mypageindex = curr || 1;
+                    if (res.totalPage < mypageindex&&res.totalPage!=0) {
+                        pageindex = 1;
+
+                        LoadData_card(1);
+                    }
+                    laypage({
+                        skin: 'molv',
+                        cont: 'page_JK',
+                        pages: res.totalPage,
+                        skip: true,
+                        curr: curr || 1,
+                        jump: function (obj, first) {
+                            if (!first) {
+                                LoadData_card(obj.curr);
+                            }
+                        }
+                    });
+                });
+            }
+        }
+        //加载精简模式
+        function LoadData_simple(curr) {
+            $.post('/Sws/Sws_ZStationJK/QuerySJKTable_simple', {
+                pageindex: curr || 1,
+                pagesize: $("#pagesize").val(),
+                searchText: $("#searchtext").val(),
+                type: tabtype
+            }, function (res) {
+                $("#allNum").text(res.allNum);
+                $("#attentionNum").text(res.attentionNum);
+                $("#onlineNum").text(res.onlineNum);
+                $("#alarmNum").text(res.alarmNum);
+                $("#offlineNum").text(res.offLineNum);
+                //添加table
+                    $(".zlw_xinxi_main").html(res.dataTable);
+                    var mypageindex = curr || 1;
+                    if (res.totalPage < mypageindex&&res.totalPage!=0) {
+                        pageindex = 1;
+                       
+                        LoadData_simple(1);
+                    }
+                laypage({
+                    skin: 'molv',
+                    cont: 'page_JK',
+                    pages: res.totalPage,
+                    skip: true,
+                    curr: curr || 1,
+                    jump: function (obj, first) {
+                        if (!first) {
+                            LoadData_simple(obj.curr);
+                        }
+                    }
+                });
+
+            });
+        }
+        //查询
+        $("#searchbtn").click(function () {
+            pageindex = 1;
+            if (displayType == "list") {
+                LoadData_List();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_List(pageindex); }, $("#refreshtime").val() * 1000);
+            }
+            else if (displayType == "card") {
+
+                LoadData_card();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_card(pageindex); }, $("#refreshtime").val() * 1000);
+            }
+            else {
+                LoadData_simple();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_simple(pageindex); }, $("#refreshtime").val() * 1000);
+
+            }
+
+        })
+        //tab切换
+        $("#tablist li").click(function () {
+            pageindex = 1;
+            tabtype = $(this)[0].id;
+            if (displayType == "list") {
+                LoadData_List();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_List(pageindex); }, $("#refreshtime").val() * 1000);
+            }
+            else if (displayType == "card") {
+                LoadData_card();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_card(pageindex); }, $("#refreshtime").val() * 1000);
+            }
+            else {
+                LoadData_simple();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_simple(pageindex); }, $("#refreshtime").val() * 1000);
+
+            }
+        })
+        $("#refreshtime").change(function () {
+
+            if (displayType == "list") {
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_List(pageindex); }, $("#refreshtime").val() * 1000);
+
+            }
+            else if (displayType == "card") {
+
+
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_card(pageindex); }, $("#refreshtime").val() * 1000);
+            }
+            else {
+
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_simple(pageindex); }, $("#refreshtime").val() * 1000);
+
+            }
+        })
+        // //关注泵房操作
+        function OperateAttention(stationid, flag, e) {
+            var evt = e ? e : window.event;
+            if (evt.stopPropagation) { //W3C 
+                evt.stopPropagation();
+            } else { //IE      
+                evt.cancelBubble = true;
+            }
+
+            var IsAttention = true;
+            var changeid = stationid + flag;
+
+            if (!$("#" + changeid + "").hasClass("orange")) {//关注
+
+                IsAttention = true;
+            }
+            else {//取消关注
+
+                IsAttention = false;
+            }
+
+            $.post("/Sws/Sws_StationJK/OperateAttention", { stationid: stationid, isAttention: IsAttention }, function (data) {
+                if (data == "ok") {
+                    if (IsAttention == true) {
+                        $("#" + changeid + "").removeClass("fa-star-o").addClass("fa-star orange");
+                        $("#attentionNum").html(parseInt($("#attentionNum").html()) + 1);
+                    }
+                    else {
+                        $("#" + changeid + "").removeClass("fa-star orange").addClass("fa-star-o");
+                        $("#attentionNum").html(parseInt($("#attentionNum").html()) - 1);
+                        if (tabtype == "attention") {
+                            var stationtemp = "s" + stationid;
+                            $("#" + stationtemp + "").remove();
+                            getagin();
+                        }
+                    }
+                }
+                else {
+                    layer.msg("操作失败");
+                }
+            })
+        }
+        function getagin() {
+            pageindex = 1;
+            if (displayType == "list") {
+                LoadData_List();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_List(pageindex); }, $("#refreshtime").val() * 1000);
+            }
+            else if (displayType == "card") {
+                LoadData_card();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_card(pageindex); }, $("#refreshtime").val() * 1000);
+            }
+            else {
+                LoadData_simple();
+                clearInterval(myVar);
+                myVar = setInterval(function () { LoadData_simple(pageindex); }, $("#refreshtime").val() * 1000);
+
+            }
+        }
+        //泵房详情页
+        function ShowDetail(stationid, stationName, showTab, e) {
+            var evt = e ? e : window.event;
+            if (evt.stopPropagation) { //W3C 
+                evt.stopPropagation();
+            } else { //IE      
+                evt.cancelBubble = true;
+            }
+            window.top.homeAddTab('sta' + stationid, stationName, '/Sws/Sws_Detail/ShowDetail?id=' + stationid + '&showTab=' + showTab + '');
+        }
+        //显示监控
+        function ShowCarema(stationid, stationname, e) {
+            var evt = e ? e : window.event;
+            if (evt.stopPropagation) { //W3C 
+                evt.stopPropagation();
+            } else { //IE      
+                evt.cancelBubble = true;
+            }
+            iframe("" + stationname + "视频监控", "1200px", "750px", "/Sws/Sws_Camera/detailCamera/" + stationid);
+        }
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["关闭"],
+                cancel: function (index) {
+
+                }
+            });
+        }
+    </script>
+</body>
+</html>

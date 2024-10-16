@@ -1,0 +1,310 @@
+﻿@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>报警方案</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- 树 -->
+    @*<link rel="stylesheet" href="~/lib/ztree/zTreeStyle.css">*@
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        html, body {
+            height: 100%
+        }
+
+        .sl_list {
+            height: calc(100% - 50px)
+        }
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+
+        .zlw_manageconrgconsan {
+            height: 100%;
+            display: flex;
+            padding: 10px;
+        }
+
+            .zlw_manageconrgconsan > div {
+                border: 1px solid #eeeeee;
+            }
+
+            .zlw_manageconrgconsan h4 {
+                padding-left: 20px;
+            }
+
+        .dpcTree {
+            flex: 1;
+        }
+
+        .warnTable {
+            flex: 1;
+        }
+
+        .table-striped tr > td:first-child {
+            width: 50px;
+            text-align: center
+        }
+    </style>
+
+</head>
+<body>
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf">
+                <!-- 搜索框 -->
+                <div class="zlw_datamain_lfconsea">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input id="pumname" class="form-control" placeholder="搜索&quot;泵房&quot;名称" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:100%;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+            </div>
+            <div class="sl_rg">
+                <div class="sl_chioce relative" style="height:51px;border-bottom:1px solid #ddd">
+                    <div class="btn-group pull-right" role="group" aria-label="..." style="position:absolute;right:10px;top:10px">
+
+                        @*<button type="button" class="btn btn-default" id="CorrectData"><i class="fa fa-paper-plane"></i> 提交</button>
+                            <button type="button" class="btn btn-default" id="ExportBtn_History"><i class="fa fa-download"></i> 删除</button>*@
+
+                        <button type="button" id="AddBtn" class="btn btn-default"><i class="fa fa-plus"></i>&nbsp提交</button>
+                        <button type="button" id="DeleteBtn" class="btn btn-default"><i class="fa fa-trash-o"></i>&nbsp删除</button>
+                    </div>
+                </div>
+                <div class="sl_list" style="margin-top:4px">
+                    <div class="zlw_manageconrgconsan">
+                        <div class="dpcTree">
+                            <h4>DPC 信息</h4>
+                            <div id="dpc" class="ztree" style="overflow: auto; background-color: #f1f3f8; ">
+                            </div>
+                        </div>
+                        <div style="width: 50px; border-left: none; border-right: none; display: flex; align-items: center; justify-content:center">
+                            <button id="toadd" type="button" class="btn btn-default"><i class="fa fa-caret-right"></i></button>
+                        </div>
+                        <div class="warnTable" style="overflow: auto;">
+                            <h4>报警列表</h4>
+                            <table id="datatable" class="table table-striped" >
+                                @* <tr>
+                                    <td style=""><input type="checkbox" /></td>
+                                    <td>1000</td>
+                                    <td>电源掉电</td>
+                                    </tr>*@
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var dataArr=[];
+        var rtuid ,Partition;
+
+        var setting = {
+            check: {
+                enable: false,
+                chkDisabledInherit: true
+            }, callback: {
+                onClick: zTreeOnClick
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }, view: {
+                showTitle: false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+        };
+        var dsetting = {
+            check: {
+                enable: false,
+                chkDisabledInherit: true
+            },callback: {
+                onClick: zTreeOnClickDpc
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+        };
+        var zNodes  = @ViewBag.TreeNodes;
+        var dNodes;
+        var zTreeObj, zTreeDpc;
+         $(function () {
+            document.onkeydown = keyDownSearch;
+                function keyDownSearch(e) {
+                // 兼容FF和IE和Opera    
+                var theEvent = e || window.event;
+                var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                // 13 代表 回车键
+                if (code == 13) {
+                    LoadZtree();
+                     return false;
+                }
+            }
+        })
+        $(document).ready(function () {
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            zTreeDpc = $.fn.zTree.init($("#dpc"), dsetting, "");
+            $('.fixed-table-loading').hide();
+            $('.fixed-table-pagination').hide();
+        });
+        //泵房选择
+        function LoadZtree() {
+            //查询树列表数据
+            $.post("/Sws/Sws_EventScheme/SelectTree",{
+                stationName:$("#pumname").val()
+            },function(data){
+                zTreeObj.destroy();    //清空树
+                var aa= JSON.parse(data);   //数据转json
+                if($("#pumname").val()!=""){
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                    zTreeObj.expandAll(true);     //初始化数列表展开
+                }else{
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                }
+            });
+        }
+        function zTreeOnClick(event, treeId, treeNode) {
+            if (treeNode.isDevice == true) {
+                rtuid =  treeNode.rtuid;
+                Partition = treeNode.Partition;
+                //获取分区DPC信息
+                $.post("/Sws/Sws_EventScheme/GetDPCInfo", { id: rtuid}, function (res) {
+                     zTreeDpc.destroy();    //清空树
+                     //$("#datatable").empty();//报警信息
+                     dNodes =  JSON.parse(res);
+                     zTreeDpc = $.fn.zTree.init($("#dpc"), dsetting, dNodes);
+                     zTreeDpc.expandAll(true);
+                });
+                LoadDataID();
+            }
+        }
+
+        function LoadDataID(){ 
+               $.post("/Sws/Sws_EventScheme/GetExist", { id: rtuid}, function (res) {
+                   dataArr=[];
+                   $("#datatable").empty();//报警信息
+                   var json =  JSON.parse(res);
+                    for(let i=0, len = json.length; i < len; i++){
+                            dataArr.push(parseInt(json[i].DataId));
+                            var html = ''; 
+                            html+='<tr>';
+                            html+='<td><input type="checkbox" class="select_one"/></td>';
+                            html+='<td>'+ json[i].DataId+'</td>';
+                            html+='<td>'+json[i].SchemeName+'</td>';
+                            html+='</tr>';
+                            $("#datatable").append(html);
+                     }
+                })
+        }
+
+         function zTreeOnClickDpc(event, treeId, treeNode) {
+                   var start=0;
+                   if(treeNode.datatype==1){
+                       if(Partition==1){
+                       start = 2000;
+                   }else if(Partition==2){
+                     start = 2500;
+                   }else if(Partition==3){
+                     start = 3000;
+                   }else if(Partition==4){
+                     start = 3500;
+                   }else if(Partition==5){
+                     start = 4000;
+                   }else if(Partition==6){
+                     start = 4500;
+                   }
+                   }else{
+                       if(Partition==1){
+                       start = 5000;
+                   }else if(Partition==2){
+                     start = 5500;
+                   }else if(Partition==3){
+                     start = 6000;
+                   }else if(Partition==4){
+                     start = 6500;
+                   }else if(Partition==5){
+                     start = 7000;
+                   }else if(Partition==6){
+                     start = 7500;
+                   }
+                   }
+                   
+                   var  endNum = parseInt((start+ parseInt(treeNode.dataid)));
+             //if($.inArray(treeNode.dataid,dataArr)){
+             if(treeNode.isdata){
+                 if(dataArr.indexOf(endNum)>-1){
+                   layer.alert("请勿重复添加")
+              } else{ 
+                   var html = '';  
+                   dataArr.push(endNum);
+                   html+='<tr>';
+                   html+='<td><input type="checkbox" class="select_one"/></td>';
+                   //html+='<td>'+(start+ parseInt(treeNode.dataid))+'</td>';
+                   html+='<td>'+(endNum)+'</td>';
+                   html+='<td>'+treeNode.name+'</td>';
+                   html+='</tr>';
+                   $("#datatable").append(html);
+              }
+             }
+              
+            
+        }
+
+         //提交数据
+         $("#AddBtn").click(function () {
+                 let rows = $("#datatable tr")
+                 let report = []
+                 for (let i=0, len = rows.length; i < len; i++) {
+                     let dataid = $(rows[i]).children()[1].innerText
+                     let dataname = $(rows[i]).children()[2].innerText
+                     report.push({dataid: dataid, dataname: dataname})
+                 }
+                 $.post("/Sws/Sws_EventScheme/AddScheme", { arrays:JSON.stringify(report),  rtuid:rtuid,  Partition:Partition}, function (res) {
+                     layer.alert(res);
+                })
+
+         });
+         //删除选中数据
+          $("#DeleteBtn").click(function () {
+                  var selectdata = $('.select_one:checked')
+                  for(let i=0, len = selectdata.length; i < len; i++){
+                     var dat =  $(selectdata[i]).parents('tr').children()[1].innerText ;
+                     dataArr.splice($.inArray(parseInt(dat), dataArr), 1);
+                     $(selectdata[i]).parents('tr').remove();
+                  }
+         });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1012 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="~/Swslxl/css_nh/reset.css">
+    <link rel="stylesheet" href="~/Swslxl/css_nh/common.css">
+    <link rel="stylesheet" href="~/Swslxl/fonts/iconfont.css">
+    <link rel="stylesheet" href="~/Swslxl/css_nh/theme1.css">
+    <link href="~/Swslxl/js/libs/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Swslxl/js/libs/jquery-1.12.4/jquery-1.12.4.min.js"></script>
+    <script src="~/Swslxl/js/plugins/adaption.js"></script>
+
+    <script src="~/lib/layui/layui.js"></script>
+    <script src="~/Swslxl/js/plugins/echarts/echarts.js"></script>
+    <script src="~/Swslxl/js/plugins/echarts/customed.js"></script>
+
+    <script src="~/Swslxl/js/plugins/jquery.SuperSlide.3.0.alpha.js"></script>
+
+    <script src="~/Swslxl/js/common.js"></script>
+
+    <style>
+        .table .th,
+        .table .td {white-space: normal;}
+        .table .th {padding: .04rem 0;}
+        .table-thead-absolute {padding-top: .68rem;}
+    </style>
+</head>
+<body>
+    <div class="window-height pb-10" data-negative=".1">
+        <div class="container full-height">
+            <div class="row height-6">
+                <div class="col-sm-6 full-height">
+                    <div class="box full-height">
+                        <div class="box-content box-content-primary title-mid">
+                            <div class="box-content-title">
+                                <div class="title">单吨能耗对比分析图</div>
+                                <div class="subtitle clearfix">
+                                    <h4>统计时间</h4>
+                                    <div class="form form-primary form-inline">
+                                        <div class="form-group">
+                                            <input type="text" name="timeInterval1" class="form-control advanceDate time-d-range" data-type="date" data-name="timeInterval1" readonly="readonly" placeholder="开始时间 ~ 结束时间" style="width: 1.8rem;" />
+                                        </div>
+                                    </div>
+
+                                    <!-- echart图例 -->
+                                    <div id="echarts1legend" class="list-legend"></div>
+                                </div>
+
+                                <div class="form form-primary form-inline">
+                                    <div class="form-group select-equipment-content">
+                                        <button type="button" class="btn btn-primary btn-blue btn-select-equipment" data-name="selectEquipment1" id="ddnh">选择设备</button>
+                                        @*<input type="text" name="selectEquipment1" class="form-control input-hidden">*@
+
+                                        @*已选设备列表*@
+                                        <div class="tips-container">
+                                            <div class="wrap" id="selectedEquipmentList1">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-content-wrap box-content-wrap-padding">
+                                <div id="echarts1" class="echarts" style="width: 100%;height: 300px;"></div>
+
+                                <div class="nothing absolute">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 full-height">
+                    <div class="box full-height">
+                        <div class="box-content box-content-primary title-mid">
+                            <div class="box-content-title">
+                                <div class="title">吨水能耗厂家对比分析图</div>
+                                <div class="subtitle clearfix">
+                                    <h4>统计时间</h4>
+                                    <div class="form form-primary form-inline">
+                                        <div class="form-group">
+                                            <input type="text" name="timeInterval2" class="form-control advanceDate time-d-range" data-type="date" data-name="timeInterval2" readonly="readonly" placeholder="开始时间 ~ 结束时间" style="width: 1.8rem;" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form form-primary form-inline">
+                                    <div class="form-group select-equipment-content">
+                                        <button type="button" class="btn btn-primary btn-blue btn-select-equipment" data-name="selectEquipment2" id="dsnh">选择设备</button>
+                                        @*<input type="text" name="selectEquipment2" class="form-control">*@
+
+                                        @*已选设备列表*@
+                                        <div class="tips-container">
+                                            <div class="wrap" id="selectedEquipmentList2">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-content-wrap box-content-wrap-padding">
+                                <div id="echarts2" class="echarts" style="width: 100%;height: 300px;"></div>
+
+                                <div class="nothing absolute">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row height-6">
+                <div class="col-sm-4 full-height">
+                    <div class="box full-height">
+                        <div class="box-content box-content-primary title-mid">
+                            <div class="box-content-title">
+                                <div class="title">泵房能耗总量分析对比图</div>
+                                <div class="subtitle clearfix">
+                                    <h4>统计时间</h4>
+                                    <div class="form form-primary form-inline">
+                                        <div class="form-group">
+                                            <input type="text" name="timeInterval3" class="form-control advanceDate time-d-range" data-type="date" data-name="timeInterval3" readonly="readonly" placeholder="开始时间 ~ 结束时间" style="width: 1.8rem;" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form form-primary form-inline">
+                                    <div class="form-group select-equipment-content">
+                                        <button type="button" class="btn btn-primary btn-blue btn-select-equipment" data-name="selectEquipment3" id="bfnh">选择设备</button>
+                                        @*<input type="text" name="selectEquipment3" class="form-control">*@
+
+                                        @*已选设备列表*@
+                                        <div class="tips-container">
+                                            <div class="wrap" id="selectedEquipmentList3">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-content-wrap box-content-wrap-padding">
+                                <div id="echarts3" class="echarts" style="width: 100%;height: 300px;"></div>
+
+                                <div class="nothing absolute">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 full-height">
+                    <div class="box full-height">
+                        <div class="box-content box-content-primary title-mid">
+                            <div class="box-content-title">
+                                <div class="title">累计流量能耗分析对比排名表</div>
+                                <div class="subtitle clearfix">
+                                    <h4>统计时间</h4>
+                                    <div class="form form-primary form-inline">
+                                        <div class="form-group">
+                                            <input type="text" name="timeInterval4" class="form-control advanceDate time-d-range" data-type="date" data-name="timeInterval4" readonly="readonly" placeholder="开始时间 ~ 结束时间" style="width: 1.8rem;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-content-wrap box-content-wrap-padding">
+                                <div id="table4" class="table table-primary table-sm table-thead-absolute">
+                                    <div class="thead">
+                                        <div class="tr"></div>
+                                    </div>
+                                    <div class="tbody">
+                                    </div>
+                                </div>
+
+                                <div class="nothing absolute">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 full-height">
+                    <div class="box full-height">
+                        <div class="box-content box-content-primary title-lg">
+                            <div class="box-content-title">
+                                <div class="title">千吨水百米扬程能耗对比分析表</div>
+                                @*<div class="subtitle clearfix">
+                                    <h4>统计时间</h4>
+                                    <div class="form form-primary form-inline">
+                                        <div class="form-group">
+                                            <input type="text" name="timeInterval5" class="form-control advanceDate time-d-range" data-type="date" data-name="timeInterval5" readonly="readonly" placeholder="开始时间 ~ 结束时间" style="width: 1.8rem;" />
+                                        </div>
+                                    </div>
+                                </div>*@
+                            </div>
+                            <div class="box-content-wrap box-content-wrap-padding">
+                                <div id="table5" class="table table-primary table-sm table-thead-absolute">
+                                    <div class="thead">
+                                        <div class="tr"></div>
+                                    </div>
+                                    <div class="tbody">
+                                    </div>
+                                </div>
+
+                                <div class="nothing absolute">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 设置时间框宽度，仅供占位使用 -->
+    <div class="time-value-content time-width-dhms-range">2021-01-01 00:00:00 ~ 2021-07-05 21:00:34</div>
+    <div class="time-value-content time-width-d-range">2021-01-01 ~ 2021-07-05</div>
+    
+  
+   
+    <script type="text/javascript">
+        var deviceid_pre = "@ViewBag.deviceid_pre";//单吨能耗设备
+        var SelectData_pre = [];
+        var deviceid_ds = "@ViewBag.deviceid_ds";//吨水能耗设备
+        var SelectData_ds = [];
+        var deviceid_st = "@ViewBag.deviceid_st";//泵房能耗设备
+        var SelectData_st = [];
+        var beginDate = '@ViewBag.beginDate', 	// 默认开始时间
+            endDate = '@ViewBag.endDate';	// 默认结束时间
+
+      
+        console.log(beginDate);
+        console.log(endDate);
+        /**
+              * 图表配置
+              */
+        var echartsApp = [],
+            // 1、单吨能耗对比分析图
+            options1ColorArray = [
+                ['#0cf9ff', '#0c6fea'],
+                ['#00c0ff', '#3f28d0'],
+                ['#fed701', '#fc7101'],
+                ['#fe9b1a', '#fe411b']
+            ],
+            options1 = {
+                color: ['#0cb5f5', '#1e76e8', '#fda801', "#fe6f1a",'#76ddfb', "#d9c26c", "#61a0a8", "#d48265", "#91c7ae","#ca8622", "#bda29a", "#6e7074","#c4ccd3"],
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var html = params[0].name + '<br />';
+                        for (var i = 0; i < params.length; i++) {
+                            var marker = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background: -moz-linear-gradient(left, ' + params[i].color.colorStops[0].color + ', ' + params[i].color.colorStops[1].color + ');background: -webkit-gradient(linear, left bottom, right bottom, from(' + params[i].color.colorStops[0].color + '), to(' + params[i].color.colorStops[1].color + '));background: -o-linear-gradient(left, ' + params[i].color.colorStops[0].color + ', ' + params[i].color.colorStops[1].color + ');"></span>';
+                            html += marker + params[i].seriesName + '：' + params[i].value + 'kW·h<br>';
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    top: 30,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    containLabel: true
+                },
+                legend: {
+                    show: false,
+                    data: []
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: [],
+                    axisLabel: {
+                        formatter: function (value, index) { }
+                    }
+                }],
+                yAxis: [{
+                    type: 'value',
+                    name: "kW·h/m³",
+                    nameLocation:"end"
+                }],
+                series: []
+            },
+
+            // 2、吨水能耗多套对比分析图
+            options2ColorArray = [
+                ['#f34759', '#fbc05f'],
+            ],
+            options2 = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var html = params[0].name + '<br />';
+                        for (var i = 0; i < params.length; i++) {
+                            var marker = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background: -moz-linear-gradient(left, ' + params[i].color.colorStops[0].color + ', ' + params[i].color.colorStops[1].color + ');background: -webkit-gradient(linear, left bottom, right bottom, from(' + params[i].color.colorStops[0].color + '), to(' + params[i].color.colorStops[1].color + '));background: -o-linear-gradient(left, ' + params[i].color.colorStops[0].color + ', ' + params[i].color.colorStops[1].color + ');"></span>';
+                            html += marker + params[i].seriesName + '：' + params[i].value + 'kW·h<br>';
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    top: 0,
+                    left: 0,
+                    right: 20,
+                    bottom: 0,
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                    name: "kW·h",
+                    nameLocation:"start"
+                },
+                yAxis: {
+                    type: 'category',
+                    data: []
+                },
+                series: [
+                    {
+                        name: '吨水能耗',
+                        type: 'bar',
+                        barWidth: 16,
+                        itemStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                                    offset: 1,
+                                    color: options2ColorArray[0][0]
+                                }, {
+                                    offset: 0,
+                                    color: options2ColorArray[0][1]
+                                }]),
+                                barBorderRadius: [0, 16, 16, 0],
+                            }
+                        },
+                        data: []
+                    }
+                ]
+            },
+
+            // 3、泵房能耗总量分析对比图
+            options3ColorArray = [
+                ['#0cf9ff', '#0c6fea'],
+            ],
+            options3 = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var html = params[0].name + '<br />';
+                        for (var i = 0; i < params.length; i++) {
+                            var marker = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color: ' + params[i].color.colorStops[0].color + ';"></span>';
+                            html += marker + params[i].seriesName + '：' + params[i].value + 'kW·h<br>'
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    top: 30,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    containLabel: true
+                },
+                legend: {
+                    show: false,
+                    data: []
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: [],
+                }],
+                yAxis: [{
+                    type: 'value',
+                    name:"kW·h"
+                }],
+                series: [{
+                    name: '能耗总量',
+                    type: 'bar',
+                    barWidth: 16,
+                    itemStyle: {
+                        normal: {
+                            color: new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                                offset: 1,
+                                color: options3ColorArray[0][0]
+                            }, {
+                                offset: 0,
+                                color: options3ColorArray[0][1]
+                            }]),
+                            barBorderRadius: [30, 30, 0, 0],
+                        }
+                    },
+                    data: []
+                }]
+            };
+
+        var table4Slide = null, // 滚动插件对象
+            table5Slide = null, // 滚动插件对象
+            visNum = null;		// 可视个数
+
+        layui.use(['form', 'laydate', 'tree'], function () {
+            var form = layui.form,
+                laydate = layui.laydate,
+                tree = layui.tree,
+                $ = layui.$;
+
+            /**
+             * echarts循环设置自身宽高
+             */
+            $('.echarts').each(function () {
+                var width = $(this).parent().width(),
+                    height = $(this).parent().height();
+                $(this).css({
+                    width: width,
+                    height: height
+                });
+            });
+          
+            /**
+             * 初始化日期选择器
+             */
+            lay('.advanceDate').each(function () {
+                var type = $(this).data('type'),
+                    name = $(this).data('name');
+                laydate.render({
+                    elem: this,
+                    trigger: 'click',
+                    range: '~',
+                    type: type,
+                    max: 0,
+                    value: beginDate + ' ~ ' + endDate,
+                    done: function (value) {
+                        // 将选择后的值回填
+                        $("input[name='" + name + "']").val(value);
+
+                        switch (name) {
+                            case 'timeInterval1':
+                                // 1、单吨能耗对比分析图
+                                GetDeviceNH_pre();
+                                break;
+
+                            case 'timeInterval2':
+                                // 2、吨水能耗多套对比分析图
+                                GetManufacterNH_ds();
+                                break;
+
+                            case 'timeInterval3':
+                                // 3、泵房能耗总量分析对比图
+                                GetStationNH();
+                                break;
+
+                            case 'timeInterval4':
+                                // 4、累计流量能耗分析对比排名表
+                                GetMaDeviceTypeRate();
+                                break;
+
+                            //case 'timeInterval5':
+                            //    // 5、千吨水百米扬程能耗对比分析表
+                            //    GetMilliLiftNH();
+                            //    break;
+                        }
+                    }
+                });
+            });
+
+            /**
+             * 初始化图表
+             */
+            // 1、单吨能耗对比分析图
+            echartsApp[1] = echarts.init($('#echarts1')[0], 'customed');
+            echartsApp[1].setOption(options1);
+
+            // 2、吨水能耗多套对比分析图
+            echartsApp[2] = echarts.init($('#echarts2')[0], 'customed');
+            echartsApp[2].setOption(options2);
+
+            // 3、泵房能耗总量分析对比图
+            echartsApp[3] = echarts.init($('#echarts3')[0], 'customed');
+            echartsApp[3].setOption(options3);
+
+            /**
+             * 获取数据
+             */
+            // 渲染已选设备列表
+            //var testData = [
+            //    {
+            //        "AreaID": 7,
+            //        "AreaName": "临沂测试区域",
+            //        "DataList": [
+            //            { "DeviceID": 1583789562077, "DeviceName": "临沂香江【低区】" },
+            //            { "DeviceID": 1584383644455, "DeviceName": "北园小区【低区】" },
+            //            { "DeviceID": 1584385733678, "DeviceName": "临沂香江【中区】" },
+            //            { "DeviceID": 1584385803034, "DeviceName": "临沂香江【高区】" },
+            //        ],
+            //    }, {
+            //        "AreaID": 8,
+            //        "AreaName": "临沂测试区域2",
+            //        "DataList": [
+            //            { "DeviceID": 1584383568956, "DeviceName": "富民小区【低区】" },
+            //            { "DeviceID": 1585608948208, "DeviceName": "富民小区【中区】" },
+            //        ],
+            //    },
+            //];
+
+            // 1、单吨能耗对比分析图
+            GetDeviceNH_pre();
+            selectedEqu(deviceid_pre,"pre");
+            
+
+            // 2、吨水能耗多套对比分析图
+            GetManufacterNH_ds();
+            selectedEqu(deviceid_ds,"ds");
+           
+
+            // 3、泵房能耗总量分析对比图
+            GetStationNH();
+            selectedEqu(deviceid_st,"st");
+            
+
+            // 4、累计流量能耗分析对比排名表
+            GetMaDeviceTypeRate();
+
+            // 5、千吨水百米扬程能耗对比分析表
+            GetMilliLiftNH();
+
+           
+        });
+        /**
+	 * 选择设备按钮Tips
+	 */
+        $('.select-equipment-content').hover(function () {
+            var containerid = $(this).children('.tips-container').children('.wrap')[0].id;
+            var renderdata = [];
+            if (containerid == "selectedEquipmentList1") {
+                renderdata = SelectData_pre;
+            }
+            else if (containerid == "selectedEquipmentList2") {
+                renderdata = SelectData_ds;
+            }
+            else if (containerid == "selectedEquipmentList3") {
+                renderdata = SelectData_st;
+            }
+            renderselectedEquipment("#" + containerid, renderdata);
+            $(this).children('.tips-container').stop().slideDown();
+
+        }, function () {
+            $(this).children('.tips-container').stop().slideUp();
+        });
+
+
+        function renderselectedEquipment(id, data) {
+            var html = '';
+            data.forEach(function (item) {
+                html += '<ul>';
+                html += '<li>';
+                html += '<a href="javascript:;" class="name" title="'+ item.StationName+'"><i class="icon icon-checked"></i>' + item.StationName + '</a>';
+
+                if (item.DataList) {
+                    html += '<ul>';
+                    item.DataList.forEach(function (item2) {
+                        html += '<li><a href="javascript:;" class="name" title="'+item2.DeviceName+'"><i class="icon icon-checked"></i>' + item2.DeviceName + '</a></li>';
+                    });
+                    html += '</ul>';
+                }
+
+                html += '</li>';
+                html += '</ul>';
+            });
+
+            $(id).html(html);
+        }
+       
+        function selectedEqu(selectdeviceids,type) {
+           if (selectdeviceids == "") {
+                selectdeviceids="0";
+            }
+            $.post("/Sws/Sws_Consump_item/SelectedDevice", { deviceIDs: selectdeviceids }, function (res) {
+                var data = [];
+                if (res != "") {
+                    data = JSON.parse(res);
+                }
+                if (type == "pre") {
+                    SelectData_pre = data;
+                }
+                else if (type == "ds") {
+                    SelectData_ds = data;
+                }
+                else if (type == "st") {
+                    SelectData_st = data;
+                }
+            })
+           
+        }
+			
+        //$(function () {
+        //    GetDeviceNH_pre();
+        //    GetManufacterNH_ds();
+        //    GetStationNH();
+        //    GetMaDeviceTypeRate();
+        //    GetMilliLiftNH();
+        //})
+        $("#ddnh").click(function () {
+            openIframe("单吨能耗设备配置",1);
+        })
+        $("#dsnh").click(function () {
+            openIframe("吨水能耗设备配置",2);
+        })
+        $("#bfnh").click(function () {
+            openIframe("泵房能耗设备配置",3);
+        })
+        function openIframe(name,type) {
+            iframeWithBtns(""+name+"", "800px", "80%", "/Sws/Sws_Consump_item/SelectDevices?type="+type+"", false, function (formIndex, formLayer) {
+                var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                currentIframe.saveForm(function (devideids,type) {
+                    console.log(devideids);
+                    console.log(type);
+                    if (type == 1) {
+                        deviceid_pre = devideids;
+                        GetDeviceNH_pre();
+                        selectedEqu(deviceid_pre,"pre");
+                    }
+                    else if (type == 2) {
+                        deviceid_ds = devideids;
+                        GetManufacterNH_ds();
+                       selectedEqu(deviceid_ds,"ds");
+                    }
+                    else if (type == 3) {
+                        deviceid_st = devideids;
+                        GetStationNH();
+                         selectedEqu(deviceid_st,"st");
+                    }
+                    layer.close(formIndex);
+                });
+            });
+        }
+      //获取单吨能耗数据   分时间段
+        function GetDeviceNH_pre() {
+            var timeInterval = $("input[name='timeInterval1']").val().split(' ~ '),
+                date1 = timeInterval[0],
+                date2 = timeInterval[1];
+            if (deviceid_pre != "") {
+                $.post("/Sws/Sws_Consump_item/GetDeviceNH_pre", {
+                    deviceIDs: deviceid_pre,
+                    begindate: date1,
+                    enddate: date2
+                }, function (res) {
+                    console.log(res);
+                    if (res.axias.length > 0) {
+                        $('#echarts1').show().next().hide();
+                        $('#echarts1legend').show();
+                        // 横坐标
+                        options1.xAxis[0].data = res.axias;
+
+                        // 设备列表
+                        options1.legend.data = [];
+
+                        // 设备列表对应的值
+                        var seriesArray = [];
+
+                        for (var i = 0; i < res.dataList.length; i++) {
+                            options1.legend.data.push(res.dataList[i].deviceName);
+                            seriesArray.push(res.dataList[i].datas);
+                        }
+                        // 插入数据
+                        var htmlLegend = '';
+                        options1.series = [];
+                        options1.legend.data.forEach(function (item, index) {
+                            // 设置图例
+                            htmlLegend += '<div class="item"><i style="background: -moz-linear-gradient(left, ' + options1ColorArray[index][0] + ', ' + options1ColorArray[index][1] + ');background: -webkit-gradient(linear, left bottom, right bottom, from(' + options1ColorArray[index][0] + '), to(' + options1ColorArray[index][1] + '));background: -o-linear-gradient(left, ' + options1ColorArray[index][0] + ', ' + options1ColorArray[index][1] + ');"></i>' + item + '</div>';
+
+                            var obj = {
+                                name: item,
+                                type: 'bar',
+                                barWidth: 12,
+                                barGap: '16%',
+                                itemStyle: {
+                                    normal: {
+                                        color: new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                                            offset: 1,
+                                            color: options1ColorArray[index][0]
+                                        }, {
+                                            offset: 0,
+                                            color: options1ColorArray[index][1]
+                                        }]),
+                                        barBorderRadius: [30, 30, 0, 0],
+                                    }
+                                },
+                                data: seriesArray[index]
+                            };
+                            options1.series.push(obj);
+                        });
+                        //横坐标显示
+                        if (res.tablename == "DHourQuartZ01") {
+                            options1.xAxis[0].axisLabel.formatter = function (value, index) {
+                                var date = new Date(value);
+                                //var texts = date.getHours() + "时";
+                                //if (index === 0) {
+                                  var  texts = (date.getMonth() + 1) + "/" + date.getDate()+" " + date.getHours();
+                                //}
+                                //else {
+                                //    var predate = new Date(options1.xAxis[0].data[index - 1]);
+                                //    if (date.getDate() != predate.getDate()) {
+                                //        texts = date.getDate() + "日" + date.getHours() + "时";
+                                //    }
+
+                                //}
+                                return texts;
+                            };
+
+                        }
+                        else if (res.tablename == "DDayQuartZ01") {
+                            options1.xAxis[0].axisLabel.formatter = function (value, index) {
+                                var date = new Date(value);
+                                //var texts = date.getDate() + "日";
+                                //if (index === 0) {
+                                   var texts = (date.getMonth() + 1) + "/" + date.getDate();
+                                //}
+                                //else {
+                                //    var predate = new Date(options1.xAxis[0].data[index - 1]);
+                                //    if (date.getMonth() != predate.getMonth()) {
+                                //        texts = (date.getMonth() + 1) + "/" + date.getDate();
+                                //    }
+                                //}
+                                return texts;
+                            };
+
+                        }
+                        else if (res.tablename == "DMonthQuartZ01") {
+                            options1.xAxis[0].axisLabel.formatter = function (value, index) {
+                                var date = new Date(value);
+                                //var texts = date.getMonth() + 1 + "月";
+                                //if (index === 0) {
+                                   var texts = date.getFullYear() + "/" + (date.getMonth() + 1);
+                                //}
+                                //else {
+                                //    var predate = new Date(options1.xAxis[0].data[index - 1]);
+                                //    if (date.getYear() != predate.getYear()) {
+                                //        texts = date.getFullYear() + "/" + (date.getMonth() + 1);
+                                //    }
+                                //}
+                                return texts;
+                            };
+
+                        }
+                        echartsApp[1].setOption(options1, true);
+
+                        $('#echarts1legend').html(htmlLegend);
+                    }
+                    else {
+                        // 	// 空数据提示
+                        $('#echarts1').hide().next().show();
+                        $('#echarts1legend').hide();
+                    }
+
+                })
+            }
+            else {
+                  // 	// 空数据提示
+                        $('#echarts1').hide().next().show();
+                        $('#echarts1legend').hide();
+            }
+        }
+        //获取吨水能耗
+        function GetManufacterNH_ds() {
+            var timeInterval = $("input[name='timeInterval2']").val().split(' ~ '),
+                date1 = timeInterval[0],
+                date2 = timeInterval[1];
+            if (deviceid_ds != "") {
+                $.post("/Sws/Sws_Consump_item/GetManufacterNH_ds", {
+                    deviceIDs: deviceid_ds,
+                    begindate: date1,
+                    enddate: date2
+                }, function (res) {
+                    if (res.names.length > 0) {
+                        $('#echarts2').show().next().hide();
+                        options2.yAxis.data = res.names;
+                        options2.series[0].data = res.datas;
+                        echartsApp[2].setOption(options2, true);
+
+                    }
+                    else {
+                        // 空数据提示
+                        $('#echarts2').hide().next().show();
+                    }
+
+                })
+            }
+            else {
+                // 空数据提示
+                        $('#echarts2').hide().next().show();
+            }
+        }
+        //泵房能耗
+        function GetStationNH() {
+            var timeInterval = $("input[name='timeInterval3']").val().split(' ~ '),
+                date1 = timeInterval[0],
+                date2 = timeInterval[1];
+            if (deviceid_st != "") {
+                $.post("/Sws/Sws_Consump_item/GetStationNH", {
+                    deviceIDs: deviceid_st,
+                    begindate: date1,
+                    enddate: date2
+                }, function (res) {
+                    if (res.names.length > 0) {
+                        $('#echarts3').show().next().hide();
+                        options3.xAxis[0].data = res.names;
+                        options3.series[0].data = res.datas;
+                        echartsApp[3].setOption(options3, true);
+                    }
+                    else {
+                        // 空数据提示
+                        $('#echarts3').hide().next().show();
+
+                    }
+
+                })
+            }
+            else {
+                 // 空数据提示
+                        $('#echarts3').hide().next().show();
+
+            }
+        }
+        //厂商设备类型能耗排名
+        function GetMaDeviceTypeRate() {
+            var timeInterval = $("input[name='timeInterval4']").val().split(' ~ '),
+					date1 = timeInterval[0],
+					date2 = timeInterval[1];
+            $.post("/Sws/Sws_Consump_item/MaDeviceTypeRate", {
+                begindate: date1,
+                enddate:date2
+            }, function (res) {
+                    if (res.datalist.length > 0) {
+                        $('#table4').show().next().hide();
+                        var theadArray = ['设备厂家', '设备名称<br>(型号)', '累计流量<br>(m³)', '累计能耗<br>(kW·h)', '单吨能耗<br>(kW·h/m³)'],
+                            tbodyArray = [];
+                        for (var i = 0; i < res.datalist.length; i++) {
+                            var array_temp = [res.datalist[i].ManufacterName, res.datalist[i].DeviceTypeName, res.datalist[i].FlowCon,
+                                res.datalist[i].EnergyCon, res.datalist[i].nh];
+                            tbodyArray.push(array_temp);
+
+                        }
+
+                        // 插入节点
+                        var theadHtml = '',
+                            tbodyHtml = '';
+                        theadArray.forEach(function (item, index) {
+                            theadHtml += '<div class="th" title="' + item + '" style="width: ' + toPercent(1 / theadArray.length) + '">' + item + '</div>';
+                        });
+                        tbodyArray.forEach(function (item) {
+                            tbodyHtml += '<div class="tr">';
+                            theadArray.forEach(function (item2, index2) {
+                                tbodyHtml += '<div class="td" style="width: ' + toPercent(1 / theadArray.length) + '">' + item[index2] + '</div>';
+                            });
+                            tbodyHtml += '</div>';
+                        });
+
+                        // 可视个数
+                        visNum = Math.floor(($('#table4').height()) / (baseSize * .39));
+
+                        $('#table4 .thead .tr').html(theadHtml);
+                        $('#table4 .tbody').html(tbodyHtml);
+
+                        if (table4Slide) table4Slide[0].destroy();
+                        table4Slide = $("#table4").slide({ mainCell: ".tbody", autoPlay: true, effect: "topMarquee", vis: visNum, interTime: 50 });
+                    }
+                    else {
+                         	// 空数据提示
+				 	$('#table4').hide().next().show();
+                    }
+
+            })
+        }
+        //千吨水百米扬程能耗
+     //   function GetMilliLiftNH() {
+     //       var timeInterval = $("input[name='timeInterval5']").val().split(' ~ '),
+					//date1 = timeInterval[0],
+					//date2 = timeInterval[1];
+     //        $.post("/Sws/Sws_Consump_item/GetMilliLiftNH", {
+     //           begindate: date1,
+     //           enddate:date2
+     //        }, function (res) {
+     //                if (res.datalist.length > 0) {
+     //                    $('#table5').show().next().hide();
+     //                    var theadArray = ['设备厂家', '设备名称(型号)', '流量(m³)', '杨程(m)', '泵效率', '电机效率', '千吨能耗(kW·h)'],
+     //                        tbodyArray = [];
+     //                     for (var i = 0; i < res.datalist.length; i++) {
+     //                       var array_temp = [res.datalist[i].ManufacterName, res.datalist[i].DeviceTypeName, res.datalist[i].FlowCon,
+     //                           res.datalist[i].HighLift, res.datalist[i].PumpEff,res.datalist[i].MotorEff,res.datalist[i].nh];
+     //                       tbodyArray.push(array_temp);
+
+     //                   }
+     //                    // 插入节点
+     //                    var theadHtml = '',
+     //                        tbodyHtml = ''; // table各列宽度
+     //                    theadArray.forEach(function (item, index) {
+     //                        theadHtml += '<div class="th" title="' + item + '" style="width: ' + toPercent(1 / theadArray.length) + '">' + item + '</div>';
+     //                    });
+     //                    tbodyArray.forEach(function (item) {
+     //                        tbodyHtml += '<div class="tr">';
+     //                        theadArray.forEach(function (item2, index2) {
+     //                            tbodyHtml += '<div class="td" style="width: ' + toPercent(1 / theadArray.length) + '">' + item[index2] + '</div>';
+     //                        });
+     //                        tbodyHtml += '</div>';
+     //                    });
+
+     //                    // 可视个数
+     //                    visNum = Math.floor(($('#table5').height()) / (baseSize * .39));
+
+     //                    $('#table5 .thead .tr').html(theadHtml);
+     //                    $('#table5 .tbody').html(tbodyHtml);
+
+     //                    if (table5Slide) table5Slide[0].destroy();
+     //                    table5Slide = $("#table5").slide({ mainCell: ".tbody", autoPlay: true, effect: "topMarquee", vis: visNum, interTime: 50 });
+     //                }
+     //                else {
+     //                     	// 空数据提示
+				 //	    $('#table5').hide().next().show();
+
+     //                }
+
+     //       })
+
+     //   }
+         function GetMilliLiftNH() {
+     //       var timeInterval = $("input[name='timeInterval5']").val().split(' ~ '),
+					//date1 = timeInterval[0],
+					//date2 = timeInterval[1];
+             $.post("/Sws/Sws_Consump_item/GetMilliLiftNH", {
+                //begindate: date1,
+                //enddate:date2
+             }, function (res) {
+                     if (res != "") {
+                         var json = JSON.parse(res);
+                         $('#table5').show().next().hide();
+                         var theadArray = ['设备厂家', '水泵品牌', '流量<br>(m³)', '杨程<br>(m)', '泵效率<br>(%)', '电机效率<br>(%)', '千吨能耗<br>(kW·h)'],
+                             tbodyArray = [];
+                          for (var i = 0; i < json.length; i++) {
+                            var array_temp = [json[i].ManufacterName, json[i].PumpBrandName, json[i].WaterFlow,
+                                json[i].HighLift, json[i].PumpEff,json[i].MotorEff,json[i].ValueData];
+                            tbodyArray.push(array_temp);
+
+                        }
+                         // 插入节点
+                         var theadHtml = '',
+                             tbodyHtml = ''; // table各列宽度
+                         theadArray.forEach(function (item, index) {
+                             theadHtml += '<div class="th" title="' + item + '" style="width: ' + toPercent(1 / theadArray.length) + '">' + item + '</div>';
+                         });
+                         tbodyArray.forEach(function (item) {
+                             tbodyHtml += '<div class="tr">';
+                             theadArray.forEach(function (item2, index2) {
+                                 tbodyHtml += '<div class="td" style="width: ' + toPercent(1 / theadArray.length) + '">' + item[index2] + '</div>';
+                             });
+                             tbodyHtml += '</div>';
+                         });
+
+                         // 可视个数
+                         visNum = Math.floor(($('#table5').height()) / (baseSize * .39));
+
+                         $('#table5 .thead .tr').html(theadHtml);
+                         $('#table5 .tbody').html(tbodyHtml);
+
+                         if (table5Slide) table5Slide[0].destroy();
+                         table5Slide = $("#table5").slide({ mainCell: ".tbody", autoPlay: true, effect: "topMarquee", vis: visNum, interTime: 50 });
+                     }
+                     else {
+                          	// 空数据提示
+				 	    $('#table5').hide().next().show();
+
+                     }
+
+            })
+
+        }
+      function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+    </script>
+</body>
+</html>

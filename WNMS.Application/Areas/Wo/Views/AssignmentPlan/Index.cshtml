@@ -1,0 +1,517 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>巡检派发</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap-table.min.css">
+    <link href="~/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="../../css/anniu.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <script src="../../lib/layer/layer.css"></script>
+    <!-- bootstrap -->
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../lib/layer/layer.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <style>
+        .selct select {
+            height: 30px;
+            width: 150px;
+            line-height: 30px;
+            border: 1px #999 solid;
+            border-radius: 5px;
+            margin-right: 15px;
+            outline: none
+        }
+
+        .zlw_manageconrgconyi {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            height: 100%;
+            margin-top: 7px;
+        }
+
+        .zlw_manageconrgconsan .bootstrap3 {
+            height: calc(100% - 37px)
+        }
+
+        .fixed-table-container {
+            height: calc(100% - 115px);
+            overflow: auto
+        }
+
+        .bootstrap3 .fixed-table-container {
+            overflow: hidden
+        }
+
+        .acl a {
+            margin-left: 10px;
+            margin-right: 10px;
+            line-height: 40px;
+        }
+
+            .acl a:hover {
+                color: #999
+            }
+
+        .acl .active {
+            background-color: #3c8dbc;
+            color: #fff;
+            border-radius: 3px;
+            padding: 0 5px
+        }
+
+            .acl .active:hover {
+                color: #fff;
+            }
+
+        .zlw_manageconrgconsan {
+            width: 100%;
+            height: calc(100% - 150px);
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- star right -->
+    <div class="zlw_bjjl">
+        <div class="zlw_bjjlcon" style="padding-top:0">
+            <!-- star 查询 -->
+            <div class="">
+                <div class="clearfloat">
+                    <div class="zlw_datamain_rgyiyi clearfloat overflow left" id="datename" style="padding-bottom:5px">
+                        <label class="hyl_label left">查询时间：</label>
+                        <ul class="clearfloat zlw_time_con">
+                            <li value="0" class="zlw_bgact"><i>全部</i></li>
+                            <li value="1"><i>昨天</i></li>
+                            <li value="2"><i>本周</i></li>
+                            <li value="3"><i>上周</i></li>
+                            <li value="4"><i>下周</i></li>
+                            <li value="5"><i>本月</i></li>
+                            <li value="6"><i>上月</i></li>
+                            <li value="7"><i>下月</i></li>
+                            <li value="8"><i>自定义</i></li>
+                        </ul>
+                        <input id="datevalue" style="display:none;" value="0" />
+                    </div>
+                    <div class="left overflow selectDate hidden">
+                        <div class="mt10px left">
+                            <input id="beginTime" type="text" class="hyl_input left hyl_input-sm" onclick="WdatePicker()" value="@ViewBag.datemin">
+                            <span class="left lh30px pl10px pr10px">至</span>
+                            <input id="endTime" type="text" class="hyl_input left hyl_input-sm" onclick="WdatePicker()" value="@ViewBag.datemax">
+                        </div>
+                        @*<div class="left mt10px ml5px">
+                                <input type="text" id="EventsName" class="hyl_input" placeholder="事件信息" />
+                                <button id="selectData" class="hyl_btn" onclick="refresh()"><i class="fa fa-search mr5px"></i>查询</button>
+                            </div>*@
+                    </div>
+
+                </div>
+            </div>
+            <div class="pl10px" style="border-bottom:1px solid #ddd">
+                <ul class="clearfloat">
+                    <li class="left zlw_bjjlernr" id="Atype">
+                        <div id="planLevel" class="acl">
+                            <label class="hyl_label left">完成状态：</label>
+                            <a class="active" data-value="8">全部(@ViewBag.TotalCount)</a>
+                            <a data-value="0">未派发(@ViewBag.UnAssign)</a>
+                            <a data-value="1">已派发(@ViewBag.Assign)</a>
+                            <a data-value="3">待审核(@ViewBag.Reviewed)</a>
+                            <a data-value="2">已完成(@ViewBag.Finish)</a>
+                            <input id="statevalue" style="display:none;" value="8" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="pl10px " style="border-bottom:1px solid #ddd">
+                <ul class="clearfloat">
+                    <li class="left zlw_bjjlernr">
+                        <div id="planType" class="acl">
+                            <label class="hyl_label left">计划类型：</label>
+                            <a class="active" data-value="8">全部</a>
+                            <a data-value="1">常规</a>
+                            <a data-value="2">临时</a>
+                            <input id="typevalue" style="display:none;" value="8" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            @{
+                IEnumerable<dynamic> userList = ViewBag.inspectors as IEnumerable<dynamic>;
+            }
+
+
+
+            <div class="" style="height:51px;border-bottom:1px solid #ddd">
+                <div class="btn-group pull-left" style="margin-top:10px;margin-left:10px">
+                    <select name="" id="creater" class="hyl_select ml5px">
+                        <option value="0">创建人</option>
+                        @{
+                            if (userList != null)
+                            {
+                                var creaters = userList.Where(r => r.type == 1);
+                                foreach (var item in creaters)
+                                {
+                                    <option value="@item.UserID">@item.NickName</option>
+                                }
+                            }
+                        }
+                    </select>
+
+                    <select name="" id="inspector" class="hyl_select ml5px">
+                        <option value="0">巡检员</option>
+                        @{
+                            if (userList != null)
+                            {
+                                var inspectors = userList.Where(r => r.type == 2);
+                                foreach (var item in inspectors)
+                                {
+                                    <option value="@item.UserID">@item.NickName</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <input type="text" id="message" class="hyl_input" placeholder="计划名称、分区名称、备注" autocomplete="off" />
+                    <button class="hyl_btn" id="selectData" onclick="refresh()"> <i class="fa fa-search"></i> 查询</button>
+                </div>
+                <div class="btn-group mar10px  pull-right">
+                    <button type="button" class="btn btn-default" id="Assingmentbtn"><i class="fa fa-paper-plane-o"></i>任务分派</button>
+                    <button type="button" class="btn btn-default" id="addbtn"><i class="fa fa-plus"></i> 添加</button>
+                    <button type="button" class="btn btn-default" id="editebtn"><i class="fa fa-pencil-square-o"></i> 编辑</button>
+                    <button type="button" class="btn btn-default" id="deletebtn"><i class="fa fa-trash-o"></i> 删除</button>
+                    <button type="button" class="btn btn-default" id="Watchbtn"><i class="fa fa-newspaper-o" aria-hidden="true"></i> 查看</button>
+
+                </div>
+            </div>
+
+            <!-- 查询 end -->
+            <!-- 表格 -->
+            <div class="zlw_manageconrgconsan" id="tablebox" style="margin-top:10px">
+                <table id="tabledata" data-toggle="table" data-pagination="true" data-side-pagination="server" data-page-list="[15, 25, 50, 100]" data-height="500" data-page-size="15" class="table-striped">
+                    <tr></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        $table = $("#tabledata");
+        var options = $table.bootstrapTable('getOptions');
+        $(function () {
+            // 时间按钮切换样式
+            $(".zlw_time_con li").click(function () {
+                $(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+                $("#datevalue").val(this.value);
+            });
+            $(".zlw_time_con li").not("li:eq(8)").click(function () {
+                $(".selectDate").addClass("hidden");
+                refresh();
+            });
+            $(".zlw_time_con li:eq(8)").click(function () {
+                $(".selectDate").removeClass("hidden");
+                refresh();
+            });
+
+            //类型按钮切换
+            var a2 = $('#planType a')//条件筛选切换
+            for (var i = 0; i < a2.length; i++) {
+                a2[i].index = i;
+                a2[i].onclick = function () {
+                    for (var i = 0; i < a2.length; i++) {
+                        a2[i].className = ''
+                    }
+                    this.className = 'active';
+                    $('#typevalue').val($(this).data('value'));
+                    refresh();
+                }
+            }
+            //状态按钮切换
+            var a3 = $('#planLevel a')//条件筛选切换
+            for (var i = 0; i < a3.length; i++) {
+                a3[i].index = i;
+                a3[i].onclick = function () {
+                    for (var i = 0; i < a3.length; i++) {
+                        a3[i].className = ''
+                    }
+                    this.className = 'active';
+                    $('#statevalue').val($(this).data('value'));
+                    refresh();
+                }
+            }
+
+            //初次加载数据
+            LoadData(1, 15, "", "desc");
+
+            ////查询列表
+            //$("#selectData").click(function () {
+            //    LoadData(1, options.pageSize, "", "desc");
+            //});
+
+            $('.fixed-table-loading').hide();
+
+            //添加
+            $("#addbtn").click(function () {
+                iframeWithBtns("添加任务", "90%", "90%", "/Wo/AssignmentPlan/AddPlan", false);
+
+            });
+            //编辑
+            $("#editebtn").click(function () {
+                var lenthcheck = $("#tabledata").bootstrapTable('getSelections');
+
+                if (lenthcheck.length == 1) {
+                    var state = $(lenthcheck[0].State).text();
+                    if (state == "未分派") {
+                        var planID = lenthcheck[0].PlanID;
+                        iframeWithBtns("编辑任务", "90%", "90%", "/Wo/AssignmentPlan/EditePlan/" + planID, false);
+                    } else {
+                        layer.msg("仅限未派发任务修改");
+                    }
+                }
+                else {
+                    layer.msg("请选中一行");
+                }
+            });
+            //删除
+            $("#deletebtn").click(function () {
+                var lenthcheck = $("#tabledata").bootstrapTable('getSelections');
+                if (lenthcheck.length <= 0) {
+                    layer.msg("请至少选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    var id = "";
+                    for (i = 0; i < lenthcheck.length; i++) {
+                        id += lenthcheck[i].PlanID + ",";
+                    }
+                    id = id.substring(0, id.length - 1);
+                    layer.confirm("确定要删除任务？", {
+                        btn: ["确定", "取消"]
+                    },
+                        function () {
+                            deleteTeamInfo(id);
+                        },
+                        function () { }
+                    );
+                }
+            });
+
+            //分派
+            $("#Assingmentbtn").click(function () {
+                var flag = 0;
+                var lenthcheck = $("#tabledata").bootstrapTable('getSelections');
+                var str = "";
+                
+                if (lenthcheck.length <= 0) {
+                    layer.msg("请至少选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    for (var i = 0; i < lenthcheck.length; i++) {
+                        if (lenthcheck[i].State.indexOf("未分派") > 0 && lenthcheck[i].inspector != null ) {
+                            str += lenthcheck[i].PlanID + ",";
+                        } else {
+                            flag = 1;
+                            layer.alert("包含已分派工单或没有指定巡检人，请重新选择！");
+                            break;
+                        }
+                        
+
+                    }
+                    if (str.length > 0) {
+                        str = str.substring(0, str.length - 1);
+                    }
+                    if (flag == 0) {
+                        $.post('/Wo/AssignmentPlan/AssignmentPlan', { PlanIDs: str }, function (data) {
+                            if (data == "ok") {
+                                layer.msg("分派成功");
+                                pageindex = 1;
+                                refresh();
+                            } else {
+                                layer.msg("分派失败");
+                                pageindex = 1;
+                                refresh();
+                            }
+                        });
+                    }
+                }
+            });
+
+
+            //查看
+            $("#Watchbtn").click(function () {
+                var lenthcheck = $("#tabledata").bootstrapTable('getSelections');
+                if (lenthcheck.length != 1) {
+                    layer.msg("请选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    var planID = lenthcheck[0].PlanID;
+                    iframeWithBtns("查看任务", "90%", "90%", "/Wo/AssignmentPlan/WatchPlan/" + planID, false);
+                }
+            });
+        });
+
+        //加载数据
+        function LoadData(index, pagesize, sort, order) {
+            $.post('/Wo/AssignmentPlan/LoadAssignmentPlan', {
+                beginDate: $("#beginTime").val(),
+                endDate: $("#endTime").val(),
+                message: $("#message").val(),
+                date: $("#datevalue").val(),
+                state: $("#statevalue").val(),
+                type: $('#typevalue').val(),
+                creator: $('#creater').val(),
+                inspector: $('#inspector').val(),
+                pageindex: index || 1,
+                pagesize: pagesize,
+                sortName: sort,
+                sortOrder: order
+            }, function (res) {
+                //添加table
+                $("#tablebox").html('<table id="tabledata" data-sort-name="' + res.sortName + '" class="table table-striped" data-pagination="true" data-page-list="[10, 15,20]" data-toggle="table"  data-side-pagination="server"  ' +
+                    'data-total-rows="' + res.total + '" data-sort-order="' + res.order + '"  data-page-size="' + res.pageSize + '" data-height="' + ($(window).height() - 150) + '"  data-page-number="' + res.pageIndex + '">' + res.dataTable + '</table>')
+                $table = $("#tabledata").bootstrapTable({
+                    smartDisplay: false
+                });
+                options = $table.bootstrapTable('getOptions');
+                //分页
+                $table.on('page-change.bs.table', function (e, number, size) {
+                    LoadData(number, size, sort, order)
+                });
+
+                //排序
+                $table.on('sort.bs.table', function (e, field, order) {
+                    LoadData(index, pagesize, field, order)
+                });
+            });
+        }
+
+        //刷新数据
+        function refresh() {
+            var option = $table.bootstrapTable('getOptions');
+            LoadData(1, option.pageSize, "", "desc");
+        };
+
+
+        //删除任务
+        function deleteTeamInfo(id) {
+            $.ajax({
+                url: '/Wo/AssignmentPlan/DeletePlans',
+                type: 'POST',
+                datatype: "json",
+                //contentType: 'application/json',
+                data: { "": id },
+                success: function (data) {
+                    if (data == "ok") {
+                        layer.msg("删除成功");
+                        pageindex = 1;
+                        refresh();
+                    }
+                    else {
+                        if (data == "no") {
+                            layer.msg("删除失败");
+                        }
+                        else {
+                            layer.msg(data);
+                            pageindex = 1;
+                            refresh();
+                        }
+                    }
+                },
+                error: function (data) {
+                    layer.msg("删除失败");
+                }
+            })
+        }
+
+        function refreshTable() {
+            var opt = {
+                pageNumber: pageindex,
+            };
+            $("#tabledata").bootstrapTable('refresh', opt);
+        }
+
+        //定义弹出层
+        function iframeWithBtns(title, width, height, url, isParent) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                area: [width, height],
+                content: url
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+
+        //审核巡检
+        function Deal(planid, state) {
+            $.post("/Wo/AssignmentPlan/AuditAss",
+                {
+                    planid: planid,
+                    state: state
+                },
+                function (res) {
+                    if (res == "ok") {
+                        layer.msg("审核成功", function () {
+                            pageindex = 1;
+                            refresh();
+                        });
+                    } else if (res == "isAudit") {
+                        layer.alert("请勿重复审核通过");
+                    } else {
+                        layer.alert("审核失败，请重新审核");
+                    }
+                });
+        }
+        //标记完成
+        function DealFinish(planid) {
+            $.post("/Wo/AssignmentPlan/AuditAssFinish",
+                {
+                    planid: planid
+                },
+                function (res) {
+                    if (res == "ok") {
+                        layer.msg("标记完成成功", function () {
+                            pageindex = 1;
+                            refresh();
+                        });
+                    } else if (res == "isFinish") {
+                        layer.alert("请勿重复标记");
+                    } else if (res == "isnoChecked") {
+                        layer.alert("有未巡检的设备");
+                    } else {
+                        layer.alert("标记失败");
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

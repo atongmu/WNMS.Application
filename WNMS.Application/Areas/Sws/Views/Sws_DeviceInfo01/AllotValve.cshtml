@@ -1,0 +1,137 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>视频配置</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/Ionicons/css/ionicons.min.css" rel="stylesheet" />
+    <link href="~/css/pumpstationindex.css" rel="stylesheet" />
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="~/js/bootstrap.min.js"></script>
+    @*<script src="/Content/newself/js/index.js"></script>
+        <link href="/Content/newself/css/pumpstationindex.css" rel="stylesheet" />*@
+    <style>
+        .con6 .con6_con .con6_right .con6_text label {
+            float: left;
+            overflow: hidden;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            text-align: right;
+            padding: 0
+        }
+
+        .con6 .con6_con .con6_right .con6_text select {
+            float: left;
+            overflow: hidden;
+            height: 30px;
+            line-height: 30px
+        }
+
+        .con6_text input {
+            float: left;
+            overflow: hidden;
+            height: 30px;
+            line-height: 30px;
+            margin-left: 8px;
+        }
+
+        .table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+            border-bottom-width: 1px;
+            text-align: center
+        }
+
+        .con6_text {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .con6 .con6_con .con6_right {
+            width: 300px
+        }
+
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td {
+            border: 0;
+            border-left: 0;
+            border-right: 1px solid #ccc
+        }
+
+            .table-bordered > thead > tr > td:last-child {
+                border-right: 0
+            }
+
+        .con6 .con6_con .con6_left table td {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body style="background:#fff;">
+    <div class="con6">
+        <div class="con6_con">
+            <div class="con6_left" id="ValveTable">
+
+            </div>
+
+            <div id="ValveForm"></div>
+            <div class="clear"></div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script src="~/lib/layer/layer.js"></script>
+<script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script type="text/javascript">
+    var deviceId = @(ViewBag.DeviceID);
+    $("#DeviceId").val(deviceId);
+    $(function () {
+        var ww = $(window).width()
+        var wh = $(window).height()
+        $('.con6_con').height(wh - 85)
+        $('.con6_left').width(ww - 360)
+        GetValveData();
+        GetValveForm(0);
+    });
+
+    //获取阀门列表数据
+    function GetValveData() {
+        $.post("/Sws/Sws_DeviceInfo01/GetValueData", { deviceID: deviceId }, function (res) {
+            $("#ValveTable").html(res.dataTable);
+        });
+    }
+
+    //获取阀门表单数据
+    function GetValveForm(valveID) {
+        $.post("/Sws/Sws_DeviceInfo01/EditValve", { deviceID: deviceId, vID: valveID }, function (res) {
+            $("#ValveForm").html(res.forms);
+        });
+    }
+
+    //删除阀门
+    function DeleteValve(valveID) {
+        $.post("/Sws/Sws_DeviceInfo01/DeleteValve", { ids: valveID, deviceID: deviceId }, function (data) {
+            if (data == "ok") {
+                layer.alert("删除阀门成功！");
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                layer.alert("删除阀门失败！");
+            }
+        });
+    }
+
+</script>

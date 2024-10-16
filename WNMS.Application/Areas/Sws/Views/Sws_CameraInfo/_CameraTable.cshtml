@@ -1,0 +1,34 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Model.CustomizedClass;
+@model IEnumerable<CameraInfo>
+<thead>
+    <tr>
+        <th data-checkbox="true"></th>
+        <th data-field="CameraID" data-visible="false"></th>
+        <th data-sortable="true" data-field="CameraName">摄像头名称</th>
+        <th data-field="StationName">所属泵房</th>
+        <th data-field="CameraType">品牌</th>
+        <th data-field="IP">地址</th>
+        <th data-field="Port">端口号</th>
+        <th data-field="ChannelNum">通道号</th>
+    </tr>
+</thead>
+<tbody>
+    @{
+        foreach (var item in Model)
+        {
+            <tr>
+                <td data-checkbox="true"></td>
+                <td data-visible="false">@item.CameraID</td>
+                <td>@item.CameraName</td>
+                <td>@item.StationName</td>
+                <td>@(System.Enum.GetName(typeof(CameraType), item.CameraType))</td>
+                <td>@item.IP</td>
+                <td>@item.Port</td>
+                <td>@item.ChannelNum</td>
+            </tr>
+        }
+    }
+</tbody>

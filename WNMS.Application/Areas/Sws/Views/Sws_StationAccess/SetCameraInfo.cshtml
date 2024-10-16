@@ -1,0 +1,532 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SetCameraPage</title>
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        html, body {
+            height: 100%
+        }
+
+        .table-box {
+            width: calc(100% - 10px);
+            height: calc(100% - 50px);
+        }
+
+        .kz-left {
+            border: 1px solid #ccc;
+            width: calc(100% - 360px);
+            height: 100%
+        }
+
+        .kz-box {
+            width: 350px;
+            background: #eeeeee7d;
+            border: 1px #ccc solid;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            height: calc(100% - 20px);
+        }
+
+            .kz-box .hyl_label {
+                width: 120px;
+                display: inline-block;
+                text-align: right
+            }
+
+            .kz-box .hyl_input, .kz-box .hyl_select {
+                width: 180px;
+                display: inline-block
+            }
+
+            .kz-box .hyl_btn {
+                height: 26px;
+                line-height: 26px;
+                background: #3c8cbb;
+                border: 1px solid #ccc;
+                color: #fff
+            }
+
+                .kz-box .hyl_btn:hover {
+                    color: #fff;
+                    background: #1989cc
+                }
+
+        label.error {
+            position: absolute;
+            top: 28px;
+            left: 130px;
+        }
+    </style>
+</head>
+<body>
+    @using WNMS.Model.CustomizedClass
+    <div class="pad10px relative" style="height: 100%">
+        <div class="pt10px pl10px kz-left">
+            <input type="text" class="hyl_input" id="searchtext" placeholder="请输入摄像头名称" />
+            <button class="hyl_btn" id="searchbtn"><i class="fa fa-search mr5px"></i>查询</button>
+            <div class="table-box mt10px">
+                <table id="table" style="width:100%"></table>
+            </div>
+        </div>
+
+        <div class="kz-box pt15px pb15px">
+            <form id="myform" autocomplete="off">
+                <input type="text" style="width:0px;height:0px;position:absolute;z-index:-1;opacity:0" />
+                <input type="password" style="width:0px;height:0px;position:absolute;z-index:-1;opacity:0" />
+                <div class="mb15px relative">
+                    <label class="hyl_label">摄像头名称：</label>
+                    <input type="text" class="hyl_input" id="CameraName" name="CameraName" />
+                    <input type="hidden" class="hyl_input" id="StationID" name="StationID" value="@ViewBag.StationID" />
+                    <input id="CameraId" type="hidden" value="0" name="CameraId" class="hyl_input" />
+                    <input id="Token" type="hidden" value="0" name="Token" class="hyl_input" />
+                    <input id="LimitTime" type="hidden" value="0" name="LimitTime" class="hyl_input" />
+                    <input id="Pid" type="hidden" value="0" name="Pid" />
+                    @*<input id="Numbering" type="hidden" value="0" name="Numbering" class="hyl_input" />*@
+                </div>
+                <div class="mb15px relative">
+                    <label class="hyl_label">门禁：</label>
+                    <select id="DoorId" name="DoorId" class="hyl_select">
+                        <option value="0">==请选择==</option>
+                    </select>
+                </div>
+                <div class="mb15px relative">
+                    <label class="hyl_label">摄像头品牌：</label>
+                    <select id="CameraType" name="CameraType" class="hyl_select">
+                        @{
+                            foreach (int item in System.Enum.GetValues(typeof(CameraType)))
+                            {
+                                <option value="@item">@System.Enum.GetName(typeof(CameraType), item)</option>
+
+                            }
+                        }
+                    </select>
+                </div>
+                <div id="haikang">
+                    <div class="mb15px relative">
+                        <label class="hyl_label">IP：</label>
+                        <input type="text" class="hyl_input" id="IP" name="IP" />
+                    </div>
+                    <div class="mb15px relative">
+                        <label class="hyl_label">端口：</label>
+                        <input type="text" class="hyl_input" id="Port" name="Port" />
+                    </div>
+
+                    <div class="mb15px relative notlmt">
+                        <label class="hyl_label">用户名：</label>
+                        <input type="text" class="hyl_input" id="UserName" name="UserName" />
+                    </div>
+
+                    <input type="password" style="width: 0px;height: 0px;position: absolute;z-index: -1; opacity: 0" />
+                    <div class="mb15px relative notlmt">
+                        <label class="hyl_label">密码：</label>
+                        <input type="password" class="hyl_input" id="PassWord" name="PassWord" />
+                    </div>
+                </div>
+
+                <div id="yingshi" style="display:none">
+                    <div class="mb15px relative">
+                        <label class="hyl_label">AppKey：</label>
+                        <input type="text" class="hyl_input" id="AppKey" name="AppKey" />
+                    </div>
+                    <div class="mb15px relative">
+                        <label class="hyl_label">AppSecret：</label>
+                        <input type="text" class="hyl_input" id="AppSecret" name="AppSecret" />
+                    </div>
+                    <div class="mb15px relative">
+                        <label class="hyl_label">序列号：</label>
+                        <input type="text" class="hyl_input" id="SerialNum" name="SerialNum" />
+                    </div>
+                </div>
+
+                <div class="mb15px relative notlmt">
+                    <label class="hyl_label">通道号：</label>
+                    <input type="text" class="hyl_input" id="ChannelNum" name="ChannelNum" />
+                </div>
+
+                <div id="dhdss" style="display:none">
+                    <div class="mb15px relative">
+                        <label class="hyl_label">编号：</label>
+                        <input type="text" class="hyl_input" id="Numbering" name="Numbering" />
+                    </div>
+                </div>
+
+                <div class="mb15px relative notlmt">
+                    <label class="hyl_label">直播地址：</label>
+                    <input type="text" class="hyl_input" id="Url" name="Url" />
+                </div>
+                <div class="textCenter">
+                    <button class="hyl_btn" type="button" id="saveform">提交</button>
+                    <button class="hyl_btn" type="button" id="clear">重置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        var pageindex = 1;
+        var stationid=@ViewBag.StationID;
+        $(function () {
+            validateForm();
+            //ip验证
+            jQuery.validator.addMethod("isIP", function (value, element) {
+                var tel = /^(?=(\b|\D))(((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))\.){3}((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))(?=(\b|\D))$/;
+                return this.optional(element) || (tel.test(value));
+            }, "请正确填写的IP。");
+            jQuery.validator.addMethod("isPort", function (value, element) {
+                var tel = /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/;
+                return this.optional(element) || (tel.test(value));
+            }, "请正确填写的端口号。");
+            var $table = $("#table");
+            $table.bootstrapTable({
+
+                method: "post",
+                url: "/Sws/Sws_StationAccess/GetAllotCamera",
+                contentType: "application/x-www-form-urlencoded",
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                height: $(".table-box").height(),
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                striped: true,
+                sidePagination: 'server',
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        pageSize: params.limit,   //每页条数
+                        pageIndex: (params.offset / params.limit) + 1, //页码
+                        cameraName: $("#searchtext").val(),
+                        id: stationid,
+                        sortOrder: params.order,
+                        sortName: params.sort == undefined ? "CameraName" : params.sort
+                    };
+                    pageindex = (params.offset / params.limit) + 1;
+                    return temp;
+                },//传递参数（*）
+                responseHandler: function (res) {
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+
+                },
+                columns: [
+                    {
+                        field: "StationID",
+                        checkbox: true,
+                        visible: true,
+                        formatter: function (value, row, index) {
+                            return changeCheckboxFormat(value)
+                        }
+                    }, {
+                        field: 'CameraName',
+                        title: '视频名称',
+                        sortable: true
+                    }, {
+                        field: 'CameraType',
+                        title: '品牌'
+                    }, {
+                        field: 'IP',
+                        title: '地址'
+                    }, {
+                        field: 'Port',
+                        title: '端口号'
+                    }, {
+                        field: 'ChannelNum',
+                        title: '通道号'
+                    },
+                    {
+                        field: 'StationName',
+                        title: '操作',
+                        formatter: function (value, row, index) {
+                            return '<button class="hyl_btn" onclick="EditeCameranfo(' + row.CameraID + ')">修改</button>';
+                        }
+                    }
+                ]
+
+            });
+            $("#CameraType").change(function () {
+                var value = $("#CameraType").val();
+                GetContent(value);
+            });
+            setdoor(stationid);
+        });
+         $("#searchbtn").click(function () {
+            pageindex = 1;
+            refreshTable();
+
+        })
+         $("#searchtext").keydown(function(e) {
+           if (e.keyCode == 13) {
+               pageindex = 1;
+               refreshTable();
+               return false;
+           }
+         });
+        function refreshTable() {
+            var opt = {
+                pageNumber: pageindex,
+            };
+            $("#table").bootstrapTable('refresh', opt);
+
+        }
+        function changeCheckboxFormat(cellval) {
+            if (cellval != 0) {
+                return {
+                    checked:true
+                }
+            }
+        }
+
+        //查询门禁
+        function setdoor(id) {
+            $.post("/Sws/Sws_CameraInfo/GetDoorID", { stationID: id }, function (res) {
+                var json = res.list;
+                var str = '<option value="0">==请选择==</option>';
+                if (json.length > 0) {
+                    $("#DoorId").empty();
+                    for (var i = 0; i < json.length; i++) {
+                        str += '<option value="' + json[i].doorId + '" selected="selected">' + json[i].accessName + '</option>'
+                    }
+                    $("#DoorId").html(str);
+                }
+            });
+        }
+        //点修改按钮表单填充
+        function EditeCameranfo(id) {
+            $.post("/Sws/Sws_StationAccess/GetCameraInfoByCameraID", { cameraid: id }, function (data) {
+                if (data.data != null && data.data != undefined) {
+                    var res = data.data;
+
+                    if (res.cameraType == 0 || res.cameraType == 1) {
+                        $(".notlmt").css("display", "block");
+                        $("#yingshi").css("display", "none");
+                        $("#dhdss").css("display", "none");
+                        $("#haikang").css("display", "block");
+                    } else {
+                        if (res.cameraType == 2 || res.cameraType == 3) {
+                            $(".notlmt").css("display", "block");
+                            $("#dhdss").css("display", "none");
+                            $("#yingshi").css("display", "block");
+                            $("#haikang").css("display", "none");
+                        } else {
+                            if (res.cameraType == 4) {
+                                $(".notlmt").css("display", "block");
+                                $("#dhdss").css("display", "block");
+                                $("#yingshi").css("display", "block");
+                                $("#haikang").css("display", "none");
+                            } else {
+                                if (res.cameraType == 5) {
+                                    $("#yingshi").css("display", "block");
+                                    $("#dhdss").css("display", "none");
+                                    $("#haikang").css("display", "block");
+                                    $(".notlmt").css("display", "none");
+                                } else {
+                                    $(".notlmt").css("display", "block");
+                                    $("#yingshi").css("display", "none");
+                                    $("#dhdss").css("display", "none");
+                                    $("#haikang").css("display", "block");
+                                }
+                            }
+                        }
+                    }
+
+                    //if (res.cameraType == 0 || res.CameraType == 1) {
+                    //    $("#yingshi").css("display", "none");
+                    //} else {
+                    //    $("#yingshi").css("display", "block");
+                    //}
+                    $("#CameraId").val(res.cameraId);
+                    $("#Token").val(res.token);
+                    $("#LimitTime").val(res.limittime);
+                    $("#CameraName").val(res.cameraName);
+                    $("#IP").val(res.ip);
+                    $("#Port").val(res.port);
+                    $("#UserName").val(res.userName);
+                    $("#PassWord").val(res.passWord);
+                    $("#Pid").val(res.pid);
+                    $("#Numbering").val(res.numbering);
+                    $("#CameraType").val(res.cameraType);
+                    $("#AppKey").val(res.appKey);
+                    $("#AppSecret").val(res.appSecret);
+                    $("#SerialNum").val(res.serialNum);
+                    $("#ChannelNum").val(res.channelNum);
+                    $("#Url").val(res.url);
+                    $("#Numbering").val(res.numbering);
+                }
+            });
+        }
+        $("#saveform").click(function () {
+            $("#myform").submit();
+
+        });
+        function validateForm() {
+             $("#myform").validate({
+                 ignore: "",
+                  submitHandler: function (form) {
+                    executeSave();
+                },
+                 rules: {
+                    CameraName: {
+                        required: true
+                    },
+                    CameraType: {
+                        required: true
+                    },
+                    Port: {
+                        number: true,
+                        isPort: true
+                    },
+                    ChannelNum: {
+                        number: true,
+                    },
+                    StationId: {
+                        required: true,
+                        digits: true,
+                        min:1
+                     },
+                    IP: {
+                         isIP: true
+                     }
+                },
+                messages: {
+                    CameraName: {
+                        required: "请输入设备编号"
+                    },
+                    CameraType: {
+                        required: "请输入相机品牌",
+                    },
+                    Port: {
+                        number: "请输入数字",
+                        isPort:"请输入正确的端口号"
+                    },
+                    ChannelNum: {
+                        number: "请输入数字",
+                    },
+                    StationId: {
+                        required: "请选择泵房",
+                        digits:"请正确选择泵房",
+                        min:"请正确选择泵房"
+                    },
+                    IP: {
+                         isIP: "请输入正确的IP地址"
+                    }
+
+                }
+            });
+        }
+        //提交
+        function executeSave() {
+            //var accessInfo = JSON.stringify($("#myform").serializeObject());
+                $.ajax({
+                    url: '/Sws/Sws_CameraInfo/SetCameraInfo',
+                    type: 'post',
+                    data: $("form").serializeArray(),
+                    success: function (data) {
+                        if (data == "ok") {
+                            if ($("#CameraId").val() == 0) {//添加
+                                parent.refreshTable();
+                            }
+                            refreshTable();
+                            layer.msg("操作成功");
+                            ClearForm();
+                        }
+                        else {
+                                layer.msg("操作失败");
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+        }
+        //重置
+        $("#clear").click(function () {
+            ClearForm();
+        });
+        function ClearForm() {
+            //$("#CameraID").val(0);
+            //$("#Brand").val("1");
+            //$("#Num").val("");
+            //$("#AccessName").val("");
+            //$("#IP").val("");
+            //$("#Port").val("");
+            //$("#UserName").val("");
+            //$("#PassWord").val("");
+            //$("#myform").reset();
+            document.getElementById("myform").reset();
+        }
+        //表单提交
+        function saveForm(func) {
+            var lenthcheck = $("#table").bootstrapTable('getSelections');
+            var cameraid = "";
+            if (lenthcheck.length > 0) {
+                for (i = 0; i < lenthcheck.length; i++) {
+                    cameraid += lenthcheck[i].CameraID + ",";
+                }
+                cameraid=cameraid.substring(0, cameraid.length - 1);
+            }
+            $.post("/Sws/Sws_StationAccess/AllotCamera", { ids: cameraid, id: stationid }, function (data) {
+                func(data);
+            });
+        }
+
+        //根据摄像头类型，更换表单内容
+        function GetContent(value) {
+            if (value == 0 || value == 1) {
+                $(".notlmt").css("display", "block");
+                $("#yingshi").css("display", "none");
+                $("#dhdss").css("display", "none");
+                $("#haikang").css("display", "block");
+            } else {
+                if (value == 2 || value == 3) {
+                    $(".notlmt").css("display", "block");
+                    $("#dhdss").css("display", "none");
+                    $("#yingshi").css("display", "block");
+                    $("#haikang").css("display", "none");
+                } else {
+                    if (value == 4) {
+                        $(".notlmt").css("display", "block");
+                        $("#dhdss").css("display", "block");
+                        $("#yingshi").css("display", "block");
+                        $("#haikang").css("display", "none");
+                    } else {
+                        if (value == 5) {
+                            $("#yingshi").css("display", "block");
+                            $("#dhdss").css("display", "none");
+                            $("#haikang").css("display", "block");
+                            $(".notlmt").css("display", "none");
+                        } else {
+                            $(".notlmt").css("display", "block");
+                            $("#yingshi").css("display", "none");
+                            $("#dhdss").css("display", "none");
+                            $("#haikang").css("display", "block");
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+

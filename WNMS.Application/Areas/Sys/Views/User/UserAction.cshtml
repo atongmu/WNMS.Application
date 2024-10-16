@@ -1,0 +1,286 @@
+﻿
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>分配权限</title>
+    <link href="~/css/AdminLTE.css" rel="stylesheet" />
+    <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <!-- 树 -->
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    @*<link href="~/lib/ztree/zTreeStyle.css" rel="stylesheet" />*@
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <style>
+        .form2 {
+            display: none
+        }
+
+        body, html {
+            height: 100% !important
+        }
+
+        body, html {
+            height: 100% !important
+        }
+        /*以下css勿动*/
+        /*.ztree li span.button.roots_open, .ztree li span.button.root_open,
+        .ztree li span.button.bottom_open,
+        .ztree li span.button.center_open {
+            background: url('../../../images/xia.png') no-repeat 0 5px !important;
+        }
+
+        .ztree li span.button.roots_close, .ztree li span.button.center_close,
+        .ztree li span.button.root_close, .ztree li span.button.bottom_close {
+            background: url('../../../images/you.png') no-repeat 0 5px !important;
+        }
+
+        .ztree li ul.line, .ztree li span.button.center_docu,
+        .ztree li span.button.roots_docu, .ztree li span.button.bottom_docu {
+            background: none
+        }*/
+
+        .btnss:hover, .btnss2:hover {
+            opacity: 0.8
+        }
+
+        .btnss {
+            height: 28px;
+            outline: none;
+            line-height: 28px;
+            padding: 0 15px;
+            border-radius: 2px;
+            font-weight: 400;
+            border-color: #4898d5;
+            background: none;
+            border: 1px #2e8ded solid;
+            background-color: #2e8ded;
+            margin: 0 0 0 6px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .btnss2 {
+            height: 28px;
+            outline: none;
+            line-height: 28px;
+            margin: 0 6px;
+            padding: 0 15px;
+            border-radius: 2px;
+            font-weight: 400;
+            border: 1px solid #dedede;
+            background-color: #f1f1f1;
+            color: #333;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <ul class="steplist">
+        <li class="on">① 模块权限</li>
+        <li>② 按钮权限</li>
+    </ul>
+
+    <div class="stepbox relative" style="padding:15px">
+
+        <!-- form start -->
+        <div style="height: calc(100% - 42px) !important;">
+            <form class="form-horizontal form1" style="height:100% !important;">
+
+                <div class="box-body" style="height:100%;overflow:auto">
+                    <div id="tree">
+                        <ul id="treeDemo" class="ztree"></ul>
+                    </div>
+                </div>
+
+                <!-- /.box-body -->
+            </form>
+
+            <!-- form start -->
+            <form class="form-horizontal form2" style="height:100% !important;">
+
+                <div class="box-body" style="height:100%;overflow:auto">
+                    <div id="treeSec">
+                        <ul id="treeDemoSec" class="ztree"></ul>
+                    </div>
+                </div>
+
+                <!-- /.box-body -->
+            </form>
+        </div>
+        <div class="box-footer" style="position:absolute;bottom:5px;right:5px;border:none">
+            <!--<button type="submit" class="btn btn-default">Cancel</button>-->
+            <button id="submitFor" type="submit" class="btnss pull-right">完成</button>
+            <button type="submit" class="btnss2 mr15px pull-right" onclick="next()">下一步</button>
+            <button type="submit" class="btnss2 mr15px pull-right" onclick="prev()">上一步</button>
+        </div>
+        <!-- /.box-footer -->
+    </div>
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/adminlte.lite.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script>
+        var zTreeObjSec;
+        var zNodesSec;
+        var settingSec = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }, callback: {
+                onClick: zTreeOnClickSec
+            }, view: {
+                showTitle: false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+
+        };
+        function next() {
+            $(".steplist li").eq(1).addClass("on");
+            $(".form1").addClass("hide");
+            $(".form2").css("display", "block");
+            GetCheckedNodes();
+        }
+        function prev() {
+            $(".steplist li").eq(1).removeClass("on");
+            $(".form1").removeClass("hide");
+            $(".form2").css("display", "none");
+
+        }
+        $(".steplist li:eq(0)").click(function () {
+            $(".steplist li").eq(1).removeClass("on");
+            $(".form1").removeClass("hide");
+            $(".form2").css("display", "none");
+        })
+        $(function () {
+            $(".steplist li:eq(1)").click(function () {
+                $(".steplist li").eq(1).addClass("on");
+                $(".form1").addClass("hide");
+                $(".form2").css("display", "block");
+                GetCheckedNodes();
+            });
+        })
+        //获取上级所选的权限id，传给下一步，
+        function GetCheckedNodes() {
+            var str = "";
+            var checkedNodes = zTreeObj.getCheckedNodes(true);
+            var ckLength = checkedNodes.length;
+            if (ckLength > 0) {
+                for (var i = 0; i < ckLength; i++) {
+                    str += checkedNodes[i].id + ",";
+                }
+            }
+            if (str != "") {
+                str = str.substring(0, str.length - 1);
+            }
+            $.post("/Sys/User/LoadButAction", { userId: UserID, actionids: str }, function (data) {
+                if (data != "") {
+                    var zNodesSec1 = JSON.parse(data);
+                    zNodesSec = eval(zNodesSec1);//格式化（object）数据
+                    zTreeObjSec = $.fn.zTree.init($("#treeDemoSec"), settingSec, zNodesSec);
+                    zTreeObjSec.expandAll(true);
+                }
+
+            });
+        }
+        function zTreeOnClickSec(event, treeId, treeNodes) { }
+    </script>
+    <script>
+        var index = parent.layer.getFrameIndex(window.name);
+        var zTreeObj;
+        var setting = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }, callback: {
+                onClick: zTreeOnClick
+            }, view: {
+                showTitle: false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+
+        };
+        var UserID=@ViewBag.UserID;
+        var zNodes = @ViewBag.TreeNodes;
+        $(function () {
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            zTreeObj.expandAll(true);
+             //为角色分配权限
+            $("#submitFor").click(function () {
+                SubmitFor();
+            });
+        })
+        function zTreeOnClick(event, treeId, treeNodes) { }
+        function SubmitFor() {
+            var str = "";
+            var strSec = "";
+            var checkedNodes = zTreeObj.getCheckedNodes(true);
+            var ckLength = checkedNodes.length;
+            if (ckLength > 0) {
+                for (var i = 0; i < ckLength; i++) {
+                    str += checkedNodes[i].id + ",";
+                }
+            }
+             if (str != "") {
+                str = str.substring(0, str.length - 1);
+            }
+            if (zTreeObjSec != undefined) {
+                var checkedNodesSec = zTreeObjSec.getCheckedNodes(true);
+                var ckLengthSec = checkedNodesSec.length;
+                if (ckLengthSec > 0) {
+                    for (var i = 0; i < ckLengthSec; i++) {
+                        if (checkedNodesSec[i].type == 2) {
+                            strSec += checkedNodesSec[i].id + ",";
+                        }
+                    }
+                }
+                if (strSec != "") {
+                    strSec = strSec.substring(0, strSec.length - 1);
+                }
+            }
+
+                $.post("/Sys/User/SetUserAction", { userId: UserID, actionids: str,btnActions:strSec }, function (data) {
+                    if (data == "ok") {
+                        window.parent.Refresh();
+                        parent.layer.close(index);
+                    } else {
+                        if (data == "false") {
+                            layer.msg("请至少选择一个权限", {
+                                offset: 't',
+                                anim: 6
+                            });
+                        } else {
+                            layer.alert("操作失败，请刷新页面重试");
+                        }
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

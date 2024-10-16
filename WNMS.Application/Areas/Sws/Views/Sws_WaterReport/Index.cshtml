@@ -1,0 +1,144 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>水质分析</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+
+    <!-- 树 -->
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+
+    <style>
+        .nav-tab li {
+            float: left;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 5px 10px;
+            color: #999;
+            margin-left: 10px;
+            cursor: pointer
+        }
+
+        .nav-tab .on, .tab-chart .on {
+            background: #3c8dbc;
+            color: #fff;
+            border: 1px solid #3c8dbc;
+        }
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf">
+                <!-- 搜索框 -->
+                <div class="zlw_datamain_lfconsea">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" id="stationname" class="form-control" placeholder="搜索&quot;泵房&quot;名称" autocomplete="off" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:100%;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+            </div>
+            <div class="sl_rg">
+                <iframe src="/Sws/Sws_WaterReport/WaterDayReport" style="border:none;width:100%;height:calc(100% - 40px)"></iframe>
+                <!--头部-->
+
+                <ul class="nav-tab">
+                    <li class="on">日报</li>
+                    <li>月报</li>
+                    <li>年报</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        //树配置
+        var setting = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+        };
+
+        var zNodes = @ViewBag.TreeNodes,zTreeObj;
+
+        $(function () {
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+            //日月年
+            $(".nav-tab li").click(function () {
+                $(this).addClass("on").siblings("li").removeClass("on");
+                var indx = $(this).index();
+                if (indx == 1) {
+                    $('iframe').attr("src",'/Sws/Sws_WaterReport/WaterMonthReport');
+                } else {
+                    if (indx == 2) {
+                        $('iframe').attr("src",'/Sws/Sws_WaterReport/WaterYearReport');
+                    } else {
+                        $('iframe').attr("src",'/Sws/Sws_WaterReport/WaterDayReport');
+                    }
+                }
+            });
+        });
+
+        //树查询
+        $("#stationname").keydown(function (e) {
+            if (e.keyCode == 13) {
+                 e.preventDefault();
+                LoadZtree();
+            }
+        });
+        //泵房选择
+        function LoadZtree() {
+            //查询树列表数据
+            $.post("/Sws/Sws_WaterReport/SelectTree",{
+                stationName:$("#stationname").val()
+            },function(data){
+                zTreeObj.destroy();    //清空树
+                var aa= JSON.parse(data);   //数据转json
+                if($("#stationname").val()!=""){
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                    zTreeObj.expandAll(true);     //初始化数列表展开
+                }else{
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                }
+            });
+        }
+    </script>
+</body>
+</html>

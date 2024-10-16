@@ -1,0 +1,630 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>综合报警平台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> -->
+    <meta name="keywords" content="二供系统">
+    <meta name="description" content="二供系统">
+    <link rel="stylesheet" href="~/Swslxl/css_event/reset.css">
+    <link rel="stylesheet" href="~/Swslxl/css_event/common.css">
+    <link rel="stylesheet" href="~/Swslxl/css_event/theme1.css">
+    <script src="~/Swslxl/js/plugins/adaption.js"></script>
+
+</head>
+<body>
+    <!-- header -->
+    <!-- <div class="header">
+        <div class="title fl">
+            <h2>二供系统综合报警平台</h2>
+        </div>
+        <div id="nowTime" class="time fr"></div>
+    </div> -->
+    <!-- header end -->
+    <!-- main -->
+    <div class="main window-height pb-10" data-negative=".2">
+        <div class="container full-height">
+            <div class="row height-8">
+                <div class="col-sm-3 full-height">
+                    <div class="row full-height">
+                        <div class="col-sm-12 height-4">
+                            <div class="box pt-0">
+                                <div class="box-content">
+                                    <div class="box-content-wrap">
+                                        <div class="panel-parameter middle-box">
+                                            <div class="middle-inner">
+                                                <div id="currentAlarmNum" class="value dynamic-number" data-counter-time="500">—</div>
+                                                <div class="name">当前报警数量</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 height-8">
+                            <div class="box box-primary">
+                                <div class="box-content">
+                                    <div class="box-content-title">
+                                        <div class="title">报警信息占比分析</div>
+                                    </div>
+                                    <div class="box-content-wrap">
+                                        <div id="echarts1" class="echarts"></div>
+
+                                        <div class="nothing absolute">
+                                            <div class="nothing-content">
+                                                <div class="icon"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 full-height">
+                    <div class="map full-height">
+                        @*<img src="img/1.jpg" alt="" style="width: 100%;height: 100%;">*@
+                        <iframe src="/Sws/Sws_EventData/GDMap" style="width:100%;height:100%;border:0"></iframe>
+                    </div>
+                </div>
+                <div class="col-sm-3 full-height">
+                    <div class="row full-height">
+                        <div class="col-sm-12 height-4">
+                            <div class="box pt-0">
+                                <div class="box-content">
+                                    <div class="box-content-wrap">
+                                        <div class="panel-parameter middle-box">
+                                            <div class="middle-inner">
+                                                <div id="currentMonthAlarmNum" class="value dynamic-number" data-counter-time="500">—</div>
+                                                <div class="name">当月报警数量</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 height-8">
+                            <div class="box box-primary">
+                                <div class="box-content">
+                                    <div class="box-content-title">
+                                        <div class="title">各厂家报警占比分析</div>
+                                    </div>
+                                    <div class="box-content-wrap">
+                                        <div id="echarts2" class="echarts"></div>
+
+                                        <div class="nothing absolute">
+                                            <div class="nothing-content">
+                                                <div class="icon"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row height-4">
+                <div class="col-sm-4 full-height">
+                    <div class="box box-primary">
+                        <div class="box-content">
+                            <div class="box-content-title">
+                                <div class="title">泵房报警排名</div>
+                            </div>
+                            <div class="box-content-wrap">
+                                <div id="echarts3" class="echarts"></div>
+
+                                <div class="nothing absolute">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 full-height">
+                    <div class="box box-primary">
+                        <div class="box-content">
+                            <div class="box-content-title">
+                                <div class="title">报警信息排名</div>
+                            </div>
+                            <div class="box-content-wrap box-content-wrap-padding">
+                                <div id="table4" class="table table-primary table-thead-absolute">
+                                    <div class="thead">
+                                        <div class="tr"></div>
+                                    </div>
+                                    <div class="tbody">
+                                    </div>
+                                </div>
+
+                                <div class="nothing absolute">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 full-height">
+                    <div class="box box-primary">
+                        <div class="box-content">
+                            <div class="box-content-title">
+                                <div class="title">各厂家报警信息排名</div>
+                            </div>
+                            <div class="box-content-wrap">
+                                <div id="echarts5" class="echarts"></div>
+
+                                <div class="nothing absolute">
+                                    <div class="nothing-content">
+                                        <div class="icon"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- main end -->
+
+    <script src="~/js/jquery 2.1.4/jquery.min.js"></script>
+
+    <script src="~/Swslxl/js/plugins/echarts/echarts.js"></script>
+
+    <script src="~/Swslxl/js/plugins/echarts/customed.js"></script>
+
+    <script src="~/Swslxl/js/plugins/jquery.SuperSlide.3.0.alpha.js"></script>
+
+    <script src="~/Swslxl/js/plugins/jquery.waypoints.min.js"></script>
+    <script src="~/Swslxl/js/plugins/jquery.countup.min.js"></script>
+
+    <script src="~/Swslxl/js/common.js"></script>
+
+    <script>
+        /**
+         * 图表配置
+         */
+        var echartsApp = [],
+
+            // 1、报警信息占比分析
+            options1 = {
+                color: ['#ffea68', '#01c9fd', '#ff8f5f', '#6fc36f', '#fc5976', '#ff7391', '#4c83ff', '#ff7391'],
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    top: 'middle',
+                    left: .2 * baseSize,
+                    itemWidth: .24 * baseSize,
+                    itemHeight: .1 * baseSize,
+                    textStyle: {
+                        color: '#fff',
+                    }
+                },
+                series: [
+                    {
+                        type: 'pie',
+                        radius: ['45%', '70%'],
+                        center: ['70%', '50%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            label: {
+                                show: false,
+                                fontSize: '40',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        data: []
+                    }
+                ]
+            },
+
+            // 2、各厂家报警占比分析
+            options2 = {
+                color: ['rgba(255, 205, 96, 1)', 'rgba(111, 195, 111, 1)'],
+                tooltip: {
+                    trigger: 'item',
+                    position: 'left'
+                },
+                legend: {
+                    orient: 'vertical',
+                    top: 'middle',
+                    left: .2 * baseSize,
+                    textStyle: {
+                        color: '#c4c4c4',
+                    },
+                    itemWidth: .3 * baseSize,
+                    itemHeight: .1 * baseSize,
+                    data: ['本月', '上月']
+                },
+                radar: {
+                    center: ['60%', '50%'],
+                    radius: '65%',
+                    shape: 'circle',
+                    name: {
+                        textStyle: {
+                            color: '#fff',
+                        }
+                    },
+                    splitArea: {
+                        areaStyle: {
+                            color: [
+                                'rgba(52, 50, 85, .5)',
+                                'rgba(52, 50, 85, .9)',
+                                'rgba(52, 50, 85, .8)',
+                                'rgba(52, 50, 85, .5)',
+                                'rgba(52, 50, 85, .5)',
+                            ],
+                            shadowColor: 'rgba(0, 0, 0, 0)',
+                            shadowBlur: 10
+                        }
+                    },
+                    axisLine: {
+                        show: false
+                    },
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            type: 'dotted',
+                        }
+                    },
+                    indicator: []
+                },
+                series: [{
+                    name: '报警占比',
+                    type: 'radar',
+                    data: [
+                        {
+                            name: '本月',
+                            areaStyle: {
+                                color: 'rgba(255, 205, 96, 0.9)'
+                            },
+                            value: []
+                        },
+                        {
+                            name: '上月',
+                            areaStyle: {
+                                color: 'rgba(111, 195, 111, 0.9)'
+                            },
+                            value: []
+                        }
+                    ]
+                }]
+            },
+
+            // 3、设备报警排名
+            options3 = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var html = params[0].name + '<br />';
+                        for (var i = 0; i < params.length; i++) {
+                            var marker = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color: ' + params[i].color.colorStops[0].color + ';"></span>';
+                            html += marker + params[i].seriesName + '：' + params[i].value + '<br>'
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    top: 0,
+                    left: .2 * baseSize,
+                    right: .2 * baseSize + 20,
+                    bottom: .1 * baseSize,
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+                },
+                yAxis: {
+                    type: 'category',
+                    axisLabel: {
+                        color: '#fff'
+                    },
+                    data: []
+                },
+                series: [
+                    {
+                        name: '报警排名',
+                        type: 'bar',
+                        barWidth: 13,
+                        data: []
+                    }
+                ]
+            },
+
+            // 5、各厂家报警信息排名
+            options5 = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var html = params[0].name + '<br />';
+                        for (var i = 0; i < params.length; i++) {
+                            var marker = '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color: ' + params[i].color.colorStops[0].color + ';"></span>';
+                            html += marker + params[i].seriesName + '：' + params[i].value;
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    top: 10,
+                    left: .2 * baseSize,
+                    right: .2 * baseSize,
+                    bottom: .1 * baseSize,
+                    containLabel: true
+                },
+                legend: {
+                    show: false,
+                    data: []
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: [],
+                }],
+                yAxis: [{
+                    type: 'value',
+                }],
+                series: [{
+                    name: '报警信息排名',
+                    type: 'bar',
+                    barWidth: 26,
+                    itemStyle: {
+                        normal: {
+                            color: new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                                offset: 1,
+                                color: 'rgba(200, 138, 255, 1)'
+                            }, {
+                                offset: 0,
+                                color: 'rgba(143, 82, 242, 1)'
+                            }])
+                        }
+                    },
+                    data: []
+                }]
+            };
+
+        var table4Slide = null, // 滚动插件对象
+            visNum = null;		// 可视个数
+
+        $(function () {
+            /**
+             * 初始化图表
+             */
+            // 1、报警信息占比分析
+            echartsApp[1] = echarts.init($('#echarts1')[0], 'customed');
+            echartsApp[1].setOption(options1);
+
+            // 3、设备报警排名
+            echartsApp[3] = echarts.init($('#echarts3')[0], 'customed');
+            echartsApp[3].setOption(options3);
+
+            // 5、各厂家报警信息排名
+            echartsApp[5] = echarts.init($('#echarts5')[0], 'customed');
+            echartsApp[5].setOption(options5);
+
+            /**
+             * 初始化数据
+             */
+            initData();
+        });
+
+        /**
+         * 初始化数据
+         */
+        function initData() {
+            // 获取报警数量统计
+            getAlarmData();
+
+            // 1、报警信息占比分析
+            getData1();
+
+            // 2、各厂家报警占比分析
+            getData2();
+
+            // 3、设备报警排名
+            getData3();
+
+            // 4、报警信息排名
+            getData4();
+
+            // 5、各厂家报警信息排名
+            getData5();
+        }
+
+        /**
+         * 获取报警数量
+         */
+        function getAlarmData() {
+            $.post("/Sws/Sws_EventData/LoadEventCount", {}, function (data) {
+                var jsonData = JSON.parse(data);
+                $('#currentAlarmNum').text(jsonData.ecount);
+                $('#currentMonthAlarmNum').text(jsonData.mCount);
+                $('.dynamic-number').countUp();
+            })
+        }
+
+        /**
+         * 1、报警信息占比分析
+         */
+        function getData1() {
+            /**
+             * 模拟获取到的数据
+             */
+            // if(res.code == 0) {
+            // 	$('#echarts1').show().next().hide();
+
+            // 	// 执行数据操作
+            // }
+            // else {
+            // 	// 空数据提示
+            // 	$('#echarts1').hide().next().show();
+            // }
+
+            $.post("/Sws/Sws_EventData/LoadEventPre", {}, function (data) {
+                var jsonData = JSON.parse(data);
+                options1.series[0].data = jsonData.endcount;
+                echartsApp[1].setOption(options1, true);
+            });
+        }
+
+        /**
+         * 2、各厂家报警占比分析
+         */
+        function getData2() {
+            $.post("/Sws/Sws_EventData/LoadVendorEvent", {}, function (data) {
+                var jsonData = JSON.parse(data);
+
+                var nameArray = jsonData.vendorName;
+                var thisMonthData = jsonData.nmdata;
+                var lastMonthData = jsonData.lmdata; 
+                if (nameArray.length > 0) {
+                    $('#echarts2').show().next().hide();
+
+                    nameArray.forEach(function (item, index) {
+                        options2.radar.indicator.push({
+                            name: item,
+                            max: jsonData.countAll
+                        });
+
+                        options2.series[0].data[0].value.push(thisMonthData[index]);
+                        options2.series[0].data[1].value.push(lastMonthData[index]);
+                    });
+
+                    // 2、各厂家报警占比分析
+                    echartsApp[2] = echarts.init($('#echarts2')[0], 'customed');
+                    echartsApp[2].setOption(options2);
+                }
+                else {
+                    $('#echarts2').hide().next().show();
+                }
+            })
+        }
+
+        /**
+         * 3、设备报警排名
+         */
+        function getData3() {
+            $.post("/Sws/Sws_EventData/LoadEqEvent", {}, function (data) {
+                var jsonData = JSON.parse(data);
+
+                if (jsonData.axix.length > 0) {
+                    $('#echarts3').show().next().hide();
+
+                    var valueArray = jsonData.eventcount;
+                    options3.yAxis.data = jsonData.axix;
+                    var dataColors = [
+                        ['#754abf', '#f75271'],
+                        ['#2a54b4', '#01cafe'],
+                        ['#278d65', '#62c367'],
+                        ['#f66800', '#ffb300'],
+                        ['#bc3535', '#fe5a79'],
+                    ];
+                    valueArray.forEach(function (item, index) {
+                        options3.series[0].data.push({
+                            value: item,
+                            itemStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                                        offset: 1,
+                                        color: dataColors[index][0]
+                                    }, {
+                                        offset: 0,
+                                        color: dataColors[index][1]
+                                    }]),
+                                    barBorderRadius: [0, 3, 3, 0],
+                                }
+                            }
+                        });
+                    });
+                    echartsApp[3].setOption(options3, true);
+                }
+                else {
+                    $('#echarts3').hide().next().show();
+                }
+            })
+        }
+
+        /**
+         * 4、报警信息排名
+         */
+        function getData4() {
+            $.post("/Sws/Sws_EventData/GetEventData", {}, function (data) {
+                var jsonData = JSON.parse(data);
+
+                if (jsonData.eventcount.length > 0) {
+                    $('#table4').show().next().hide();
+
+                    var tbodyArray = []; var theadArray = ['报警内容', '报警次数', '排名'];
+                    for (var i = 0; i < jsonData.eventcount.length; i++) {
+                        var firstArray = [];
+                        //theadArray.push(jsonData.eventcoun[i].Name);
+                        firstArray.push(jsonData.eventcount[i].Name, jsonData.eventcount[i].Count, i+1);
+                        tbodyArray.push(firstArray);
+                    }
+
+
+                    // 插入节点
+                    var theadHtml = '',
+                        tbodyHtml = '';
+                    theadArray.forEach(function (item, index) {
+                        theadHtml += '<div class="th" title="' + item + '" style="width: ' + toPercent(1 / theadArray.length) + '">' + item + '</div>';
+                    });
+                    tbodyArray.forEach(function (item) {
+                        tbodyHtml += '<div class="tr">';
+                        theadArray.forEach(function (item2, index2) {
+                            tbodyHtml += '<div class="td" style="width: ' + toPercent(1 / theadArray.length) + '">' + item[index2] + '</div>';
+                        });
+                        tbodyHtml += '</div>';
+                    });
+
+                    // 可视个数
+                    visNum = Math.floor(($('#table4').height() + .23 * baseSize) / (baseSize * .36 + 1));
+
+                    $('#table4 .thead .tr').html(theadHtml);
+                    $('#table4 .tbody').html(tbodyHtml);
+
+                    if (table4Slide) table4Slide[0].destroy();
+                    table4Slide = $("#table4").slide({ mainCell: ".tbody", autoPlay: true, effect: "topMarquee", vis: visNum, interTime: 50 });
+                }
+                else {
+                    $('#table4').hide().next().show();
+                }
+            })
+        }
+
+        /**
+         * 5、各厂家报警信息排名
+         */
+        function getData5() {
+            $.post("/Sws/Sws_EventData/LoadVendorRank", {}, function (data) {
+                var jsonData = JSON.parse(data);
+                if (jsonData.vendorName.length > 0) {
+                    $('#echarts5').show().next().hide();
+
+                    options5.xAxis[0].data = jsonData.vendorName;
+                    options5.series[0].data = jsonData.nmdata;
+                    echartsApp[5].setOption(options5, true);
+                }
+                else {
+                    $('#echarts5').hide().next().show();
+                }
+            })
+        }
+    </script>
+</body>
+</html>

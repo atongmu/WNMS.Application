@@ -1,0 +1,205 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@using WNMS.Model.CustomizedClass
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .zlw_manage, .zlw_managecon {
+            background: #fff
+        }
+
+        .zlw_xtys {
+            padding: 20px 16%;
+        }
+
+            .zlw_xtys ul {
+                border: 1px solid #c9c9c9;
+                background: #edf5fc;
+            }
+
+                .zlw_xtys ul li {
+                    position: relative;
+                    padding-left: 200px;
+                    border-bottom: 1px solid #c9c9c9;
+                }
+
+                    .zlw_xtys ul li span {
+                        width: 180px;
+                        padding-right: 10px;
+                        display: block;
+                        height: 40px;
+                        line-height: 40px;
+                        font-size: 15px;
+                        font-weight: bold;
+                        text-align: right;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                    }
+
+                    .zlw_xtys ul li div {
+                        border-left: 1px solid #c9c9c9;
+                        line-height: 40px;
+                        padding-left: 20px;
+                        background: #fff;
+                    }
+
+                    .zlw_xtys ul li:nth-child(7) div {
+                        padding: 50px 0 50px 20px;
+                    }
+
+                    .zlw_xtys ul li:last-child div {
+                        padding: 10px 0;
+                        text-align: center;
+                    }
+
+        #editebtn {
+            padding: 0 10px;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 5px;
+            background: #4eaeff;
+            color: #fff;
+            display: inline-block;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_manage">
+        <div class="zlw_managecon" style="        padding-left: 0px
+">
+            <div class="zlw_manageconrgcon">
+                <div class="overflow" style="height:51px;border-bottom:1px solid #ddd">
+                    <div class="btn-group mar10px pull-right">
+
+                    </div>
+                </div>
+
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan" style="height:calc(100% - 50px);margin-top:10px">
+                    @{
+                        SystemInfo st = ViewBag.SystemInfo as SystemInfo;
+                        if (st != null)
+                        {
+                            <div class="zlw_xtys">
+                                <ul class="dl-horizontal">
+                                    <li>
+                                        <span>系统名称</span>
+                                        <div>@st.SystemName</div>
+                                    </li>
+                                    <li>
+                                        <span>英文名</span>
+                                        <div>@st.SystemEngName</div>
+                                    </li>
+                                    <li>
+                                        <span>地图缩放级别</span>
+                                        <div>@st.MapLevel</div>
+                                    </li>
+                                    <li>
+                                        <span>Lng</span>
+                                        <div>@st.Lng</div>
+                                    </li>
+                                    <li>
+                                        <span>Lat</span>
+                                        <div>@st.Lat</div>
+                                    </li>
+                                    <li>
+                                        <span>坐标城市</span>
+                                        <div>@st.AreaName</div>
+                                    </li>
+                                    <li>
+                                        <span>Logo</span>
+                                        <div>
+                                            <img src="~/UploadImg/Logo/@st.Logo" style="width:100px;height:100px;" />
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span></span>
+                                        <div>
+                                            <button type="button" class="btn btn-default" id="editebtn"><i class="fa fa-pencil-square-o"></i> 编辑</button>
+                                        </div>
+
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="no-date textCenter">
+                                <img src="~/images/null.png" width="150" />
+                                <p>暂无数据</p>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var pageindex = 1;
+        $(function () {
+
+        });
+
+        //编辑按钮点击事件
+        $("#editebtn").click(function () {
+            iframeWithBtns("编辑系统信息", "800px", "600px", "/Sys/Sys_Info/EditPage", false, function (formIndex, formLayer) {
+                var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                currentIframe.saveForm(function (data) {
+                    if (data == "ok") {
+                        layer.close(formIndex);
+                        window.location.reload();
+                    } else {
+                        layer.alert("编辑失败")
+                    }
+                });
+            });
+        });
+
+        function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+
+    </script>
+</body>
+</html>

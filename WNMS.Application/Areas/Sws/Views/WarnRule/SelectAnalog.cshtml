@@ -1,0 +1,157 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SelectAnalog</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/css/AllotRtu_User.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <!-- bootstrap -->
+    <script src="~/js/bootstrap.min.js"></script>
+
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        ul li {
+            left: 5px
+        }
+        .r_right {
+            width: 100%;
+    left: 0px;
+    border: none;
+   position: relative !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_manage">
+
+        <!-- star right -->
+        <div class="zlw_manageconrg">
+            <div class="zlw_manageconrgcon">
+                <!-- star 查询 -->
+                <div class="left">
+                    <ul class="clearfloat ml10px mt10px">
+                        <li>
+                            <input id="SearchTxt" type="text" class="hyl_input" placeholder="输入关键字" autocomplete="off">
+                            <button class="hyl_btn" id="btnSelect">
+                                <i class="fa fa-search"></i> 查询
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <!-- 查询 end -->
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan r_right">
+                    <ul>
+                        @{
+                            var dataList = ViewBag.analogs as IEnumerable<SwsDataInfo>;
+                            var dataid_select = ViewBag.dataid;
+                            foreach (var item in dataList)
+                            {
+                                if (dataid_select==item.DataId)
+                                {
+                                    <li>
+                                        <a class='btn btn-default' data-id="@item.DataId" data-region="@item.Region" title="@item.Cnname">@item.Cnname</a><i></i>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a class='btn btn-default' data-id="@item.DataId" data-region="@item.Region" title="@item.Cnname">@item.Cnname</a><i class='unCheck'></i>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- right end -->
+
+    </div>
+    <script type="text/javascript">
+        var select_Dataid = @ViewBag.dataid;
+        var partition = @ViewBag.partition;
+        $(".r_right ul").on("click", "a", function () {
+            var $i = $(this).next();
+
+            if ($i.hasClass("unCheck")) {
+                $(".r_right i").addClass("unCheck");
+                $i.removeClass("unCheck");
+
+            }
+            else {
+                $i.addClass("unCheck");
+
+            }
+
+
+        })
+        function saveForm(func) {
+               var dataids = "";
+               var dataNames = "";
+               var partition = 0;
+               $(".r_right i:not([class='unCheck'])").each(function () {
+                  
+                var dataID = $(this).prev().data("id");
+                var dataname=$(this).prev()[0].innerText;
+                dataids += dataID;
+                dataNames += dataname;
+                partition=$(this).prev().data("region");
+            });
+               if (dataids == "") {
+                   layer.alert("至少选择一个模拟量");
+
+               }
+               else {
+                   func(dataids,dataNames,partition);
+               }
+        }
+        $("#btnSelect").click(function () {
+            var searchText = $("#SearchTxt").val();
+            if (searchText != "") {
+                $.post("/Sws/WarnRule/SearchAnalog", { searchText: searchText, partition: partition }, function (res) {
+                    $(".r_right ul").empty();
+                    if (res.analogs.length > 0) {
+                        var appendStr = "";
+                        for (var i = 0; i < res.analogs.length; i++) {
+
+                            if (select_Dataid == res.analogs[i].dataId) {
+
+                                appendStr += '<li>'+
+                                        '<a class="btn btn-default" data-region="'+res.analogs[i].region+'" data-id="'+res.analogs[i].dataId+'" title="'+res.analogs[i].cnname+'">'+res.analogs[i].cnname+'</a><i></i></li>';
+                            }
+                            else {
+
+                                 appendStr += '<li>'+
+                                        '<a class="btn btn-default" data-region="'+res.analogs[i].region+'" data-id="'+res.analogs[i].dataId+'" title="'+res.analogs[i].cnname+'">'+res.analogs[i].cnname+'</a><i class="unCheck"></i></li>';
+                            }
+                        }
+                        $(".r_right ul").append(appendStr);
+                    }
+
+                });
+
+            }
+
+        })
+    </script>
+</body>
+</html>

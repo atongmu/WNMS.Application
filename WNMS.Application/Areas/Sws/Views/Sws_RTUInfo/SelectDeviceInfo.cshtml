@@ -1,0 +1,279 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SelectDeviceInfo</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/AllotRtu_User.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <title>分配泵站</title>
+    <style>
+        .r_right ul li {
+            left: 5px
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden
+        }
+
+        .zlw_datamain_lfconsea {
+            padding: 10px;
+            border-bottom: solid 1px #ddd;
+            position: relative !important;
+            width: 297px;
+            top: 0px;
+            left: 0;
+            box-sizing: border-box;
+            background: #fff;
+        }
+
+        .boxs {
+            height: 100%;
+        }
+
+        .r_left, .r_right {
+            height: 100%
+        }
+    </style>
+</head>
+<body>
+    <div class="boxs">
+        <div class="prompt" style="margin:5px 5px 4px">
+            <p style="float:left">温馨提示：选中复选框并提交即可授予相应设备，取消选中并提交则回收相应设备。</p>  <p style="margin-right:5px;float:right"><em class='iconfont icon-bengfang' style='color:blue;'></em> 二供泵房<p>
+        </div>
+
+        <div class="r_layout" style="border:none;border-top: 1px solid #bbb;border-bottom:1px solid #ddd;height:calc(100% - 50px) !important">
+            <div class="r_left">
+                    <header>
+                        <span id="identifyname">泵房</span>
+                    </header>
+                    <section style="height:calc(100% - 26px);overflow:hidden">
+                        <div class="zlw_datamain_lfconsea ">
+                            <form action="">
+                                <i class="glyphicon glyphicon-search"></i>
+                                <input type="text" id="stationname" class="form-control" placeholder="搜索&quot;泵房&quot;名称" autocomplete="off" />
+                            </form>
+                        </div>
+                        <ul id="treeDemo" class="ztree" style="height:calc(100% - 50px);overflow:auto"></ul>
+                    </section>
+                </div>
+            <div class="r_right" style="border: none;overflow: hidden">
+                <header>
+                    <span>设备名称</span>
+                    <span><label class="checkAllOff" id="check">全选</label></span>
+                </header>
+                <section>
+                    <ul id="datalist">
+                      
+                                  
+                                    @*<li>
+                                        <a class='btn btn-default' data-id="1" title="测试">测试</a><i class='unCheck'></i>
+                                    </li>
+                               
+                                    <li>
+                                        <a class='btn btn-default' data-id="2" title="测试2">测试2</a><i></i>
+                                    </li>*@
+                           
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        var stationid =@ViewBag.stationid;//初始泵房id
+        var rtuid =@ViewBag.rtuid;//初始通讯id
+        var stationname = "";
+        var deviceids = "@ViewBag.deviceids";
+          //树配置及回调函数
+        var setting = {
+			check: {
+				enable: true,
+                chkStyle: "radio"
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+            }
+            ,callback:{
+                onCheck: zTreeOnCheck
+            },view: {
+                 showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+		};
+        var zNodes =@ViewBag.TreeNodes, zTreeObj;
+         $(function () {
+            var height = $(window).height() - 100;
+           // $(".r_right").height(height);
+           // $(".r_layout").height(height + 2);
+           // $("section:first").height(height - 25);
+
+            $(window).resize(function () {
+                var height = $(window).height() - 100;
+               // $(".r_right").height(height);
+               // $(".r_layout").height(height + 2);
+               // $("section:first").height(height - 25);
+            });
+             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+             getDevice_right(stationid);
+
+            $(".r_right ul").on("click", "a", function () {         //选中事件
+                
+                    var $i = $(this).next();
+                    var display = $i.css("display");
+                    if (display != "none") {
+                         $i.addClass("unCheck");
+                        
+                    } else {
+                      $i.removeAttr("class");
+                    }
+                
+            });
+            lableClick();
+         });
+         $("#stationname").keydown(function(e) {  
+           if (e.keyCode == 13) {  
+               LoadZtree();
+               return false;
+           }  
+        });  
+        //左侧树查询
+        function LoadZtree() {
+             zTreeObj.destroy();    //清空树
+         if ($("#stationname").val() != "") {
+             //查询树列表数据
+             $.post("/Sws/Sws_RTUInfo/SearchTree", {
+                 stationid:stationid,
+                 stationName: $("#stationname").val()
+             }, function (data) {
+                 var aa= JSON.parse(data);   //数据转json
+                     zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                     zTreeObj.expandAll(false);     //初始化数列表展开
+                     
+             });
+         }
+         else {
+               
+             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);   //重新初始化树
+            
+         }
+
+        }
+
+        function zTreeOnCheck(event, treeId, treeNode) {
+            
+            if (treeNode.checked) {
+                stationid = treeNode.id;
+                var indexLength = treeNode.name.indexOf("</em>") 
+                stationname = treeNode.name.substring(indexLength+5);
+                getDevice_right(treeNode.id);
+            }
+            else {
+                stationid = 0;
+                stationname = "";
+                $("#datalist").empty();
+            }
+            
+        }
+        //获取右侧设备列
+        function getDevice_right(stationid) {
+            if (stationid != 0) {
+                $.post("/Sws/Sws_RTUInfo/GetDeviceInfo", { stationid: stationid, rtuid: rtuid,deviceids:deviceids }, function (res) {
+                    $("#datalist").empty();
+                    if (res.data.length > 0) {
+                        var appends = "";
+                        for (var i = 0; i < res.data.length; i++) {
+                            if (res.data[i].hasCheck == 1) {
+                                appends += ' <li>' +
+                                    '<a class="btn btn-default" data-id="' + res.data[i].DeviceID + '" title="' + res.data[i].partionname + '">' + res.data[i].partionname + '</a><i></i></li>';
+
+                            }
+                            else {
+                                 appends += ' <li>' +
+                                    '<a class="btn btn-default" data-id="' + res.data[i].DeviceID + '" title="' + res.data[i].partionname + '">' + res.data[i].partionname + '</a><i class="unCheck"></i></li>';
+                            }
+                        }
+                        $("#datalist").append(appends);
+                    }
+                })
+            }
+        }
+
+
+         function lableClick() {          // 全选/反选
+            $("#check").click(function () {
+
+                var txt = $(this).attr("class");
+                if (txt == "checkAllOff") {
+                    $(this).removeClass("checkAllOff").addClass("checkAllOn").text("反选");
+                    unCheckItems();
+                }
+                else {
+                    $(this).removeClass("checkAllOn").addClass("checkAllOff").text("全选");
+                    checkItems();
+                }
+            });
+        }
+         function unCheckItems() {
+            var StationIDs = "";
+            $(".unCheck").each(function () {
+                var aa = $(this).prev();
+                //var StationID = $(this).prev().data("id");
+                //StationIDs += StationID + ",";
+                $(this).removeAttr("class");
+            });
+           
+        }
+
+         function checkItems() {
+            var StationIDs = "";
+            $("i:not([class])").each(function () {
+                //var StationID = $(this).prev().data("id");
+                //StationIDs += StationID + ",";
+                $(this).addClass("unCheck");
+            });
+         
+        }
+        function saveForm1(func) {
+            var deviceids = "";
+            var devidenames = "";
+               $("i:not([class])").each(function () {
+                var deviceid = $(this).prev().data("id");
+                   deviceids += deviceid + ",";
+                  
+                   devidenames += $(this).prev()[0].innerText + ",";
+            });
+            if (deviceids != "") {
+                devidenames = devidenames.substring(0, devidenames.length - 1);
+                deviceids = deviceids.substring(0, deviceids.length-1);
+                func(stationid,stationname,deviceids,devidenames);
+            }
+            else {
+                //layer.msg("请至少选中一个设备");
+                 func(0,"","","");
+            }
+        }
+    </script>
+</body>
+</html>

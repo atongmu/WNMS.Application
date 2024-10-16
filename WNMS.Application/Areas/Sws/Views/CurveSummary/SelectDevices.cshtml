@@ -1,0 +1,74 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SelectDevices</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Swslxl/css_lines/sdc.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+</head>
+<body>
+    <div class="zlw_sbxz">
+        <div class="zlw_sbxztitle">
+            <p>设备重置选择</p>
+        </div>
+        <div class="zlw_sbxzcon">
+            <input type="text" id="device1" placeholder="设备一">
+            <input type="text" id="device2" placeholder="设备二">
+        </div>
+    </div>
+    <script>
+        var deviceid1, deviceid2;
+        $(function () {
+            $("#device1").val(parent.deviceName1);
+            $("#device2").val(parent.deviceName2);
+            deviceid1 = parent.deviceID1;
+            deviceid2 = parent.deviceID2;
+        })
+        $("#device1").click(function () {
+            parent.iframeWithBtns("设备选择", "400px", "760px", "/Sws/CurveSummary/SelectDevice_single/"+deviceid1, false, function (formIndex, formLayer) {
+                var currentIframe = parent.window[formLayer.find('iframe')[0]['name']];
+                currentIframe.saveForm1(function (deviceid, devicename) {
+                    deviceid1 = deviceid;
+                    $("#device1").val(devicename);
+                    parent.layer.close(formIndex);
+                });
+            })
+        })
+        $("#device2").click(function () {
+            parent.iframeWithBtns("设备选择", "400px", "760px", "/Sws/CurveSummary/SelectDevice_single/"+deviceid2, false, function (formIndex, formLayer) {
+                var currentIframe = parent.window[formLayer.find('iframe')[0]['name']];
+                currentIframe.saveForm1(function (deviceid, devicename) {
+                    deviceid2 = deviceid;
+                    $("#device2").val(devicename);
+                    parent.layer.close(formIndex);
+                });
+            })
+        })
+        function saveForm(func) {
+            if ($("#device1").val() != "" && $("#device2").val() != "" && deviceid1!=deviceid2) {
+                //配置设备写入数据库
+                $.post("/Sws/CurveSummary/SettingDevice", {deviceid1:deviceid1,deviceid2:deviceid2}, function (res) {
+                    if (res == "ok") {
+                        func(deviceid1, $("#device1").val(), deviceid2, $("#device2").val());
+                    }
+                    else {
+                        layer.alert("配置失败");
+                    }
+                })
+                
+            }
+            else {
+                layer.msg("请选择两套设备");
+            }
+        }
+    </script>
+</body>
+</html>

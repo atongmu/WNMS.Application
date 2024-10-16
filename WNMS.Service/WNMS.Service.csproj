@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName></SccProjectName>
+    <SccProvider></SccProvider>
+    <SccAuxPath></SccAuxPath>
+    <SccLocalPath></SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\WNMS.IService\WNMS.IService.csproj" />
+    <ProjectReference Include="..\WNMS.Model\WNMS.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Jiguang.JPush">
+      <HintPath>..\packages\net45\Jiguang.JPush.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="t4Service.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>t4Service.cs</LastGenOutput>
+    </None>
+    <None Update="t4Service.txt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>t4Service.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="t4Service.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>t4Service.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

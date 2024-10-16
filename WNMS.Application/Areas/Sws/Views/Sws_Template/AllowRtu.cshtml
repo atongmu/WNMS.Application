@@ -1,0 +1,306 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SelectDeviceInfo</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/AllotRtu_User.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <title>分配泵站</title>
+    <style>
+        .r_right ul li {
+            left: 5px
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden
+        }
+
+        .zlw_datamain_lfconsea {
+            padding: 10px;
+            border-bottom: solid 1px #ddd;
+            position: relative !important;
+            width: 297px;
+            top: 0px;
+            left: 0;
+            box-sizing: border-box;
+            background: #fff;
+        }
+
+        .boxs {
+            height: 100%;
+        }
+
+        .r_left, .r_right {
+            height: 100%
+        }
+    </style>
+</head>
+<body>
+    <div class="boxs">
+        <div class="prompt" style="margin:5px 5px 4px">
+            <p style="float:left">温馨提示：选中即可授予相应设备，取消选中则回收。</p>  <p style="margin-right:5px;float:right"><em class='iconfont icon-bengfang' style='color:blue;'></em> 二供泵房 
+            @*<em class='iconfont icon-bengfang' style='color:green'></em> 直饮水泵房*@
+            <p>
+        </div>
+
+        <div class="r_layout" style="border:none;border-top: 1px solid #bbb;border-bottom:1px solid #ddd;height:calc(100% - 50px) !important">
+            <div class="r_left">
+                <header>
+                    <span id="identifyname">泵房</span>
+                </header>
+                <section style="height:calc(100% - 26px);overflow:hidden">
+                    <div class="zlw_datamain_lfconsea ">
+                        <form action="">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" id="stationname" class="form-control" placeholder="搜索&quot;泵房&quot;名称" />
+                        </form>
+                    </div>
+                    <ul id="treeDemo" class="ztree" style="height:calc(100% - 50px);overflow:auto"></ul>
+                </section>
+            </div>
+            <div class="r_right" style="border: none;overflow: hidden">
+                <header>
+                    <span>设备名称</span>
+                    <span><label class="checkAllOff" id="check">全选</label></span>
+                </header>
+                <section>
+                    <ul id="datalist">
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        var stationid =@ViewBag.stationid;//初始泵房id
+        var rtuid =@ViewBag.rtuid;//初始通讯id
+        var stationname = "";
+        var deviceids = "@ViewBag.deviceids";
+        var temid = @ViewBag.temid;
+        var  treetag, clicktag;
+          //树配置及回调函数
+        var setting = {
+			check: {
+				enable: true,
+                chkStyle: "radio"
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+            }
+            ,callback:{
+                onCheck: zTreeOnCheck
+            },view: {
+                 showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+		};
+        var zNodes =@ViewBag.TreeNodes, zTreeObj;
+         $(function () {
+            var height = $(window).height() - 100; 
+            $(window).resize(function () {
+                var height = $(window).height() - 100; 
+            });
+             document.onkeydown = keyDownSearch;
+            function keyDownSearch(e) {
+                // 兼容FF和IE和Opera    
+                var theEvent = e || window.event;
+                var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                // 13 代表 回车键
+                if (code == 13) {
+                    // 要执行的函数 或者点击事件
+                    LoadZtree();
+                    return false;
+                }
+                
+            }
+             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+             getDevice_right(stationid);
+             treetag = 0;
+             clicktag = 0;
+             $(".r_right ul").on("click", "a", function () {         //选中事件
+                var $i = $(this).next();
+                var display = $i.css("display");
+                if (display != "none") {
+                     $.post("/Sws/Sws_Template/AddTempDevice",{ deviceids: $(this).data("id"), temid: temid , key: "Delete" },function (data) {
+                         if (data == "ok") {
+                             $i.addClass("unCheck");
+                             frequent("", 500);
+                         }
+                     });
+                    } else {
+                      $.post("/Sws/Sws_Template/AddTempDevice", {deviceids: $(this).data("id"), temid: temid , key: "Add" }, function (data) {
+                            if (data == "ok") {
+                                $i.removeAttr("class");
+                                frequent("", 500);
+                            }
+                        });
+                    }
+                 //getDeviceid();
+            });
+            lableClick();
+         });
+        function frequent(para, time) {
+            if (para == "tree") {
+                treetag = 1;
+                setTimeout(function () { treetag = 0 }, time);
+            } else {
+                clicktag = 1;
+                setTimeout(function () { clicktag = 0 }, time);
+            }
+        }
+        //左侧树查询
+        function LoadZtree() {
+             zTreeObj.destroy();    //清空树
+         if ($("#stationname").val() != "") {
+             //查询树列表数据
+             $.post("/Sws/Sws_Template/SearchTree", {
+                 stationName: $("#stationname").val()
+             }, function (data) {
+                 var aa= JSON.parse(data);   //数据转json
+                     zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                     zTreeObj.expandAll(false);     //初始化数列表展开
+
+             });
+         }
+         else {
+             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);   //重新初始化树
+            }
+        } 
+        function zTreeOnCheck(event, treeId, treeNode) {
+
+            if (treeNode.checked) {
+                stationid = treeNode.id;
+                var indexLength = treeNode.name.indexOf("</em>")
+                stationname = treeNode.name.substring(indexLength+5);
+                getDevice_right(treeNode.id);
+            }
+            else {
+                stationid = 0;
+                stationname = "";
+                $("#datalist").empty();
+            }
+
+        }
+        //获取右侧设备列
+        function getDevice_right(stationid) {
+            if (stationid != 0) {
+                $.post("/Sws/Sws_Template/GetDeviceInfo", { stationid: stationid, temid: temid,deviceids:deviceids }, function (res) {
+                    $("#datalist").empty();
+                    if (res.data.length > 0) {
+                        var appends = "";
+                        for (var i = 0; i < res.data.length; i++) {
+                            if (res.data[i].hasCheck == 1) {
+                                appends += ' <li>' +
+                                    '<a class="btn btn-default" data-id="' + res.data[i].DeviceID + '" title="' + res.data[i].partionname + '">' + res.data[i].partionname + '</a><i></i></li>';
+
+                            }
+                            else {
+                                 appends += ' <li>' +
+                                    '<a class="btn btn-default" data-id="' + res.data[i].DeviceID + '" title="' + res.data[i].partionname + '">' + res.data[i].partionname + '</a><i class="unCheck"></i></li>';
+                            }
+                        }
+                        $("#datalist").append(appends);
+                    }
+                })
+            }
+        }
+
+
+        function lableClick() {          // 全选/反选
+            $("#check").click(function () {
+                var txt = $(this).attr("class");
+                if (txt == "checkAllOff") {
+                    $(this).removeClass("checkAllOff").addClass("checkAllOn").text("反选");
+                    unCheckItems();
+                }
+                else {
+                    $(this).removeClass("checkAllOn").addClass("checkAllOff").text("全选");
+                    checkItems();
+                }
+                getDeviceid();
+            });
+        }
+         function unCheckItems() {
+            var deviceids = "";
+            $(".unCheck").each(function () {
+                var aa = $(this).prev();
+                var device = $(this).prev().data("id");
+                deviceids += device + ",";
+                $(this).removeAttr("class");
+            });
+             if (deviceids != "") {
+                deviceids = deviceids.substring(0, deviceids.length - 1);
+            }
+             $.post("/Sws/Sws_Template/AddTempDevice", { deviceids: deviceids, temid: temid, key: "Add" }, function (data) {
+                 if (data == "ok") {
+                     $i.addClass("unCheck");
+                     frequent("", 500);
+                 }
+             });
+        }
+
+         function checkItems() {
+            var deviceids = "";
+            $("i:not([class])").each(function () {
+                var device = $(this).prev().data("id");
+                deviceids += device + ",";
+                $(this).addClass("unCheck");
+            });
+             if (deviceids != "") {
+                deviceids = deviceids.substring(0, deviceids.length - 1);
+             }
+             $.post("/Sws/Sws_Template/AddTempDevice", { deviceids: deviceids, temid: temid, key: "Delete" }, function (data) {
+                 if (data == "ok") {
+                     $i.addClass("unCheck");
+                     frequent("", 500);
+                 }
+             });
+        }
+        //function getDeviceid() {
+        //    var deviceids = "";
+        //       $("i:not([class])").each(function () {
+        //        var deviceid = $(this).prev().data("id");
+        //           deviceids += deviceid + ",";
+        //    });
+        //    if (deviceids != "") {
+        //        deviceids = deviceids.substring(0, deviceids.length - 1);
+        //         $.post("/Sws/Sws_Template/AddTempDevice",
+        //        { deviceids: deviceids, temid: temid },
+        //        function (data) {
+        //            //if (data == "ok") {
+        //            //    layer.close(index);
+        //            //} else {
+        //            //    alert("分配失败");
+        //            //}
+        //        });
+        //    }
+        //    else {
+
+        //    }
+
+        //}
+    </script>
+</body>
+</html>

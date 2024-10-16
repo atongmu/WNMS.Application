@@ -1,0 +1,6 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define("exports ../../../../chunks/_rollupPluginBabelHelpers ../../../../chunks/tslib.es6 ../../../../core/Accessor ../../../../core/accessorSupport/decorators/property ../../../../core/arrayUtils ../../../../core/has ../../../../core/accessorSupport/ensureType ../../../../core/accessorSupport/decorators/subclass".split(" "),function(a,g,c,h,d,l,m,n,k){a.LineOfSightResult=function(e){function f(b){b=e.call(this,b)||this;b.target=null;b.intersectedGraphic=null;b.intersectedLocation=null;b.elevationAlignedTargetLocation=
+null;return b}g._inheritsLoose(f,e);return f}(h);c.__decorate([d.property()],a.LineOfSightResult.prototype,"target",void 0);c.__decorate([d.property()],a.LineOfSightResult.prototype,"intersectedGraphic",void 0);c.__decorate([d.property()],a.LineOfSightResult.prototype,"intersectedLocation",void 0);c.__decorate([d.property()],a.LineOfSightResult.prototype,"elevationAlignedTargetLocation",void 0);c.__decorate([d.property()],a.LineOfSightResult.prototype,"visible",void 0);a.LineOfSightResult=c.__decorate([k.subclass("esri.views.3d.analysis.LineOfSight.LineOfSightResult")],
+a.LineOfSightResult);Object.defineProperty(a,"__esModule",{value:!0})});

@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>报警记录</title>
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+	<script src="../../js/jquery-1.12.4.min.js"></script>
+	<!-- 日历 -->
+	<script src="../../lib/My97DatePicker/WdatePicker.js"></script>
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="../../css/bootstrap/bootstrap.css">
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <link rel="stylesheet" href="~/css/bootstrap-table-pagejump.css" />
+    <script src="~/js/bootstrap-table-pagejump.js"></script>
+
+</head>
+<body>
+    <div class="zlw_bjjl">
+        <div class="zlw_bjjlcon">
+            <!-- star 查询字段 -->
+            <div class="zlw_bjjlyi">
+                <div class="zlw_datamain_rgyi clearfloat">
+                    <!-- 时间 -->
+                    <div class="zlw_datamain_rgyiyi clearfloat left">
+                        <h4>查询时间：</h4>
+                        <ul class="clearfloat zlw_time_con">
+                            <li class="zlw_bgact"><i>近1小时</i></li>
+                            <li><i>近4小时</i></li>
+                            <li><i>近12小时</i></li>
+                            <li><i>近24小时</i></li>
+                        </ul>
+                    </div>
+                    <div class="zlw_datamain_rgyier left">
+                        <input id="d11" type="text" onclick="WdatePicker()">
+                        <span> 至 </span>
+                        <input id="d11" type="text" onclick="WdatePicker()">
+                    </div>
+                    <div class="zlw_datamain_rgyisan">
+                        <input type="submit" value="提交">
+                    </div>
+                </div>
+            </div>
+            <!-- 查询字段 end -->
+            <!-- star 报警级别 -->
+            <div class="zlw_bjjler">
+                <ul class="clearfloat">
+                    <li class="left zlw_bjjlernr">
+                        <div>
+                            <span>报警级别：</span>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox1" value="option1"> 普通
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox2" value="option2"> 高级
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox3" value="option3"> 紧急
+                            </label>
+                        </div>
+                    </li>
+                    <li class="left zlw_bjjlernr">
+                        <div>
+                            <span>站点类型：</span>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox1" value="option1"> 二供
+                            </label>
+                        </div>
+                    </li>
+                    <li class="left zlw_bjjlernr">
+                        <div>
+                            <span>报警类别：</span>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox1" value="option1"> 硬件
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox2" value="option2"> 突变
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox3" value="option3"> 超时
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- 报警级别 end -->
+            <!-- star 报警记录 -->
+            <div class="zlw_bjjlsan">
+                <table id="tabledata" class=" table-striped">
+
+                </table>
+            </div>
+            <!-- 报警记录 end -->
+
+        </div>
+    </div>
+    <script>
+		// 按钮切换样式
+		$(function(){
+			$(".zlw_time_con li").click(function() {
+				$(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+				$(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+            });
+            // 数据
+        $('#tabledata').bootstrapTable({
+            // url: '/json/data.json',        // 表格数据来源
+            // showColumns:true,
+            paginationShowPageGo: true,
+            showJumpto: true,
+            columns: [{
+                field: 'id',
+                title: '序号',
+                align: 'center',
+                backgroundColor:'#449d44'
+            }, {
+                field: 'column0',
+                title: '报警方案名称'
+            }, {
+                field: 'column1',
+                title: '报警站点'
+            },{
+                field: 'column2',
+                title: '方案类型'
+            },{
+                field: 'column3',
+                title: '报警等级' 
+            },{
+                field: 'column4',
+                title: '报警指示'
+            },{
+                field: 'column5',
+                title: '报警值'
+            },{
+                field: 'column6',
+                title: '报警限制值'
+            },{
+                field: 'column7',
+                title: '发生时间'
+            },{
+                field: 'column8',
+                title: '结束时间'
+            },{
+                field: 'column9',
+                title: '持续时间'
+            },{
+                field: 'column10',
+                title: '是否结束'
+            }    ],
+            data:[
+            {
+                id:1,
+                column0:'日照龙湖小区#低区出水压力',
+                column1:'日照龙湖小区#低区',
+                column2:'限值报警',
+                column3:'高级报警',
+                column4:'出水压力',
+                column5:'0.65MPa',
+                column6:'0.5MPa',
+                column7:'2020.01.05 10:10',
+                column8:'2020.01.05 10:15',
+                column9:'5分钟',
+                column10:'是'
+
+            },
+            {
+                id:2,
+                column0:'青岛龙湖小区#低区出水压力',
+                column1:'青岛龙湖小区#低区',
+                column2:'限值报警',
+                column3:'高级报警',
+                column4:'出水压力',
+                column5:'0.65MPa',
+                column6:'0.5MPa',
+                column7:'2020.01.05 10:10',
+                column8:'2020.01.05 10:15',
+                column9:'5分钟',
+                column10:'是'
+
+            },
+            {
+                id:3,
+                column0:'烟台龙湖小区#低区出水压力',
+                column1:'烟台龙湖小区#低区',
+                column2:'限值报警',
+                column3:'高级报警',
+                column4:'出水压力',
+                column5:'0.65MPa',
+                column6:'0.5MPa',
+                column7:'2020.01.05 10:10',
+                column8:'2020.01.05 10:15',
+                column9:'5分钟',
+                column10:'是'
+
+            },
+            ]
+        });
+            $('.fixed-table-loading').hide()
+            //$PageTable.on('uncheck.bs.table check.bs.table check-all.bs.table uncheck-all.bs.table', function (e, rows) {
+            //        var datas = $.isArray(rows) ? rows : [rows]; // 点击时获取选中的行或取消选中的行
+            //        examine(e.type, datas);// 保存到全局 Array() 里
+            //    })
+	}); 
+	</script>
+</body>
+</html>

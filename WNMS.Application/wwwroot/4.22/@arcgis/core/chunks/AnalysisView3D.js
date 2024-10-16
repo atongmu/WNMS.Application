@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+*/
+import{_ as t}from"./tslib.es6.js";import{i as r}from"../core/lang.js";import{a as s}from"./Promise.js";import{property as e}from"../core/accessorSupport/decorators/property.js";import"./ensureType.js";import{subclass as o}from"../core/accessorSupport/decorators/subclass.js";const i=i=>{let p=class extends(s(i)){constructor(){super(...arguments),this.parent=null}get updating(){return!1}get visible(){const t=!r(this.parent)||this.parent.visible&&!this.parent.suspended;return this.analysis.visible&&t}};return t([e({readOnly:!0})],p.prototype,"type",void 0),t([e({constructOnly:!0})],p.prototype,"analysis",void 0),t([e({constructOnly:!0})],p.prototype,"parent",void 0),t([e({constructOnly:!0})],p.prototype,"view",void 0),t([e({readOnly:!0})],p.prototype,"updating",null),t([e({readOnly:!0})],p.prototype,"visible",null),p=t([o("esri.views.3d.analysis.AnalysisView3D")],p),p};export{i as A};

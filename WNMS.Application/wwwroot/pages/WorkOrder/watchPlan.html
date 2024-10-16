@@ -1,0 +1,529 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" /WorkOrder/Content/="width=device-width" />
+    <title>查看任务</title>
+    <link rel="stylesheet" href="/WorkOrder/Content//bootstrap/css/bootstrap.min.css">
+    <link href="/WorkOrder/Content//newself/css/bootstrap-reset.css" rel="stylesheet" />
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="/WorkOrder/Scripts/jquery-3.1.1.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="/WorkOrder/Content//bootstrap/js/bootstrap.min.js"></script>
+    <!--layui样式框架-->
+    <link href="/WorkOrder/Content//layui/css/layui.css" rel="stylesheet" />
+    <script src="/WorkOrder/Content//layui/layui.all.js"></script>
+
+    <!--icon图表库-->
+    <link href="/WorkOrder/Content//newself/css/ionicons.min.css" rel="stylesheet" />
+    <link href="/WorkOrder/Content//newself/css/font-awesome.css" rel="stylesheet" />
+    <!--可编辑样式/JS-->
+    <link href="/WorkOrder/Content//newself/css/index.css" rel="stylesheet" />
+    <link href="/WorkOrder/Content//newself/css/patrol.css" rel="stylesheet" />
+    <script src="/WorkOrder/Content//newself/js/patrol.js"></script>
+
+
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0FD2e24cIlCdotUtuW037RVo"></script>
+    <script src="/WorkOrder/Content//newself/js/jscolor/jscolor.js"></script>
+    <!--加载鼠标绘制工具-->
+    <script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+
+    <script>
+
+
+    </script>
+
+
+
+    <style>
+        .layui-table td,
+        .layui-table th {
+            position: relative;
+            padding: 5px 5px;
+            min-height: 20px;
+            line-height: 30px;
+            font-size: 10px;
+        }
+
+        .spanclass {
+            margin-left: 10px
+        }
+
+        /*#mapToggle {
+            position: absolute;
+            bottom: 40px;
+            right: 30px;
+            display: flex;
+            flex-direction: row;
+            cursor: default;
+            z-index: 999;
+        }
+
+        #mapLayer {
+            width: 70px;
+            text-align: center;
+            background-color: #ffffff;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-right-style: solid;
+            border-right-width: 1px;
+            border-right-color: #c6c6c6;
+            border-radius: 10px 0 0 10px;
+        }
+
+        #imageLayer {
+            width: 70px;
+            text-align: center;
+            background-color: #ffffff;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-left-style: solid;
+            border-left-width: 1px;
+            border-left-color: #c6c6c6;
+            border-radius: 0 10px 10px 0;
+        }*/
+    </style>
+</head>
+<body>
+    <div class="potrolMap_popup" style="z-index:99">
+        <!--弹出框2-->
+        <h3>
+            <label>设备信息</label>
+            <span class="potrolPopup_close"><i class="fa fa-close"></i></span>
+        </h3>
+        <div class="potrolMap_popup_tab">
+            <a class="active">反馈详情</a><a>设备详情</a>
+        </div>
+        <div class="potrolMap_popup_tabCon">
+            <div class="potrolMap_popup_tabBox" id="detailfeed">
+                <img id="imageFullScreen" src="/WorkOrder/Content//newself/images/default.jpg" />
+
+
+
+                <div class="potrolMap_tabBox_btn">
+                    <button class="btn btn-default" id="previous">上一张</button>
+                    <button class="btn btn-default" id="next">下一张</button>
+                    <div class="clear"></div>
+                </div>
+                <ul>
+                </ul>
+            </div>
+            <div class="potrolMap_popup_tabBox" id="deviceDetail">
+                <ul></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="potrolPopup potrolPopup_jhmb box" style="width:450px;height:580px;z-index:99">
+        <!--弹出框-->
+        <div class="potrolPopup_header">
+            <!--头部-->
+            <h4>计划模板</h4>
+            <span class="potrolPopup_close"><i class="fa fa-close"></i></span>
+            <div class="clear"></div>
+        </div>
+        <div class="potrolPopup_body">
+            <!--内容-->
+            <div class="potrolRwxx">
+                <div class="rwxx_top">
+                    <p>
+                        <label>任务信息:</label>
+                        <a>编号:<span>RWXJ3</span></a>
+                        <a>任务时刻:<span>2019.09.28-2019.09.28</span></a>
+                    </p>
+                    <p>
+
+                        <a>点反馈:<span>0/3</span></a>
+
+                    </p>
+                </div>
+                <div class="rwxx_bot">
+                    <table class="layui-table">
+                        <thead>
+                            <tr>
+                                <td>#</td>
+                                <td>设备名称</td>
+                                <td>坐标</td>
+                                <td>状态</td>
+                                <td>更新时间</td>
+                            </tr>
+                        </thead>
+                        <tbody id="tabletada"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="potrolPopup_footer">
+            <!--按钮-->
+
+            <select id="type" style="width:100px;height:30px">
+                <option value="全部">全部</option>
+
+                <option value="已反馈">已反馈</option>
+                <option value="未反馈">未反馈</option>
+
+            </select>
+
+
+            <script>
+					$(function() {
+						var array = [];
+						var Num = 0;
+						var bigmark = [];
+						var PlanID = 3;
+						var checkID = 0;
+						var equipID = 0;
+						$(function() {
+							$('.potrolPopup_jhmb').show();
+							$(".potrolMap_popup").hide();
+							GetPlanWatchDetail();
+							//弹框2选项卡功能
+							var a1 = $('.potrolMap_popup_tab a')
+							var div = $('.potrolMap_popup_tabBox')
+							for (var i = 0; i < a1.length; i++) {
+								a1[i].index = i;
+								a1[i].onclick = function() {
+									for (var i = 0; i < a1.length; i++) {
+										a1[i].className = ''
+										div[i].style.display = 'none';
+
+									}
+									this.className = 'active'
+									div[this.index].style.display = 'block';
+									if (this.index == 1) {
+										deviceDetail(checkID);
+									} else {
+										taskdetail(equipID);
+									}
+								}
+							}
+
+							//图片放大及缩小
+							//$('#imageFullScreen').smartZoom({'containerClass':'zoomableContainer'});
+							$('#topPositionMap,#leftPositionMap,#rightPositionMap,#bottomPositionMap').bind("click",
+								moveButtonClickHandler);
+							$('#zoomInButton,#zoomOutButton').bind("click", zoomButtonClickHandler);
+
+							function zoomButtonClickHandler(e) {
+								var scaleToAdd = 0.8;
+								if (e.target.id == 'zoomOutButton')
+									scaleToAdd = -scaleToAdd;
+								$('#imageFullScreen').smartZoom('zoom', scaleToAdd);
+							}
+
+							function moveButtonClickHandler(e) {
+								var pixelsToMoveOnX = 0;
+								var pixelsToMoveOnY = 0;
+
+								switch (e.target.id) {
+									case "leftPositionMap":
+										pixelsToMoveOnX = 50;
+										break;
+									case "rightPositionMap":
+										pixelsToMoveOnX = -50;
+										break;
+									case "topPositionMap":
+										pixelsToMoveOnY = 50;
+										break;
+									case "bottomPositionMap":
+										pixelsToMoveOnY = -50;
+										break;
+								}
+								$('#imageFullScreen').smartZoom('pan', pixelsToMoveOnX, pixelsToMoveOnY);
+							}
+
+						})
+
+						function GetPlanWatchDetail() {
+							$.post("http://47.93.6.250:10041/GD_AssignmentPlan/WatchPlanDetail", {
+								PlanID: PlanID,
+								type: $("#type").find("option:selected").text()
+							}, function(data) {
+								if (data != "") {
+									console.log(data);
+
+									/**
+									 * 前端模拟数据
+									 */
+									data = [{"rownum":1,"EquipmentID":1492421542438,"EquipmentNo":"1608010","DevicePosition":"山东省临沂市北城新区北京路37号","Gis":"118.353059,35.109041","DeviceName":"临商银行股份有限公司-临商银行金升支行综合服务楼","ID":null,"ModifyTime":null,"ReachState":false,"FeedBackState":false},{"rownum":2,"EquipmentID":1540257399334,"EquipmentNo":"7700121","DevicePosition":"山东省临沂市兰山区金雀山路42号","Gis":"118.355308,35.057104","DeviceName":"兰山供水泵站","ID":null,"ModifyTime":null,"ReachState":false,"FeedBackState":false}];
+
+									// var json = JSON.parse(data);
+									var json = data;
+
+									$("#tabletada").empty();
+									var appenddata = "";
+
+									//addObjects(json);
+									for (var i = 0; i < json.length; i++) {
+										var state = "";
+										if (json[i].FeedBackState == true) {
+											state = "<i class='fa fa-circle' aria-hidden='true' style='color:green'></i>";
+										}
+										//else {
+										//    if (json[i].ReachState == true) {
+										//        state = "<i class='fa fa-circle' aria-hidden='true' style='color:blue'></i>";
+										//    }
+										else {
+											state = "<i class='fa fa-circle' aria-hidden='true'></i>";
+										}
+										//}
+
+										if (json[i].ModifyTime != null) {
+											appenddata += "<tr data-value='" + json[i].ID + "' data-equipid='" + json[i].EquipmentID +
+												"' data-gis='" + json[i].Gis + "'><td>" + json[i].rownum + "</td><td>" + json[i].DeviceName +
+												"</td><td>" + json[i].Gis + "</td><td>" + state + "</td><td>" + json[i].ModifyTime.replace("T", " ") +
+												"</td></tr>";
+										} else {
+											appenddata += "<tr data-value='" + json[i].ID + "'  data-equipid='" + json[i].EquipmentID +
+												"' data-gis='" + json[i].Gis + "'><td>" + json[i].rownum + "</td><td>" + json[i].DeviceName +
+												"</td><td>" + json[i].Gis + "</td><td>" + state + "</td><td>无</td></tr>";
+										}
+
+
+									}
+									$("#tabletada").append(appenddata);
+									$("#recordNum").text(json.length);
+								}
+							})
+						}
+
+
+						$(document).on("click", "#tabletada tr", function() {
+							checkID = $(this).data("value");
+							equipID = $(this).data("equipid").toString();
+							if (checkID == null || checkID == "") {
+								checkID = 0;
+							}
+							if (equipID == null || equipID == "") {
+								equipID = 0;
+							}
+							var checkgis = $(this).data("gis");
+							if (checkgis != "") {
+								if (checkgis.indexOf(",") != -1) {
+									var ss = checkgis.split(",");
+									DisPlayOneRtu(ss[0], ss[1]);
+								}
+
+							}
+
+
+							$(".potrolMap_popup").show();
+							var excute = $(".potrolMap_popup_tab .active").text();
+							if (excute == "反馈详情") {
+								taskdetail(checkID);
+							} else {
+
+								deviceDetail(equipID);
+
+							}
+						})
+
+						//显示某个设备
+						function DisPlayOneRtu(Lng, Lat) {
+							map.clearOverlays();
+							var markerold = null;
+							var pts = [];
+							var pt1 = new BMap.Point(Lng, Lat);
+							pts.push(pt1);
+							var myIconold = new BMap.Icon("/WorkOrder/Content//newself/img/positionBig.png", new BMap.Size(20, 32), {
+								//anchor: new BMap.Size(10, 32),
+								//imageOffset: new BMap.Size(0 - 10, 0 - 32)
+								offset: new BMap.Size(20, 16)
+							});
+							markerold = new BMap.Marker(pt1, {
+								icon: myIconold
+							}); // 创建标注
+							map.addOverlay(markerold);
+							setZoom(pts);
+						}
+
+						// 根据点的数组自动调整缩放级别
+						function setZoom(bPoints) {
+							var view = map.getViewport(eval(bPoints));
+							var mapZoom = view.zoom;
+							var centerPoint = view.center;
+							map.centerAndZoom(centerPoint, mapZoom);
+						}
+
+						function taskdetail(id) {
+							$.post("http://47.93.6.250:10041/GD_AssignmentPlan/GetTaskDetail", {
+								feedID: id,
+							}, function(data) {
+								if (data.dataInfos != "" && data.dataInfos != "null") {
+									var json = JSON.parse(data.feedbackData);
+									var datainfoList = JSON.parse(data.dataInfos);
+									$("#detailfeed ul").empty();
+									var appenddata = "";
+									if (data.GISLocation != "") {
+										appenddata += " <li>巡检定位:<span>" + data.GISLocation + "</span></li><br/>";
+									}
+
+									for (var i = 0; i < datainfoList.length; i++) {
+										var feedvalue = "";
+										if (json != null) {
+											if (json[datainfoList[i].FeedBackName] != undefined) {
+												feedvalue = json[datainfoList[i].FeedBackName];
+												if (feedvalue == true) {
+													feedvalue = "是";
+												} else {
+													if (feedvalue == false) {
+														feedvalue = "否";
+													}
+												}
+											}
+
+										}
+
+										appenddata += " <li>" + datainfoList[i].FeedBackName + ":<span>" + feedvalue + "</span></li>";
+									}
+									$("#detailfeed ul").append(appenddata);
+								} else {
+									$("#detailfeed ul").empty();
+								}
+								if (data.imgelist.length > 0) {
+									array = data.imgelist;
+									$(".potrolMap_popup_tabBox img").attr("src", data.imgelist[0]);
+									if (data.imgelist.length == 1) {
+										$(".potrolMap_tabBox_btn").hide();
+
+									} else {
+										$(".potrolMap_tabBox_btn").show();
+									}
+								} else {
+									$(".potrolMap_popup_tabBox img").attr("src", "/WorkOrder/Content//newself/images/default.jpg");
+									$(".potrolMap_tabBox_btn").hide();
+								}
+							});
+						}
+
+						function deviceDetail(id) {
+
+							$("#deviceDetail ul").empty();
+							$.post("/GD_AssignmentPlan/GetDeviceDetail", {
+								equipID: id
+							}, function(result) {
+								var data = JSON.parse(result.data);
+								if (data != null) {
+									var appenddata = " <li>设备名称:<span>" + data.DeviceName + "</span></li>";
+									appenddata += " <li>安装位置:<span>" + (data.DevicePosition == null ? '' : data.DevicePosition) +
+										"</span></li>";
+									appenddata += " <li>Gis坐标:<span>" + data.Lng + "," + data.Lat + "</span></li>";
+									appenddata += " <li>设备编号:<span>" + data.EquipmentNo + "</span></li>";
+
+									appenddata += " <li>通讯编号:<span>" + data.DeviceID + "</span></li>";
+									appenddata += " <li>IP端口:<span>" + data.IPPort + "</span></li>";
+									appenddata += " <li>Com地址:<span>" + data.ComAddress + "</span></li>";
+									appenddata += " <li>优先级:<span>" + (data.Priority == null ? '' : data.Priority) + "</span></li>";
+									$("#deviceDetail ul").append(appenddata);
+								}
+
+							})
+						}
+
+						$("#previous").click(function() {
+							if (Num != 0) {
+								$(".potrolMap_popup_tabBox img").attr("src", array[Num - 1]);
+								Num = Num - 1;
+							}
+						})
+
+						$("#next").click(function() {
+							if (Num < array.length - 1) {
+								$(".potrolMap_popup_tabBox img").attr("src", array[Num + 1]);
+								Num = Num + 1;
+							}
+						})
+
+						$("#type").change(function() {
+							GetPlanWatchDetail();
+						});
+
+						$(".potrolMap_popup_tabBox img").click(function() {
+							var src = $(".potrolMap_popup_tabBox img").attr('src');
+							iframe("图片预览", "1000px", "700px", "http://47.93.6.250:10041/GD_AssignmentPlan/ImagePreview?Url=" + src + "");
+							//window.open("/GD_AssignmentPlan/ImagePreview?Url='" + src + "'");
+						});
+
+
+
+						//定义layer层
+						function iframe(title, width, height, url) {
+							layer.open({
+								type: 2,
+								title: title,
+								shadeClose: true,
+								shade: 0.7,
+								area: [width, height],
+								/WorkOrder/Content/: url,
+								cancel: function(index) {}
+							})
+						};
+
+					})
+            </script>
+            <span class="spanclass">共</span><span id="recordNum">80</span><span>条记录</span>
+            <span class="spanclass"><i class="fa fa-circle" aria-hidden="true" style="color:green"></i>已反馈</span>
+
+            <span class="spanclass"><i class="fa fa-circle" aria-hidden="true"></i>未反馈</span>
+        </div>
+    </div>
+    <div id="mapDiv" style="position:absolute;top:0;left:0;width:100%;height:100%;"></div>
+
+
+
+    <script>
+			var map; //地图对象
+			var areaID = 0,
+				areapid = 0;
+			var markoverlayer = [];
+			var overlays = [];
+			var templays = [];
+			//---------------------------地图操作区域-----------------------------------------
+			//-----------------------------strat-----------------------------------------
+			//1.实例化地图
+
+			map = new BMap.Map("mapDiv", {
+				minZoom: 5
+			}); // 创建Map实例
+			map.centerAndZoom(new BMap.Point(116.376979, 39.904374), 5); // 初始化地图,设置中心点坐标和地图级别
+			map.addControl(new BMap.MapTypeControl({
+				mapTypes: [BMAP_NORMAL_MAP, BMAP_HYBRID_MAP],
+				anchor: BMAP_ANCHOR_TOP_RIGHT
+			})); //添加地图类型控件
+			map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
+			map.enableScrollWheelZoom(true);
+			//loadMarkerByZoom();
+			//地图级别变化结束监听
+			map.addEventListener("zoomend", function() {
+				//loadMarkerByZoom();
+			});
+			//拖动获取设备信息
+			map.addEventListener("moveend", function() {
+
+				//loadMarkerByMove();
+			});
+
+			function clearAll() {
+				//for (var i = 0; i < overlays.length; i++) {
+				//    map.removeOverlay(overlays[i]);
+				//}
+				map.clearOverlays();
+				overlays.length = 0;
+				markoverlayer.length = 0;
+
+			}
+			var styleOptions = {
+				strokeColor: "red", //边线颜色。
+				fillColor: "red", //填充颜色。当参数为空时，圆形将没有填充效果。
+				strokeWeight: 3, //边线的宽度，以像素为单位。
+				strokeOpacity: 0.8, //边线透明度，取值范围0 - 1。
+				fillOpacity: 0.6, //填充的透明度，取值范围0 - 1。
+				strokeStyle: 'solid' //边线的样式，solid或dashed。
+			}
+    </script>
+
+
+
+</body>
+</html>

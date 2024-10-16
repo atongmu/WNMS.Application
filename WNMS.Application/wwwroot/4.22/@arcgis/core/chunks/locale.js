@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+*/
+var n,l,o;let e,a;const i=null!=(n=null==(l=globalThis.esriConfig)?void 0:l.locale)?n:null==(o=globalThis.dojoConfig)?void 0:o.locale;function t(){var n,l;return null!=(n=null!=i?i:null==(l=globalThis.navigator)?void 0:l.language)?n:"en"}function u(){return void 0===a&&(a=t()),a}function s(n){e=n||void 0,b()}function r(n=u()){const l=/^([a-zA-Z]{2,3})(?:[_\-]\w+)*$/.exec(n);return null==l?void 0:l[1].toLowerCase()}const c={he:!0,ar:!0};function v(n=u()){const l=r(n);return void 0!==l&&(c[l]||!1)}const d=[];function f(n){return d.push(n),{remove(){d.splice(d.indexOf(n),1)}}}const g=[];function h(n){return g.push(n),{remove(){d.splice(g.indexOf(n),1)}}}function b(){var n;const l=null!=(n=e)?n:t();a!==l&&(a=l,[...g].forEach((n=>{n.call(null,l)})),[...d].forEach((n=>{n.call(null,l)})))}null==globalThis.addEventListener||globalThis.addEventListener("languagechange",b);export{r as a,h as b,u as g,f as o,v as p,s};

@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>视频监控</title>
+    <link rel="stylesheet" href="../../css/iconfont.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+</head>
+<body>
+    <div class="zlw-content">
+            <div class="zlw-content-lf relative" style="overflow-x:hidden;">
+                <div class="zlw-content-lfdj"></div>
+                <div class="zlw-content-lfcon">
+                    <div class="zlw-sxtcyi">
+                    <div class="zlw-sxtcyicon">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input id="selname" type="text" placeholder="请输入搜索的内容" class="zlw-ssk">
+                    </div>
+                </div>
+                <div class="zlw-sxtcer">
+                    <div class="zlw-tree pt5px">
+                        <ul class="sxt_list" id="dataList">
+                            <li class="on">
+                                <em class="clcle-red"></em>
+                                <span class="chaochu">锦绣蓝山</span>
+                                <i class="iconfont icon-shexiangtou"></i>
+                            </li>
+                            <li>
+                                <em class="clcle-green"></em>
+                                <span class="chaochu">锦绣蓝山</span>
+                                <i class="iconfont icon-shexiangtou"></i>
+                            </li>
+                            <li>
+                                <em class="clcle-gray"></em>
+                                <span class="chaochu">锦绣蓝山兰山公证处</span>
+                                <i class="iconfont icon-shexiangtou"></i>
+                            </li>
+                            <li>
+                                <em class="clcle-red"></em>
+                                <span class="chaochu">锦绣蓝山</span>
+                                <i class="iconfont icon-shexiangtou"></i>
+                            </li>
+                            <li>
+                                <em class="clcle-red"></em>
+                                <span class="chaochu">锦绣蓝山</span>
+                                <i class="iconfont icon-shexiangtou"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                </div>
+                
+            </div>
+            <div class="zlw-content-rg">
+                <div class="zlw-content-rgcon">
+                    <div class="left-icon"></div>
+                    <!--- star Camera -->
+                    <div class="zlw-camera-list">
+                        <div class="zlw-camera-list-title">
+                            <p>视频列表</p>
+                        </div>
+                        <div class="zlw-camera-list-content">
+                            <ul>
+                                <li class="camera_act"><p>锦绣蓝山1</p></li>
+                                <li><p>锦绣蓝山2</p></li>
+                                <li><p>锦绣蓝山3</p></li>
+                                <li><p>锦绣蓝山4</p></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="zlw-camera-content">
+                        <div class="zlw-camera-contentdw">
+                            <div class="zlw-camera-content-xx clearfloat">
+                                <span class="left">选项</span>
+                                <ul class="left clearfloat">
+                                    <li class="xz_active left numberyiyi">1x1</li>
+                                    <li class="left numbererer">2x2</li>
+                                </ul>
+                            </div>
+                            <div class="zlw-camera-content-nr">
+                                <ul class="clearfloat camera_numyi">
+                                    <li>
+                                        <div class="zlw-camera-number">
+                                            <span></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="zlw-camera-number">
+                                            <span></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="zlw-camera-number">
+                                            <span></span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="zlw-camera-number">
+                                            <span></span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Camera end -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $(".zlw-content-lfdj").click(function () {
+                $(".zlw-content-lfdj").hide();
+                $(".left-icon").css("display", "block");
+                $(".zlw-content-lf").css({ "width": "0", "padding": "0" });
+                $(".zlw-content-rg").css("width", "100%");
+            });
+            $(".left-icon").click(function () {
+                $(".zlw-content-lfdj").fadeIn();
+                $(".left-icon").css("display", "none");
+                $(".zlw-content-lf").css({ "width": "220px", "padding": "5px" });
+                $(".zlw-content-rg").css("width", "calc(100% - 220px)");
+            })
+            $(document).on('click', '.sxt_list li', function () {
+                $(this).addClass('on').siblings('li').removeClass('on');
+            });
+                $(document).on('click', '.navlist li', function () {
+                    $(this).addClass('on').siblings('li').removeClass('on');
+            });
+            $(document).on('click', '.zlw-camera-list-content ul li', function () {
+                $(this).addClass('camera_act').siblings('li').removeClass('camera_act');
+            }); 
+            $(document).on('click', '.zlw-camera-content-xx ul li', function () {
+                $(this).addClass('xz_active').siblings('li').removeClass('xz_active');
+            });
+            $('.numberyiyi').click(function () {
+                $('.zlw-camera-content-nr ul').addClass("camera_numyi").removeClass("camera_numer");
+            })
+            $('.numbererer').click(function () {
+                $('.zlw-camera-content-nr ul').addClass("camera_numer").removeClass("camera_numyi");
+            })
+        })
+    </script>
+</body>
+</html>

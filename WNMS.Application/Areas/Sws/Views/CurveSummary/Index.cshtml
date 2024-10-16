@@ -1,0 +1,1454 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>曲线汇总</title>
+    <link rel="Shortcut Icon" href="~/UploadImg/Logo/logo.png" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Swslxl/css_lines/sdc.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/echarts.min.js"></script>
+    <script src="~/js/jquery.kxbdMarquee.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+
+    <style>
+        .no-date {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            position: relative;
+            left: 0;
+            top: 48%;
+            display: none
+        }
+
+            .no-date img {
+                position: relative;
+                top: -75px;
+            }
+
+            .no-date p {
+                text-align: center;
+                font-size: 14px;
+                color: #fff;
+                position: absolute;
+                top: 85px;
+                width: 100%;
+            }
+    </style>
+</head>
+<body>
+    <div class="zlw_btcj">
+        <div class="zlw_btcjcon">
+            <!-- top -->
+            <div class="btcjtop clearfloat">
+                <div class="btcjtoplf left">
+                    <div class="btcjtoplfcon">
+                        <!-- 倒角 -->
+                        <i class="leftTopx corner"></i>
+                        <i class="rightTopx corner"></i>
+                        <i class="leftBottomx corner"></i>
+                        <i class="rightBottomx corner"></i>
+                        <div class="btcjlist clearfloat">
+                            <div class="btcjlistcon">
+                                <p class="btcjlistyi">设备绩效分析</p>
+                                <button class="sbxz" id="chongzhi">选择</button>
+
+                            </div>
+                        </div>
+                        <div class="btcjnr">
+                            <!-- VS -->
+                            <p class="pk">VS</p>
+                            <ul class="clearfloat">
+                                <li class="clearfloat">
+                                    <div class="btcjnryi">
+                                        <p class="name1new">@Html.Raw(ViewBag.devicename1)</p>
+                                    </div>
+                                    <div class="btcjnrer clearfloat">
+                                        <div class="dbitem">
+                                            <span> <i id="pressIN1">0.35</i> </span>
+                                            <p>进水压力</p>
+                                        </div>
+                                        <div class="dbitem">
+                                            <span> <i id="pressOut1">0.35</i> </span>
+                                            <p>出水压力</p>
+                                        </div>
+                                        <div class="dbitem">
+                                            <span> <i id="pressSet1">0.35</i> </span>
+                                            <p>设定压力</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="clearfloat">
+                                    <div class="btcjnryi">
+                                        <p class="name2new">@Html.Raw(ViewBag.devicename2)</p>
+                                    </div>
+                                    <div class="btcjnrer clearfloat">
+                                        <div class="dbitem">
+                                            <span> <i id="pressIN2">0.35</i> </span>
+                                            <p>进水压力</p>
+                                        </div>
+                                        <div class="dbitem">
+                                            <span> <i id="pressOut2">0.35</i> </span>
+                                            <p>出水压力</p>
+                                        </div>
+                                        <div class="dbitem">
+                                            <span> <i id="pressSet2">0.35</i> </span>
+                                            <p>设定压力</p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="btcjtoprg right">
+                    <div class="zlwarealisttlt">
+                        <p>压力波动对比</p>
+                    </div>
+                    <div class="zlwarealistcon">
+                        <div id="ylbdcs"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- bot -->
+            <div class="btcjbot clearfloat">
+                <div class="btcjbotlf left">
+                    <ul class="clearfloat">
+                        <li>
+                            <div class="btcjlb">
+                                <div class="zlwarealisttlt">
+                                    <p>出水压力对比分析</p>
+                                </div>
+                                <div class="zlwarealistcon">
+                                    <div id="jrlldb"></div>
+                                    <div class="no-date" id="nodata_press" style="display:none">
+                                        <img src="/images/zanwu.png" width="150" height="150" />
+                                        <p>暂无数据</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="btcjlb">
+                                <div class="zlwarealisttlt">
+                                    <p>能耗对比分析</p>
+                                </div>
+                                <div class="zlwarealistcon">
+                                    <div id="jrnhdb"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="btcjlb">
+                                <div class="zlwarealisttlt">
+                                    <p>单吨能耗对比</p>
+                                </div>
+                                <div class="zlwarealistcon">
+                                    <div id="ddnhdb"></div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="btcjlb">
+                                <div class="zlwarealisttlt">
+                                    <p>频率对比分析</p>
+                                </div>
+                                <div class="zlwarealistcon">
+                                    <div id="pldbfx"></div>
+                                    <div class="no-date" id="nodata" style="display:none">
+                                        <img src="/images/zanwu.png" width="150" height="150" />
+                                        <p>暂无数据</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="btcjbotrg right">
+                    <!-- 波动次数对比 -->
+                    <div class="btcbdcs">
+                        <div class="btcbdcscon">
+                            <div class="zlwarealisttlt">
+                                <p>压力波动对比</p>
+                            </div>
+                            <div class="btsbdbfx">
+                                <ul class="clearfloat">
+                                    <li>
+                                        <div id="zbdcs"></div>
+                                    </li>
+                                    <li>
+                                        <div id="ybdcs"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btcjjl">
+                        <div class="zlwarealisttlt">
+                            <p>设备对比结论</p>
+                        </div>
+                        <div class="btsbdbfx">
+                            <div class="btsbdbfxyi clearfloat">
+                                <span>类别</span>
+                                <span class="name1new">@Html.Raw(ViewBag.devicename1)</span>
+                                <span class="name2new">@Html.Raw(ViewBag.devicename2)</span>
+                            </div>
+                            <div id="queeContent" style="height:100%">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            var marH = ($('.btcjnrer').height() - 120) / 2 + 'px';
+            $('.dbitem').css('paddingTop', marH)
+        })
+        $(window).resize(function () {
+            var marH = ($('.btcjnrer').height() - 120) / 2 + 'px';
+            $('.dbitem').css('paddingTop', marH)
+        });
+
+    </script>
+    <script>
+        //设备选择
+        var deviceID1 = @ViewBag.deviceid1;
+        var deviceID2 = @ViewBag.deviceid2;
+        var deviceName1 = "@Html.Raw(ViewBag.devicename1)";
+        var deviceName2 = "@Html.Raw(ViewBag.devicename2)";
+        $('#chongzhi').on('click', function () {
+            iframeWithBtns("设备配置", "400px", "300px", "/Sws/CurveSummary/SelectDevices/", false, function (formIndex, formLayer) {
+                var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                currentIframe.saveForm(function (deviceid1, devicename1, deviceid2, devicename2) {
+                    deviceID1 = deviceid1;
+                    deviceName1 = devicename1;
+                    deviceID2 = deviceid2;
+                    deviceName2 = devicename2;
+                    $(".name1new").text(devicename1);
+                    $(".name2new").text(devicename2);
+
+                    layer.close(formIndex);
+                    if (deviceID1 != 0 && deviceID2 != 0) {
+                        clearInterval(jkfresh);
+                        
+                        clearInterval(hourFresh);
+                        clearInterval(pressFreFresh);
+                        GetJKData();
+                        GetWaterDataOfMonth();
+                        GetflucCount();
+                        FrePressData();
+                        
+                        GetCompareData();
+                       
+                        GetWeekFlucNum();
+                        GetMonthFlucNum();
+                        jkfresh = setInterval("GetJKData()", 5000);
+                       
+                        hourFresh = setInterval("FreshByHour()", 1000 * 3600);
+                    }
+                });
+            });
+        })
+        function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+
+         // 压力波动次数
+        var myChart1 = echarts.init(document.getElementById('ylbdcs'));
+        var option1 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '15px',
+                right: '20px',
+                bottom: '30',
+                top: '16%',
+                containLabel: true
+            },
+            legend: {
+                data: ['新都大丰锦封新城C区中一区', '北京昆仑饭店高区'],
+                left: 'center',
+                top: 0,
+                textStyle: {
+                    fontSize: 15,
+                    color: "#fff"
+                },
+                itemWidth: 12,
+                itemHeight: 10,
+                // itemGap: 35
+            },
+            xAxis: {
+                type: 'category',
+                data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月'],
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                    lineStyle: {//线条样式
+                        color: '#2c345c',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#fff',
+                    },//控制x轴字体样式
+                    fontSize: 15,
+                    margin: 10,
+                },
+            },
+
+            yAxis: {
+                type: 'value',
+                // name:'次',
+                nameTextStyle: {
+                    color: '#fff',
+                    fontSize: 15,
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                            },
+                            {
+                                offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        },
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: 15
+                    },//控制x轴字体样式
+                },
+            },
+            calculable: true,
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 100,
+                    bottom: 10,
+                    right: 20,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            series: [{
+                name: '新都大丰锦封新城C区中一区',
+                type: 'bar',
+                barWidth: '12',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#d6c768'
+                        }, {
+                            offset: 1,
+                            color: '#9b8501'
+                        }]),
+                        barBorderRadius: 12,
+                    },
+                },
+                data: [400, 400, 650, 700, 500, 650, 400, 400, 550]
+            },
+            {
+                name: '北京昆仑饭店高区',
+                type: 'bar',
+                barWidth: '12',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#33d8fa'
+                        }, {
+                            offset: 1,
+                            color: '#0471bd'
+                        }]),
+                        barBorderRadius: 11,
+                    }
+
+                },
+                data: [500, 500, 400, 400, 260, 200, 300, 350, 400]
+            }]
+        };
+        //  压力对比
+        var myChart2 = echarts.init(document.getElementById('jrlldb'));
+        var option2 = {
+            color: ['#2EC7C9', '#B6A2DE', '#5AB1EF', '#FFB980'],
+            tooltip: {
+                trigger: 'axis'
+            },
+            calculable: true,
+            grid: {
+                top: 70,
+                left: 10,
+                right: 10,
+                bottom: 25,
+                containLabel: true
+            },
+            legend: {
+                left: 'center',
+                top: 0,
+                textStyle: {
+                    color: '#fff',
+                    fontSize: 15
+                }
+            },
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 100,
+                    bottom: 10,
+                    right: 20,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            xAxis: [
+                {
+                    type: 'time',
+                    axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                    lineStyle: {//线条样式
+                        color: '#2c345c',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#fff',
+                    },//控制x轴字体样式
+                    fontSize: 15,
+                    margin: 10,
+                },
+                    data: ['1月', '2月', '3月', '4月', '5月', '6月']
+                }
+            ],
+            yAxis: [{
+                type: 'value',
+                name: 'MPa',
+                nameTextStyle: {
+                    color: '#fff',
+                    fontSize: 15
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                            },
+                            {
+                                offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        },
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: 15
+                    },//控制x轴字体样式
+                }
+            }
+            ],
+            series: [
+                {
+                    name: '新都大丰锦封新城C区中一区',
+                    //barWidth: 13,
+                    type: 'line',
+                    //barWidth: 8,
+                    smooth: false,
+                    showSymbol: false,
+
+                    itemStyle: {
+                        color: '#ff6000'
+                    },
+                    data: []
+                },
+                {
+                    name: '北京昆仑饭店高区',
+                    type: 'line',
+                    smooth: false,
+                    showSymbol: false,
+                    itemStyle: {
+                        color: '#12ff00'
+                    },
+
+
+                    data: []
+                }
+
+            ]};
+
+
+        // 能耗
+        var myChart3 = echarts.init(document.getElementById('jrnhdb'));
+        var option3 = {
+            grid: {
+                top: 70,
+                left: 15,
+                right: 20,
+                bottom: 10,
+                containLabel: true
+            },
+            legend: {
+                left: 'center',
+                top: 0,
+                textStyle: {
+                    color: '#fff',
+                    fontSize: 15
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            color: ['#73d3ff'],
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLabel: {
+                    formatter: '{value} '
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: '#1a253b',
+                        width: 1,
+                        type: 'deshed'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: { color: '#fff' },//控制x轴字体样式
+                    fontSize: 15,
+                },
+                data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月']
+            },
+            yAxis: {
+                name: 'kW·h',
+                nameTextStyle: {
+                    color: "#fff",
+                    fontSize: 14
+                },
+                axisLabel: {
+                    formatter: '{value} '
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: '#1a253b',
+                        width: 1,
+                        type: 'deshed'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: { color: '#fff' },//控制x轴字体样式
+                    fontSize: 15,
+                },
+            },
+            series: [{
+                name: '新都大丰锦封新城C区中一区',
+                type: 'line',
+                // smooth: true, //是否平滑
+                showAllSymbol: true,
+                // symbol: 'image://./static/images/guang-circle.png',
+                symbol: 'circle',
+                symbolSize: 5,
+                lineStyle: {
+                    normal: {
+                        color: "#6c50f3",
+                        shadowColor: 'rgba(0, 0, 0, .3)',
+                        shadowBlur: 0,
+                        shadowOffsetY: 5,
+                        shadowOffsetX: 5,
+                    },
+                },
+                label: {
+                    show: false,
+                    position: 'top',
+                    textStyle: {
+                        color: '#6c50f3',
+                    }
+                },
+                itemStyle: {
+                    color: "#6c50f3",
+                    borderColor: "#fff",
+                    borderWidth: 3,
+                    shadowColor: 'rgba(0, 0, 0, .3)',
+                    shadowBlur: 0,
+                    shadowOffsetY: 2,
+                    shadowOffsetX: 2,
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(108,80,243,0.3)'
+                        },
+                        {
+                            offset: 1,
+                            color: 'rgba(108,80,243,0)'
+                        }
+                        ], false),
+                        shadowColor: 'rgba(108,80,243, 0.9)',
+                        shadowBlur: 20
+                    }
+                },
+                data: [84, 97, 79, 55, 35, 60, 77]
+            },
+            {
+                name: '北京昆仑饭店高区',
+                type: 'line',
+                // smooth: true, //是否平滑
+                showAllSymbol: true,
+                // symbol: 'image://./static/images/guang-circle.png',
+                symbol: 'circle',
+                symbolSize: 5,
+                lineStyle: {
+                    normal: {
+                        color: "#00ca95",
+                        shadowColor: 'rgba(0, 0, 0, .3)',
+                        shadowBlur: 0,
+                        shadowOffsetY: 5,
+                        shadowOffsetX: 5,
+                    },
+                },
+                label: {
+                    show: false,
+                    position: 'top',
+                    textStyle: {
+                        color: '#00ca95',
+                    }
+                },
+
+                itemStyle: {
+                    color: "#00ca95",
+                    borderColor: "#fff",
+                    borderWidth: 3,
+                    shadowColor: 'rgba(0, 0, 0, .3)',
+                    shadowBlur: 0,
+                    shadowOffsetY: 2,
+                    shadowOffsetX: 2,
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(0,202,149,0.3)'
+                        },
+                        {
+                            offset: 1,
+                            color: 'rgba(0,202,149,0)'
+                        }
+                        ], false),
+                        shadowColor: 'rgba(0,202,149, 0.9)',
+                        shadowBlur: 20
+                    }
+                },
+                data: [94, 67, 89, 65, 75, 30, 77]
+            }
+            ]
+        };
+
+        // 单吨能耗
+        var myChart4 = echarts.init(document.getElementById('ddnhdb'));
+        var option4 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '15px',
+                right: '20px',
+                bottom: '25',
+                top: '70',
+                containLabel: true
+            },
+            legend: {
+                data: ['新都大丰锦封新城C区中一区', '北京昆仑饭店高区'],
+                left: 'center',
+                top: 0,
+                textStyle: {
+                    fontSize: 15,
+                    color: "#fff"
+                },
+                itemWidth: 12,
+                itemHeight: 10,
+                // itemGap: 35
+            },
+            xAxis: {
+                type: 'category',
+                data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月'],
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                    lineStyle: {//线条样式
+                        color: '#2c345c',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#fff',
+                    },//控制x轴字体样式
+                    fontSize: 15,
+                    margin: 10,
+                },
+            },
+
+            yAxis: {
+                type: 'value',
+                name: 'kW·h/m³',
+                nameTextStyle: {
+                    color: '#fff',
+                    fontSize: 15,
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                            },
+                            {
+                                offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        },
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: 15
+                    },//控制x轴字体样式
+                },
+            },
+            calculable: true,
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 100,
+                    bottom: 10,
+                    right: 20,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            series: [{
+                name: '新都大丰锦封新城C区中一区',
+                type: 'bar',
+                barWidth: '12',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#d6c768'
+                        }, {
+                            offset: 1,
+                            color: '#9b8501'
+                        }]),
+                        barBorderRadius: 12,
+                    },
+                },
+                data: [0.02, 0.01, 0.02, 0.02, 0.02, 0.03, 0.01]
+            },
+            {
+                name: '北京昆仑饭店高区',
+                type: 'bar',
+                barWidth: '12',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#33d8fa'
+                        }, {
+                            offset: 1,
+                            color: '#0471bd'
+                        }]),
+                        barBorderRadius: 11,
+                    }
+
+                },
+                data: [0.02, 0.01, 0.02, 0.03, 0.01, 0.02, 0.02]
+            }]
+        };
+
+
+        // 频率对比分析
+        var myChart5 = echarts.init(document.getElementById('pldbfx'));
+        var option5 = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    lineStyle: {
+                        color: '#57617B'
+                    }
+                }
+            },
+            legend: {
+                icon: 'rect',
+                itemWidth: 14,
+                itemHeight: 5,
+                itemGap: 13,
+                left: 'center',
+                top: 5,
+                textStyle: {
+                    fontSize: 15,
+                    color: '#F1F1F3'
+                }
+            },
+            grid: {
+                left: 10,
+                right: 10,
+                bottom: 25,
+                top: 50,
+                containLabel: true
+            },
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 100,
+                    bottom: 10,
+                    right: 20,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            xAxis: [{
+                type: 'time',
+                boundaryGap: false,
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                    lineStyle: {//线条样式
+                        color: '#2c345c',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#fff',
+                    },//控制x轴字体样式
+                    fontSize: 12,
+                    margin: 10,
+                }
+
+            }],
+            yAxis: [{
+                type: 'value',
+                name: 'Hz',
+                nameTextStyle: {
+                    color: '#fff',
+                    fontSize: 15
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                            },
+                            {
+                                offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        },
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#fff',
+                    },//控制x轴字体样式
+                }
+            }
+            ],
+            series: [
+                {
+                    name: '新都大丰锦封新城C区中一区',
+                    type: 'line',
+                    smooth: true,
+                    showSymbol: false,
+                    data: [],
+                    itemStyle: {
+                        color: '#ffae01'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(255, 174, 1,0.5)'
+                        }, {
+                            offset: 1,
+                            color: 'rgba(255, 174, 1,0)'
+                        }])
+                    }
+
+                },
+                {
+                    name: '北京昆仑饭店高区',
+                    type: 'line',
+                    smooth: true,
+                    showSymbol: false,
+                    itemStyle: {
+                        color: '#03fbff'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(3, 251, 255,0.5)'
+                        }, {
+                            offset: 1,
+                            color: 'rgba(3, 251, 255,0)'
+                        }])
+                    },
+                    data: []
+                }
+            ]
+        };
+
+
+        //周波动次数对比
+        var myChart6 = echarts.init(document.getElementById('zbdcs'));
+        var colorList = ['#fbfe27', '#00baff', '#FDD56A', '#FDB36A', '#FD866A', '#9E87FF', '#58D5FF']
+        var option6 = {
+            title: {
+                text: '周',
+                x: 'center',
+                y: '35%',
+                textStyle: {
+                    fontSize: 20,
+                    color:'#fff'
+                }
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                icon: 'rect',
+                itemWidth: 18,
+                itemHeight: 5,
+                left: 'center',
+                bottom:3,
+                textStyle: {
+                    fontSize: 15,
+                    color: '#fff'
+                }
+            },
+            series: [{
+                type: 'pie',
+                center: ['50%', '40%'],
+                radius: ['40%', '55%'],
+                clockwise: true,
+                avoidLabelOverlap: true,
+                hoverOffset: 15,
+                itemStyle: {
+                    normal: {
+                        color: function (params) {
+                            return colorList[params.dataIndex]
+                        }
+                    }
+                },
+                label: {
+                    show: true,
+                    position: 'outside',
+                    formatter: '{font|{d}%}',
+                    rich: {
+                        font: {
+                            fontSize: 14,
+                            padding: [5, 0],
+                            color: '#fff'
+                        },
+                        hr: {
+                            backgroundColor: 't',
+                            borderRadius: 3,
+                            width: 1,
+                            height: 1,
+                            padding: [3, 3, 0, -12]
+                        },
+                        a: {
+                            padding: [-30, 15, -20, 15]
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        length: 5,
+                        length2: 20,
+                        lineStyle: {
+                            width: 1
+                        }
+                    }
+                },
+                data: [{
+                    'name': '枣庄--供应社区',
+                    'value': 5600
+                },
+                {
+                    'name': '枣庄--惠工村二区',
+                    'value': 4000
+                }],
+            }]
+        };
+       
+
+
+        //月波动次数对比
+        var myChart7 = echarts.init(document.getElementById('ybdcs'));
+        var colorList1 = ['#fbfe27', '#00baff', '#FDD56A', '#FDB36A', '#FD866A', '#9E87FF', '#58D5FF']
+        var option7 = {
+            title: {
+                text: '月',
+                x: 'center',
+                y: '35%',
+                textStyle: {
+                    fontSize: 20,
+                    color: '#fff'
+                }
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                icon: 'rect',
+                itemWidth: 18,
+                itemHeight: 5,
+                left: 'center',
+                bottom: 3,
+                textStyle: {
+                    fontSize: 15,
+                    color: '#fff'
+                }
+            },
+            series: [{
+                type: 'pie',
+                center: ['50%', '40%'],
+                radius: ['40%', '55%'],
+                clockwise: true,
+                avoidLabelOverlap: true,
+                hoverOffset: 15,
+                itemStyle: {
+                    normal: {
+                        color: function (params) {
+                            return colorList1[params.dataIndex]
+                        }
+                    }
+                },
+                label: {
+                    show: true,
+                    position: 'outside',
+                    formatter: '{font|{d}%}',
+                    rich: {
+                        font: {
+                            fontSize: 14,
+                            padding: [5, 0],
+                            color: '#fff'
+                        },
+                        hr: {
+                            backgroundColor: 't',
+                            borderRadius: 3,
+                            width: 1,
+                            height: 1,
+                            padding: [3, 3, 0, -12]
+                        },
+                        a: {
+                            padding: [-30, 15, -20, 15]
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        length: 5,
+                        length2: 20,
+                        lineStyle: {
+                            width: 1
+                        }
+                    }
+                },
+                data: [{
+                    'name': '枣庄--供应社区',
+                    'value': 3200
+                },
+                {
+                    'name': '枣庄--惠工村二区',
+                    'value': 4000
+                }],
+            }]
+        };
+        var jkfresh, hourFresh, pressFreFresh;
+        $(function () {
+             GetJKData();//实时数据
+            GetWaterDataOfMonth();//获取能耗、单吨能耗
+            FrePressData();//频率压力数据
+            GetflucCount();//压力波动分析（按月汇总）
+            GetCompareData();//设备对比结论
+            GetWeekFlucNum();//周波动次数
+            GetMonthFlucNum();//月波动次数
+            jkfresh = setInterval("GetJKData()", 10000);
+             hourFresh = setInterval("FreshByHour()", 1000 * 3600);
+        })
+        //按小时刷新
+        function FreshByHour() {
+           
+            GetCompareData();
+            GetWeekFlucNum();
+            GetMonthFlucNum();
+        }
+        function GetJKData() {
+            $.post("/Sws/CurveSummary/GetJKDatas", { EquipmentID1: deviceID1, EquipmentID2: deviceID2 }, function (res) {
+                var json = res.presslist;
+                for (var i = 1; i <= json.length; i++) {
+                    $("#pressIN" + i + "").text(json[i - 1].pressIN);
+                    $("#pressOut" + i + "").text(json[i - 1].pressOut);
+                    $("#pressSet" + i + "").text(json[i - 1].pressSet);
+                }
+            });
+        }
+        function GetWaterDataOfMonth() {
+            $.post("/Sws/CurveSummary/GetNHData", { EquipmentID1: deviceID1, EquipmentID2: deviceID2 }, function (res) {
+                myChart3.clear();
+                myChart4.clear();
+                 ///能耗
+                option3.xAxis.data = res.axias;
+                option3.series[0].name = deviceName1;
+                option3.series[0].data = res.datas[0].eneryData;
+                option3.series[1].name = deviceName2;
+                option3.series[1].data = res.datas[1].eneryData;
+                myChart3.setOption(option3);
+                ///单吨能耗
+                option4.xAxis.data = res.axias;
+                option4.legend.data = [deviceName1, deviceName2];
+                option4.series[0].name = deviceName1;
+                option4.series[0].data = res.datas[0].eneryAvg;
+                option4.series[1].name = deviceName2;
+                option4.series[1].data = res.datas[1].eneryAvg;
+                myChart4.setOption(option4);
+            });
+        }
+        function FrePressData() {
+             $.post("/Sws/CurveSummary/FrePressData", { EquipmentID1: deviceID1, EquipmentID2: deviceID2 }, function (res) {
+                var json = JSON.parse(res);
+                if (json[0].datalist != "" || json[1].datalist != "") {
+                    myChart5.clear();
+                    $("#nodata").css("display", "none");
+                    $("#pldbfx").css("display", "block");
+                    option5.series[0].name = deviceName1;
+                    option5.series[0].data = eval(json[0].datalist);
+                    option5.series[1].name = deviceName2;
+                    option5.series[1].data = eval(json[1].datalist);
+                    myChart5.setOption(option5);
+                }
+                else {//没有数据
+                    $("#nodata").css("display", "block");
+                    $("#pldbfx").css("display", "none");
+                    option5.series[0].name = deviceName1;
+                    option5.series[0].data = [];
+                    option5.series[1].name = deviceName2;
+                    option5.series[1].data = [];
+                    myChart5.setOption(option5);
+                }
+                ///出水压力比对
+                if (json[0].outPress != "" || json[1].outPress != "") {
+                    myChart2.clear();
+                    $("#nodata_press").css("display", "none");
+                    $("#jrlldb").css("display", "block");
+
+                    option2.series[0].name = deviceName1;
+                    option2.series[0].data = eval(json[0].outPress);
+                    option2.series[1].name = deviceName2;
+                    option2.series[1].data = eval(json[1].outPress);
+                    myChart2.setOption(option2);
+                }
+                else {
+                    $("#nodata_press").css("display", "block");
+                    $("#jrlldb").css("display", "none");
+                    option2.series[0].name = deviceName1;
+                    option2.series[0].data = [];
+                    option2.series[1].name = deviceName2;
+                    option2.series[1].data = [];
+                    myChart2.setOption(option2);
+                }
+
+
+                // //压力对比，频率对比数据更新
+               pressFreFresh= setInterval(function () {
+                    $.post("/Sws/CurveSummary/UpdateLineData", { EquipmentID1: deviceID1, EquipmentID2: deviceID2 }, function (result) {
+                        if (result != "") {
+                            var json = JSON.parse(result);
+                            //频率
+                            if (json[0].datalist != "" || json[1].datalist != "") {
+
+                                for (var j = 0; j < option5.series.length; j++) {
+                                    if (json[j].datalist != "") {
+                                        if (option5.series[j].data.length > 0) {
+                                            if (option5.series[j].data[option5.series[j].data.length - 1].name != eval(json[j].datalist)[0].name) {
+                                                option5.series[j].data.push(eval(json[j].datalist)[0]);
+                                            }
+                                        }
+                                        else {
+                                            option5.series[j].data.push(eval(json[j].datalist)[0]);
+                                        }
+                                    }
+                                }
+                            }
+                            var seris_f = [];
+                            seris_f = option5.series;
+                            myChart5.setOption({
+                                series: seris_f
+                            });
+                            //压力
+                            if (json[0].outPress != "" || json[1].outPress != "") {
+                                for (var j = 0; j < option2.series.length; j++) {
+                                    if (json[j].outPress != "") {
+                                        if (option2.series[j].data.length > 0) {
+                                            if (option2.series[j].data[option2.series[j].data.length - 1].name != eval(json[j].outPress)[0].name) {
+                                                option2.series[j].data.push(eval(json[j].outPress)[0]);
+                                            }
+                                        }
+                                        else {
+                                            option2.series[j].data.push(eval(json[j].outPress)[0]);
+                                        }
+                                    }
+                                }
+                            }
+                            var seris_p = [];
+                            seris_p = option2.series;
+                            myChart2.setOption({
+                                series: seris_p
+                            });
+                        }
+                    });
+                }, 30 * 1000);
+
+            });
+        }
+        function GetflucCount() {
+            $.post("/Sws/CurveSummary/GetFlucNumber", { EquipmentID1: deviceID1, EquipmentID2: deviceID2, diff: 0.03 }, function (res) {
+                myChart1.clear();
+                option1.xAxis.data = res.axias;
+                option1.legend.data = [deviceName1, deviceName2];
+                option1.series[0].name = deviceName1;
+                option1.series[0].data = res.result[0].datalist;
+                option1.series[1].name = deviceName2;
+                option1.series[1].data = res.result[1].datalist;
+                myChart1.setOption(option1);
+            })
+        }
+        function GetCompareData() {
+             $.post("/Sws/CurveSummary/GetCompareData", { EquipmentID1: deviceID1, EquipmentID2: deviceID2, diff: 0.03,key: "天" }, function (res) {
+               
+                $("#queeContent").html(res.dataTable);
+            });
+        }
+        function GetWeekFlucNum() {
+             $.post("/Sws/CurveSummary/GetFlucNum_WeekMonth", { EquipmentID1: deviceID1, EquipmentID2: deviceID2, diff: 0.03,key:"周" }, function (res) {
+                var json = JSON.parse(res);
+                option6.series[0].data[0].name = deviceName1;
+                option6.series[0].data[0].value = json[0];
+                option6.series[0].data[1].name = deviceName2;
+                option6.series[0].data[1].value = json[1];
+                myChart6.setOption(option6);
+            });
+        }
+        function GetMonthFlucNum() {
+            $.post("/Sws/CurveSummary/GetFlucNum_WeekMonth", { EquipmentID1: deviceID1, EquipmentID2: deviceID2, diff: 0.03, key: "月" }, function (res) {
+                var json = JSON.parse(res);
+                option7.series[0].data[0].name = deviceName1;
+                option7.series[0].data[0].value = json[0];
+                option7.series[0].data[1].name = deviceName2;
+                option7.series[0].data[1].value = json[1];
+                myChart7.setOption(option7);
+            });
+        }
+        window.onresize = function () {
+            myChart1.resize();
+            myChart2.resize();
+            myChart3.resize();
+            myChart4.resize();
+            myChart5.resize();
+            myChart6.resize();
+            myChart7.resize();
+
+        }
+
+    </script>
+</body>
+</html>

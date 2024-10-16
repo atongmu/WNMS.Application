@@ -1,0 +1,422 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>区域管理</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link href="~/css/anniu.css" rel="stylesheet" />
+
+
+    <!-- bootstrap -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- 树 -->
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+
+    <style>
+        .zlw_manageconrgconsan, .fixed-table-container {
+            height: calc(100% - 30px) !important
+        }
+
+        .bootstrap-table {
+            height: 100%
+        }
+
+        .ztree .fa {
+            padding-right: 5px;
+        }
+
+        .zlw_manageconlfcon li:hover {
+            background-color: #f5f5f5;
+        }
+
+            .zlw_manageconlfcon li:hover > ul {
+                background-color: #fff;
+            }
+
+        .zlw_manageconlfcon ul li a:hover {
+            text-decoration: none;
+        }
+    </style>
+    <script type="text/javascript">
+        var zTreeObj;
+        var pid = 0;
+        var sort = "asc";     //定义排序方式（升降序）
+        var order = "id";
+        var pageSize = 40;
+        var $table;
+        var setting = {
+            data:{
+                simpleData: {
+                    enable: true
+                }
+            },callback:{
+                onClick: zTreeOnClick
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+        };
+
+    var zNodes = @ViewBag.TreeNodes;
+         $(function () {
+             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+             LoadInfoList(1, pid);
+
+        })
+        function zTreeOnClick(event, treeId, treeNode) {
+            pid = treeNode.id;
+            updata();
+        }
+        function updata() {
+            //$('#tabledata').bootstrapTable('refresh', null);
+              $.post('/Sys/Sys_Area/LoadInfoList', {
+                pid: pid,
+                sort: sort,
+                order: order,
+                pageSize: pageSize,
+                pageIndex: 1 || 1,
+              }, function (res) {
+                      $('#tabledata').bootstrapTable('load', res.table);
+                      $('#tabledata').bootstrapTable({
+                          pageList: [10, 25],
+                      });
+            });
+        }
+        function LoadInfoList(curr, pid) {
+             $table = $('#tabledata').bootstrapTable({
+                search: false,
+                pagination: true,
+                pageSize: 15,
+                pageList: [10, 15,20],
+                showColumns: false,
+                 showRefresh: false,
+                height: $(window).height() - 50,
+                locale: "zh-CN",
+                //sidePagination : "server",//使用服务器端分页
+                striped: true,
+                toggle: true,
+                //得到查询的参数
+                queryParams: function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        pageSize: params.limit,                         //页面大小
+                        pageIndex: (params.offset / params.limit) + 1,   //页码
+                        sort: params.sort,      //排序列名
+                        order: params.order, //排位命令（desc，asc）
+                        pid: pid,
+                    };
+                    return temp;
+                },
+                ajax: function (request) {
+                    $.ajax({
+                        url: "/Sys/Sys_Area/LoadInfoList",
+                        type: "GET",
+                        dataType: "json",
+                        data: {
+                            pid: pid,
+                            sort: sort,
+                            order: order,
+                            pageSize: pageSize,
+                            pageIndex: curr || 1,
+                        },
+                        success: function (data) {
+                            request.success({
+                                row: data.totalCount
+                            });
+                            $('#tabledata').bootstrapTable('load', data.table);
+
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    })
+                },
+                columns: [{
+                    field: 'id',
+                    title: '编号',
+                    align: 'center',
+                    backgroundColor: '#449d44'
+                }, {
+                    field: 'areaName',
+                    title: '省市名称',
+                    align: 'center',
+                    backgroundColor: '#449d44'
+                }, {
+                    field: 'parents',
+                    title: '父编号',
+                    align: 'center',
+                    backgroundColor: '#449d44'
+                }, {
+                    field: 'createdDate',
+                    title: '创建日期',
+                    align: 'center',
+                    backgroundColor: '#449d44',
+                    formatter: function (value, row, index) {
+                        return changeDateFormat(value)
+                    }
+                 }],
+        });
+        }
+    function setPage(pageCurrent, pageSum, callback) {
+        $(".pagination").bootstrapPaginator({
+            //设置版本号
+            bootstrapMajorVersion: 3,
+            // 显示第几页
+            currentPage: pageCurrent,
+            // 总页数
+            totalPages: pageSum,
+            //当单击操作按钮的时候, 执行该函数, 调用ajax渲染页面
+            onPageClicked: function (event,originalEvent,type,page) {
+                // 把当前点击的页码赋值给currentPage, 调用ajax,渲染页面
+                currentPage = page
+                callback && callback()
+            }
+        })
+        }
+        function changeDateFormat(cellval) {
+            if (cellval != null) {
+                var date = cellval.replace("T"," ");
+                return date;
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="zlw_manage">
+        <div class="zlw_managecon">
+            <!-- star left -->
+            <div class="zlw_manageconlf">
+                <div class="zlw_manageconlfcon">
+                    <div class="zlw_managecontitle">
+                        <p> <i class="fa fa-map"></i> 区域信息</p>
+                    </div>
+                    <div style="overflow:auto;height:calc(100% - 26px);padding:5px 5px 0 0">
+                        <div id="treeDemo" class="ztree" style="padding:0">
+                            <!-- tree渲染区域 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- left end -->
+            <!-- star right -->
+            <div class="zlw_manageconrg">
+                <div class="zlw_manageconrgcon">
+                    <!-- star 查询 -->
+                    @*<div class="zlw_manageconrgconyi">
+                            <ul class="clearfloat">
+                                <li><input type="text" class="zlw_bmsrmc" placeholder="输入部门名称"></li>
+                                <li><button class="zlw_bmcx"> <i class="fa fa-search"></i> 查询</button></li>
+                            </ul>
+                        </div>*@
+                    <!-- 查询 end -->
+                    <div class="zlw_manageconrgconer">
+                        @*<a href="#" class="hvr-ripple-out button2" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-plus-sign"></i> 添加用户</a>
+                            <a href="#" class="hvr-ripple-out button2"><i class="glyphicon glyphicon-edit"></i> 修改用户</a>
+                            <a href="#" class="hvr-ripple-out button2"><i class="glyphicon glyphicon-trash"></i> 删除用户</a>
+                            <a href="#" class="hvr-ripple-out button2"><i class="glyphicon glyphicon-cog"></i> 分配设备</a>
+                            <a href="#" class="hvr-ripple-out button2"><i class="glyphicon glyphicon-cog"></i> 用户设备管理</a>*@
+                    </div>
+                    <!-- 表格 -->
+                    <div class="zlw_manageconrgconsan">
+                        <table id="tabledata" class=" table-striped">
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <!-- right end -->
+        </div>
+    </div>
+    <script>
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+        $(".button_su_inner").mouseenter(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("desplode-circle");
+            $(this).prev(".su_button_circle").addClass("explode-circle");
+        });
+        $(".button_su_inner").mouseleave(function (e) {
+            var parentOffset = $(this).offset();
+            var relX = e.pageX - parentOffset.left;
+            var relY = e.pageY - parentOffset.top;
+            $(this).prev(".su_button_circle").css({
+                "left": relX,
+                "top": relY
+            });
+            $(this).prev(".su_button_circle").removeClass("explode-circle");
+            $(this).prev(".su_button_circle").addClass("desplode-circle");
+        });
+    </script>
+    <script>
+        // 按钮切换样式
+        $(function () {
+            $(".zlw_time_con li").click(function () {
+                $(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+            });
+            //// 数据
+            //$('#tabledata').bootstrapTable({
+            //    // url: '/json/data.json',        // 表格数据来源
+            //    // showColumns:true,
+
+            //    columns: [{
+            //        field: 'id',
+            //        title: '序号',
+            //        align: 'center',
+            //        backgroundColor: '#449d44'
+            //    }, {
+            //        field: 'column0',
+            //        title: '报警方案名称'
+            //    }, {
+            //        field: 'column1',
+            //        title: '报警站点'
+            //    }, {
+            //        field: 'column2',
+            //        title: '方案类型'
+            //    }, {
+            //        field: 'column3',
+            //        title: '报警等级'
+            //    }, {
+            //        field: 'column4',
+            //        title: '报警指示'
+            //    }, {
+            //        field: 'column5',
+            //        title: '报警值'
+            //    }, {
+            //        field: 'column6',
+            //        title: '报警限制值'
+            //    }, {
+            //        field: 'column7',
+            //        title: '发生时间'
+            //    }, {
+            //        field: 'column8',
+            //        title: '结束时间'
+            //    }, {
+            //        field: 'column9',
+            //        title: '持续时间'
+            //    }, {
+            //        field: 'column10',
+            //        title: '是否结束'
+            //    }],
+            //    data: [
+            //        {
+            //            id: 1,
+            //            column0: '日照龙湖小区#低区出水压力',
+            //            column1: '日照龙湖小区#低区',
+            //            column2: '限值报警',
+            //            column3: '高级报警',
+            //            column4: '出水压力',
+            //            column5: '0.65MPa',
+            //            column6: '0.5MPa',
+            //            column7: '2020.01.05 10:10',
+            //            column8: '2020.01.05 10:15',
+            //            column9: '5分钟',
+            //            column10: '是'
+
+            //        },
+            //        {
+            //            id: 2,
+            //            column0: '青岛龙湖小区#低区出水压力',
+            //            column1: '青岛龙湖小区#低区',
+            //            column2: '限值报警',
+            //            column3: '高级报警',
+            //            column4: '出水压力',
+            //            column5: '0.65MPa',
+            //            column6: '0.5MPa',
+            //            column7: '2020.01.05 10:10',
+            //            column8: '2020.01.05 10:15',
+            //            column9: '5分钟',
+            //            column10: '是'
+
+            //        },
+            //        {
+            //            id: 3,
+            //            column0: '烟台龙湖小区#低区出水压力',
+            //            column1: '烟台龙湖小区#低区',
+            //            column2: '限值报警',
+            //            column3: '高级报警',
+            //            column4: '出水压力',
+            //            column5: '0.65MPa',
+            //            column6: '0.5MPa',
+            //            column7: '2020.01.05 10:10',
+            //            column8: '2020.01.05 10:15',
+            //            column9: '5分钟',
+            //            column10: '是'
+
+            //        },
+            //    ]
+            //});
+            $('.fixed-table-loading').hide()
+        });
+    </script>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        模态框（Modal）标题
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    在这里添加一些文本
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</body>
+</html>

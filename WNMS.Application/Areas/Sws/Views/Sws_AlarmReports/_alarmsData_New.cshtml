@@ -1,0 +1,72 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Model.CustomizedClass
+@model IEnumerable<AlarmRep>
+<thead>
+    <tr>
+        <th>报警时间</th>
+        <th>报警设备</th>
+        <th>报警类型</th>
+        <th>报警次数</th>
+        <th>查看详情</th>
+
+    </tr>
+</thead>
+<tbody>
+
+    @{
+        if (Model.Count() > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.EventTime</td>
+                    <td>@item.DeviceName</td>
+                    <td>@item.ItemName</td>
+                    <td>@item.Num</td>
+                    <td style="text-align:left"><a href="javascript:void(0);" style="cursor: pointer;width: 80px;padding:3px 18px;background:#0094ff;border-radius:10px;color:#fff;" onclick="GetAlarmsData('@item.DeviceId', '@item.ItemValue', '@item.EventTime')">查看</a></td>
+ 
+                </tr>
+            }
+        }
+    }
+</tbody>
+
+
+
+
+
+
+
+<script src="~/js/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+
+ 
+    function GetAlarmsData(id, itemvalue, eventtime) {
+      
+        if (id == null) {
+            layer.alert("未选择数据请重新选择");
+        } else {
+            iframeLay(['报警详情'], "90%", "90%", "/Sws/Sws_AlarmReports/GetAlarmsData?type=" + $("#timeselect").val() + "&time=" + eventtime + "&itemvalue=" + itemvalue + "&deviceid=" + id + "");
+        }
+    }
+
+ 
+
+    function iframeLay(title, width, height, url) {
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: true,
+            shade: 0.7,
+            area: [width, height],
+            content: url,
+            btn: ["关闭"],
+            end: function () {
+            }
+        });
+    }
+</script>

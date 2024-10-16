@@ -1,0 +1,323 @@
+﻿
+html,body,#map{height:100%;width:100%;
+padding:0;
+margin:0;
+border:solid 0px #FF0000;
+font-family:"microsoft yahei","微软雅黑",Helvetica,STHeiTi,sans-serif;
+background-color:#001221;
+}
+
+li{list-style:none}
+
+.leaflet-control-zoom{xdisplay:none;transparent:!0;opacity:.5;}
+.leaflet-control-zoom over{xdisplay:none;transparent:!0;opacity:.9;}
+
+.leaflet-bottom{display:none}
+
+#loading{background:#fcfcfc;
+text-align:center;
+position:absolute;
+left:0;
+top:0;
+z-index:1020;
+filter:alpha(opacity=60);
+opacity:.5 !important;
+right:0;
+bottom:0;
+display:none}
+
+#loading img{position:absolute;
+left:50%;
+top:50%;
+margin-top:-150px;
+margin-left:-200px}
+
+#typeCheckbox_parkoutroad{color:white;
+position:absolute;
+right:100px;
+top:5px;
+z-index:1001;
+height:60px;
+line-height:1;
+padding-left:20px}
+
+#typeCheckbox_parkoutroad .leftbg{position:absolute;
+z-index:-1;
+left:0;
+top:0;
+bottom:0;
+width:26px;
+background:url("../images/group.png") no-repeat}
+
+#typeCheckbox_parkoutroad .centerbg{position:absolute;
+z-index:-1;
+left:26px;
+right:0;
+top:0;
+bottom:0;
+background:url("../images/bg.png") repeat-x}
+
+#typeCheckbox_parkoutroad .citem{cursor:pointer;
+float:left;
+margin-top:22px;
+margin-right:10px}
+
+#typeCheckbox_parkoutroad .cbox{float:left;
+width:18px;
+height:17px}
+
+#typeCheckbox_parkoutroad .selected{background:url("../images/group.png") no-repeat 0 -66px}
+
+#typeCheckbox_parkoutroad .unselected{background:url("../images/group.png") no-repeat -18px -66px}
+
+.rightpanel{position:absolute;
+right:0;
+top:120px;
+z-index:1001}
+
+.icon_tooptip{display:none;
+color:white;
+position:absolute}
+
+.icon_tooptip_parkoutroad{right:100px;
+top:0}
+
+.icon_parkoutroad{cursor:pointer;
+position:absolute;
+right:40px;
+top:10px}
+
+.icon_tooptip_parkinroad{right:142px;
+top:95px;
+width:80px}
+
+.icon_parkinroad{cursor:pointer;
+position:absolute;
+right:95px;
+top:80px}
+
+.icon_tooptip_roadstat{right:145px;
+top:190px;
+width:50px}
+
+.icon_roadstat{cursor:pointer;
+position:absolute;
+right:98px;
+top:170px}
+
+.icon_manflow{cursor:pointer;
+position:absolute;
+right:40px;
+top:240px}
+
+.icon_tooptip_manflow{right:100px;
+top:280px}
+
+#left-panel{position:absolute;
+left:30px;
+top:120px;
+z-index:1000}
+
+#searchbox{background:url("../images/map/searchbox.png") no-repeat;
+float:left;
+box-shadow:1px 2px 1px rgba(0,0,0,0.15);
+width:337px;
+height:43px}
+
+.searchbox-content-common{background-color:transparent;
+border-style:none;
+box-sizing:border-box;
+color:white;
+float:left;
+font-size:16px;
+height:43px;
+line-height:33px;
+padding:5px;
+width:290px}
+
+#search-button{background-color:transparent;
+border:0 none;
+cursor:pointer;
+float:left;
+height:43px;
+padding:0;
+pointer-events:auto;
+width:47px}
+
+#cardlist-container{background:url("../images/map/searchbox.png") no-repeat 0 -50px;
+clear:both;
+width:316px;
+float:left;
+margin-top:5px;
+height:400px;
+box-shadow:1px 2px 1px rgba(0,0,0,0.15);
+padding:9px;
+overflow:auto}
+
+#cardlist{line-height:1.6;
+height:100%}
+
+.card-item{position:relative;
+padding-left:5px}
+
+.card-item div{width:200px}
+
+.card-item .spaceshow{width:100px;
+right:0;
+text-align:right;
+bottom:5px;
+position:absolute}
+
+.card{opacity:.6;
+padding:6px 0;
+text-shadow:black 1px 1px 1px}
+
+.card-selected{opacity:1}
+
+.cart-title{font-size:14px;
+color:white;
+text-decoration:none}
+
+.card-tips{font-size:12px;
+color:#3385ff}
+
+.popupbg_blue{background:url("images/map/tipsbg_blue.png") no-repeat;
+width:368px;
+height:203px;
+color:white;
+position:relative}
+
+.popupbg_green{background:url("images/map/tipsbg_green.png") no-repeat;
+width:368px;
+height:203px;
+color:white;
+position:relative}
+
+.popup{text-shadow:black 1px 1px 1px;
+float:right;
+height:133px;
+margin-right:15px;
+margin-top:13px;
+width:320px}
+
+#tab{position:absolute;
+right:0;
+bottom:0;
+width:450px;
+height:250px;
+z-index:1002;
+display:none}
+
+#tab div{text-align:center}
+
+.tabhead{position:relative;
+height:36px;
+overflow:hidden}
+
+.tabbody{position:absolute;
+right:0;
+bottom:0;
+left:0;
+top:36px}
+
+.tabbody .leftwall{background:url('../images/tab/tabbody_leftwall.png') repeat-y;
+position:absolute;
+width:6px;
+bottom:6px;
+left:0;
+top:0}
+
+.tabbody .bottomwall{background:url('../images/tab/tabbody_bottomwall.png') repeat-x;
+position:absolute;
+right:0;
+bottom:0;
+left:6px;
+height:6px}
+
+.tabbody .leftbottom{position:absolute;
+left:0;
+bottom:0;
+height:6px;
+background:url('../images/tab/tab.png') -51px -46px;
+width:6px}
+
+.tabbody .body{background:url('../images/tab/tabbody_bg.png') repeat-x;
+position:absolute;
+right:0;
+top:0;
+bottom:6px;
+left:6px}
+
+.tabbody .body .content{width:100%;
+height:100%;
+color:white}
+
+.tabbody .body .hide{display:none}
+
+.tab{cursor:pointer}
+
+.tab_unselected{line-height:30px;
+color:white;
+font-size:12px}
+
+.tab_selected{line-height:36px;
+color:white;
+font-size:14px;
+text-shadow:black 1px 1px 1px}
+
+.tab_selected_nfirst{background:url('../images/tab/tab.png') no-repeat -93px 0;
+float:left;
+width:93px;
+height:36px}
+
+.tab_unselected_nfirst{background:url('../images/tab/tab.png') no-repeat -185px 0;
+float:left;
+width:93px;
+height:36px}
+
+.tab_selected_first{background:url('../images/tab/tab.png') no-repeat -279px 0;
+float:left;
+width:93px;
+height:36px}
+
+.tab_unselected_first{background:url('../images/tab/tab.png') no-repeat;
+float:left;
+width:93px;
+height:36px}
+
+.tab_end{position:absolute;
+top:30px;
+left:360px;
+height:6px;
+width:400px;
+background:url('../images/tab/tabhead_bottomwall.png') repeat-x}
+
+.echart{width:100%;
+height:100%}
+
+.tooptipOn{position:absolute;
+left:10px;
+bottom:150px;
+height:30px;
+width:51px;
+background:url('../images/tooltiponoff.png');
+z-index:1001;
+cursor:pointer}
+
+.tooptipOff{position:absolute;
+left:10px;
+bottom:150px;
+height:30px;
+width:51px;
+background:url('../images/tooltiponoff.png') -51px 0;
+z-index:1001;
+cursor:pointer}
+
+.legend{position:absolute;
+left:10px;
+bottom:10px;
+height:128px;
+width:180px;
+z-index:1001}
+
+

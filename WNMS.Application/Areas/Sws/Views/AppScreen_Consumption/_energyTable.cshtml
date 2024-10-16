@@ -1,0 +1,132 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<dynamic>
+<thead>
+    <tr>
+        <th data-width="120px">时间</th>
+        @{
+            IEnumerable<dynamic> deviceids = ViewBag.deviceidList as IEnumerable<dynamic>;
+            foreach (var item in deviceids)
+            {
+                <th  data-width="100px">@item.deviceName<span>用电量(kW·h)</span></th>
+            }
+        }
+    </tr>
+    @*<tr>
+        @foreach (var item in deviceids)
+        {
+            <th data-width="100px">用电量(kW·h)</th>
+        }
+    </tr>*@
+</thead>
+
+<tbody>
+    @{
+        if (Model.Count() > 0)
+        {
+            var DeviceData_Head = Model.GroupBy(r => r.DeviceID).ToList();
+            <tr>
+                <td>最大值</td>
+                @foreach (var item in deviceids)
+                {
+                    var sdata = DeviceData_Head.Where(r => r.Key == item.DeviceID).FirstOrDefault();
+                    if (sdata == null)
+                    {
+                        <td>--</td>
+                    }
+                    else
+                    {
+                        var maxenergy = sdata.Max(r => r.EnergyCon);
+                        <th>@(maxenergy == null ? "--" : Math.Round((double)maxenergy, 2).ToString())</th>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>最大值时间</td>
+                @foreach (var item in deviceids)
+                {
+                    var sdata = DeviceData_Head.Where(r => r.Key == item.DeviceID).FirstOrDefault();
+                    if (sdata == null)
+                    {
+                        <td>--</td>
+                    }
+                    else
+                    {
+                        var maxenergy = sdata.Max(r => r.EnergyCon);
+                        <th>@sdata.Where(r => r.EnergyCon == maxenergy).FirstOrDefault().UpdateTime.ToString(ViewBag.timeformate)</th>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>最小值</td>
+                @foreach (var item in deviceids)
+                {
+                    var sdata = DeviceData_Head.Where(r => r.Key == item.DeviceID).FirstOrDefault();
+                    if (sdata == null)
+                    {
+                        <td>--</td>
+                    }
+                    else
+                    {
+                        var minenergy = sdata.Min(r => r.EnergyCon);
+                        <th>@(minenergy == null ? "--" : Math.Round((double)minenergy, 2).ToString())</th>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>最小值时间</td>
+                @foreach (var item in deviceids)
+                {
+                    var sdata = DeviceData_Head.Where(r => r.Key == item.DeviceID).FirstOrDefault();
+                    if (sdata == null)
+                    {
+                        <td>--</td>
+                    }
+                    else
+                    {
+                        var minenergy = sdata.Min(r => r.EnergyCon);
+                        <th>@Model.Where(r => r.EnergyCon == minenergy).FirstOrDefault().UpdateTime.ToString(ViewBag.timeformate)</th>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>平均值</td>
+                @foreach (var item in deviceids)
+                {
+                    var sdata = DeviceData_Head.Where(r => r.Key == item.DeviceID).FirstOrDefault();
+                    if (sdata == null)
+                    {
+                        <td>--</td>
+                    }
+                    else
+                    {
+                        var aveElist = sdata.Where(r => r.EnergyCon.ToString() != "");
+                        <th>@(aveElist.Count() == 0 ? "--" : Math.Round((double)aveElist.Average(r => (double)r.EnergyCon), 2).ToString())</th>
+                    }
+
+                }
+            </tr>
+
+            var data = Model.GroupBy(r => r.UpdateTime).OrderBy(r => r.Key).ToList();
+            foreach (var item in data)
+            {
+                <tr>
+                    <td>@Convert.ToDateTime(item.Key).ToString(ViewBag.timeformate)</td>
+                    @foreach (var st in deviceids)
+                    {
+                        var sdata = item.Where(r => r.DeviceID == st.DeviceID).FirstOrDefault();
+                        if (sdata == null)
+                        {
+                            <td>--</td>
+                        }
+                        else
+                        {
+                            <td>@(sdata.EnergyCon.ToString() == "" ? "--" : Math.Round((double)sdata.EnergyCon, 2).ToString())</td>
+                        }
+                    }
+                </tr>
+            }
+        }
+    }
+</tbody>

@@ -1,0 +1,201 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+@model WoTeamInfo
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SetTeamInfo</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+        <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <style>
+        .star {
+            font-size: 25px;
+            color: red;
+            position: absolute;
+            top: -4px;
+            left: 60px
+        }
+
+        .form-group {
+            position: relative
+        }
+
+
+
+        .zlw_gs label {
+            /*line-height: 35px;*/
+            margin-bottom: 2px;
+        }
+
+            .zlw_gs label span {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                padding-top: 5px;
+                float: left;
+                margin-left: 5px;
+            }
+
+            .zlw_gs label i {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                float: left;
+                font-weight: bold;
+            }
+
+        .displayNo {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="xiugai" style="padding:20px 30px">
+        <form action="/Wo/Wo_TeamInfo/SetTeamInfo" data-ajax="true" data-ajax-method="post" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body zlw_gs">
+                <input id="TeamId" name="TeamId" type="hidden" value="@Model.TeamId" />
+               
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>班组名称 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="TeamName" name="TeamName" value="@Model.TeamName" autocomplete="off">
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>所属大区<em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select id="RegionId" name="RegionId" class="form-control">
+                                            @{
+                                                IEnumerable<WoAreaInfo> list1 = ViewBag.regionlist as IEnumerable<WoAreaInfo>;
+                                                if (list1.Count() != 0)
+                                                {
+                                                    foreach (var item in list1)
+                                                    {
+
+                                                        if (item.Id == Model.RegionId)
+                                                        {
+                                                            <option value="@item.Id" selected="selected">@item.AreaName</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Id">@item.AreaName</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                          
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>选择人员</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input name="UserName" id="UserName" placeholder="选择人员" class="form-control" value="@ViewBag.usernames" autocomplete="off" />
+
+                                        <input name="UserIDs" id="UserIDs" style="display:none;" value="@ViewBag.userids" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+              
+            </div>
+
+        </form>
+    </div>
+   <script type="text/javascript">
+       var myfunc;
+       $(function () {
+           validateForm();
+           
+       })
+        function validateForm()
+        {
+            $("#MFForm").validate({
+                rules: {
+                    TeamName: "required",
+                    RegionId: "required"
+                },
+                messages: {
+                    TeamName: "请输入名称",
+                    RegionId: "请选择区域"
+
+                }
+            });
+        }
+       $("#UserName").click(function () {
+             parent.iframeWithBtns("人员分配", "800px", "700px", "/Wo/Wo_TeamInfo/AllotUser?teamid="+$("#TeamId").val()+"&UserIDs="+$("#UserIDs").val()+"", false, function (formIndex, formLayer) {
+                    var currentIframe =parent.window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm(function (userids,username) {
+                        $("#UserIDs").val(userids);
+                        $("#UserName").val(username);
+                        parent.layer.close(formIndex);
+                    });
+                });
+            
+       })
+       function saveForm(func) {
+           $("form").submit();
+            myfunc = func;
+       }
+       function _addFun(data) {
+           if (data == "ok") {
+               myfunc("ok");
+           }
+           else {
+               layer.alert("操作失败");
+           }
+       }
+   </script>
+</body>
+</html>

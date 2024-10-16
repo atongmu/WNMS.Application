@@ -1,0 +1,316 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+@model SysUser
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SelectUsers</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/AllotRtu_User.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+
+    @*<link href="~/css/font-awesome.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .r_right ul li {
+            left: 5px
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden
+        }
+
+        .zlw_datamain_lfconsea {
+            padding: 10px;
+            border-bottom: solid 1px #ddd;
+            position: relative !important;
+            width: 297px;
+            top: 0px;
+            left: 0;
+            box-sizing: border-box;
+            background: #fff;
+        }
+
+        .boxs {
+            height: 100%;
+        }
+
+        .r_left, .r_right {
+            height: 100%
+        }
+
+        .fa-close {
+            cursor: pointer
+        }
+
+        .right {
+            float: right;
+        }
+        .left{
+            width: calc(100% - 30px);
+        }
+
+        .mr5px {
+            margin-right: 7px;
+        }
+
+        .tc-child {
+            /*border: 1px solid #dedede;*/
+            margin-top: 10px;
+            border-radius: 2px;
+            /*background: #f4f6f8;*/
+            width: 100%;
+            height: 460px;
+            padding: 10px 0;
+            overflow: auto
+        }
+
+        .r_right ul li i {
+            position: relative;
+            width: 10px;
+            height: 0px;
+            font-size: 16px;
+            line-height: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/gif;base64,R0lGODlhCgAKAKIAAP////7+/v39/fr7+/n6+0xde0pbef///yH5BAEHAAcALAAAAAAKAAoAAAMdeLprzMa9EyWsr8ZbQ9OBRxkDYITFGIVEUWiRUCUAOw==') /*../../Content/newself/img/sys_item_selected.gif*/ no-repeat right bottom;
+            z-index: 99;
+            margin-right: 5px;
+        }
+
+
+        .tc-child li {
+            border: 1px solid #ccc !important;
+            border-radius: 2px !important;
+            height: 36px !important;
+            line-height: 36px !important;
+            box-sizing: border-box !important;
+            background: #d7edec !important;
+            box-shadow: 3px 3px 5px #ccc !important;
+            position: relative !important;
+            width: calc(33.3% - 30px) !important;
+            float: left !important;
+            margin-left: 15px !important;
+            margin-top: 10px !important
+        }
+
+            .tc-child li .left {
+                margin-left: 5px
+            }
+
+            .tc-child li .right {
+                padding-right: 10px;
+                position: relative
+            }
+
+        .ellipsis1 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="boxs">
+        @*<div class="prompt" style="margin:5px 5px 4px">
+                <p style="float:left">温馨提示：选中复选框并提交即可授予相应设备，取消选中并提交则回收相应设备。</p>  <p style="margin-right:5px;float:right"><em class='iconfont icon-bengfang' style='color:blue;'></em> 二供泵房 <em class='iconfont icon-bengfang' style='color:green'></em> 直饮水泵房<p>
+            </div>*@
+
+        <div class="r_layout" style="border:none;border-top: 1px solid #bbb;border-bottom:1px solid #ddd;height:calc(100% - 50px) !important">
+            <div class="r_left">
+                <header>
+                    <span id="identifyname">人员</span>
+                </header>
+                <section style="height: calc(100% - 26px);overflow: hidden">
+                    <div class="zlw_datamain_lfconsea ">
+                        <form action="">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" id="stationname" class="form-control" placeholder="搜索" autocomplete="off" />
+                        </form>
+                    </div>
+                    <ul id="treeDemo" class="ztree" style="height:calc(100% - 50px);overflow:auto"></ul>
+                </section>
+            </div>
+            <div class="r_right" style="border: none;overflow: hidden">
+                <header>
+                    <span>已选人员</span>
+                    @*<span><label class="checkAllOff" id="check">全选</label></span>*@
+                </header>
+                <section>
+                    <ul id="userlist" class="tc-child">
+
+                        @{
+                            IEnumerable<SysUser> userlist = ViewBag.allotUser as IEnumerable<SysUser>;
+                            if (userlist.Count() > 0)
+                            {
+                                foreach (var item in userlist)
+                                {
+                                    <li class="ml15px overflow" id="@item.UserId">
+                                        <span class="left ellipsis1">
+                                            <i class="fa fa-user fa-lg"></i>
+                                            <span  class="name" title="@item.Account">@item.Account</span>
+                                        </span>
+                                        <span class="right"><i class="fa fa-close"></i></span>
+                                    </li>
+                                }
+                            }
+
+                        }
+
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var teamid =@ViewBag.teamid;
+        var selectUserids = "@ViewBag.selectUserids";
+       var setting = {
+			check: {
+				enable: true
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+            }
+            ,callback:{
+                onCheck: zTreeOnCheck
+            },view: {
+                 showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+		};
+       var zNodes=@ViewBag.treenodes, zTreeObj;
+        $(function () {
+                 zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        })
+
+        function zTreeOnCheck(event, treeId, treeNode) {
+
+            var stringappend = "";
+
+            if (treeNode.isUser == true) {
+                var treeid = treeNode.id.substring(0, treeNode.id.length - 1);
+                if (treeNode.checked == true) {
+
+                    stringappend = '<li class="mar15px overflow" id="' + treeid + '">' +
+                        '<span class="left ellipsis1">' +
+                        '<i class="fa fa-user fa-lg"></i>' +
+                        '<span class="name" title="'+treeNode.playname+'">' + treeNode.playname + '</span>' +
+                        '</span>' +
+                        '<span class="right"><i class="fa fa-close"></i></span>' +
+                        '</li>';
+                }
+                else {
+
+                    $("#" + treeid + "").remove();
+                }
+            }
+            else {
+                if (treeNode.checked == true) {
+                    var nodes = zTreeObj.getNodesByParam("isUser", true, treeNode);
+                    for (var i = 0; i < nodes.length; i++) {
+                        var nodeid = nodes[i].id.substring(0, nodes[i].id.length - 1);
+                        if ($("#" + nodeid + "").length == 0) {//不存在
+                            stringappend += '<li class="mar15px overflow" id="' + nodeid + '">' +
+                                '<span class="left ellipsis1">' +
+                                '<i class="fa fa-user fa-lg"></i>'+
+                               /* '<em class="left" style="display: inline-block;width:26px;height:26px;background:#FA9C3E;border-radius:100%;"></em>'*/
+                                '<span class="name" title='+ nodes[i].playname +'>' + nodes[i].playname + '</span>' +
+                                '</span>' +
+                                '<span class="right"><i class="fa fa-close"></i></span>' +
+                                '</li>';
+                        }
+                    }
+                }
+                else {
+                    var nodes = zTreeObj.getNodesByParam("isUser", true, treeNode);
+                    for (var i = 0; i < nodes.length; i++) {
+                        var nodeid = nodes[i].id.substring(0, nodes[i].id.length - 1);
+                        if ($("#" + nodeid + "").length>0) {//存在
+                            $("#" + nodeid + "").remove();
+                        }
+                    }
+                }
+            }
+            if (stringappend != "") {
+                $("#userlist").append(stringappend);
+            }
+
+        }
+        //树查询
+        $("#stationname").keydown(function (e) {
+            if (e.keyCode == 13) {
+                if ($("#stationname").val() != "") {
+                    $.post("/Wos/TeamInfo/SearchTree", { searchtxt: $("#stationname").val(), teamid: teamid, selectUserids: selectUserids}, function (data) {
+                    zTreeObj.destroy();    //清空树
+                    var aa = JSON.parse(data);   //数据转json8
+
+                        zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                        zTreeObj.expandAll(true);     //初始化数列表展开
+
+                })
+            }
+            else {
+                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);   //重新初始化树
+            }
+               return false;
+           }
+        })
+        //删除已选人员
+        $(document).on("click", '#userlist .right', function () {
+
+
+            var iddata = $(this).parent()[0].id + "u";
+
+            var node = zTreeObj.getNodeByParam("id", iddata, null);
+            if (node != null) {
+                zTreeObj.checkNode(node, false, false);
+                $(this).parent()[0].remove();
+            }
+            else {
+               layer.msg("未找到相关节点");
+            }
+        })
+        //提交
+         function saveFormChirld(func) {
+
+             var ulist = $("#userlist li");
+             var userids = "";
+
+             var names = "";
+             for (var i = 0; i < ulist.length; i++) {
+
+                 userids += ulist[i].id + ',';
+                 names += ulist[i].innerText + ",";
+             }
+             if (userids != "") {
+                 userids = userids.substring(0, userids.length - 1);
+                 names = names.substring(0, names.length - 1);
+             }
+
+             func(userids, names);
+
+
+        }
+    </script>
+</body>
+</html>

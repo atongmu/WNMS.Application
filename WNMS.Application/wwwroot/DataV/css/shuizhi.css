@@ -1,0 +1,248 @@
+﻿@charset "utf-8";
+
+.hyl_head {
+    width: 100%;
+    padding: 20px 20px 20px 20px;
+    border: 1px solid #0c4ea3;
+    height: 180px;
+    position: relative;
+    box-sizing: border-box;
+    background: url(../images/kuangbakc.png) repeat
+}
+
+.hyl_center {
+    width: 100%;
+    height: calc(50% - 90px);
+    box-sizing: border-box;
+    padding-top: 6px;
+}
+
+.hyl_clist {
+    width: 100%;
+    height: 100%;
+}
+
+    .hyl_clist li {
+        float: left;
+        height: 100%;
+        width: 25%;
+        padding-right: 6px;
+    }
+
+        .hyl_clist li:last-child {
+            padding-right: 0;
+        }
+
+.hyl_cchart {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box; /*border:1px solid #0c4ea3;*/
+    position: relative;
+}
+
+.hyl_foot {
+    width: 100%;
+    height: calc(50% - 90px);
+    box-sizing: border-box;
+    padding-top: 6px;
+}
+
+.hyl_ftlist {
+    width: 100%;
+    height: 100%;
+}
+
+    .hyl_ftlist > li {
+        float: left;
+        height: 100%;
+        width: 33.33%;
+        padding-right: 6px;
+    }
+
+    .hyl_ftlist li:last-child {
+        padding-right: 0;
+    }
+
+    .hyl_ftlist > li:nth-child(1) {
+        width: 40%;
+    }
+
+    .hyl_ftlist > li:nth-child(2) {
+        width: 30%;
+    }
+
+    .hyl_ftlist > li:nth-child(3) {
+        width: 30%;
+    }
+
+.hyl_title {
+    height: 35px;
+    position: relative;
+}
+
+    .hyl_title span {
+        font-size: 18px;
+        line-height: 35px;
+        color: #e4f4ff;
+        letter-spacing: 1px;
+        letter-spacing: 3px;
+    }
+
+    .hyl_title img {
+        position: absolute;
+        left: 0;
+        top: 22px;
+        width: 100%;
+        z-index: 9;
+    }
+
+.hyl_child {
+    background: url(../images/kuangbakc.png) repeat;
+    height: calc(100% - 35px);
+    width: 100%;
+    border: 1px #0c4ea3 solid;
+}
+
+.hyl_fchart {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box; /*border:1px solid #0c4ea3;*/
+    position: relative;
+}
+
+.head_child {
+    width: 100%;
+    height: 100%;
+}
+
+    .head_child li {
+        float: left;
+        height: 100%;
+        width: calc(12.5% - 20px);
+        margin: 0px 10px;
+        box-sizing: border-box;
+        position: relative;
+        background: rgba(0,85,175,0.3);
+    }
+
+    .head_child img {
+        display: block;
+        width: 40px;
+        margin: auto;
+    }
+
+    .head_child li div {
+        text-align: center;
+    }
+
+        .head_child li div:first-child {
+            padding: 10px 0;
+        }
+
+        .head_child li div:last-child {
+            font-size: 16px;
+            color: #accfff;
+            letter-spacing: 1px;
+        }
+
+.head_txt {
+    font-size: 29px;
+    color: #00fffc;
+    font-weight: bold;
+    letter-spacing: 2px;
+    /*font-family: "zcoolqingkehuangyouti";*/
+    margin: 0 0 4px 0;
+    height: 42px;
+    line-height: 42px;
+}
+
+.pt15px {
+    padding-top: 12px;
+}
+
+.pb5px {
+    padding-bottom: 5px;
+}
+
+.pb10px {
+    padding-bottom: 10px;
+}
+
+.hyl_martitle {
+    height: 35px;
+    background: #202d89;
+}
+
+    .hyl_martitle span {
+        width: 12%;
+        float: left;
+        line-height: 35px;
+        color: #fff;
+        text-align: center;
+    }
+
+.marlist li {
+    height: 35px;
+    width: 100%;
+    padding: 0;
+}
+
+    .hyl_martitle span:first-child, .marlist li span:first-child {
+        width: 16%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding: 0 10px
+    }
+
+    .marlist li span {
+        width: 12%;
+        float: left;
+        line-height: 35px;
+        color: #fff;
+        text-align: center;
+        color: #cee3ff;
+        height: 35px;
+        overflow: hidden;
+    }
+
+.marbox {
+    height: calc(100% - 35px);
+}
+
+#marquees {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.head_child .pt15px {
+    box-sizing: border-box;
+}
+
+.head_child li:nth-child(4) .pb5px img {
+    width: 34px;
+}
+
+.head_child li:nth-child(7) .pb5px img {
+    width: 27px;
+    margin-top: 4px;
+}
+
+.head_child li:nth-child(8) .pb5px img {
+    width: 27px;
+    margin-top: 4px;
+}
+
+.dp-search {
+    height: 30px;
+    border: 2px solid #07A6FF;
+    border-radius: 5px;
+    outline: none;
+    background: transparent;
+    line-height: 30px;
+    color: #fff;
+    width: 100%;
+    text-indent: 10px;
+    margin: 5px 0;
+}

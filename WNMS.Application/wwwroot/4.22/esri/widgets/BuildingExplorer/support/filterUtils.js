@@ -1,0 +1,6 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define("exports ../../../core/maybe ../../../core/uuid ../../../layers/support/BuildingFilterBlock ../../../layers/support/BuildingFilterModeSolid ../../../layers/support/BuildingFilterModeXRay".split(" "),function(c,f,l,h,m,n){function g(a){a="string"===typeof a?a:a.id;return!!a&&-1!==a.indexOf("__BUILDING_EXPLORER_FILTER__")}function k(a){return a.filter(b=>!!b).map(b=>`(${b})`).join(" AND ")}c.generateFilterId=function(){return`${l.generateUUID()}${"__BUILDING_EXPLORER_FILTER__"}`};c.getFilterBlockSolid=
+function(a){return(a=k(a))?new h({filterExpression:a,filterMode:new m}):null};c.getFilterBlockXRay=function(a){return(a=k(a))?new h({filterExpression:a,filterMode:new n}):null};c.getValueFromFilters=function(a,b){for(const d of a.items)for(const e of d.filters.items)if(g(e)&&(a=b(e),f.isSome(a)))return a;return null};c.isBuildingExplorerFilter=g;c.setFilterOnLayers=function(a,b){a.forEach(d=>{const e=d.filters.filter(p=>!g(p));f.isSome(b)&&e.push(b);d.filters=e;d.activeFilterId=f.isSome(b)?b.id:null})};
+Object.defineProperty(c,"__esModule",{value:!0})});

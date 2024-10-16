@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Model.DataModels;
+@model IEnumerable<SwsGpsmodule>
+<thead>
+    <tr>
+        <th data-radio="true"></th>
+        <th data-field="Gpsid" data-visible="false"></th>
+        <th data-sortable="true" data-field="Gpsnumber">编号</th>
+        <th data-field="ModelNumber">型号</th>
+        <th data-field="GpsName">名称</th>
+        <th data-field="Manufacture">品牌</th>
+    </tr>
+</thead>
+<tbody>
+    @{
+        foreach (var item in Model)
+        {
+        <tr>
+            <td data-radio="true"></td>
+            <td data-visible="false">@item.Gpsid</td>
+            <td>@item.GpSnumber</td>
+            <td>@item.ModelNumber</td>
+            <td>@item.GpsName</td>
+            <td>@item.Manufacture</td>
+        </tr>
+        }
+    }
+</tbody>

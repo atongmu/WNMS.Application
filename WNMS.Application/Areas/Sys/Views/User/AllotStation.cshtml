@@ -1,0 +1,204 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.CustomizedClass;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/AllotRtu_User.css" rel="stylesheet" />
+    <title>分配泵站</title>
+    <style>
+        .r_right ul li{left:5px}
+    </style>
+</head>
+<body>
+    <div>
+        <div class="prompt" style="margin:5px 5px 4px">
+            温馨提示：选中复选框即可授予相应设备，取消选中则回收相应设备。
+        </div>
+        
+        <div class="r_layout" style="border:none;border-top: 1px solid #bbb;margin:0">
+            @*<div class="r_left">
+                    <header>
+                        <span id="identifyname">设备分类</span>
+                    </header>
+                    <section>
+                        <ul id="treeDemo" class="ztree" style="height:100%"></ul>
+                    </section>
+                </div>*@
+            <div class="r_right" style="width: 100%;left: 0;border: none;overflow: hidden">
+                <header>
+                    <span>泵站名称</span>
+                    <span><label class="checkAllOff" id="check">全选</label></span>
+                </header>
+                <section>
+                    <ul>
+                        @{
+                            List<AllotStation> stations = ViewBag.Station as List<AllotStation>;
+                            foreach (var item in stations)
+                            {
+
+                                if (!item.Flag)
+                                {
+                                    <li>
+                                        <a class='btn btn-default' data-id="@item.StationID" title="@item.StationName">@item.StationName</a><i class='unCheck'></i>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a class='btn btn-default' data-id="@item.StationID" title="@item.StationName">@item.StationName</a><i></i>
+                                    </li>
+                                }
+                            }
+                        }
+
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript">
+        var Node_RTU = "", treetag, clicktag;
+        var UserID =@ViewBag.UserID, array = new Array();
+        //#region 加载事件
+        $(function () {
+            var height = $(window).height() - 100;
+            $(".r_right").height(height);
+            $(".r_layout").height(height + 2);
+            $("section:first").height(height - 25);
+
+            $(window).resize(function () {
+                var height = $(window).height() - 100;
+                $(".r_right").height(height);
+                $(".r_layout").height(height + 2);
+                $("section:first").height(height - 25);
+            });
+            treetag = 0;
+            clicktag = 0;
+
+            $(".r_right ul").on("click", "a", function () {         //电机选中事件
+                if (clicktag == 0) {
+                    var $i = $(this).next();
+                    var display = $i.css("display");
+                    if (display != "none") {
+                        $.post("/Sys/User/SaveAllotRTU", { UserID: UserID, StationID: $(this).data("id"), key: "Delete" }, function (data) {
+                            if (data == "ok") {
+                                $i.addClass("unCheck");
+                                frequent("", 500);
+                            }
+                        });
+                    } else {
+                        $.post("/Sys/User/SaveAllotRTU", { UserID: UserID, StationID: $(this).data("id"), key: "Add" }, function (data) {
+                            if (data == "ok") {
+                                $i.removeAttr("class");
+                                frequent("", 500);
+                            }
+                        });
+                    }
+                }
+                else {
+                    alert('请勿频繁点击！');
+                }
+            });
+            lableClick();
+        });
+        //#endregion
+
+        function frequent(para, time) {
+            if (para == "tree") {
+                treetag = 1;
+                setTimeout(function () { treetag = 0 }, time);
+            } else {
+                clicktag = 1;
+                setTimeout(function () { clicktag = 0 }, time);
+            }
+        }
+
+
+        //function formatUl(res) {      //格式化ul
+        //    var html = "";
+        //    var data = eval(res);
+        //    var length = data.length;
+        //    for (var i = 0; i < length; i++) {
+        //        if (data[i].checked) {
+        //            html += "<li><a class='btn btn-default' data-id=" + data[i].EquipmentID + " title=" + data[i].DeviceName + ">" + data[i].DeviceName + "</a><i></i></li>";
+        //        } else {
+        //            html += "<li><a class='btn btn-default' data-id=" + data[i].EquipmentID + " title=" + data[i].DeviceName + ">" + data[i].DeviceName + "</a><i class='unCheck'></i></li>";
+        //        }
+        //    }
+        //    return html;
+        //}
+
+        function lableClick() {          // 全选/反选
+            $("#check").click(function () {
+
+                var txt = $(this).attr("class");
+                if (txt == "checkAllOff") {
+                    $(this).removeClass("checkAllOff").addClass("checkAllOn").text("反选");
+                    unCheckItems();
+                }
+                else {
+                    $(this).removeClass("checkAllOn").addClass("checkAllOff").text("全选");
+                    checkItems();
+                }
+            });
+        }
+
+        Array.prototype.unique = function () {        //自定义数组去重属性
+            var res = [];
+            var json = {};
+            for (var i = 0; i < this.length; i++) {
+                if (!json[this[i]]) {
+                    res.push(this[i]);
+                    json[this[i]] = 1;
+                }
+            }
+            return res;
+        }
+
+        function unCheckItems() {
+            var StationIDs = "";
+            $(".unCheck").each(function () {
+                var aa = $(this).prev();
+                var StationID = $(this).prev().data("id");
+                StationIDs += StationID + ",";
+                $(this).removeAttr("class");
+            });
+            if (StationIDs != "") {
+                StationIDs = StationIDs.substring(0, StationIDs.length - 1);
+            }
+            $.post("/Sys/User/SaveAllotRTU", { UserID: UserID, StationID: StationIDs, key: "Add" }, function (data) {//批量添加
+                if (data == "ok") {
+                    $i.removeAttr("class");
+                    frequent("", 500);
+                }
+            });
+        }
+
+        function checkItems() {
+            var StationIDs = "";
+            $("i:not([class])").each(function () {
+                var StationID = $(this).prev().data("id");
+                StationIDs += StationID + ",";
+                $(this).addClass("unCheck");
+            });
+            if (StationIDs != "") {
+                StationIDs = StationIDs.substring(0, StationIDs.length - 1);
+            }
+            $.post("/Sys/User/SaveAllotRTU", { UserID: UserID, StationID: StationIDs, key: "Delete" }, function (data) {//批量删除
+                if (data == "ok") {
+                    var $i;
+                    $i.addClass("unCheck");
+                    frequent("", 500);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

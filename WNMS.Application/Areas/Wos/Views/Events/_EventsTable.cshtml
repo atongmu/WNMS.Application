@@ -1,0 +1,54 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Model.CustomizedClass;
+@model IEnumerable<SEvents>
+<thead>
+    <tr>
+        @*<th data-checkbox="true"></th>*@
+        <th data-field="IncidentID" data-visible="false"></th>
+        <th data-sortable="true" data-field="IncidentNum">事件编号</th>
+        <th data-field="StationName">泵房</th>
+        <th data-field="IncidentType">事件类型</th>
+        <th data-field="IncidentState">事件状态</th>
+        <th data-field="DisposeState">处理状态</th>
+        <th data-field="IncidentContent">事件内容</th>
+        <th data-field="Account">上报人</th>
+        <th data-field="AuditState">是否审核</th>
+        <th data-field="ReportTime">上报时间</th>
+        <th data-field="#">操作</th>
+    </tr>
+</thead>
+<tbody>
+    @{
+        foreach (var item in Model)
+        {
+            <tr>
+                @*<td data-checkbox="true"></td>*@
+                <td data-visible="false">@item.IncidentID</td>
+                <td>@item.IncidentNum</td>
+                <td>@item.StationName</td>
+                <td>@(System.Enum.GetName(typeof(IncidentType), item.IncidentType))</td>
+                <td>@(System.Enum.GetName(typeof(IncidentState), item.IncidentState))</td>
+                <td>@(System.Enum.GetName(typeof(DisposeState), item.DisposeState))</td>
+                <td>@item.IncidentContent</td>
+                <td>@item.Account</td>
+                @{
+                    if (item.AuditState)
+                    {
+                        <td style="color:teal">已审核</td>
+                    }
+                    else
+                    {
+                        <td style="color:teal">未审核</td>
+                    }
+                }
+                <td>@item.ReportTime</td>
+                <td>
+                    <button class='btn btn-sm  btn-success' onclick="assignTask(@item.IncidentID,@item.DisposeState)">处理</button>
+                    <button class='btn btn-sm btn-danger' onclick="auditIncident(@item.IncidentID,@item.DisposeState)">审核</button>
+                </td>
+            </tr>
+                    }
+    }
+</tbody>

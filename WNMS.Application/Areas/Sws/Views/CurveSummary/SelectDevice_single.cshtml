@@ -1,0 +1,123 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SelectDevice_single</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <script src="~/DataV/js/jquery-1.12.4.min.js"></script>
+
+    <script src="~/lib/layer/layer.js"></script>
+    <
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+</head>
+<body>
+    <div class="zlw_datamain">
+        <div class="zlw_datamaincon">
+            <!-- star left -->
+            <div class="zlw_datamain_lf" style="width:100%">
+                <div class="zlw_datamain_lfconsea" style="width:100%">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" id="searchTxt" class="form-control" placeholder="搜索设备名称" autocomplete="off" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:calc(100% - 50px);overflow:auto;margin-top:50px;">
+                    <!-- tree渲染区域 -->
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+    <script>
+        var deviceid = @ViewBag.deviceid, devicename = "@ViewBag.deviceName";
+        var setting = {
+			check: {
+		      enable: true,
+                chkStyle: "radio",
+                radioType: "all"
+	        },
+			data: {
+				simpleData: {
+					enable: true
+				}
+            },
+            callback: {
+                onCheck: zTreeOnCheck
+            }
+            ,view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+		};
+        var zNodes =@ViewBag.TreeNodes, zTreeObj;
+        $(function () {
+             zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        })
+           //左侧树查询回车事件
+        $("#searchTxt").keydown(function (e) {
+
+           if (e.keyCode == 13) {
+               LoadZtree();
+               return false;
+           }
+        });
+             //树查询
+        function LoadZtree() {
+            zTreeObj.destroy();    //清空树
+            if ($("#searchTxt").val() != "") {
+                //查询树列表数据
+                $.post("/Sws/CurveSummary/SearchTree", {
+                    searchtxt: $("#searchTxt").val(),
+                    deviceid:deviceid
+                }, function (data) {
+                    var aa = JSON.parse(data);   //数据转json
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                    zTreeObj.expandAll(true);     //初始化数列表展开
+
+                });
+            }
+            else {
+
+                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);   //重新初始化树
+            }
+
+        }
+        function zTreeOnCheck(event, treeId, treeNode) {
+            if (treeNode.checked = true) {
+                deviceid = treeNode.id;
+                devicename = treeNode.name;
+            }
+            else {
+                deviceid = 0;
+                devicename = "";
+            }
+        }
+
+        function saveForm1(func) {
+            if (deviceid == 0) {
+                layer.msg("请选中一套设备");
+            }
+            else {
+                 func(deviceid, devicename);
+               
+            }
+        }
+    </script>
+</body>
+</html>

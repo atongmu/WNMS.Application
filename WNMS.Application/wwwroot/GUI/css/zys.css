@@ -1,0 +1,200 @@
+@charset "utf-8";
+/* CSS Document */
+*{
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-family: 'Microsoft YaHei',Verdana,Arial,Helvetica,sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    list-style: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
+}
+ul,li, ol, dl {
+    list-style: none;
+}
+a{
+    color: #333333 ;
+    text-decoration:none;
+    cursor:pointer;
+}
+a:hover {
+    color:#dd3200;
+    text-decoration:none;
+}
+img {
+    border:none;
+}
+.container{
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.bian:before{
+    content: "";
+    display: table;
+}
+.clearfloat:after {
+    content: "";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+.clearfloat {
+    zoom: 1;
+}
+.link {
+    display:block;
+    width:100%;
+    height:100%;
+}
+.clear {
+    clear:both;
+}
+.left {
+    float:left;
+}
+.right {
+    float:right;
+}
+.main{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+}
+.back{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1200px;
+    height: 450px;
+    transform: translateX(-50%);
+    transform: translateY(-50%);
+}
+.back img {
+    width: 100%;
+}
+.title{
+    position: absolute;
+    top: 0px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background: #00423e;
+    height: 80px;
+    overflow: hidden;
+}
+.djwz1{
+    font-size:4px;
+}
+.title-con{
+    display: inline-block;
+    position: relative;
+    padding-left: 160px;
+}
+.title img{
+    display: inline-block;
+    width: 150px;
+    position: absolute;
+    top:33px;
+    left: 0;
+}
+.title  p{
+    text-align: left;
+    font-size: 38px;
+    color: #fff;
+    font-family: "楷体";
+    font-weight:bold;
+    display: inline-block;
+    line-height: 80px;
+    padding-left: 15px;
+}
+.title  p span{
+    font-size: 38px;
+    color: #fff;
+    font-family: "楷体";
+    font-weight:bold;
+    display: inline-block;
+}
+.content {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 70px 0 50px 0;
+}
+.content-main{
+    width: 100%;
+    height: 100%;
+    padding: 0 30px 0px 30px;
+    box-sizing: border-box;
+}
+.content-maink{
+    width: 100%;
+    height: 100%;
+}
+
+
+
+/* 文字 */
+.wz1{
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+    letter-spacing: 1px;
+}
+.zazhi1{
+    color: #00423e;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.path1{
+    animation: water 5s infinite linear;
+    animation-fill-mode:forwards;
+}
+.path2{
+    animation: water1 5s infinite linear;
+}
+@keyframes water{
+    0%{
+        stroke-dashoffset: 100;
+    }
+   100%{
+        stroke-dashoffset: 0;
+    }
+}
+@keyframes water1{
+    0%{
+        stroke-dashoffset: 0;
+    }
+   100%{
+        stroke-dashoffset: 100;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

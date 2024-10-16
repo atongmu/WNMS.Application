@@ -1,0 +1,182 @@
+﻿@using WNMS.Model.CustomizedClass;
+@model IEnumerable<ZStationJkInfo>
+<div class="zlw_xxzl_lb zlw_xxzl_lbxs">
+
+    @foreach (var item in Model)
+    {
+        var queeid = "p" + item.StationID;
+        var alarmflag = 0;
+
+
+        var starP = "";
+        if (item.Attention == true)
+        {
+            starP = "fa fa-star orange";
+        }
+        else
+        {
+            starP = "fa fa-star-o";
+        }
+        var stationidflag = "s" + item.StationID;
+
+        <div class="zlw_list" id="@stationidflag">
+            <div class="zlw_listyi clearfloat">
+                <div class="zlw_listyilfyi clearfloat left">
+                    @*<img src="/adminlte/images/main.png" alt="">*@
+                    @if (item.State == "正常")
+                    {
+                        <em class="iconfont green icon-bengfang" ></em>
+                    }
+                    else if (item.State == "离线")
+                    {
+                        <em class="iconfont gray icon-bengfang" ></em>
+                    }
+                    else
+                    {
+                        <em class="iconfont red icon-bengfang" ></em>
+                        alarmflag = 1;
+                    }
+                    <i id="@item.StationID" class="@starP ml10px" onclick="OperateAttention(@item.StationID,'')"></i>
+                    <p class="ellipsis1">@item.StationName</p>
+                </div>
+                <div class="zlw_listyilf clearfloat left">
+                    <div class="zlw_listyilfcon">
+                        <div class="zlw_listyilfer left">
+
+                        </div>
+                        <div class="elembox" id="@queeid">
+                            <ul>
+                                @{
+                                    foreach (var it in item.eventlist)
+                                    {
+                                                                <li class="zlw_listyilfsan left clearfloat">
+                                                                    <p>分区：<i>@it.RegionName</i></p>
+                                                                    <p>报警内容：<i>@it.EventMessage</i></p>
+                                                                    <p>报警时间：<i>@it.EventTime</i></p>
+                                                                </li>
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="zlw_listyirg right">
+                    @if (item.CameraMonitor == true)
+                    {
+                        @*<button type="button" class="layui-btn">视频</button>*@
+                        <button type="button" class="layui-btn" onclick="ShowCarema(@item.StationID,'@item.StationName')">视频</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="layui-btn disableclass" disabled="disabled">视频</button>
+                    }
+
+
+                    @if (item.ControlMonitor == true)
+                    {
+                        @*<button type="button" class="layui-btn">控制</button>*@
+                        <button type="button" class="layui-btn" onClick="window.top.homeAddTab('sta'+@item.StationID,'@item.StationName','/Sws/Sws_Detail/ShowDetail?id=@item.StationID&showTab=3');">控制</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="layui-btn disableclass" disabled="disabled">控制</button>
+                    }
+                    <a href="javascript:void(0);" onClick="window.top.homeAddTab('sta'+@item.StationID,'@item.StationName','/Sws/Sws_Detail/Index/'+@item.StationID);"><i class="fa fa-sign-in kp_gd"></i></a>
+                </div>
+            </div>
+            <div class="zlw_lister">
+                <ul class="clearfloat">
+                    <li class="list_head2">
+                        <div>采集时间</div>
+                        <div>分区</div>
+                        <div>净水出水/原水出水/净设压(MPa)</div>
+                        <div>原水箱液位</div>
+                        <div>净水箱液位</div>
+                        <div>电导率</div>
+                        <div>浊度</div>
+                        <div>余氯</div>
+                        <div>PH</div>
+                        <div>ORP</div>
+                        <div>盐度</div>
+                        <div>溶解氧</div>
+                    </li>
+                    @{
+                        foreach (var it in item.deviceJKs)
+                        {
+                            <li class="list_body2">
+                                <div>
+                                    @it.datetime
+                                </div>
+                                <div class="zlw_fq">
+                                    @if (it.State == "正常")
+                                    {
+                                        <i style="background:#1CC800"></i>
+                                    }
+                                    else if (it.State == "故障")
+                                    {
+                                        <i style="background:#FF0202"></i>
+                                    }
+                                    else
+                                    {
+                                        <i style="background:#999"></i>
+                                    }
+                                    @it.devicename
+                                </div>
+                                <div>
+                                    @if (it.JPressOut.Value == true)
+                                    {
+                                        <span style="color:red">@it.JPressOut.Key</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@it.JPressOut.Key</span>
+                                    }
+                                    <span> / </span>
+                                    @if (it.YPressOut.Value == true)
+                                    {
+                                        <span style="color:red">@it.YPressOut.Key</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@it.YPressOut.Key</span>
+                                    }
+                                    <span> / </span>
+                                    @it.JSetpressure
+                                </div>
+                                <div>
+                                    @it.YLevel
+                                </div>
+                                <div>@it.JLevel</div>
+                                <div>@it.Conductivity</div>
+                                <div>@it.Turbidity</div>
+                                <div>@it.CL</div>
+                                <div>@it.PH</div>
+                                <div>@it.Orp</div>
+                                <div>@it.Salinity</div>
+                                <div>@it.Oxygen</div>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+        <script type="text/javascript">
+                                $(function () {
+
+
+                                    var queeids="p"+ @item.StationID;
+                                    if (@alarmflag == 1) {
+                                        $("#" + queeids + "").kxbdMarquee({
+                                            direction: "up",
+                                            isEqual: true,
+                                            scrollDelay: 90
+                                        });
+                                    }
+                                    })
+        </script>
+    }
+</div>

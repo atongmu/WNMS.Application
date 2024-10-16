@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+*/
+import{_ as s}from"../../chunks/tslib.es6.js";import{a as r}from"../../chunks/JSONSupport.js";import{property as o}from"../../core/accessorSupport/decorators/property.js";import"../../core/lang.js";import"../../chunks/ensureType.js";import{subclass as t}from"../../core/accessorSupport/decorators/subclass.js";import"../../core/Accessor.js";import"../../chunks/deprecate.js";import"../../chunks/Logger.js";import"../../config.js";import"../../chunks/object.js";import"../../chunks/string.js";import"../../chunks/metadata.js";import"../../chunks/handleUtils.js";import"../../chunks/ArrayPool.js";import"../../core/scheduling.js";import"../../chunks/nextTick.js";import"../../core/promiseUtils.js";import"../../core/Error.js";let e=class extends r{constructor(s){super(s),this.visible=!0}clone(){}};s([o({type:["line"],readOnly:!0,json:{read:!1,write:{ignoreOrigin:!0}}})],e.prototype,"type",void 0),s([o({readOnly:!0})],e.prototype,"visible",void 0),e=s([t("esri.symbols.callouts.Callout3D")],e);const i=e;export{i as default};

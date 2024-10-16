@@ -1,0 +1,1407 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>水质分析</title>
+    <link rel="Shortcut Icon" href="~/UploadImg/Logo/logo.png" />
+    <link href="../../DataV/css/css.css" rel="stylesheet" />
+    <link href="~/DataV/css/shuizhi.css" rel="stylesheet" />
+    @*<link href="~/css/zlw.css" rel="stylesheet" />*@
+    <link href="~/lib/ztree/diy/zTreeStyle02.css" rel="stylesheet" />
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/iconfont.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/echarts.min.js"></script>
+    <script src="../../DataV/js/jquery.kxbdMarquee.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.all.min.js"></script>
+    <style>
+        .ztree li a {
+            color: #e4f4ff
+        }
+         ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #999;
+            background-clip: padding-box;
+            min-height: 28px;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-track-piece {
+            background-color: #fff;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="zlw_content">
+        <!-- star  body -->
+        <div class="zlw_xnhfx  clearfloat">
+            <div class="zlw_zcdw">
+                @*<div class="zlw_datamain_lfconsea">
+                        <form action="">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" id="pumname" class="form-control" placeholder="搜索&quot;泵房&quot;名称" />
+                        </form>
+                    </div>*@
+                <input type="text" placeholder="搜索泵房" class="dp-search" id="pumname" autocomplete="off"/>
+                <div id="treeDemo" class="ztree"></div>
+            </div>
+            <div class="zlw-content-lfdj"></div>
+            <div class="zlw-nhfxcon">
+                <!-- star 水质分析 -->
+                <!-- top header -->
+                <div class="hyl_head">
+                    <!-- 四个角直角 -->
+                    <div class="dwtopl"></div>
+                    <div class="dwtopr"></div>
+                    <div class="dwbotl"></div>
+                    <div class="dwbotr"></div>
+                    <ul class="head_child">
+                        <li>
+                            <!-- 四个角直角 -->
+                            <span class="dwtopl"></span>
+                            <span class="dwtopr"></span>
+                            <span class="dwbotl"></span>
+                            <span class="dwbotr"></span>
+                            <!-- /四个角直角 -->
+                            <div class="pt15px pb5px" style="height:57px;box-sizing:border-box;">
+                                <img src="~/DataV/images/sz1.svg" />
+                            </div>
+                            <div class="head_txt">0.2</div>
+                            <div class="pb5px">当前余氯</div>
+                        </li>
+                        <li>
+                            <!-- 四个角直角 -->
+                            <span class="dwtopl"></span>
+                            <span class="dwtopr"></span>
+                            <span class="dwbotl"></span>
+                            <span class="dwbotr"></span>
+                            <!-- /四个角直角 -->
+                            <div class="pt15px pb5px" style="height:57px;box-sizing:border-box;">
+                                <img src="~/DataV/images/sz2.svg" />
+                            </div>
+                            <div class="head_txt">0.02</div>
+                            <div class="pb5px">当前浊度</div>
+                        </li>
+                        <li>
+                            <!-- 四个角直角 -->
+                            <span class="dwtopl"></span>
+                            <span class="dwtopr"></span>
+                            <span class="dwbotl"></span>
+                            <span class="dwbotr"></span>
+                            <!-- /四个角直角 -->
+                            <div class="pt15px pb5px" style="height:57px;box-sizing:border-box;">
+                                <img src="~/DataV/images/sz3.svg" />
+                            </div>
+                            <div class="head_txt">0.25</div>
+                            <div class="pb5px">当前PH</div>
+                        </li>
+                        <li>
+                            <!-- 四个角直角 -->
+                            <span class="dwtopl"></span>
+                            <span class="dwtopr"></span>
+                            <span class="dwbotl"></span>
+                            <span class="dwbotr"></span>
+                            <!-- /四个角直角 -->
+                            <div class="pt15px pb5px" style="height:57px;box-sizing:border-box;">
+                                <img src="~/DataV/images/sz4.svg" />
+                            </div>
+                            <div class="head_txt">0.27</div>
+                            <div class="pb5px">当前ORP</div>
+                        </li>
+                        <li>
+                            <!-- 四个角直角 -->
+                            <span class="dwtopl"></span>
+                            <span class="dwtopr"></span>
+                            <span class="dwbotl"></span>
+                            <span class="dwbotr"></span>
+                            <!-- /四个角直角 -->
+                            <div class="pt15px pb5px" style="height:57px;box-sizing:border-box;">
+                                <img src="~/DataV/images/sz5.svg" />
+                            </div>
+                            <div class="head_txt">0.25</div>
+                            <div class="pb5px">当前溶解氧</div>
+                        </li>
+                        <li>
+                            <!-- 四个角直角 -->
+                            <span class="dwtopl"></span>
+                            <span class="dwtopr"></span>
+                            <span class="dwbotl"></span>
+                            <span class="dwbotr"></span>
+                            <!-- /四个角直角 -->
+                            <div class="pt15px pb5px" style="height:57px;box-sizing:border-box;">
+                                <img src="~/DataV/images/sz6.svg" />
+                            </div>
+                            <div class="head_txt">0.52</div>
+                            <div class="pb5px">当前电导率</div>
+                        </li>
+                        <li>
+                            <!-- 四个角直角 -->
+                            <span class="dwtopl"></span>
+                            <span class="dwtopr"></span>
+                            <span class="dwbotl"></span>
+                            <span class="dwbotr"></span>
+                            <!-- /四个角直角 -->
+                            <div class="pt15px pb5px" style="height:57px;box-sizing:border-box;">
+                                <img src="~/DataV/images/sz7.svg" />
+                            </div>
+                            <div class="head_txt">0.28</div>
+                            <div class="pb5px">当前盐度</div>
+                        </li>
+                        <li>
+                            <!-- 四个角直角 -->
+                            <span class="dwtopl"></span>
+                            <span class="dwtopr"></span>
+                            <span class="dwbotl"></span>
+                            <span class="dwbotr"></span>
+                            <!-- /四个角直角 -->
+                            <div class="pt15px pb5px" style="height:57px;box-sizing:border-box;">
+                                <img src="~/DataV/images/sz8.svg" />
+                            </div>
+                            <div class="head_txt">0.29</div>
+                            <div class="pb5px">当前硬度</div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /top header -->
+                <!-- center -->
+                <div class="hyl_center">
+                    <ul class="hyl_clist">
+                        <li>
+                            <div class="hyl_cchart">
+                                <!-- 四个角直角 -->
+                                <!--<div class="dwtopl"></div>
+                                <div class="dwtopr"></div>
+                                <div class="dwbotl"></div>
+                                <div class="dwbotr"></div>-->
+                                <div class="hyl_title">
+                                    <span>溶解氧分析</span>
+                                    <img src="~/DataV/images/btbg.png" />
+                                </div>
+                                <div class="hyl_child" id="chart1"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="hyl_cchart">
+                                <!-- 四个角直角 -->
+                                <!--<div class="dwtopl"></div>
+                                <div class="dwtopr"></div>
+                                <div class="dwbotl"></div>
+                                <div class="dwbotr"></div>-->
+                                <div class="hyl_title">
+                                    <span>ORP分析</span>
+                                    <img src="~/DataV/images/btbg.png" />
+                                </div>
+                                <div class="hyl_child" id="chart2"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="hyl_cchart">
+                                <!-- 四个角直角 -->
+                                <!--<div class="dwtopl"></div>
+                                <div class="dwtopr"></div>
+                                <div class="dwbotl"></div>
+                                <div class="dwbotr"></div>-->
+                                <div class="hyl_title">
+                                    <span>电导率分析</span>
+                                    <img src="~/DataV/images/btbg.png" />
+                                </div>
+                                <div class="hyl_child" id="chart3"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="hyl_cchart">
+                                <!-- 四个角直角 -->
+                                <!--<div class="dwtopl"></div>
+                                <div class="dwtopr"></div>
+                                <div class="dwbotl"></div>
+                                <div class="dwbotr"></div>-->
+                                <div class="hyl_title">
+                                    <span>盐度分析</span>
+                                    <img src="~/DataV/images/btbg.png" />
+                                </div>
+                                <div class="hyl_child" id="chart4"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /center -->
+                <!-- footer -->
+                <div class="hyl_foot">
+                    <ul class="hyl_ftlist">
+                        <li>
+                            <div class="hyl_fchart">
+                                <!-- 四个角直角 -->
+                                <!--<div class="dwtopl"></div>
+                                <div class="dwtopr"></div>
+                                <div class="dwbotl"></div>
+                                <div class="dwbotr"></div>-->
+                                <!--<div class="hyl_title">
+                                    <span>水质分析</span>
+                                    <img src="images/btbg.png" style="top:18px" />
+                                </div>-->
+                                <div class="hyl_martitle">
+                                    <span>设备名称</span>
+                                    <span>余氯</span>
+                                    <span>浊度</span>
+                                    <span>PH</span>
+                                    <span>ORP</span>
+                                    <span>溶解氧</span>
+                                    <span>电导率</span>
+                                    <span>盐度</span>
+                                </div>
+                                <div class="hyl_child marbox">
+                                    <div id="marquees">
+                                        <ul class="marlist" id="watertable">
+                                        </ul>
+                                    </div>
+                                </div>
+
+                        </li>
+                        <li>
+                            <div class="hyl_fchart">
+                                <!-- 四个角直角 -->
+                                <!--<div class="dwtopl"></div>
+                                <div class="dwtopr"></div>
+                                <div class="dwbotl"></div>
+                                <div class="dwbotr"></div>-->
+                                <div class="hyl_title">
+                                    <span>水质对比分析</span>
+                                    <img src="~/DataV/images/btbg.png" style="top:18px" />
+                                </div>
+                                <div class="hyl_child" id="chart5"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="hyl_fchart">
+                                <!-- 四个角直角 -->
+                                <!--<div class="dwtopl"></div>
+                                <div class="dwtopr"></div>
+                                <div class="dwbotl"></div>
+                                <div class="dwbotr"></div>-->
+                                <div class="hyl_title">
+                                    <span>水质硬度分析</span>
+                                    <img src="~/DataV/images/btbg.png" style="top:18px" />
+                                </div>
+                                <div class="hyl_child" id="chart6"></div>
+                            </div>
+                        </li>
+
+
+                    </ul>
+                </div>
+                <!--/footer-->
+                <!-- 水质分析 end -->
+            </div>
+        </div>
+        <!-- body end -->
+    </div>
+    <script>
+        // 左侧伸缩按钮
+        $('.zlw-content-lfdj').click(function () {
+            if ($(".zlw-content-lfdj").hasClass("ss_active")) {
+                $('.zlw_zcdw').css('left', '0px');
+                $('.zlw-content-lfdj').css('left', '244px').removeClass('ss_active');
+                $('.zlw-content-lfdj').css('background-image', 'url(/DataV/images/dwleft.png)');
+                $('.zlw_xnhfx').css('padding-left', '260px')
+            } else {
+                $('.zlw_zcdw').css('left', '-260px');
+                $('.zlw-content-lfdj').css('left', '0px').addClass('ss_active');
+                $('.zlw-content-lfdj').css('background-image', 'url(/DataV/images/jt_lefth.png)');
+                $('.zlw_xnhfx').css('padding', 0)
+
+            }
+        });
+
+    </script>
+    <script>
+        //定义变量
+        var zNodes = [];
+        var zTreeObj;
+        var deviceid = 1580842783112;
+        var setting = {
+            check: {
+                enable: false,
+            }, callback: {
+                onClick: zTreeOnClick
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            view: {
+                showTitle: false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+        };
+
+        $(function () {
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            $("#marquees").kxbdMarquee({ direction: "up", isEqual: false, scrollDelay: 80 });
+
+            //树加载
+            LoadZtree();
+            //树查询
+            $("#pumname").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    LoadZtree();
+                }
+            });
+            LoadJKQualityData(deviceid);
+            getChartData(deviceid);
+            LoadTableData();
+            Getwatercharts();
+        });
+
+        //加载设备树
+        function LoadZtree() {
+            //查询树列表数据
+            $.post("/Sws/Sws_Device02RunLog/SelectTree", {
+                stationName: $("#pumname").val()
+            }, function (data) {
+                zTreeObj.destroy();    //清空树
+                var aa = JSON.parse(data);   //数据转json
+                if ($("#pumname").val() != "") {
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                    zTreeObj.expandAll(true);     //初始化数列表展开
+                } else {
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                }
+            });
+        }
+
+        //树点击事件
+        function zTreeOnClick(event, treeId, treeNode) {
+            if (treeNode.isDevice == true) {
+                deviceid = treeNode.id;
+            }
+            if (treeNode.isDevice == true) {
+                LoadJKQualityData(treeNode.id);
+                getChartData(treeNode.id);
+                LoadTableData();
+                Getwatercharts();
+            } else {
+
+            }
+        }
+
+        //查询实时数据
+        function LoadJKQualityData() {
+            $.post("/Sws/Sws_WaterQuality/GetJKQualityData", { deviceID: deviceid }, function (res) {
+                var arr = $(".head_txt");
+                $(arr[0]).html(res == null || res.analogValues["2033"] == undefined ? "--" : res.analogValues["2033"].toFixed(2));
+                $(arr[1]).html(res == null || res.analogValues["2034"] == undefined ? "--" : res.analogValues["2034"].toFixed(2));
+                $(arr[2]).html(res == null || res.analogValues["2032"] == undefined ? "--" : res.analogValues["2032"].toFixed(2));
+                $(arr[3]).html(res == null || res.analogValues["2035"] == undefined ? "--" : res.analogValues["2035"].toFixed(2));
+                $(arr[4]).html(res == null || res.analogValues["2037"] == undefined ? "--" : res.analogValues["2037"].toFixed(2));
+                $(arr[5]).html(res == null || res.analogValues["2023"] == undefined ? "--" : res.analogValues["2023"].toFixed(2));
+                $(arr[6]).html(res == null || res.analogValues["2036"] == undefined ? "--" : res.analogValues["2036"].toFixed(2));
+                $(arr[7]).html(res == null || res.analogValues["2039"] == undefined ? "--" : res.analogValues["2039"].toFixed(2));
+            });
+        }
+
+        //查询表格数据
+        function LoadTableData() {
+            $.post("/Sws/Sws_WaterQuality/GetAllJKData", {}, function (res) {
+                $("#watertable").html(res.dataTable);
+            });
+        }
+
+        //溶解氧分析
+        var chart1 = echarts.init(document.getElementById('chart1'));
+        var oxoption = {
+            color: ['#9441FF', '#577DDF', '#01BEB7'],
+            // title: {
+            // text: '',
+            // subtext: ''
+            // },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                top: 60,
+                left: 15,
+                right: 15,
+                bottom: 30,
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: ['03-01', '03-02', '03-03', '03-04', '03-05', '03-06', '03-07'],
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    axisLine: {//x轴的样式控制
+                        show: true,　//显示与否
+                        lineStyle: {//线条样式
+                            color: '#2c345c',
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    axisLabel: {//控制x轴上的文字的样式
+                        show: true,//显示与否
+                        textStyle: {
+                            color: '#999bc6',
+                        },//控制x轴字体样式
+                        fontSize: 12,
+                        margin: 10,
+                    }
+                }
+            ],
+            yAxis: [{
+                type: 'value',
+                //name : 'm³',
+                nameTextStyle: {
+                    color: '#fff',
+                    fontSize: 15
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                            },
+                            {
+                                offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        },
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#999bc6',
+                    },//控制x轴字体样式
+                }
+            }
+
+            ],
+            calculable: true,
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 100,
+                    bottom: 10,
+                    right: 15,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            series: [{
+                name: '溶解氧',
+                type: 'bar',
+                data: [300, 450, 570, 203, 255, 188, 156],
+                barWidth: '13px',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#70a8fb' // 0% 处的颜色
+                        }, {
+                            offset: 1,
+                            color: '#0668fb' // 100% 处的颜色
+                        }], false),
+                        barBorderRadius: [30, 30, 0, 0],
+
+                    }
+                },
+                label: {
+                    normal: {
+                        show: true,
+                        lineHeight: 30,
+                        width: 80,
+                        height: 30,
+                        //backgroundColor: 'rgba(0,160,221,0.1)',
+                        borderRadius: 200,
+                        position: ['-8', '-60'],
+                        distance: 1,
+                        formatter: [
+                            '    {d|●}',
+                            ' {a|{c}}     \n',
+                            '    {b|}'
+                        ].join(','),
+                        rich: {
+                            d: {
+                                color: '#2eb3ff',
+                            },
+                            a: {
+                                color: '#999bc6',
+                                align: 'center',
+                            },
+                            b: {
+                                width: 1,
+                                height: 30,
+                                borderWidth: 1,
+                                borderColor: '#234e6c',
+                                align: 'left'
+                            },
+                        }
+                    }
+                }
+            }]
+        };
+        //chart1.setOption()
+
+        // orp分析
+        var chart2 = echarts.init(document.getElementById('chart2'));
+        orpoption = {
+            //backgroundColor: '#00265f',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            grid: {
+                top: 60,
+                left: 15,
+                right: 15,
+                bottom: 30,
+                containLabel: true
+            },
+            xAxis: [{
+                type: 'category',
+                data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月'],
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                    lineStyle: {//线条样式
+                        color: '#2c345c',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#999bc6',
+                    },//控制x轴字体样式
+                    fontSize: 12,
+                    margin: 10,
+                }
+
+
+
+            }],
+            yAxis: [{
+                type: 'value',
+                //name : 'm³',
+                nameTextStyle: {
+                    color: '#fff',
+                    fontSize: 15
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                            },
+                            {
+                                offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        },
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#999bc6',
+                    },//控制x轴字体样式
+                }
+            }],
+            calculable: true,
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 80,
+                    bottom: 10,
+                    right: 15,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            series: [{
+                name: 'ORP',
+                type: 'bar',
+                data: [300, 450, 570, 203, 255, 188, 156],
+                barWidth: '13px',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(251,177,141,1)' // 0% 处的颜色
+                        }, {
+                            offset: 1,
+                            color: 'rgba(255,98,21,1)' // 100% 处的颜色
+                        }], false),
+                        barBorderRadius: [30, 30, 0, 0],
+
+                    }
+                },
+                label: {
+                    normal: {
+                        show: true,
+                        lineHeight: 30,
+                        width: 80,
+                        height: 30,
+                        //backgroundColor: 'rgba(0,160,221,0.1)',
+                        borderRadius: 200,
+                        position: ['-11', '-60'],
+                        distance: 1,
+                        formatter: [
+                            '    {d|●}',
+                            ' {a|{c}}     \n',
+                            '    {b|}'
+                        ].join(','),
+                        rich: {
+                            d: {
+                                color: '#e15a17',
+                            },
+                            a: {
+                                color: '#999bc6',
+                                align: 'center',
+                            },
+                            b: {
+                                width: 1,
+                                height: 30,
+                                borderWidth: 1,
+                                borderColor: '#234e6c',
+                                align: 'left'
+                            },
+                        }
+                    }
+                }
+            }]
+        };
+        //chart2.setOption()
+
+        //电导率
+        var chart3 = echarts.init(document.getElementById('chart3'));
+        var coption = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: {
+                top: 20,
+                left: 15,
+                right: 15,
+                bottom: 30,
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                    lineStyle: {//线条样式
+                        color: '#2c345c',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#999bc6',
+                    },//控制x轴字体样式
+                    fontSize: 12,
+                    margin: 10,
+                },
+                data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月']
+            },
+            yAxis: [{
+                type: 'value',
+                //name : 'm³',
+                nameTextStyle: {
+                    color: '#fff',
+                    fontSize: 15
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                            },
+                            {
+                                offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        },
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#999bc6',
+                    },//控制x轴字体样式
+                }
+            }
+
+            ],
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 100,
+                    bottom: 10,
+                    right: 15,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            series: [{
+                name: '电导率',
+                type: 'line',
+                data: [250,380,540,243,280,260],
+                markPoint: {
+                    symbol: 'pin',
+                    position: 'top',
+                    symbolSize: [50, 40],
+                    data: [{
+                        type: 'max',
+                        name: '最大值'
+                    }, {
+                        type: 'min',
+                        name: '最小值'
+                    }],
+                    symbolOffset: [0, '-15%'],
+                    itemStyle: {
+                        color: '#5e80f3'
+                    }
+                },
+                lineStyle: {
+                    normal: {
+                        width: 3,
+                        color: {
+                            type: 'linear',
+
+                            colorStops: [{
+                                offset: 0,
+                                color: '#a54dff' // 0% 处的颜色
+                            }, {
+                                offset: 1,
+                                color: '#04c1e4' // 100% 处的颜色
+                            }]
+                        }
+                    }
+                },
+                itemStyle: {
+                    // opacity: 0.1,
+                    borderWidth: 4,
+                    borderColor: '#fff'
+                },
+               // smooth: true
+    
+            }]
+        };
+        //chart3.setOption()
+
+        //盐度
+        var chart4 = echarts.init(document.getElementById('chart4'));
+        var soption = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: {
+                top: 20,
+                left: 15,
+                right: 15,
+                bottom: 30,
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                    lineStyle: {//线条样式
+                        color: '#2c345c',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#999bc6',
+                    },//控制x轴字体样式
+                    fontSize: 12,
+                    margin: 10,
+                },
+                data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月']
+            },
+            yAxis: [{
+                type: 'value',
+                //name : 'm³',
+                nameTextStyle: {
+                    color: '#fff',
+                    fontSize: 15
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                            },
+                            {
+                                offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        },
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#999bc6',
+                    },//控制x轴字体样式
+                }
+            }
+
+            ],
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 100,
+                    bottom: 10,
+                    right: 15,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            series: [
+                {
+                    type: 'line',
+                    symbolSize: 5, // 设定实心点的大小
+                    data: [120, 272, 171, 356, 210, 140, 180, 170, 165, 190, 222],
+                    smooth: true,
+                    itemStyle: {
+                        color: '#782eff'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(148, 90, 254,0.5)'
+                        }, {
+                            offset: 1,
+                            color: 'rgba(148, 90, 254,0)'
+                        }])
+                    }
+                }
+            ]
+        };
+        // chart4.setOption()
+
+        //水质对比分析
+        var chart5 = echarts.init(document.getElementById('chart5'));
+        var woption = {
+
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '15px',
+                right: '20px',
+                bottom: '14%',
+                top: '16%',
+                containLabel: true
+            },
+            legend: {
+                data: ['余氯', '浊度', 'PH'],
+                right: 10,
+                top: 12,
+                textStyle: {
+                    color: "#fff"
+                },
+                itemWidth: 12,
+                itemHeight: 10,
+                // itemGap: 35
+                selected: {
+                    // 选中'系列1'
+                    '余氯': true,
+                    // 不选中'系列2'
+                    '浊度': true,
+                    'PH': false,
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: [],
+
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                    lineStyle: {//线条样式
+                        color: '#2c345c',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#e8e8e8',
+                    },//控制x轴字体样式
+                    fontSize: 12,
+                    margin: 10,
+                    interval: 0,
+                },
+            },
+
+            yAxis: {
+                type: 'value',
+                //max: '1200',
+                nameTextStyle: {
+                    color: '#fff',
+                    fontSize: 15
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                            },
+                            {
+                                offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        },
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#f0f0f0',
+                    },//控制x轴字体样式
+                },
+            },
+            calculable: true,
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 70,
+                    bottom: 10,
+                    right: 20,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            series: [{
+                name: '余氯',
+                type: 'bar',
+                barWidth: '13',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#d2a6fe'
+                        }, {
+                            offset: 1,
+                            color: '#9034ef'
+                        }]),
+                        barBorderRadius: [30, 30, 0, 0],
+                    },
+                },
+                data: []
+            },
+            {
+                name: '浊度',
+                type: 'bar',
+                barWidth: '13',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#f98d8d'
+                        }, {
+                            offset: 1,
+                            color: '#d23939'
+                        }]),
+                        barBorderRadius: [30, 30, 0, 0],
+                    }
+
+                },
+                data: []
+            },
+            {
+                name: 'PH',
+                type: 'bar',
+                barWidth: '13',
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#248ff7'
+                        }, {
+                            offset: 1,
+                            color: '#6851f1'
+                        }]),
+                        barBorderRadius: [30, 30, 0, 0],
+                    }
+                },
+                data: []
+            }]
+        };
+        //chart5.setOption()
+
+        var chart6 = echarts.init(document.getElementById('chart6'));
+        option6 = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            grid: {
+                top: 20,
+                left: 15,
+                right: 20,
+                bottom: 30,
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                    lineStyle: {//线条样式
+                        color: '#2c345c',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#999bc6',
+                    },//控制x轴字体样式
+                    fontSize: 12,
+                    margin: 10,
+                },
+                data: ['03-01', '03-02', '03-03', '03-04', '03-05', '03-06', '03-07', '03-08', '03-09']
+            },
+            yAxis: [{
+                type: 'value',
+                //name : 'm³',
+                nameTextStyle: {
+                    color: '#fff',
+                    fontSize: 15
+                },
+                splitLine: {//控制网格的线条样式
+                    show: true,
+                    lineStyle: {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 1,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: 'rgba(7,25,82,0.4)' // 0% 处的颜色
+                            },
+                            {
+                                offset: 0.5, color: 'rgba(87,98,133,1)' // 100% 处的颜色
+                            },
+                            {
+                                offset: 1, color: 'rgba(7,25,82,0.4)' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        },
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLine: {//x轴的样式控制
+                    show: true,　//显示与否
+                },
+                axisTick: {
+                    show: false,
+                },
+                axisLabel: {//控制x轴上的文字的样式
+                    show: true,//显示与否
+                    textStyle: {
+                        color: '#999bc6',
+                    },//控制x轴字体样式
+                }
+            }
+
+            ],
+            dataZoom: [
+                {
+                    type: 'slider',
+                    start: 0,
+                    end: 100,
+                    bottom: 10,
+                    right: 20,
+                    height: 16,
+                    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+                    handleSize: '110%',
+                    handleStyle: {
+                        color: "#d3dee5",
+                    },
+                    textStyle: {
+                        color: "#041A46"
+                    },
+                    borderColor: "#90979c"
+                }, {
+                    "type": "inside",
+                    "show": true,
+                    "height": 15,
+                    "start": 1,
+                    "end": 35
+                }],
+            series: [
+                {
+                    type: 'line',
+                    symbolSize: 5, // 设定实心点的大小
+                    data: [120, 272, 171, 156, 210, 140, 180, 170, 165, 190, 222],
+                    smooth: true,
+                    itemStyle: {
+                        color: '#00b2de'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(31, 216, 254,0.8)'
+                        }, {
+                            offset: 1,
+                            color: 'rgba(31, 188, 254,0)'
+                        }])
+                    }
+                }
+            ]
+        };
+        //chart6.setOption()
+
+        //查询曲线数据
+        function getChartData(id) {
+            $.post("/Sws/Sws_WaterQuality/GetChartData", { deviceID: id }, function (res) {
+                //溶解氧
+                oxoption.xAxis[0].data = res.xAxis;
+                oxoption.series[0].data = res.oxdata;
+                chart1.setOption(oxoption);
+
+                //orp
+                orpoption.xAxis[0].data = res.xAxis;
+                orpoption.series[0].data = res.orpdata;
+                chart2.setOption(orpoption);
+
+                //电导率
+                coption.xAxis.data = res.xAxis;
+                coption.series[0].data = res.cudata;
+                chart3.setOption(coption);
+
+                //盐度
+                soption.xAxis.data = res.xAxis;
+                soption.series[0].data = res.sadata;
+                chart4.setOption(soption);
+
+                //硬度
+                option6.xAxis.data = res.xAxis;
+                option6.series[0].data = res.harddata;
+                chart6.setOption(option6);
+            });
+        }
+
+        //查询对比曲线数据
+        function Getwatercharts() {
+            $.post("/Sws/Sws_WaterQuality/GetWaterChart", {}, function (res) {
+                woption.xAxis.data = res.xAxis;
+                woption.series[0].data = res.cl;
+                woption.series[1].data = res.tr;
+                woption.series[2].data = res.ph;
+                chart5.setOption(woption);
+            });
+        }
+        // 跟随页面自适应
+        window.onresize = function () {
+            chart1.resize();
+            chart2.resize();
+            chart3.resize();
+            chart4.resize();
+            chart5.resize();
+            chart6.resize();
+        }
+    </script>
+    <script src="~/DataV/js/jt.js"></script>
+    <script>
+        $("#chart1 ").resize(function () { });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,250 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@using WNMS.Model.DataModels;
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>视频监控</title>
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    @*<script src="~/lib/flvjs/flv.js"></script>*@
+    <script src="~/lib/flv/flv.min.js"></script>
+
+    @*<script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>*@
+
+    <style>
+        .selected {
+            border: 1px solid red;
+        }
+
+        .double {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nothascamera {
+            display: none
+        }
+
+        .zlw-content-rg {
+            width: 100%;
+        }
+
+        .camera_numyi {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw-content">
+        <div class="zlw-content-rg">
+            <div class="zlw-content-rgcon">
+                <!--- star Camera -->
+                <div class="zlw-camera-list">
+                    <div class="zlw-camera-list-title">
+                        <p>视频列表</p>
+                    </div>
+                    <div class="zlw-camera-list-content">
+                        <ul id="camerList" class="textCenter gray">
+                            @{
+                                var list = ViewBag.CameraList as List<SwsCamera>;
+
+                                foreach (var item in list)
+                                {
+                                    <li data-camerid="@item.CameraId"><p>@item.CameraName</p></li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="zlw-camera-content">
+
+                    <div class="zlw-camera-contentdw">
+                        <div class="zlw-camera-content-xx clearfloat">
+                            <span class="left">选项</span>
+                            <ul class="left clearfloat">
+                                <li class="xz_active left numberyiyi" id="preview">视频监控</li>
+                                <li class="left numbererer" id="playbacks">视频回放</li>
+                            </ul>
+                        </div>
+                        <div class="zlw-camera-content-nr">
+                            <iframe id="tab" class="webControl-tab" name="homeIframe" src="" frameborder="0" style="width:100%;overflow:hidden;height:100%;"> </iframe>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Camera end -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        var cameraId;   //当前选中摄像头的Id
+        var width=0,height=0;
+        $(function () {
+
+            var firstli = $("#camerList").children("li").first();
+            firstli.addClass("camera_act");
+            //GetVideoInfo(firstli.data("camerid"));
+
+            ////摄像头获取视频信息
+            //$(document).on('click', '.zlw-camera-list-content ul li', function () {
+            //    cameraId = $(this).data("camerid");
+            //    //var Id = $(this).data("camerid");
+            //    $(this).addClass('camera_act').siblings('li').removeClass('camera_act');
+            //    GetVideoInfo(cameraId);
+            //});
+
+            ////点击1*1  2*2样式
+            //$(document).on('click', '.zlw-camera-content-xx ul li', function () {
+            //    $(this).addClass('xz_active').siblings('li').removeClass('xz_active');
+            //});
+            //$('.numberyiyi').click(function () {
+            //    $('.zlw-camera-content-nr>ul').addClass("camera_numyi").removeClass("camera_numer");
+            //    $('.zlw-camera-content-nr>ul>li').removeClass("double");
+            //    $('.zlw-camera-content-nr>ul>li:nth-child(1)').css('display', 'block');
+            //    $('.zlw-camera-content-nr>ul>li:nth-child(2)').css('display', 'none');
+            //    $('.zlw-camera-content-nr>ul>li:nth-child(3)').css('display', 'none');
+            //    $('.zlw-camera-content-nr>ul>li:nth-child(4)').css('display', 'none');
+            //    $('.zlw-camera-content-nr>ul>li:nth-child(1)').css('width', '100%');
+            //    $('.zlw-camera-content-nr>ul>li:nth-child(1)').css('height', '100%');
+            //});
+            //$('.numbererer').click(function () {
+            //    $('.zlw-camera-content-nr>ul').addClass("camera_numer").removeClass("camera_numyi");
+            //    $('.zlw-camera-content-nr>ul>li:nth-child(1)').css('display', 'block');
+            //    $('.zlw-camera-content-nr>ul>li:nth-child(2)').css('display', 'block');
+            //    $('.zlw-camera-content-nr>ul>li:nth-child(3)').css('display', 'block');
+            //    $('.zlw-camera-content-nr>ul>li:nth-child(4)').css('display', 'block');
+            //    $('.zlw-camera-content-nr>ul>li').css('width', '50%');
+            //    $('.zlw-camera-content-nr>ul>li').css('height', '50%');
+            //});
+
+            ////2*2时点击某一屏时的样式
+            //$(document).on('click', '.zlw-camera-content-nr>ul>li>.sxt', function () {
+            //    $(this).addClass('selected').parent().siblings('li').children('.sxt').removeClass('selected');
+            //});
+            $("#tab").attr("src", "/Sws/Sws_Camera/Preview?cameraId=" + firstli.data("camerid") + "");
+
+            //摄像头获取视频信息
+            $(document).on('click', '.zlw-camera-list-content ul li', function () {
+                cameraId = $(this).data("camerid");
+                //var Id = $(this).data("camerid");
+                $(this).addClass('camera_act').siblings('li').removeClass('camera_act');
+                if ($("#preview").hasClass("xz_active")) {
+                    $("#tab").attr("src", "/Sws/Sws_Camera/Preview?cameraId=" + cameraId + "");
+                } else {
+                    $("#tab").attr("src", "/Sws/Sws_Camera/PlayBack?cameraId=" + cameraId + "");
+                }
+            });
+
+            $("#preview").click(function () {
+                $(this).addClass('xz_active').siblings('li').removeClass('xz_active');
+                $("#tab").attr("src", "/Sws/Sws_Camera/Preview?cameraId=" + cameraId + "");
+            });
+
+            $("#playbacks").click(function () {
+                $(this).addClass('xz_active').siblings('li').removeClass('xz_active');
+                $("#tab").attr("src", "/Sws/Sws_Camera/PlayBack?cameraId=" + cameraId + "");
+            });
+
+            //点击"视频监控"样式
+            $(document).on('click', '.zlw-camera-content-xx ul li', function () {
+                $(this).addClass('xz_active').siblings('li').removeClass('xz_active');
+            });
+
+            //点击"录像回放"样式
+            $(document).on('click', '.zlw-camera-content-nr>ul>li>.sxt', function () {
+                $(this).addClass('selected').parent().siblings('li').children('.sxt').removeClass('selected');
+            });
+
+            $(document).on('dblclick', '.zlw-camera-content-nr>ul>li', function () {
+                if ($(".numbererer").hasClass("xz_active")) {
+                    var pw = $(this).parent().width();
+                    var ph = $(this).parent().height();
+                    if ($(this).hasClass("double")) {
+                        $(this).removeClass("double").css({ "width": pw / 2, "height": ph / 2 }).siblings("li").css("display", "block");
+                    } else {
+                        $(this).addClass("double").css({ "width": pw, "height": ph }).siblings("li").css("display", "none");
+                    };
+                };
+            });
+
+            //width = window.parent.parent.$(".main-sidebar")[0].clientWidth;
+            //height = window.parent.parent.$(".main-header")[0].clientHeight;
+            width = window.parent.offsetLeft;
+            height = window.parent.offsetTop;
+        });
+
+        //----------------------------------------------------------视频直播---------------------------------------------------------------
+        //点击摄像头，获取视频信息
+        function GetVideoInfo(Id) {
+            $.post("/Sws/Sws_Camera/GetCameraDetail", {
+                cameraID: Id
+            }, function (res) {
+                var url = res.url;
+                var Ip = res.cameraIp;
+                if ($(".numberyiyi").hasClass("xz_active")) {
+
+                    getLiveUrl("videoElement1", url, Id, Ip);
+                } else {
+                    if ($(".numbererer").hasClass("xz_active")) {
+                        var aa = $(".zlw-camera-content-nr>ul>li .selected").children();
+                        var elementId = aa[0].id;
+
+                        getLiveUrl(elementId, url, Id, Ip);
+                    }
+                }
+            });
+        }
+
+        //大华海康直播
+        function getLiveUrl(video = "videoElement1", url, stream = 0, IP) {
+            $.getJSON(IP + "/index/api/addStreamProxy", {
+                "url": url,
+                //"url": "rtsp://admin:admin@192.168.80.85:554/cam/realmonitor?channel=1&subtype=1",
+                "enable_rtmp": 1,
+                "enable_rtsp": 1,
+                "vhost": "wnms",
+                "app": "live",
+                "stream": stream,
+                "secret": "035c73f7-bb6b-4889-a715-d9eb2d1925cc"
+
+            }, function (result) {
+                if (result.code == 0) {
+
+                    //alert(result.data.key);
+                    if (flvjs.isSupported()) {
+                        var videoElement = document.getElementById(video);
+                        var num = IP.indexOf("//");
+                        var myip = IP.substring(num + 2, IP.length);
+                        var flvPlayer = flvjs.createPlayer({
+                            type: 'flv',
+                            url: 'ws://' + myip + '/live/' + stream + '.flv?vhost=wnms'
+                        });
+                        flvPlayer.attachMediaElement(videoElement);
+                        flvPlayer.load();
+                        flvPlayer.play();
+                    }
+                } else {
+                    //按需拉流失败
+                    alert("摄像头配置信息有误，请重新配置");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

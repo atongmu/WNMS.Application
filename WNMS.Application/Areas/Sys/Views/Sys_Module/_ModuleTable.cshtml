@@ -1,0 +1,48 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Model.DataModels;
+@model IEnumerable<SysModule>
+<thead>
+    <tr>
+        <th data-checkbox="true"></th>
+        <th data-sortable="true" data-field="ModuleNum">编号</th>
+        <th data-sortable="true" data-field="ModuleName">名称</th>
+        <th data-field="Url">地址</th>
+        <th data-field="HttpMethod">请求方式</th>
+        <th data-field="IsEnable">是否有效</th>
+        <th data-field="Sort">排序</th>
+        <th data-field="Target">打开方式</th>
+        <th data-field="IsMenu">是否为菜单权限</th>
+    </tr>
+</thead>
+<tbody>
+    @{
+        foreach (var item in Model)
+        {
+            <tr>
+                <td data-checkbox="true"></td>
+                <td>@item.ModuleNum</td>
+                <td>@item.ModuleName</td>
+                <td>@item.Url</td>
+                <td>@item.HttpMethod</td>
+                <td>
+                    @{
+                        if (item.IsEnable == true)
+                        {
+                            <input value="@item.ModuleNum" type="checkbox" id="project_status_switch" name="my-checkbox1" checked />
+
+                        }
+                        else
+                        {
+                            <input value="@item.ModuleNum" type="checkbox" id="project_status_switch"  name="my-checkbox2" />
+                        }
+                    }
+                </td>
+                <td>@item.Sort</td>
+                <td>@(Enum.GetName(typeof(WNMS.Model.CustomizedClass.Target),item.Target))</td>
+                <td>@(item.IsMenu == true ? "是" : "否")</td>
+            </tr>
+        }
+    }
+</tbody>

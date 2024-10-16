@@ -1,0 +1,96 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TaskTreat</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .workbox {
+            margin: 20px;
+        }
+
+            .workbox label {
+                font-size: 16px;
+                padding-bottom: 5px;
+                font-weight: 500
+            }
+
+        .boxchild {
+            display: block;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 10px
+        }
+
+        .means {
+        }
+
+            .means h6 {
+                font-size: 16px;
+                margin: 0;
+                line-height: 36px;
+                height: 36px;
+                overflow: hidden;
+                zoom: 1;
+            }
+
+            .means textarea {
+                width: 100%;
+                margin-top: 10px;
+                resize: none;
+                padding: 5px;
+                height: 90px;
+                border: 1px solid #ccc
+            }
+    </style>
+</head>
+<body>
+    <div class="workbox">
+        <div class="means">
+            <h6>
+                <span style="float: left;">审核意见</span>
+                <span style="float: right;">您还可以输入<em>100</em>字</span>
+            </h6>
+            <textarea id="instruction"></textarea>
+        </div>
+    </div>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        var index = parent.layer.getFrameIndex(window.name);
+        var pindex = parent.parent.layer.getFrameIndex(parent.window.name);
+
+        function SubmitData() {
+            $.post("/Wos/EventsAudit/SetOrderAudit",
+                {
+                    woID:@ViewBag.WOID,
+                    state:@ViewBag.State,
+                    treatidea: $("#instruction").val(),
+                },
+                function (res) {
+                    if (res = "ok") {
+                        parent.layer.close(index);
+                        parent.parent.layer.close(pindex);
+                        parent.parent.layer.msg("审核成功");
+                    } else {
+                        if (res = "false") {
+                            parent.layer.close(index);
+                            parent.parent.layer.close(pindex);
+                            parent.parent.layer.msg("该工单已被删除，工单不存在");
+                        } else {
+                            parent.layer.close(index);
+                            parent.parent.layer.close(pindex);
+                            parent.parent.layer.msg("工单审核失败");
+                        }
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,906 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>地图监测</title>
+    <link rel="stylesheet" href="../../css/hyl.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../css/iconfont.css">
+    <link rel="stylesheet" href="../../css/ziti.css">
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../css/gdmap.css">
+    <!-- Arcgis -->
+    <link href="~/4.22/esri/themes/light/main.css" rel="stylesheet" />
+    <script src="~/4.22/init.js"></script>
+    <style>
+        .custom-input-card {
+            width: 18rem;
+        }
+
+            .custom-input-card .btn:last-child {
+                margin-left: 1rem;
+            }
+
+        .content-window-card {
+            position: relative;
+            width: 23rem;
+            padding: 0.75rem 0 0 1.25rem;
+            box-shadow: none;
+            bottom: 0;
+            left: 0;
+        }
+
+        .chaochu {
+            text-align: left !important
+        }
+
+            .chaochu i {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 10px;
+                margin-right: 6px;
+                background: #0fd10a
+            }
+
+        .ls {
+            background: #0fd10a !important
+        }
+
+        .hs {
+            background: #ff0202 !important
+        }
+
+        .huis {
+            background: #666 !important
+        }
+
+        .content-window-card p {
+            height: 2rem;
+        }
+
+        .clearfloat:after {
+            content: "";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+
+        input {
+            outline: none
+        }
+
+        .amap-container img {
+            position: relative;
+            left: -1px;
+            top: 1px;
+        }
+
+        .clearfloat {
+            zoom: 1;
+        }
+
+        .esri-popup_footer, .esri-popup_button--dock, .esri-popup__inline-actions-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_map">
+        <!-- star 地图层 -->
+        <div class="zlw_map_layer">
+            <div id="map_monitor"></div>
+        </div>
+        <!-- 地图层 end -->
+        <!-- star 数据层 -->
+        <div class="data_layer">
+            <div class="data_layercon">
+                <div class="data_layeryi">
+                    <div class="data_layeryitop">
+                        <ul class="clearfloat">
+                            <li>
+                                <div class="data_layeryitopyi clearfloat">
+                                    <img src="~/images/泵房.png" alt="">
+                                    <i>监控泵房</i>
+                                </div>
+                                <div class="data_layeryitoper">
+                                    <p><span id="stationNum"></span>个</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="data_layeryitopyi clearfloat">
+                                    <img src="~/images/泵房1.png" alt="">
+                                    <i>监控机组</i>
+                                </div>
+                                <div class="data_layeryitoper">
+                                    <p><span id="deviceName"></span>个</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="data_layerer">
+                    <ul>
+                        <li class="clearfloat">
+                            <div class="zlw_tj_yi">
+                                <i></i>正常运行
+                            </div>
+                            <div class="zlw_tj_er">
+                                <p> <i id="okNum"></i>个</p>
+                            </div>
+                        </li>
+                        <li class="clearfloat">
+                            <div class="zlw_tj_yi">
+                                <i></i>报警
+                            </div>
+                            <div class="zlw_tj_er">
+                                <p> <i id="alerNum"></i>个</p>
+                            </div>
+                        </li>
+                        <li class="clearfloat">
+                            <div class="zlw_tj_yi">
+                                <i></i>离线
+                            </div>
+                            <div class="zlw_tj_er">
+                                <p> <i id="outNum"></i>个</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="data_layersan">
+                    <div class="data_layersancon">
+                        <div class="data_layersan_title">
+                            <p>实时监测数据</p>
+                        </div>
+                        <div class="data_layersan_nr">
+                            <div class="data_layersan_nrbt clearfloat">
+                                <span>二供泵房</span>
+                                <span>采集时间</span>
+                                <span>操作</span>
+                            </div>
+                            <div class="data_layersan_nrcon">
+                                <div id="stationData">
+
+                                </div>
+                                <div id="zstationData">
+
+                                </div>
+                            </div>
+                            @*<div class="data_layersan_nrcon" id="zstationData">
+
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 数据层 end  -->
+        <!-- star 筛选层 -->
+        <div class="shuai_layui">
+            <div class="shuai_layui_yi clearfloat">
+                <!-- 搜索框 -->
+                <div class="shuai_layui_sea left">
+                    <input id="stationName" type="text" autoComplete="off" placeholder="搜索">
+                </div>
+                <!-- 复选 -->
+                <div class="shuai_layui_fux left">
+                    <ul class="clearfloat">
+                        <li>
+                            <input name="state" class="state1" type="checkbox" data-value="正常" checked><i></i>正常
+                        </li>
+                        <li>
+                            <input name="state" class="state1" type="checkbox" data-value="故障" checked><i></i>报警
+                        </li>
+                        <li>
+                            <input name="state" class="state1" type="checkbox" data-value="离线" checked><i></i>离线
+                        </li>
+                    </ul>
+                </div>
+                
+            </div>
+
+        </div>
+        <div class="shuai_layui_er">
+            <span>单位说明</span>
+            <p>压力：MPa</p>
+            <p>瞬流：m³/h</p>
+        </div>
+    </div>
+    <!-- 收缩按钮 -->
+    <div class="zlw_ss">
+
+        <!-- 筛选层 end -->
+    </div>
+
+    <script>
+        var lng =@ViewBag.lng;
+        var lat = @ViewBag.lat;
+        var zoomend = @ViewBag.zoom;
+        var isselect = 0;
+        var view;
+        var graphicsLayer;
+        var ArcgisUrl = '@ViewBag.ArcgisUrl' 
+        var graid = "";
+
+        require(["esri/config", "esri/Map", "esri/views/MapView", "esri/layers/TileLayer", "esri/Graphic",
+            "esri/layers/GraphicsLayer", "esri/rest/locator", "esri/geometry/Point", "esri/geometry/support/webMercatorUtils", "esri/symbols/TextSymbol", "esri/widgets/Popup","esri/symbols/Font"], function (esriConfig, Map, MapView, TileLayer, Graphic, GraphicsLayer, Point, locator, webMercatorUtils, TextSymbol,popup,Font) {
+
+            LoadNum();
+            //LoadPumState();
+            //initMap();
+
+            document.onkeydown = keyDownSearch;
+            function keyDownSearch(e) {
+                // 兼容FF和IE和Opera    
+                var theEvent = e || window.event;
+                var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                // 13 代表 回车键
+                if (code == 13) {
+                    // 要执行的函数 或者点击事件
+                    if ($("#stationName").val() != "") {
+                        isselect = 1;
+                    }
+                    LoadZoomData(zoomend);
+                }
+                return true;
+            }
+
+                var layer = new TileLayer({
+                    //url:
+                    //    "https://192.168.0.234:6443/arcgis/rest/services//tile/MapServer" //自己的底图地址
+                    url: ArcgisUrl //自己的底图地址
+                });
+
+                var map = new Map({
+                    basemap: "",
+                    layers: [layer]
+                });
+            let pt = {
+                x: lng,
+                y: lat,
+                spatialReference: 2436
+            };
+                view = new MapView({
+                    map: map,
+                    center: pt, // Longitude, latitude
+                    zoom: zoomend, // Zoom level
+                    constraints: {
+                        minScale: 140000, // User cannot zoom out beyond a scale of 1:500,000
+                        maxScale: 0, // User can overzoom tiles
+                    },
+                    container: "map_monitor", // Div element
+                    spatialReference: 2436
+                });
+
+            graphicsLayer = new GraphicsLayer();
+            map.add(graphicsLayer);
+            LoadPumState();
+            view.watch("stationary", function (e) {
+                var zoomlevel = this.zoom;
+                if (zoomend == zoomlevel) {
+                    return;
+                }
+                zoomend = this.zoom;
+                if (e == true) {
+                    if (zoomlevel > 5) {
+                        LoadZoomData(zoomlevel);
+                    } else {
+                        graphicsLayer.removeAll();
+                        $.post("/Sws/Map/QueryTableData", { typecheck: checkedType(), stationName: "" }, function (data) {
+                            for (var i = 0; i < data.dataTable.length; i++) {
+                                //if (data.dataTable[i].state == "故障") {
+                                //    imageurl = '../../images/bf.png';
+
+                                //} else if (data.dataTable[i].state == "正常") {
+                                //    imageurl = '../../images/bf.png';
+                                //} else {
+                                //    imageurl = '../../images/bf.png';
+                                //}
+
+                                if (data.dataTable[i].state == "故障") {
+                                    imageurl = '../../images/red.gif';
+                                } else if (data.dataTable[i].state == "正常") {
+                                    imageurl = '../../images/green.gif';
+                                } else {
+                                    imageurl = '../../images/grey.gif';
+                                }
+
+                                //data.dataTable[i].lng, data.dataTable[i].lat
+                                const point = { //Create a point118.338223
+                                    type: "point",
+                                    x: data.dataTable[i].lng,
+                                    y: data.dataTable[i].lat,
+                                    spatialReference: 2436,
+                                };
+                                const pictureMarkerSymbol = {
+                                    type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
+                                    url: imageurl,
+                                    width: "32px",
+                                    height: "32px"
+                                };
+                                let textSymbol = {
+                                    type: "text",  // autocasts as new TextSymbol()
+                                    color: "green",
+                                    haloColor: "black",
+                                    haloSize: "10px",
+                                    text: "出瞬流" + data.dataTable[i].allInFlow,
+                                    xoffset: 1,
+                                    yoffset: 1,
+                                    font: {  // autocasts as new Font()
+                                        size: 15,
+                                        family: "Josefin Slab",
+                                        weight: "bold"
+                                    }
+                                };
+                                const attributes = {
+                                    Name: data.dataTable[i].stationID,
+                                    x: data.dataTable[i].lng,
+                                    y: data.dataTable[i].lat
+                                }
+
+                                const pointGraphic = new Graphic({
+                                    geometry: point,
+                                    symbol: pictureMarkerSymbol,
+                                    attributes: attributes
+                                });
+                                markers.push(pointGraphic);
+                                graphicsLayer.add(pointGraphic);
+                            }
+                        })
+                    }
+                }
+            })
+
+            view.on("pointer-move", function (e) {
+                var point1 = e.mapPoint; 
+                view.hitTest(e)
+                    .then(res => {
+                        if (res.results.length) {
+                            //let gra = res.results.filter(function (results) {
+                            //    return results.graphic.layer == graphicsLayer;
+                            //})[0].graphic;
+                            var gra = res.results[0].graphic;
+                            if (gra.attributes != null) {
+                                //PopupInfo(gra, point1);
+                                if (graid != gra.attributes.Name) {
+                                    graid = gra.attributes.Name; 
+                                    PopupInfo(gra, point1);
+                                }
+                            }
+                            
+                        } else {
+                            graid = "";
+                            view.popup.close();
+                        }
+                    })
+
+
+
+                //view
+                //    .when()
+                //    .then(() => {
+                //        return graphicsLayer.when();
+                //    })
+                //    .then((layerView) => {
+                //        view.on("pointer-move", eventHandler);
+                //        function eventHandler(event) {
+                //            const opts = {
+                //                include: graphicsLayer
+                //            }
+                //            view.hitTest(event, opts).then(getGraphics);
+                //        }
+
+                //        let highlight, currentYear, currentName;
+
+                //        function getGraphics(response) {
+                //            if (response.results.length) {
+                //                const graphic = response.results[0].graphic;
+                //                if (graid != graphic.attributes.Name) {
+                //                    graid = graphic.attributes.Name;
+                //                    PopupInfo(graphic);
+                //                    graid = 0;
+                //                }
+                                
+                //            } else {
+                //            }
+                //        } 
+
+
+
+
+            //view.on("click", function (e) {
+            //    var point1 = e.mapPoint;
+            //    view.hitTest(e)
+            //        .then(res => {
+            //            if (res.results.length) {
+            //                let gra = res.results.filter(function (results) {
+            //                    return results.graphic.layer == graphicsLayer;
+            //                })[0].graphic;
+            //                PopupInfo(gra, point1);
+            //            }
+            //        })
+                //var point1 = e.mapPoint;
+                //view.hitTest(e)
+                //    .then(function (res) {
+                //        console.log(point1);
+                //        if (res.results.length) {
+                //            let gra = res.results.filter(function (results) {
+                //                return results.graphic.layer == graphicsLayer;
+                //            })[0].graphic;
+                //            PopupInfo(gra, point1);
+                //        }
+                //    });
+                //view.hitTest(e)
+                //    .then(res => {
+                //        if (res.results.length) {
+                //            // 获取每个图形上的ID
+                //            var htmlstr = LoadStationJkData(2);
+                //            let objId = res.results[0].graphic.attributes.ObjectID
+                //            //筛选当前点击的坐标点信息
+                //            //let mark = gras.filter(value => {
+                //            //    // console.log(value)
+                //            //    return value.attributes.ObjectID == objId
+                //            //})
+
+                //            //console.log(mark[0].attributes.ObjectID)
+                //            //定义新的弹出层内容
+                //            var popupTemplate = {
+                //                // autocasts as new PopupTemplate()
+                //                title: "自定义图层{name}",
+                //                // outFields: ["*"],
+                //                content: htmlstr,
+                //            };
+
+                //            layer.popupTemplate = popupTemplate
+                //        }
+                //    })
+                //geom = webMercatorUtils.xyToLngLat(e.mapPoint.x, e.mapPoint.y);
+
+            });
+            function PopupInfo(gra, point1) {
+                var arrt = gra.attributes; 
+                $.post("/Sws/Map/LoadDataByStationID", { id: arrt.Name }, function (data) {
+                    if (data != null) {
+                        var clore = '';
+                        if (data.jk.state == "故障") {
+                            clore = 'red';
+                        } else if (data.jk.state == "正常") {
+                            clore = 'green';
+                        } else {
+                            clore = 'gray';
+                        }
+                        var table = '<div class="makercon overflow clearfloat pad10px">';
+                        table += "<div class='maptitle'><i class='iconfont f24px icon-bengfang " + clore + "'></i><p><span class='fb f16px' onClick=" + '"' + "window.top.homeAddTab('sta" + data.jk.stationID + "','" + data.jk.stationName + "','/Sws/Sws_Detail/Index/" + data.jk.stationID + "')" + '"' + "'>" + data.jk.stationName + "</span></p></div>";
+                        table += '<ul class="maplist">';
+                        table += '<li class="maplistnr1" ><span>分区</span><span>进水压力</span><span>出水压力</span><span>出水瞬时</span></li>';
+                        if (data.jk.deviceJKs.length > 0) {
+                            for (var i = 0; i < data.jk.deviceJKs.length; i++) {
+                                var pin = data.jk.deviceJKs[i].pressIN;
+                                var pout = data.jk.deviceJKs[i].pressOut;
+                                if (data.jk.deviceJKs[i].partition == "1") {
+                                    table += '<li><span>低区</span>';
+                                } else if (data.jk.deviceJKs[i].partition == "2") {
+                                    table += '<li><span>中区</span>';
+                                }
+                                else if (data.jk.deviceJKs[i].partition == "3") {
+                                    table += '<li><span>高区</span>';
+                                }
+                                else if (data.jk.deviceJKs[i].partition == "4") {
+                                    table += '<li><span>超高区</span>';
+                                } else if (data.jk.deviceJKs[i].partition == "5") {
+                                    table += '<li><span>超超高区</span>';
+                                } else if (data.jk.deviceJKs[i].partition == "6") {
+                                    table += '<li><span>智能泵房</span>';
+                                }
+                                if (pin.Value == true) {
+                                    table += '<span class="red">' + pin.Key + ' MPa' + '</span>'
+                                } else {
+                                    table += '<span>' + pin.Key + ' MPa' + '</span>'
+                                }
+                                if (pout.Value == true) {
+                                    table += '<span class="red">' + pout.Key + ' MPa' + '</span>'
+                                } else {
+                                    table += '<span>' + pout.Key + ' MPa' + '</span>'
+                                }
+                                table += '<span>' + data.jk.deviceJKs[i].inflow + ' m³/h' + '</span>'
+                                table += '</li>'
+                            }
+                        }
+                        table += '</ul></div>';
+                        var div = document.createElement("div");
+                        div.innerHTML = table;
+                        const point = { 
+                            x: arrt.x,
+                            y: arrt.y,
+                            spatialReference: 2436,
+                        };  
+                        view.popup.open({
+                            location: point,
+                            content: div
+                        });
+                    }
+                })
+
+            }
+            function LoadPumState() {
+                 $.post("/Sws/Map/QueryTableData", { typecheck: checkedType(), stationName: "" }, function (data) {
+                     $("#stationData").empty();
+                     var html = ""; 
+                        for (var i = 0; i < data.dataTable.length; i++) {
+                            html += '<div class="data_layersan_item clearfloat" onclick="Positioning(' + data.dataTable[i].stationID + ',1)">'
+                            if (data.dataTable[i].state == "故障") {
+                                html += '<span class="chaochu"><i class="hs"></i>' + data.dataTable[i].stationName + '</span>'
+                            } else if (data.dataTable[i].state == "正常") {
+                                html += '<span class="chaochu"><i></i>' + data.dataTable[i].stationName + '</span>'
+                            } else {
+                                html += '<span class="chaochu"><i class="huis"></i>' + data.dataTable[i].stationName + '</span>'
+                            }
+
+                            html += '<span>' + data.dataTable[i].updateTime + '</span>'
+                            html += "<span><a href='javascript:void(0);' onClick=" + '"' + "window.top.homeAddTab('sta" + data.dataTable[i].stationID + "','" + data.dataTable[i].stationName + "','/Sws/Sws_Detail/Index/" + data.dataTable[i].stationID + "')" + '"' + "'>详情</a></span> </div>"
+                            html += ' </div>'
+                            var imageurl;
+                            if (data.dataTable[i].state == "故障") {
+                                imageurl = '../../images/red.gif';
+                            } else if (data.dataTable[i].state == "正常") {
+                                imageurl = '../../images/green.gif';
+                            } else {
+                                imageurl = '../../images/grey.gif';
+                            } 
+                            //data.dataTable[i].lng, data.dataTable[i].lat
+                            const point = { //Create a point118.338223
+                                type: "point",
+                                x: data.dataTable[i].lng,
+                                y: data.dataTable[i].lat,
+                                spatialReference: 2436,
+                            };
+                            const pictureMarkerSymbol = {
+                                type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
+                                url: imageurl,
+                                width: "32px",
+                                height: "32px"
+                            };
+                            let textSymbol = {
+                                type: "text",  // autocasts as new TextSymbol()
+                                color: "green",
+                                haloColor: "black",
+                                haloSize: "10px",
+                                text: "出瞬流" + data.dataTable[i].allInFlow,
+                                xoffset: 1,
+                                yoffset: 1,
+                                font: {  // autocasts as new Font()
+                                    size: 15,
+                                    family: "Josefin Slab",
+                                    weight: "bold"
+                                }
+                            };
+                            const attributes = {
+                                Name: data.dataTable[i].stationID,
+                                x: data.dataTable[i].lng,
+                                y: data.dataTable[i].lat,
+                            }
+                            //const pointGraphic = new Graphic({
+                            //    geometry: point,
+                            //    attributes: attributes,
+                            //    symbol: textSymbol
+                            //});
+
+                            const pointGraphic = new Graphic({
+                                geometry: point,
+                                symbol: pictureMarkerSymbol,
+                                attributes: attributes
+                            });
+                            graphicsLayer.add(pointGraphic);
+                        }
+                        $("#stationData").append(html);
+                    })
+
+            }
+            function LoadZoomData(zoomlevel) {
+                $.post("/Sws/Map/QueryTableData", { typecheck: checkedType(), stationName: $("#stationName").val() }, function (data) {
+                    graphicsLayer.removeAll();
+                    if (isselect == 1) {
+                        isselect = 0;
+                    }
+                    var imageurl;
+                    for (var i = 0; i < data.dataTable.length; i++) {
+                        if (3 <= zoomlevel && zoomlevel <= 5) {
+                            if (data.dataTable[i].state == "故障") {
+                                imageurl = '../../images/red.gif';
+                            } else if (data.dataTable[i].state == "正常") {
+                                imageurl = '../../images/green.gif';
+                            } else {
+                                imageurl = '../../images/grey.gif';
+                            } 
+                            const point = { //Create a point118.338223
+                                type: "point",
+                                x: data.dataTable[i].lng,
+                                y: data.dataTable[i].lat,
+                                spatialReference: 2436,
+                            };
+                            const pictureMarkerSymbol = {
+                                type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
+                                url: imageurl,
+                                width: "32px",
+                                height: "32px"
+                            };
+                            const attributes = {
+                                Name: data.dataTable[i].stationID,
+                                x: data.dataTable[i].lng,
+                                y: data.dataTable[i].lat,
+                            }
+
+                            const pointGraphic = new Graphic({
+                                geometry: point,
+                                symbol: pictureMarkerSymbol,
+                                attributes: attributes
+                            });
+                            graphicsLayer.add(pointGraphic);
+                            if (data.toLat != 0 && data.toLng != 0) {
+                                view.center = point;
+                            }
+                        }
+                        /*else if (zoomlevel == 13) {*/
+                        else if (zoomlevel >= 6) {
+                            var colorIcon;
+                            
+                            if (data.dataTable[i].state == "故障") {
+                                 colorIcon = "red";
+                            } else if (data.dataTable[i].state == "正常") {
+                                colorIcon = "green";
+                            } else {
+                                colorIcon = "grey";
+                            }
+
+                            const point = { //Create a point118.338223
+                                type: "point",
+                                x: data.dataTable[i].lng,
+                                y: data.dataTable[i].lat,
+                                spatialReference: 2436, 
+                            };
+
+                            //var font = new Font("12pt");
+                            //font.setFamily("Arial");
+                            //font.setWeight(Font.WEIGHT_BOLD);
+                            //font.setDecoration("none");
+                            //font.setStyle(Font.STYLE_NORMAL);
+                            //var symbol = new TextSymbol(this.textInput.value);
+                            //symbol.setAlign(TextSymbol.ALIGN_MIDDLE);
+                            //symbol.setColor(new Color("#2A506F"));
+                            //symbol.setFont(font);
+                            //symbol.setText("你好。");
+                            //symbol.setHaloColor(new Color([255, 255, 255, 1]));  //
+                            //symbol.setHaloSize(1);  //
+                            //symbol.setAngle(angle);
+
+                            let textSymbol = {
+                                type: "text",  // autocasts as new TextSymbol()
+                                color: colorIcon,
+                                haloColor: [255, 255, 255, 1],
+                                haloSize: 1,
+                                borderLineSize: "10px",
+                                backgroundColor:"red",
+                                text: "出瞬流 " + data.dataTable[i].allInFlow +"",
+                                xoffset: "45px",
+                                yoffset: "-7px",
+                                angle:1,
+                                font: {  // autocasts as new Font()
+                                    size: 12,
+                                    family: "Arial",
+                                    weight: "WEIGHT_BOLD",
+                                    style:"STYLE_NORMAL"
+                                }
+                            };
+                            const attributes = {
+                                Name: data.dataTable[i].stationID,
+                                x: data.dataTable[i].lng,
+                                y: data.dataTable[i].lat,
+                            }
+
+                            const pointGraphic = new Graphic({
+                                geometry: point,
+                                symbol: textSymbol,
+                                attributes: attributes
+                            });
+
+                            //加坐标点
+                            const point1 = { //Create a point118.338223
+                                type: "point",
+                                x: data.dataTable[i].lng,
+                                y: data.dataTable[i].lat,
+                                spatialReference: 2436,
+                            };
+                            const pictureMarkerSymbol = {
+                                type: "picture-marker",  // autocasts as new PictureMarkerSymbol()
+                                url: "../../images/泵房蓝.png",
+                                width: "20px",
+                                height: "20px"
+                            };
+                            const pointGraphic1 = new Graphic({
+                                geometry: point1,
+                                symbol: pictureMarkerSymbol,
+                            });
+                            graphicsLayer.add(pointGraphic);
+                            graphicsLayer.add(pointGraphic1);
+                        }
+                    }
+                })
+
+            }
+            $(".state1").click(function () {
+                LoadZoomData(zoomend);
+            });
+        });
+        //双击泵房  定位地图中心点
+        function Positioning(stationid, type) {
+            $.post("/Sws/Map/LoadDataByStationID", { id: stationid }, function (data) {
+                if (data != null) {
+                    var clore = '';
+                    if (data.jk.state == "故障") {
+                        clore = 'red';
+                    } else if (data.jk.state == "正常") {
+                        clore = 'green';
+                    } else {
+                        clore = 'gray';
+                    }
+                    var table = '<div class="makercon overflow clearfloat pad10px">';
+                    table += "<div class='maptitle'><i class='iconfont f24px icon-bengfang " + clore + "'></i><p><span class='fb f16px' onClick=" + '"' + "window.top.homeAddTab('sta" + data.jk.stationID + "','" + data.jk.stationName + "','/Sws/Sws_Detail/Index/" + data.jk.stationID + "')" + '"' + "'>" + data.jk.stationName + "</span></p></div>";
+                    table += '<ul class="maplist">';
+                    table += '<li class="maplistnr1" ><span>分区</span><span>进水压力</span><span>出水压力</span><span>出水瞬时</span></li>';
+                    if (data.jk.deviceJKs.length > 0) {
+                        for (var i = 0; i < data.jk.deviceJKs.length; i++) {
+                            var pin = data.jk.deviceJKs[i].pressIN;
+                            var pout = data.jk.deviceJKs[i].pressOut;
+                            if (data.jk.deviceJKs[i].partition == "1") {
+                                table += '<li><span>低区</span>';
+                            } else if (data.jk.deviceJKs[i].partition == "2") {
+                                table += '<li><span>中区</span>';
+                            }
+                            else if (data.jk.deviceJKs[i].partition == "3") {
+                                table += '<li><span>高区</span>';
+                            }
+                            else if (data.jk.deviceJKs[i].partition == "4") {
+                                table += '<li><span>超高区</span>';
+                            } else if (data.jk.deviceJKs[i].partition == "5") {
+                                table += '<li><span>超超高区</span>';
+                            } else if (data.jk.deviceJKs[i].partition == "6") {
+                                table += '<li><span>智能泵房</span>';
+                            }
+                            if (pin.Value == true) {
+                                table += '<span class="red">' + pin.Key + ' MPa' + '</span>'
+                            } else {
+                                table += '<span>' + pin.Key + ' MPa' + '</span>'
+                            }
+                            if (pout.Value == true) {
+                                table += '<span class="red">' + pout.Key + ' MPa' + '</span>'
+                            } else {
+                                table += '<span>' + pout.Key + ' MPa' + '</span>'
+                            }
+                            table += '<span>' + data.jk.deviceJKs[i].inflow + ' m³/h' + '</span>'
+                            table += '</li>'
+                        }
+                    }
+                    table += '</ul><div class="sj"></div>';
+                    const point1 = { //Create a point118.338223
+                        type: "point",
+                        x: data.jk.lng,
+                        y: data.jk.lat,
+                        spatialReference: 2436,
+                    };
+                    view.popup.open({
+                        location: point1,
+                        content: table
+                    });
+                    view.center = point1;
+                }
+            })
+        }
+        function checkedType() {
+            var typecheck = "";
+            $("input:checkbox[name='state']:checked").each(function () {
+                typecheck += $(this).data("value") + ",";
+            })
+            if (typecheck != "") {
+                typecheck = typecheck.substring(0, typecheck.length - 1);
+            }
+            else {
+                typecheck = "无";
+            }
+            return typecheck;
+        }
+    </script>
+
+
+    <script>
+        var map;
+        var markers = [];
+        var markerClusterer;
+        var mapselect;
+        var infoWindow;
+        var clusters;
+        var isselect = 0;
+        var areaname = '@Html.Raw(@ViewBag.AreaName)';
+
+        var markericon = '' +
+            '<div>' +
+            '<img src="../../images/main.png">' +
+            '</div>';
+        var markerContent = '' +
+            '<div class="makercon overflow pad10px">' +
+            '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang blue"></i><p class="mt5px">二供泵房</p></div>' +
+            '<div class="makercon-right">' +
+            '<p class="f18px ellipsis1">万象新城</p>' +
+            '<div class="green f16px fb tb-f"><span>4.31</span><span>0.85</span><span>0.81</span></div>' +
+            '<div class="tb-f f12px"><span>出瞬流</span><span>低区</span><span>中区</span></div>' +
+            '</div > ' +
+            '</div>' +
+            '<div class="sj"></div>';
+        $(function () {
+            var layui_yi = $('.data_layeryi').height();
+            var layui_er = $('.data_layerer').height();
+            var layuisanpadding = (layui_yi + layui_er + 30) + 'px';
+            $('.data_layersan').css('padding-top', layuisanpadding)
+            // 搜索框点击变长
+            $(".shuai_layui_sea input").focus(function () {
+                $('.shuai_layui_sea input').css('width', '200px')
+            });
+            $(".shuai_layui_sea input").blur(function () {
+                $('.shuai_layui_sea input').css('width', '60px')
+            });
+            // 点击收缩
+            $('.zlw_ss').click(function () {
+                if ($(".zlw_ss").hasClass("ss_active")) {
+                    $('.data_layer').css('right', '0px');
+                    $('.shuai_layui').css('right', '385px');
+                    $('.zlw_ss').css('right', '378px').removeClass('ss_active');
+                    $('.zlw_ss').css('background-image', 'url(../../images/收缩-触发-白色.svg)')
+                } else {
+                    $('.data_layer').css('right', '-380px');
+                    $('.shuai_layui').css('right', '0px');
+                    $('.zlw_ss').css('right', '0px').addClass('ss_active');
+                    $('.zlw_ss').css('background-image', 'url(../../images/展开-未触发-白色.svg)')
+                }
+            });
+            LoadNum();
+            //LoadPumState();
+            //initMap();
+
+            //document.onkeydown = keyDownSearch;
+            //function keyDownSearch(e) {
+            //    // 兼容FF和IE和Opera    
+            //    var theEvent = e || window.event;
+            //    var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+            //    // 13 代表 回车键
+            //    if (code == 13) {
+            //        // 要执行的函数 或者点击事件
+            //        if ($("#stationName").val() != "") {
+            //            isselect = 1;
+            //        }
+            //        LoadZoom();
+            //    }
+            //    return true;
+            //}
+        })
+        function LoadNum() {
+            $.post("/Sws/Map/QueryStationNum", {}, function (data) {
+                $("#stationNum").html(data.allNum);
+                $("#deviceName").html(data.deviceNum);
+                $("#okNum").html(data.onlineNum);
+                $("#alerNum").html(data.alarmNum);
+                $("#outNum").html(data.offLineNum);
+            })
+        }
+    </script>
+</body>
+</html>

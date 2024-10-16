@@ -1,0 +1,428 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@using WNMS.Model.CustomizedClass
+@using WNMS.Model.DataModels;
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>表单</title>
+    <!--设置是否为缩放模式 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <!--layui样式框架-->
+    <link href="~/DataV/css/layui.css" rel="stylesheet" />
+    <!--icon图表库-->
+    <link href="~/lib/Ionicons/css/ionicons.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <!--可编辑样式/JS-->
+    <link href="~/css/gdstyle.css" rel="stylesheet" />
+    <link href="~/css/patrol.css" rel="stylesheet" />
+    <link href="~/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" />
+
+
+    <style>
+        .thumbnail {
+            display: block;
+            padding: 4px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            line-height: 1.42857143;
+            background-color: transparent;
+            border: 0px;
+            border-radius: 4px;
+            -webkit-transition: border .2s ease-in-out;
+            -o-transition: border .2s ease-in-out;
+            transition: border .2s ease-in-out;
+        }
+
+        .txt-left {
+            text-align: left;
+            text-indent: 1em;
+        }
+
+        .red {
+            color: #f00;
+        }
+
+        .mt20px {
+            margin-top: 20px;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .btn-bg {
+            background: #027ED0;
+        }
+
+        .blue {
+            color: #0055AA !important;
+        }
+
+        .bg-none:hover {
+            color: #027ED0
+        }
+
+        .bg-none {
+            background: none;
+            color: #027ED0;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .none {
+            display: none;
+        }
+
+        .titlebar {
+            height: 40px;
+            line-height: 40px;
+        }
+
+            .titlebar button {
+                width: 70px;
+                margin-top: 8px;
+                float: left;
+            }
+
+        .btn-gray {
+            background: #9B9B99;
+            color: #fff;
+        }
+
+        .td-blues {
+            color: #2079A3;
+            font-weight: bold;
+        }
+
+        .btn-no {
+            background: #CF524C;
+            width: 35px;
+        }
+
+        .items {
+            margin-top: 15px;
+            background-color: #D8EAF6;
+            text-align: left;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px #D3E0E6 solid
+        }
+
+            .items h5 {
+                font-size: 14px;
+                font-weight: bold;
+                color: #666;
+            }
+
+            .items p {
+                color: #999;
+                font-size: 12px;
+                line-height: 30px;
+            }
+
+        .bgblue {
+            background: #42A2D4
+        }
+
+        #checkSelect span i.fa-plus {
+            display: block;
+        }
+
+        #checkSelect span i.fa-minus {
+            display: none;
+        }
+
+        #checkSelect .potrolSjxq_table {
+            display: none
+        }
+
+        .layui-layer-btn .layui-layer-btn0 {
+            border-color: #1E9FFF;
+            background-color: #1E9FFF;
+            color: #fff;
+        }
+
+        .layui-layer-btn .layui-layer-btn1 {
+            border-color: #009688;
+            background-color: #009688;
+            color: #fff;
+        }
+
+        .layui-layer-btn .layui-layer-btn2 {
+            border-color: #cb2a2a;
+            background-color: #cb2a2a;
+            color: #fff;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="potrolSjxq">
+        <div class="potrolSjxq_box">
+            @{
+                SEvents e = ViewBag.Events as SEvents;
+                List<GdResource> img = ViewBag.Img as List<GdResource>;
+                var name = "PE" + e.IncidentNum + "-事件详情";
+                <div class="potrolSjxq_head" style="margin-bottom:20px;">
+                    <i class="fa fa-file-text"></i><label>@name</label>
+                    <span class="potrolSjxq_head_btn">
+                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-minus"></i>
+                    </span>
+                </div>
+                <div class="potrolSjxq_table">
+                    <table class="layui-table" lay-even="" lay-size="">
+                        <tr>
+                            <td class="layui-col-xs2"><label>事件编号</label></td>
+                            <td class="layui-col-xs3" colspan="2">@e.IncidentNum</td>
+                            <td class="layui-col-xs2"><label>泵房</label></td>
+                            <td class="layui-col-xs3" colspan="3">@e.StationName</td>
+                            <td class="layui-col-xs2"><button class="layui-btn layui-btn-sm" id="position">定位</button></td>
+                        </tr>
+                        <tr>
+                            <td><label>上报时间</label></td>
+                            <td colspan="2">@e.ReportTime</td>
+                            <td class="layui-col-xs2"><label>上报人</label></td>
+                            <td>@e.Account</td>
+                            @*<td colspan="2"><label>所属部门</label></td>
+                            <td></td>*@
+                        </tr>
+                        <tr>
+                            <td><label>事件类型</label></td>
+                            <td colspan="2">@(System.Enum.GetName(typeof(IncidentType), e.IncidentType))</td>
+                            <td><label>事件内容</label></td>
+                            <td>@e.IncidentContent</td>
+                            <td colspan="2"><label>事件来源</label></td>
+                            <td>@(System.Enum.GetName(typeof(IncidentSource), e.IncidentSource))</td>
+                        </tr>
+
+                        <tr>
+                            <td><label>现场照片</label></td>
+                            @if (img != null && img.Count > 0)
+                            {
+                                <td colspan="2"><button type="button" id="btn_img" class="btn btn-success btn-xs">查看</button></td>
+                            }
+                            else
+                            {
+                                <td colspan="2">暂无图片</td>
+                            }
+                            <td><label>现场录音</label></td>
+                            @if (ViewBag.Record > 0)
+                            {
+                                <td><button type="button" id="btn_record" class="btn btn-success btn-xs" onclick="ShowAudio(@e.IncidentID)">查看</button></td>
+                            }
+                            else
+                            {
+                                <td>无录音</td>
+                            }
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td><label>缩略图预览</label></td>
+                            @if (img != null && img.Count > 0)
+                            {
+
+                                <td colspan="10">
+                                    @foreach (var item in img)
+                                    {
+                                        <div class="col-sm-6 col-md-2">
+                                            <a href="#" class="thumbnail">
+                                                <img src="@item.Path" style="width:100%;height:60px" />
+                                            </a>
+                                        </div>
+                                    }
+                                </td>
+                            }
+                            else
+                            {
+                                <td colspan="10">该事件未上传现场图片</td>
+                            }
+
+                        </tr>
+                        <tr>
+                            <td><label>事件描述</label></td>
+                            <td colspan="10">@e.Description</td>
+                        </tr>
+
+                    </table>
+                    <!-- clear float -->
+                    <div style="clear: both;"></div>
+                </div>
+            }
+        </div>
+        <div class="potrolSjxq_box" id="checkSelect">
+            <div class="potrolSjxq_head" style="margin-bottom:20px;">
+                <i class="fa fa-file-text"></i><label>工单详情</label>
+                <span class="potrolSjxq_head_btn">
+                    <i class="fa fa-plus"></i>
+                    <i class="fa fa-minus"></i>
+                </span>
+            </div>
+            <div class="potrolSjxq_table">
+                @{
+                    List<dynamic> wo = ViewBag.WorkOrder as List<dynamic>;
+                    if (wo.Count() > 0)
+                    {
+                        int i = 1;
+                        <table class="layui-table" lay-even="" lay-size="" id="woTable">
+                            <tbody>
+                                <tr class="td-blues">
+                                    <td class="layui-col-xs1">序号</td>
+                                    <td class="layui-col-xs2">工单编号</td>
+                                    <td class="layui-col-xs1">处理状态</td>
+                                    <td class="layui-col-xs1">维修人员</td>
+                                    <td class="layui-col-xs2">到场时间</td>
+                                    <td class="layui-col-xs2">维修时间</td>
+                                    <td class="layui-col-xs2">完工时间</td>
+                                    <td class="layui-col-xs1">操作</td>
+                                </tr>
+
+
+                                @foreach (var item in wo)
+                                {
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@item.Num</td>
+                                        <td>@(System.Enum.GetName(typeof(WoState), item.CurrentState))</td>
+                                        <td>@item.Account</td>
+                                        <td>@item.ComeTime</td>
+                                        <td>@item.TreateTime</td>
+                                        <td>@item.CompleteTime</td>
+                                        <td><button class="layui-btn layui-btn-xs" id="Workorder" onclick="workorderAudit(@item.WOID)">查看详情</button></td>
+                                    </tr>
+                                    i++;
+                                }
+
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="items">
+                            <h5>未查询到相关数据！</h5>
+                            <p>该工单维修负责人未发起延期</p>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="right">
+                <button class="layui-btn layui-btn-sm bgblue" id="back">返回</button>
+                <button class="layui-btn layui-btn-sm" id="btn_Audit">审核通过</button>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/patrol.js"></script>
+    <script src="~/js/bootstrap.js"></script>
+    @*<script src="~/DataV/js/layui.all.js"></script>*@
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script>
+        var index = parent.layer.getFrameIndex(window.name);
+        var IncID = @ViewBag.IncidentID
+
+        $(function () {
+            $('.potrolSjxq_head_btn').click(function () {
+                $(this).parent().siblings('.potrolSjxq_table').toggle();
+                $(this).children().toggle();
+            });
+        });
+
+        //事件图片
+        $("#btn_img").click(function () {
+            iframes('事件图片', "600px", "340px", "/Wos/Events/EventsImg/" + IncID);
+        });
+        $("#btn_Audit").click(function () {
+            iframee('事件审核', "700px", "400px", "/Wos/EventsAudit/EventAudit/" + IncID)
+        });
+
+        //定位
+        $("#position").click(function () {
+            iframes(['事件定位', 'color:#fff;background: linear-gradient(to right, rgba(30,147,236,1),rgba(62,88,201,1),rgba(52,72,161,0.7));'], "80%", "80%", "/Wos/WorkHandle/Positioning/" + IncID);
+        });
+
+        //音频展示
+        function ShowAudio(id) {
+            iframes(['音频列表', 'color:#fff;background: linear-gradient(to right, rgba(30,147,236,1),rgba(62,88,201,1),rgba(52,72,161,0.7));'], "354px", "450px", "/Wos/Events/ShowAudio/"+id);
+        }
+
+        //返回
+        $("#back").click(function () {
+            parent.layer.close(index);
+        });
+
+        function workorderAudit(id) {
+            iframe('工单详情', "1000px", "600px", "/Wos/EventsAudit/WorkOrderDetail/" + id);
+        }
+        //$("#woTable").on("click",".layui-btn",function () {
+        //    var aa = $(this).parent().parent();
+        //    var value = $(this).parent().parent().find("td").eq(1).text();
+        //    var id = value.replace("GD", "");
+        //    iframe('工单详情', "1000px", "600px", "/Wos/EventsAudit/WorkOrderDetail/" + id)
+        //});
+        function iframes(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.8,
+                area: [width, height],
+                content: url
+            });
+        }
+
+        function iframee(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.8,
+                area: [width, height],
+                content: url,
+                btn: ['确定', '取消'],
+                yes: function (index, layero) {
+                    var aa = window.frames[0];
+                    window.frames[0].SubmitData();
+                }, cancel: function (index) {
+
+                }
+            });
+        }
+        //工单审核
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.8,
+                area: [width, height],
+                content: url,
+                btn: ['取消', '审核通过', "审核打回"],
+                yes: function (index, layero) {
+                    layer.close(index);
+                }
+                , btn2: function () {
+                    window.frames[0].SubmitData(1);
+                    return false
+                },
+                btn3: function () {
+                    window.frames[0].SubmitData(2);
+                    return false
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

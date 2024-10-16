@@ -1,0 +1,674 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="renderer" content="webkit">
+    <title>视频监控</title>
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+
+    @*<script src="~/lib/flvjs/flv.js"></script>*@
+    <script src="~/lib/flv/flv.min.js"></script>
+    <script src="~/lib/player/cyberplayer.js"></script>
+
+    <style>
+        .selected {
+            border: 1px solid red;
+        }
+
+        .tab_select select {
+            outline: none;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            border-radius: 2px;
+            width: 100px
+        }
+
+        .double {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nothascamera {
+            display: none
+        }
+        .kongz{
+            position:fixed;bottom:0;right:0;z-index:9999;width:200px;height:57px;
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw-content">
+        <div class="zlw-content-lf relative" style="overflow-x:hidden;">
+            <div class="zlw-content-lfdj"></div>
+            <div class="zlw-content-lfcon">
+                <div class="zlw-sxtcyi">
+                    <div class="zlw-sxtcyicon">
+                        <i class="glyphicon glyphicon-search" id="searchbtn"></i>
+                        <input id="selname" type="text" placeholder="请输入搜索的内容" class="zlw-ssk">
+                    </div>
+                </div>
+                <div class="zlw-sxtcer">
+                    <div class="zlw-tree pt5px">
+                        <ul class="sxt_list" id="dataList">
+                            @{
+                                var stationSates = ViewBag.stationState as IEnumerable<dynamic>;
+                                if (stationSates.Count() > 0)
+                                {
+                                    var States = stationSates.ToList();
+                                    for (var i = 0; i < States.Count; i++)
+                                    {
+                                        var classSate = "";
+                                        if (States[i].state == "在线")
+                                        {
+                                            classSate = "clcle-green";
+                                        }
+                                        else if (States[i].state == "报警")
+                                        {
+                                            classSate = "clcle-red";
+                                        }
+                                        else
+                                        {
+                                            classSate = "clcle-gray";
+
+                                        }
+                                        var cameraclass = "";
+                                        if (!States[i].CameraMonitor)
+                                        {
+                                            cameraclass = "nothascamera";
+                                        }
+                                        else
+                                        {
+                                            cameraclass = "";
+                                        }
+
+                                        if (i == 0)
+                                        {
+                                            <li data-key="@States[i].StationID" class="on">
+                                                <em class="@classSate"></em>
+                                                <span class="chaochu">@States[i].StationName</span>
+                                                <i class="iconfont icon-shexiangtou @cameraclass"></i>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li data-key="@States[i].StationID">
+                                                <em class="@classSate"></em>
+                                                <span class="chaochu">@States[i].StationName</span>
+                                                <i class="iconfont icon-shexiangtou @cameraclass"></i>
+                                            </li>
+                                        }
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="zlw-content-rg">
+            <div class="zlw-content-rgcon">
+                <div class="left-icon"></div>
+                <!--- star Camera -->
+                <div class="zlw-camera-list">
+                    <div class="zlw-camera-list-title">
+                        <p>视频列表</p>
+                    </div>
+                    <div class="zlw-camera-list-content">
+                        <ul id="camerList" class="textCenter gray">
+                            该泵房下暂无摄像头
+                        </ul>
+                    </div>
+                </div>
+                <div class="zlw-camera-content">
+                    <div class="zlw-camera-contentdw">
+                        <div class="zlw-camera-content-xx clearfloat">
+                            <span class="left">窗体个数</span>
+                            <div class="tab_select">
+                                <select id="Number_select">
+                                    <option value="4">2*2</option>
+                                    <option value="9">3*3</option>
+                                    <option value="16">4*4</option>
+                                </select>
+                            </div>
+                            @*<ul class="left clearfloat">
+                                    <li class="xz_active left numberyiyi">2x2</li>
+                                    <li class="left numbererer">3x3</li>
+                                    <li class="left numbererer">4x4</li>
+                                </ul>*@
+                        </div>
+                        <div class="kongz">
+                            <div class="cam_sfkz" style="border:1px solid #ddd;z-index:99999;">
+                                <div class="cam_sfkzyi">
+                                    <ul class='pie'>
+                                        <li class='slice-one slice' id="Up"><img src="../../images/up.png" alt=""></li>
+                                        <li class='slice-two slice' id="RightTop"> <img src="../../images/up.png" alt=""></li>
+                                        <li class='slice-three slice' id="RightMove"> <img src="../../images/up.png" alt=""></li>
+                                        <li class='slice-four slice' id="RightDown"> <img src="../../images/up.png" alt=""></li>
+                                        <li class='slice-five slice' id="Down"><img src="../../images/up.png" alt=""> </li>
+                                        <li class='slice-six slice' id="LeftDown"> <img src="../../images/up.png" alt=""></li>
+                                        <li class='slice-seven slice' id="LeftMove"><img src="../../images/up.png" alt=""> </li>
+                                        <li class='slice-eight slice' id="LeftTop"> <img src="../../images/up.png" alt=""></li>
+                                        <li class="center"></li>
+                                    </ul>
+                                </div>
+                                <div class="cam_sfkzer">
+                                    <ul>
+                                        <li class="clearfloat">
+                                            <i id="SFDown"></i>
+                                            <span>缩放</span>
+                                            <i id="SFUp"></i>
+                                        </li>
+                                        <li class="clearfloat">
+                                            <i id="JJDown"></i>
+                                            <span>焦距</span>
+                                            <i id="JJUp"></i>
+                                        </li>
+                                        <li class="clearfloat">
+                                            <i id="GQDown"></i>
+                                            <span>光圈</span>
+                                            <i id="GQUp"></i>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="camerss" title="控制台">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="zlw-camera-content-nr">
+                            <ul class="clearfloat camera_numyi" style="position:relative">
+                                <li>
+                                    <div style="width: 100%; height:100%;">
+                                        <object style="width: 100%; height:100%; align-items: center; float: none;" id="DHActiveX" codebase="cab/DpsdkOcx.CAB" classid="clsid:D3E383B6-765D-448D-9476-DFD8B499926D" type="application/x-itst-activex"></object>
+                                    </div>
+                                    
+                                        <script>
+                                            // 点击收缩
+                                            $('.camerss').click(function () {
+                                                if ($(".camerss").hasClass("ss_active")) {
+                                                    $('.cam_sfkz').css('right', '1px');
+                                                    $('.camerss').css('right', '-10px').removeClass('ss_active');
+                                                    $('.camerss').css('background-image', 'url(../../images/蓝色收缩.svg)')
+                                                } else {
+                                                    $('.cam_sfkz').css('right', '-160px');
+                                                    $('.camerss').css('right', '0px').addClass('ss_active');
+                                                    $('.camerss').css('background-image', 'url(../../images/蓝色展开.svg)')
+                                                }
+                                            });
+                                        </script>
+                                    
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Camera end -->
+            </div>
+        </div>
+    </div>
+    <script>
+        var stationid = $(".sxt_list li .on").data("key");
+        var cameraId;   //当前选中摄像头的Id
+        var DHOcx = document.getElementById("DHActiveX");
+        var m_nSmartWndId = -1;//加载显示窗口
+        var orderDoc;
+        var stringsss = "";//组织架构数据
+        var id_eq = "";
+        $(function () {
+            var winheight = $(window).height();
+            var winwidth = $(window).width();
+            $("#DHActiveX").css("height", winheight - 43);
+            $(".zlw-content-lfdj").click(function () {
+                $(".zlw-content-lfdj").hide();
+                $(".left-icon").css("display", "block");
+                $(".zlw-content-lf").css({ "width": "0", "padding": "0" });
+                $(".zlw-content-rg").css("width", "100%");
+            });
+
+            GetCameraList($(".sxt_list .on").data("key"));
+
+            //树查询
+            //$("#searchbtn").click(function () {
+            //    LoadStationList();
+            //});
+            $("#selname").bind("keypress", function (event) {
+                if (event.keyCode != 13) {
+                    if (event.keyCode < 48 || event.keyCode > 57) {
+                        console.log("1");
+                    }
+                } else {
+                    event.preventDefault();
+                    LoadStationList();
+                }
+            });
+
+            $(".left-icon").click(function () {
+                $(".zlw-content-lfdj").fadeIn();
+                $(".left-icon").css("display", "none");
+                $(".zlw-content-lf").css({ "width": "220px", "padding": "5px" });
+                $(".zlw-content-rg").css("width", "calc(100% - 220px)");
+            });
+
+            //泵房点击事件
+            $(document).on('click', '.sxt_list li', function () {
+                stationid = $(this).data("key");
+                $(this).addClass('on').siblings('li').removeClass('on');
+
+                GetCameraList(stationid);
+            });
+
+            //摄像头获取视频信息
+            $(document).on('click', '.zlw-camera-list-content ul li', function () {
+                cameraId = $(this).data("camerid");
+                //var Id = $(this).data("camerid");
+                $(this).addClass('camera_act').siblings('li').removeClass('camera_act');
+                CameraOnClick(cameraId)
+            });
+            $('#Number_select').change(function () {
+                fnInit();
+            });
+            //点击1*1  2*2样式
+            $(document).on('click', '.zlw-camera-content-xx ul li', function () {
+                $(this).addClass('xz_active').siblings('li').removeClass('xz_active');
+            });
+            $('.numberyiyi').click(function () {
+                $('.zlw-camera-content-nr>ul').addClass("camera_numyi").removeClass("camera_numer");
+                $('.zlw-camera-content-nr>ul>li').removeClass("double");
+                $('.zlw-camera-content-nr>ul>li:nth-child(1)').css('display', 'block');
+                $('.zlw-camera-content-nr>ul>li:nth-child(2)').css('display', 'none');
+                $('.zlw-camera-content-nr>ul>li:nth-child(3)').css('display', 'none');
+                $('.zlw-camera-content-nr>ul>li:nth-child(4)').css('display', 'none');
+                $('.zlw-camera-content-nr>ul>li:nth-child(1)').css('width', '100%');
+                $('.zlw-camera-content-nr>ul>li:nth-child(1)').css('height', '100%');
+            });
+            $('.numbererer').click(function () {
+                $('.zlw-camera-content-nr>ul').addClass("camera_numer").removeClass("camera_numyi");
+                $('.zlw-camera-content-nr>ul>li:nth-child(1)').css('display', 'block');
+                $('.zlw-camera-content-nr>ul>li:nth-child(2)').css('display', 'block');
+                $('.zlw-camera-content-nr>ul>li:nth-child(3)').css('display', 'block');
+                $('.zlw-camera-content-nr>ul>li:nth-child(4)').css('display', 'block');
+                $('.zlw-camera-content-nr>ul>li').css('width', '50%');
+                $('.zlw-camera-content-nr>ul>li').css('height', '50%');
+            });
+
+            //2*2时点击某一屏时的样式
+            $(document).on('click', '.zlw-camera-content-nr>ul>li>.sxt', function () {
+                $(this).addClass('selected').parent().siblings('li').children('.sxt').removeClass('selected');
+            });
+
+            $(document).on('dblclick', '.zlw-camera-content-nr>ul>li', function () {
+                if ($(".numbererer").hasClass("xz_active")) {
+                    var pw = $(this).parent().width();
+                    var ph = $(this).parent().height();
+                    if ($(this).hasClass("double")) {
+                        $(this).removeClass("double").css({ "width": pw / 2, "height": ph / 2 }).siblings("li").css("display", "block");
+                    } else {
+                        $(this).addClass("double").css({ "width": pw, "height": ph }).siblings("li").css("display", "none");
+                    };
+                };
+            });
+        });
+
+        
+        $(window).resize(function(){
+            var winheight = $(window).height();
+            $("#DHActiveX").css("height", winheight - 43);
+        });
+        //左侧泵房查询
+        function LoadStationList() {
+            var searchText = $("#selname").val();
+            var flag = false;
+            $.post("/Sws/Sws_Camera/SearchStationList", { stationName: searchText }, function (res) {
+                $("#dataList").empty();
+
+                if (res.data.length > 0) {
+                    var appends = "";
+                    var States = res.data;
+                    for (var i = 0; i < States.length; i++) {
+
+                        var classSate = "";
+                        if (States[i].state == "在线") {
+                            classSate = "clcle-green";
+                        }
+                        else if (States[i].state == "报警") {
+                            classSate = "clcle-red";
+                        }
+                        else {
+                            classSate = "clcle-gray";
+                        }
+                        var cameraclass = "";
+                        if (!States[i].CameraMonitor) {
+                            cameraclass = "nothascamera";
+                        }
+                        else {
+                            cameraclass = "";
+                        }
+                        if (States[i].StationID == stationid) {
+                            appends += ' <li class="on"  data-key="' + States[i].StationID + '">' +
+                                '<em class="' + classSate + '"></em>' +
+                                '<span class="chaochu">' + States[i].StationName + '</span>' +
+                                ' <i class="iconfont icon-shexiangtou' + cameraclass + '"></i>' +
+                                '</li>';
+                            flag = true;
+                        }
+                        else {
+                            appends += ' <li  data-key="' + States[i].StationID + '">' +
+                                '<em class="' + classSate + '"></em>' +
+                                '<span class="chaochu">' + States[i].StationName + '</span>' +
+                                ' <i class="iconfont icon-shexiangtou' + cameraclass + '"></i>' +
+                                '</li>';
+                        }
+                    }
+                    $("#dataList").html(appends);
+                }
+                if (flag == false) {
+                    doorid = 0;
+                    stationid = 0;
+                }
+            })
+
+        }
+
+        //获取泵房下摄像头列表
+        function GetCameraList(stationid) {
+            $.post("/Sws/Sws_Camera/GetDSSCameraList", {
+                stationID: stationid
+            }, function (res) {
+                if (res.list.length > 0) {
+                    $("#camerList").empty();
+                    var list = res.list;
+                    var str = "";
+                    for (var i = 0; i < list.length; i++) {
+                        if (i == 0) {
+                            str += '<li class="camera_act" data-camerId="' + list[i].cameraId + '" data-type="' + list[i].cameraType + '"><p>' + list[i].cameraName + '</p></li>';
+                        } else {
+                            str += '<li  data-camerId="' + list[i].cameraId + '" data-type="' + list[i].cameraType + '"><p>' + list[i].cameraName + '</p></li>';
+                        }
+                    }
+                    $("#camerList").html(str);
+                } else {
+                    $("#camerList").html("<span style='position:relative;top:10px'>该泵房下暂无摄像头</span>");
+                }
+            });
+        }
+
+
+        $(function () {
+            fnInit();
+            preview();
+            //$("#yulan").click(function () {
+            //    preview();
+            //});
+
+            $("#stop").click(function () {
+                //ActiveX.InInit();
+                StoptPreview();
+            });
+
+            $("#Pic").click(function () {
+                ActiveX.Pic();
+            });
+
+            $("#SoundPlay").click(function () {
+                ActiveX.SoundPlay();
+            });
+
+            $("#SoundStop").click(function () {
+                ActiveX.SoundStop();
+            });
+
+            $("#LeftTop").mousedown(function () {
+                lefttopclick();
+                //alert(id_eq);
+                //var nRet = DHOcx.DPSDK_PtzDirection(id_eq, 5, 1, 0)
+                //if (nRet != 0) {
+                //    alert("云台操作失败，错误码：" + nRet);
+                //}
+                fnPtzDirection(id_eq, 5, 1, 0);
+                //var buchang=$("#buchang").val();
+                //ActiveX.LeftTop_Begin(buchang);
+            });
+            $("#LeftTop").mouseup(function () {
+                lefttopclick();
+                fnPtzDirection(id_eq, 5, 1, 1);
+            });
+
+            //上
+            $("#Up").mousedown(function () {
+                //var nRet = DHOcx.DPSDK_PtzDirection(id_eq, 1, 1, 0)
+                //if (nRet != 0) {
+                //    alert("云台操作失败，错误码：" + nRet);
+                //}
+                fnPtzDirection(id_eq, 1, 1, 0);
+            });
+            $("#Up").mouseup(function () {
+                fnPtzDirection(id_eq, 1, 1, 1);
+            });
+
+            $("#RightTop").mousedown(function () {
+                //var nRet = DHOcx.DPSDK_PtzDirection(id_eq, 7, 1, 0)
+                //if (nRet != 0) {
+                //    alert("云台操作失败，错误码：" + nRet);
+                //}
+                fnPtzDirection(id_eq, 7, 1, 0);
+                //var buchang=$("#buchang").val();
+                //ActiveX.RightTop_Begin(buchang);
+            });
+            $("#RightTop").mouseup(function () {
+                fnPtzDirection(id_eq, 7, 1, 1);
+            });
+
+            $("#LeftMove").mousedown(function () {
+                //var nRet = DHOcx.DPSDK_PtzDirection(id_eq, 3, 1, 0)
+                //if (nRet != 0) {
+                //    alert("云台操作失败，错误码：" + nRet);
+                //}
+                fnPtzDirection(id_eq, 3, 1, 0);
+                //var buchang=$("#buchang").val();
+                //ActiveX.LeftMove_Begin(buchang);
+            });
+            $("#LeftMove").mouseup(function () {
+                fnPtzDirection(id_eq, 3, 1, 1);
+            });
+
+            $("#RightMove").mousedown(function () {
+                //var nRet = DHOcx.DPSDK_PtzDirection(id_eq, 3, 1, 0)
+                //if (nRet != 0) {
+                //    alert("云台操作失败，错误码：" + nRet);
+                //}
+                //fnPtzDirection(id_eq,3, 1, 0);
+                fnPtzDirection(id_eq, 4, 1, 0);
+                //var buchang=$("#buchang").val();
+                //ActiveX.RightMove_Begin(buchang);
+            });
+            $("#RightMove").mouseup(function () {
+                fnPtzDirection(id_eq, 4, 1, 1);
+            });
+
+            $("#LeftDown").mousedown(function () {
+                //var nRet = DHOcx.DPSDK_PtzDirection(id_eq, 6, 1, 0)
+                //if (nRet != 0) {
+                //    alert("云台操作失败，错误码：" + nRet);
+                //}
+                fnPtzDirection(id_eq, 6, 1, 0);
+                //var buchang=$("#buchang").val();
+                //ActiveX.LeftDown_Begin(buchang);
+            });
+            $("#LeftDown").mouseup(function () {
+                fnPtzDirection(id_eq, 6, 1, 1);
+            });
+
+            $("#Down").mousedown(function () {
+                //var nRet = DHOcx.DPSDK_PtzDirection(id_eq, 2, 1, 0)
+                //if (nRet != 0) {
+                //    alert("云台操作失败，错误码：" + nRet);
+                //}
+                fnPtzDirection(id_eq, 2, 1, 0);
+                //var buchang=$("#buchang").val();
+                //ActiveX.Down_Begin(buchang);
+            });
+            $("#Down").mouseup(function () {
+                fnPtzDirection(id_eq, 2, 1, 1);
+            });
+
+            $("#RightDown").mousedown(function () {
+                //var nRet = DHOcx.DPSDK_PtzDirection(id_eq, 8, 1, 0)
+                //if (nRet != 0) {
+                //    alert("云台操作失败，错误码：" + nRet);
+                //}
+                fnPtzDirection(id_eq, 8, 1, 0);
+                //var buchang=$("#buchang").val();
+                //ActiveX.RightDown_Begin(buchang);
+            });
+            $("#RightDown").mouseup(function () {
+                fnPtzDirection(id_eq, 8, 1, 1);
+            });
+            $("#JJDown").mousedown(function () {
+                var nRet = DHOcx.DPSDK_PtzCameraOperation(id_eq, 4, 1, 1);
+                if (nRet != 0) {
+                    alert("变焦操作失败，错误码：" + nRet);
+                }
+                //var buchang=$("#buchang").val();
+                //ActiveX.JJDown_Begin(buchang);
+            });
+            $("#JJDown").mouseup(function () {
+                fnPtzDirection(id_eq, 4, 1, 1);
+            });
+            $("#JJUp").mousedown(function () {
+                var nRet = DHOcx.DPSDK_PtzCameraOperation(id_eq, 1, 1, 0);
+                if (nRet != 0) {
+                    alert("变焦操作失败，错误码：" + nRet);
+                }
+                //var buchang=$("#buchang").val();
+                //ActiveX.JJUp_Begin(buchang);
+            });
+            $("#JJUp").mouseup(function () {
+                fnPtzDirection(id_eq, 1, 1, 1);
+            });
+            $("#SFDown").mousedown(function () {
+                var nRet = DHOcx.DPSDK_PtzCameraOperation(id_eq, 3, 1, 0);
+                if (nRet != 0) {
+                    alert("变焦操作失败，错误码：" + nRet);
+                }
+                //var buchang=$("#buchang").val();
+                //ActiveX.SFDown_Begin(buchang);
+            });
+            $("#SFDown").mouseup(function () {
+                fnPtzDirection(id_eq, 3, 1, 1);
+            });
+            $("#SFUp").mousedown(function () {
+                var nRet = DHOcx.DPSDK_PtzCameraOperation(id_eq, 0, 1, 0);
+                if (nRet != 0) {
+                    alert("变焦操作失败，错误码：" + nRet);
+                }
+                //var buchang=$("#buchang").val();
+                //ActiveX.SFUp_Begin(buchang);
+            });
+            $("#SFUp").mouseup(function () {
+                fnPtzDirection(id_eq, 0, 1, 1);
+            });
+            $("#GQDown").mousedown(function () {
+                var nRet = DHOcx.DPSDK_PtzCameraOperation(id_eq, 5, 1, 0);
+                if (nRet != 0) {
+                    alert("变焦操作失败，错误码：" + nRet);
+                }
+                //var buchang=$("#buchang").val();
+                //ActiveX.GQDown_Begin(buchang);
+            });
+            $("#GQDown").mouseup(function () {
+                fnPtzDirection(id_eq, 5, 1, 1);
+            });
+            $("#GQUp").mousedown(function () {
+                var nRet = DHOcx.DPSDK_PtzCameraOperation(id_eq, 2, 1, 0);
+                if (nRet != 0) {
+                    alert("变焦操作失败，错误码：" + nRet);
+                }
+                //var buchang=$("#buchang").val();
+                //ActiveX.GQUp_Begin(buchang);
+            });
+            $("#GQUp").mouseup(function () {
+                fnPtzDirection(id_eq, 2, 1, 1);
+            });
+        });
+
+        //控制方向
+        function fnPtzDirection(szCameraId, nDirect, nStep, bStop) {
+            var nRet = DHOcx.DPSDK_PtzDirection(szCameraId, nDirect, nStep, bStop)
+
+            if (nRet != 0) {
+                alert("云台操作失败，错误码：" + nRet);
+            }
+        }
+        function lefttopclick() {
+            var nRet = DHOcx.DPSDK_PtzDirection(id_eq, 5, 1, 0)
+            if (nRet != 0) {
+                alert("云台操作失败，错误码：" + nRet);
+            }
+        }
+        function fnInit() {
+            var select = document.getElementById('Number_select');
+            m_nSmartWndId = DHOcx.DPSDK_CreateSmartWnd(0, 0, 100, 100);
+            DHOcx.DPSDK_SetWndCount(m_nSmartWndId, select.value);
+        }
+        $('#Number_select').change(function () {
+            fnInit();
+        });
+        //视频预览
+        function preview() {
+            var aa = DHOcx.DPSDK_Login('218.57.213.44', '9000', 'jiaozuo', 'jzmy123456');
+            //fnLoadGroupInfo();
+        }
+        //摄像头点击事件
+        function CameraOnClick(cameraId) {
+            $.post("/Sws/Sws_Camera/GetDSSCameraDetail", {
+                cameraID: cameraId
+            }, function (res) {
+                var url = res.url;
+
+                var nWndNo = DHOcx.DPSDK_GetSelWnd(m_nSmartWndId);
+                if (nWndNo == -1) {
+                    alert("请选择窗口！");
+                    return;
+                }
+                var WndNo = nWndNo + 1;
+                if (confirm("确定显示在第" + WndNo + "个窗口？")) {
+                    //var  nRet =  DHOcx.DPSDK_StartRealplayByWndNo(m_nSmartWndId, 0, '1000001$1$0$0', 1, 1, 1);
+                    id_eq = url;
+                    var nRet = DHOcx.DPSDK_StartRealplayByWndNo(m_nSmartWndId, nWndNo, url, 1, 1, 1);
+                    if (nRet == 0) {
+                    }
+                    else {
+                        alert("打开视频失败，错误码：" + nRet);
+                    }
+                }
+                else {
+                    alert("请重新选择窗口！");
+                    return;
+                }
+            });
+
+        }
+
+    </script>
+</body>
+</html>

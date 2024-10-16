@@ -1,0 +1,484 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+
+    <script src="~/DataV/js/echarts.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- 树 -->
+    @*<link rel="stylesheet" href="~/lib/ztree/zTreeStyle.css">*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    @*<link href="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>*@
+    <link href="~/lib/bootstrap-table1.16.0/bootstrap-table-fixed-columns.min.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap-table1.16.0/bootstrap-table-fixed-columns.min.js"></script>
+    <style>
+        .table {
+            table-layout: fixed;
+        }
+
+        .bootstrap3 {
+            height: 100%
+        }
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+
+        #tablebox table thead .th-inner {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #tablebox table thead tr:nth-child(2) .th-inner {
+            text-align: center;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf">
+                <!-- 搜索框 -->
+                <div class="zlw_datamain_lfconsea">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" id="stationname" class="form-control" placeholder="搜索&quot;泵房&quot;名称" autocomplete="off" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:100%;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+            </div>
+            <div class="sl_rg">
+                <div class="" style="border-bottom:1px solid #ddd;height:51px">
+                    <nav aria-label="Page navigation" style="width:100%">
+                        <div class="overflow pad10px" style="width:100%">
+                            <label class="hyl_label">统计方式：</label>
+                            <select class="hyl_select" id="timeselect">
+                                <option value="day">按天</option>
+                                <option value="month">按月</option>
+                                <option value="year">按年</option>
+                            </select>
+                            <label class="hyl_label ml15px">时间：</label>
+                            <span id="daytime" style="display:inline-block">
+                                <input class=" hyl_input hyl_input-sm" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" value="@ViewBag.BeginTimeDay" />
+                            </span>
+                            <div id="monthtime" style="display:none">
+                                <input class=" hyl_input hyl_input-sm" onclick="WdatePicker({ dateFmt: 'yyyy-MM' })" value="@ViewBag.BeginTimeMonth" />
+                            </div>
+                            <span id="yeartime" style="display:none;">
+                                <input class=" hyl_input hyl_input-sm" onclick="WdatePicker({ dateFmt: 'yyyy' })" value="@ViewBag.BeginTimeYear" />
+                            </span>
+                            <label class="hyl_label ml15px">时段：</label>
+                            <input type="text" onclick="WdatePicker({ dateFmt: 'HH:00'})" placeholder="开始时段" id="BeginTime" style="width:100px" class=" hyl_input" value="02:00">
+                            <span class="pl10px pr10px">至</span>
+                            <input type="text" onclick="WdatePicker({ dateFmt: 'HH:00' })" placeholder="结束时段" id="EndTime" style="width:100px" class=" hyl_input" value="04:00">
+                            <button class="hyl_btn" type="button" id="search_btn">
+                                <i class="fa fa-search mr5px"></i>查询
+                            </button>
+                            <div class="btn-group pull-right" role="group" aria-label="...">
+                                <button type="button" class="btn btn-default switchChange" data-types="table"><i class="fa fa-table"></i> 表格</button>
+                                <button type="button" class="btn btn-default switchChange" data-types="chart"><i class="fa fa-bar-chart"></i> 柱状图</button>
+                                <button type="button" class="btn btn-default" id="exportbtn"><i class="fa fa-download"></i> 导出</button>
+                            </div>
+
+                            @*<div  id="searchcontent">
+
+                            </div>*@
+
+
+
+                        </div>
+                    </nav>
+                </div>
+                <div class="pl10px pt10px pr10px" style="height:calc(100% - 50px);box-sizing:border-box">
+
+                    <div id="tablebox" style="height:100%">
+                    </div>
+
+                    <div class="zlw_datamain_rgernr" id="echart">
+                    </div>
+                    <div class="no-date textCenter" style="display:none">
+                        <img src="/images/null.png" width="150" />
+                        <p>暂无数据</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        var hasTable = 1;
+        var begintime = "";
+        var stationid = 0;
+        var stationname = "";
+        var pagesize = 10;
+        var zTreeObj;
+
+        var myChart = echarts.init(document.getElementById('echart'));
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                onClick: onClickNode,
+                // onCheck: zTreeOnCheck
+            },
+            check: {
+                enable: true,
+                chkboxType: { 'Y': 's', 'N': 's' }
+            }
+            , view: {
+                showTitle: false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+        };
+        var zNodes = @ViewBag.treenodes;
+        // 点击勾选节点
+        function onClickNode(event, treeId, treeNode) {
+            if (zTreeObj && treeNode && !treeNode.children) {
+
+                zTreeObj.checkNode(treeNode, !treeNode.checked);  // 选中点击的节点
+
+                GetSelectStation()
+            }
+
+        }
+        $(function () {
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            zTreeObj.expandAll(true);
+
+        })
+        //左侧树查询回车事件
+        $("#stationname").keydown(function (e) {
+            if (e.keyCode == 13) {
+                LoadZtree();
+                return false;
+            }
+        });
+        //树查询
+        function LoadZtree() {
+            zTreeObj.destroy();    //清空树
+
+            if ($("#stationname").val() != "") {
+                //查询树列表数据
+                $.post("/Sws/Sws_NightFlow/SearchTree", {
+                    stationName: $("#stationname").val()
+                }, function (data) {
+                    var aa = JSON.parse(data);   //数据转json
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                    zTreeObj.expandAll(true);     //初始化数列表展开
+
+                });
+            }
+            else {
+
+                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);   //重新初始化树
+
+                zTreeObj.expandAll(true);
+            }
+
+        }
+
+
+        //查询按钮
+        $("#search_btn").click(function () {
+
+            GetTableData();
+        })
+        function GetSearchtime() {
+            var mudoleT = $("#timeselect").val();
+            if (mudoleT == "day") {
+                begintime = $("#daytime input").val();
+            }
+            else if (mudoleT == "month") {
+                begintime = $("#monthtime input").val();
+
+            }
+            else {
+
+                begintime = $("#yeartime input").val();
+            }
+
+        }
+        function GetTableData(index) {
+            var stationids = GetSelectStation();
+            GetSearchtime();
+            if (begintime == "") {
+                layer.msg("请选择时间");
+                return;
+            }
+            var proidtime1 = $("#BeginTime").val();
+            var proidtime2 = $("#EndTime").val();
+            if (proidtime1 == "" || proidtime2 == "") {
+                layer.msg("请选择时间段");
+                return;
+            }
+            else {
+                var p1 = parseInt(proidtime1.split(':')[0]);
+                var p2 = parseInt(proidtime2.split(':')[0]);
+                if (p1 > p2) {
+                    layer.msg("请选择正确的时间段");
+                    return;
+                }
+            }
+            if (stationids != "") {
+                var type = $("#timeselect").val();
+                var action = "";
+                if (type == "day") {
+                    action = "GetTable_Father";
+                }
+                else if (type == "month") {
+                    action = "GetTable_Father_Month";
+                }
+                else {
+                    action = "GetTable_Father_Year";
+
+                }
+                $.post("/Sws/Sws_NightFlow/" + action + "", {
+                    pageindex: index || 1,
+                    pagesize: pagesize,
+                    stationids: stationids,
+
+                    priodTimeBegin: proidtime1,
+                    priodTimeEnd: proidtime2,
+                    time: begintime,
+                    hasTable
+
+                }, function (res) {
+                    console.log(res)
+                    showTable(res)
+
+                    if (res.datalist.length > 0) {
+                        var options = {
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                top: '12%',
+                                containLabel: true,
+                            },
+                            xAxis: {
+                                type: 'category',
+                                boundaryGap: false,
+                                data: []
+                            },
+                            legend: {
+                                show: true,
+                                data: []
+                            },
+                            yAxis: {
+                                type: 'value',
+                                axisLabel: {
+                                    formatter: '{value} m³'
+                                }
+                            },
+                            series: []
+                        }
+                        var echart = res.datalist.forEach(e => {
+                            
+                            var legndData = ""
+                            var seriesData = {
+                                name: '',
+                                data: [],
+                                type: 'line',
+                                showSymbol: false,
+                                smooth: true
+                            }
+
+                            for (let key in e) {
+                                var hasFloat = parseFloat(key);
+                                if (!isNaN(hasFloat) && isFinite(hasFloat)) {
+                                    seriesData.data.push(e[key])
+                                    if (!options.xAxis.data.includes(key)) {
+                                        options.xAxis.data.push(key)
+                                    }
+                                }
+                                if (key == "StationName") {
+                                    legndData=e[key]
+                                    seriesData.name = e[key]
+                                }
+                                if (key == "pastAverge") {
+                                    seriesData.data.unshift(e[key])
+                                    if (!options.xAxis.data.includes('昨天')) {
+                                        options.xAxis.data.unshift('昨天')
+                                    }
+
+                                }
+                                if (key == "thisAverge") {
+                                    seriesData.data.push(e[key])
+                                    if (!options.xAxis.data.includes('今天')) {
+                                        options.xAxis.data.push('今天')
+                                    }
+
+                                }
+                            }
+                            options.legend.data.push(legndData)
+                            options.series.push(seriesData)
+                        })
+                        showEchart(options)
+                    }
+                })
+            }
+            else {
+
+            }
+        }
+        function detailFormatter(index, row, $detail) {
+            $detail.html('<table class="child-table child-table-' + row.id + '" style=""><tr><td>1</td><td>2</td></tr></table>')
+        }
+        function GetSelectStation() {
+
+            var nodes = zTreeObj.getCheckedNodes(true);
+
+            if (nodes.length > 0) {
+                var ids = "";
+                for (var i = 0; i < nodes.length; i++) {
+
+                    ids += nodes[i].id + ",";
+                    //flag = flag + 1;
+
+
+                }
+                if (ids != "") {
+
+                    ids = ids.substring(0, ids.length - 1);
+                    return ids;
+
+                } else {
+                    layer.msg("请至少选中一台设备", { offset: 't', anim: 6 });
+                    return "";
+                }
+            } else {
+                layer.msg("请至少选中一台设备", { offset: 't', anim: 6 });
+                return "";
+            }
+        }
+        $("#exportbtn").click(function () {
+            var stationids = GetSelectStation();
+            GetSearchtime();
+            if (begintime == "") {
+                layer.msg("请选择时间");
+                return;
+            }
+            var proidtime1 = $("#BeginTime").val();
+            var proidtime2 = $("#EndTime").val();
+            if (proidtime1 == "" || proidtime2 == "") {
+                layer.msg("请选择时间段");
+                return;
+            }
+            else {
+                var p1 = parseInt(proidtime1.split(':')[0]);
+                var p2 = parseInt(proidtime2.split(':')[0]);
+                if (p1 > p2) {
+                    layer.msg("请选择正确的时间段");
+                    return;
+                }
+            }
+            if (stationids != "") {
+                var type = $("#timeselect").val();
+                var action = "";
+                if (type == "day") {
+                    action = "ExportTable";
+                }
+                else if (type == "month") {
+                    action = "ExportTable_Month";
+                }
+                else {
+                    action = "ExportTable_Year";
+
+                }
+
+                window.location.href = "/Sws/Sws_NightFlow/" + action + "?stationids=" + stationids + "&type=" + $("#timeselect").val() + "&priodTimeBegin=" + proidtime1 + "&priodTimeEnd=" + proidtime2 + "&time=" + begintime + "";
+            }
+            else {
+
+            }
+        })
+        $("#timeselect").change(function () {
+            var timemudle = $(this).val();
+            if (timemudle == "day") {
+
+                $("#daytime").css("display", "inline-block");
+                $("#monthtime").css("display", "none");
+                $("#yeartime").css("display", "none");
+            }
+            else if (timemudle == "month") {
+
+                $("#monthtime").css("display", "inline-block");
+                $("#daytime").css("display", "none");
+                $("#yeartime").css("display", "none");
+            }
+            else {
+
+                $("#yeartime").css("display", "inline-block");
+                $("#monthtime").css("display", "none");
+                $("#daytime").css("display", "none");
+            }
+            GetTableData();
+        })
+        function showTable(res) {
+            $("#tablebox").html('<table id="tableFather" data-pagination="true" data-toggle="table"  data-side-pagination="server" data-page-list="[10,15,20,25,50,100]"' +
+                'data-total-rows="' + res.total + '"  data-page-size="' + res.pageSize + '"   data-page-number="' + res.pageIndex + '" ' +
+                'data-fixed-number="1" data-fixed-right-number="7" data-fixed-columns="true" data-height="' + ($(window).height() - 56) + '" > ' +
+                '' + res.dataTable.result + '</table > ');
+            $table = $("#tableFather").bootstrapTable();
+
+
+            //分页
+            $table.on('page-change.bs.table', function (e, number, size) {
+                pagesize = size;
+                GetTableData(number)
+            });
+        }
+        function showEchart(res) {
+            console.log(res)
+            myChart.clear();
+            myChart.setOption(res, true);
+
+        }
+        $(".switchChange").click(function () {
+            var val = $(this).data("types");
+            if (val == "table") {
+                hasTable = 1;
+                $("#echart").css("display", "none");
+                $("#tablebox").css("display", "block");
+            } else {
+                $("#echart").css("display", "block");
+                $("#tablebox").css("display", "none");
+                hasTable = 0;
+            }
+        })
+    </script>
+</body>
+</html>

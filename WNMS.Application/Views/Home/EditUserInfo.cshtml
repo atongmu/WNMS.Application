@@ -1,0 +1,323 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditUserInfo</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/lib/webuploader/webuploader.css" rel="stylesheet" />
+    <style>
+        #filePicker div:nth-child(2) {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="box box-danger">
+        <div class="box-body">
+            <div class="pad20px">
+                @model SysUser
+                <form class="">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.UserId)
+                    @Html.HiddenFor(model => model.CreateTime)
+                    @Html.HiddenFor(model => model.ErrorTimes)
+                    @Html.HiddenFor(model => model.HeadIcon, new { id = "HeadIcon", name = "HeadIcon" })
+                    @Html.HiddenFor(model => model.Imei)
+                    @Html.HiddenFor(model => model.IsAdmin)
+                    @Html.HiddenFor(model => model.IsEnable)
+                    @Html.HiddenFor(model => model.IsLock)
+                    @Html.HiddenFor(model => model.LastLoginDate)
+                    @Html.HiddenFor(model => model.LitmitTime)
+                    @Html.HiddenFor(model => model.WeChatKey)
+                    @Html.HiddenFor(model => model.Password)
+                    @Html.HiddenFor(model => model.Remark)
+                    @Html.HiddenFor(model => model.Account)
+                    @Html.HiddenFor(model => model.Department)
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                               
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="NickName">昵称</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                            @Html.TextBoxFor(model => model.NickName, new { id = "NickName", name = "NickName", placeholder = "昵称", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Gender">性别</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-transgender-alt"></i>
+                                            </div>
+                                            <select id="Gender" name="Gender" class="form-control">
+                                                @{
+                                                    if (!Model.Gender)
+                                                    {
+                                                        <option value="false" selected="selected">男</option>
+                                                        <option value="true">女</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="false">男</option>
+                                                        <option value="true" selected="selected">女</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Phone">电话</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-phone"></i>
+                                            </div>
+                                            @Html.TextBoxFor(model => model.Phone, new { id = "Phone", name = "Phone", placeholder = "PhoneNumber", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Email">邮箱</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-envelope-square"></i>
+                                            </div>
+                                            @Html.TextBoxFor(model => model.Email, new { id = "Email", name = "Email", placeholder = "Email", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="Remark">图片</label>
+                                        <div class="ml15px">
+                                            @if (string.IsNullOrEmpty(Model.HeadIcon))
+                                            {
+                                                <h3 class="gray" style="width:150px;height:150px;text-align:center;line-height:150px;background:#eee">暂无设备图片</h3>
+                                            }
+                                            else
+                                            {
+                                                <img width="150" height="150" src="@Url.Content(Model.HeadIcon)" alt="images" />
+                                            }
+                                        </div>
+                                        <div style="margin-top:10px;margin-bottom:10px;">修改设备图片：</div>
+                                        <div id="fileList" class="uploader-list"></div>
+                                        <div id="filePicker">选择图片</div>
+                                        <input type="button" class="uploadBtn" value="开始上传" id="btnUpload" style="margin-left:15px;padding:4px 12px;border-radius:3px;border:none;background:#0094ff;color:#fff" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <!--图片上传-->
+    <script src="~/lib/webuploader/webuploader.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            validateForm();
+
+              //图片上传
+            var $list = $('#fileList'),
+               ratio = window.devicePixelRatio || 1,
+
+               // 缩略图大小
+               thumbnailWidth = 100 * ratio,
+               thumbnailHeight = 100 * ratio,
+
+               // Web Uploader实例
+               uploader;
+
+            // 初始化Web Uploader
+            uploader = WebUploader.create({
+                formData: {
+                    userid: @Model.UserId,
+                },
+                // 自动上传。
+                auto: false,
+
+                // swf文件路径
+                swf: '~/Content/webuploader-0.1.5/Uploader.sw',
+
+                // 文件接收服务端。
+                server: '/Home/UpLoadImg/1111',
+
+                // 选择文件的按钮。可选。
+                // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                pick: '#filePicker',
+
+                // 只允许选择文件，可选。
+                accept: {
+                    title: 'Images',
+                    extensions: 'gif,jpg,jpeg,bmp,png',
+                    mimeTypes: 'image/*'
+                }
+            });
+
+            // 当有文件添加进来的时候
+            uploader.on('fileQueued', function (file) {
+                var $li = $(
+                        '<div id="' + file.id + '" class="file-item thumbnail">' +
+                            '<img>' +
+                            '<div class="info">' + file.name + '</div>' +
+                        '</div>'
+                        ),
+                    $img = $li.find('img');
+
+                $list.append($li);
+
+                // 创建缩略图
+                uploader.makeThumb(file, function (error, src) {
+                    if (error) {
+                        $img.replaceWith('<span>不能预览</span>');
+                        return;
+                    }
+
+                    $img.attr('src', src);
+                }, thumbnailWidth, thumbnailHeight);
+            });
+
+            // 文件上传过程中创建进度条实时显示。
+            uploader.on('uploadProgress', function (file, percentage) {
+                var $li = $('#' + file.id),
+                    $percent = $li.find('.progress span');
+
+                // 避免重复创建
+                if (!$percent.length) {
+                    $percent = $('<p class="progress"><span></span></p>')
+                            .appendTo($li)
+                            .find('span');
+                }
+
+                $percent.css('width', percentage * 100 + '%');
+            });
+
+            // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+            uploader.on('uploadSuccess', function (file, response) {
+                $('#' + file.id).addClass('upload-state-done');
+                name = response._raw;
+                debug: true;
+                $("#HeadIcon").val(name);
+                //layer.msg("上传成功", {
+                //    offset: 't',
+                //    anim: 6
+                //});
+            });
+
+            // 文件上传失败，现实上传出错。
+            uploader.on('uploadError', function (file) {
+                var $li = $('#' + file.id),
+                    $error = $li.find('div.error');
+
+                // 避免重复创建
+                if (!$error.length) {
+                    $error = $('<div class="error"></div>').appendTo($li);
+                }
+
+                $error.text('上传失败');
+            });
+
+            // 完成上传完了，成功或者失败，先删除进度条。
+            uploader.on('uploadComplete', function (file) {
+                $('#' + file.id).find('.progress').remove();
+            });
+
+            $("#btnUpload").click(function () {
+                uploader.upload();
+            });
+        });
+
+        // 联系电话(手机/电话皆可)验证
+        jQuery.validator.addMethod("isPhone", function (value, element) {
+            var length = value.length;
+            var mobile = /^(((13[0-9]{1})|(15[0-9]{1}))+\d{8})$/;
+            var tel = /^\d{3,4}-?\d{7,9}$/;
+            return this.optional(element) || (tel.test(value) || mobile.test(value));
+
+        }, "请正确填写您的联系电话");
+
+        function validateForm() {
+            $("form").validate({
+                
+                ignore: "",
+                rules: {
+                    Account: "required",
+                    DepartMent: {
+                        required: true,
+                        digits: true,
+                        min: 1
+                    },
+                    Phone: {
+                        isPhone: true
+                    },
+                    Email: {
+                        email: true
+                    }
+                },
+                messages: {
+                    Account: "请输入账号",
+                    DepartMent: {
+                        required: "请选择部门",
+                        digits: "请选择部门",
+                        min: "请选择部门"
+                    },
+                    Phone: {
+                        isPhone: "请输入正确的联系电话"
+                    },
+                    Email: {
+                        email: "请输入一个正确的邮箱"
+                    }
+                }
+            });
+        }
+
+        function saveForm1(func) {
+           
+            if ($("form").valid()) {
+                $.ajax({
+                    url: '/Sys/User/SetUserInfo',
+                    type: 'post',
+
+                    data: $("form").serializeArray(),
+                    success: function (data) {
+                        func(data,$("#HeadIcon").val(),$("#NickName").val());
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

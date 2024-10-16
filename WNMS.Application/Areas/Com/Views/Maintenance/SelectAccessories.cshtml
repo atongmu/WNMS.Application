@@ -1,0 +1,252 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+
+    <script src="~/lib/layer/layer.js"></script>
+
+</head>
+<body>
+    <div class="zlw_manage">
+        <div class="zlw_managecon" style="padding-left:0px">
+            <div class="zlw_manageconrgcon zlw_bfxx">
+                <div class="" style="height:51px;border-bottom:1px solid #ddd">
+                    <div class="btn-group pull-left" style="margin-top:10px;margin-left:10px">
+                        <input type="text" id="searchtext" class="hyl_input" placeholder="输入器件名称、器件编号、设备名称" autocomplete="off" />
+                        <button class="hyl_btn" id="searchbtn"> <i class="fa fa-search"></i> 查询</button>
+                    </div>
+
+                </div>
+
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan" style="height:calc(100% - 90px);margin-top:10px">
+                    <table id="table" class="table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var pageindex = 1;
+        var order = "", sort = "";
+        var index = parent.layer.getFrameIndex(window.name);
+        $(function () {
+            // 时间选择
+            $(".zlw_mjkzyi ul li").not("#detailType").click(function () {
+                $(this).siblings('.zlw_mjkzyi ul li').removeClass('sjlbxz');  // 删除其他兄弟元素的样式
+                $(this).addClass('sjlbxz');// 添加当前元素的样式
+
+                if ($(this)[0].id == "自定义") {
+                    $("#detailType").css("display", "block");
+                }
+                else {
+                    $("#detailType").css("display", "none");
+                    pageindex = 1;
+                    refreshTable();
+                }
+
+            })
+
+
+            var $table = $("#table");
+            $table.bootstrapTable({
+                method: "post",
+                url: "/Com/Maintenance/QueryStationTable",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                height: $(window).height() - 60,
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 15, 20],        //可供选择的每页的行数（*）
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        pagesize: params.limit,   //每页条数
+                        pageindex: (params.offset / params.limit) + 1, //页码
+                        SearchText: $("#searchtext").val(),
+                        order: params.order,
+                        sort: params.sort == undefined ? "MaintenanceDate" : params.sort,
+                        beginDate: $("#BeginDate").val(),
+                        endDate: $("#EndDate").val()
+                    };
+                    order = params.order;
+                    sort = params.sort == undefined ? "MaintenanceDate" : params.sort;
+                    pageindex = (params.offset / params.limit) + 1;
+                    return temp;
+                },//传递参数（*）
+                uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+
+                responseHandler: function (res) {
+                    var aa = JSON.parse(res.rows);
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+                },
+                columns: [
+                    {
+                        checkbox: true
+                    },
+                    {
+                        sortable: true,
+                        field: 'ID',
+                        title: '器件ID'
+                    },
+                    {
+                        sortable: true,
+                        field: 'Name',
+                        title: '器件名称'
+                    }, {
+                        sortable: true,
+                        field: 'AccessoriesNo',
+                        title: '器件编号'
+                    },
+                    {
+
+                        field: 'DeviceName',
+                        title: '设备名称'
+                    },
+                    {
+                        sortable: true,
+                        field: 'GuaranteePeriod',
+                        title: '质保日期',
+                        formatter: changeDateFormat
+                    }
+                ]
+
+            });
+
+
+        })
+        function operateFormatter(value, row, index) {
+            var aa = value;
+
+            return " <button type='button' class='hyl_btn' onclick='GetPosition(" + row.Lng + "," + row.Lat + "," + JSON.stringify(row.StationNum) + "," + JSON.stringify(row.StationName) + ")'>查看定位</button>";
+
+        }
+        function GetPosition(lng, lat, StationNum, StationName) {
+
+            layer.open({
+                type: 2,
+                title: "泵房位置",
+                //title: false,
+                shadeClose: true,
+                shade: [0.1, '#000'],
+                area: ["1000px", "700px"],
+                offset: 'rt',
+                anim: 2,
+                content: "/Sws/Sws_Station/GetStationPosition?lng=" + lng + "&lat=" + lat + "&StationNum=" + StationNum + "&StationName=" + StationName + ""
+            });
+        }
+        function dataFormatter(value, row, index) {
+            if (value == true) {
+                return "<i class='fa fa-check-square-o' aria-hidden='true' style='color:blue'></i>";
+            }
+            else {
+                return "<i class='fa fa-check-square-o' aria-hidden='true' style='color:#c1c1c0'></i>";
+            }
+        }
+        function dataFormatterCommi(value, row, index) {
+            if (value == "是") {
+                return "<i class='fa fa-check-square-o' aria-hidden='true' style='color:blue'></i>";
+            }
+            else {
+                return "<i class='fa fa-check-square-o' aria-hidden='true' style='color:#c1c1c0'></i>";
+            }
+        }
+        function changeDateFormat(cellval) {
+            if (cellval != null) {
+                var date = cellval.replace("T", " ").substring(0, 10);
+                return date;
+            }
+        }
+        function changeDateFormat1(cellval) {
+
+            if (cellval != null) {
+                var date = cellval.replace("T", " ");
+                return date;
+            }
+        }
+        $("#searchbtn").click(function () {
+            pageindex = 1;
+            refreshTable();
+
+        })
+        $("#searchtext").keydown(function (e) {
+            if (e.keyCode == 13) {
+                pageindex = 1;
+                refreshTable();
+                return false;
+            }
+        });
+        function refreshTable() {
+            var opt = {
+                pageNumber: pageindex
+            };
+            $("#table").bootstrapTable('refresh', opt);
+
+        }
+
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+
+                    window.frames[0].saveForm();
+                },
+                cancel: function (index) {
+
+                }
+            });
+        }
+
+        function saveForm() {
+            var row = $("#table").bootstrapTable('getAllSelections');
+            if (row.length != 1) {
+                layer.msg("请选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                $(parent.$('iframe')[0].contentDocument).find('#AccessoriesDetailId').val(row[0].ID);
+                $(parent.$('iframe')[0].contentDocument).find('#Name').val(row[0].Name);
+                //parent.$("#StationId").val(row[0].StationId);
+                //parent.$("#StationName").val(row[0].StationName);
+                parent.layer.close(index);
+            }
+
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<dynamic>
+    <ul>
+        @{
+            foreach (var item in Model)
+            {
+                <li class="clearfloat">
+                    @if (item.StaitonType == 1)
+                    {
+                        <div class="zlw_bfsslist_lei wyf"><i></i>@item.TypeName</div>
+                    }
+                    else
+                    {
+                        if (item.StaitonType == 2)
+                        {
+                            <div class="zlw_bfsslist_lei zys"><i></i>@item.TypeName</div>
+                        }
+                        else
+                        {
+                            <div class="zlw_bfsslist_lei wfy"><i></i>@item.TypeName</div>
+                        }
+                    }
+
+                    <div class="zlw_bfsslist_ming">@item.StationName</div>
+                    <div class="zlw_bfsslist_time">@(item.InstallationDate == null ? "--" : (Convert.ToDateTime(item.InstallationDate)).ToString("yyyy-MM-dd"))</div>
+                    <div class="zlw_bfsslist_gd" id="action_Btn" onClick="window.top.homeAddTab('sta' + '@item.StationID','@item.StationName','/Sws/Sws_Detail/Index/'+'@item.StationID')"><input style="display:none" value="@item.StationID">></div>
+                </li>
+            }
+        }
+    </ul>

@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>权限管理</title>
+    <link href="../../css/AdminLTE.lite.css" rel="stylesheet" />
+    <link href="../../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../css/hyl.css" rel="stylesheet" />
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <style>
+        .form2{display:none}
+    </style>
+</head>
+<body>
+    
+        <div class="btn-group mar15px pull-right">
+            <button type="button" class="btn btn-default">按钮1</button>
+            <button type="button" class="btn btn-default">按钮2</button>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    下拉按钮
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Dropdown</a></li>
+                    <li><a href="#">Dropdown link</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="clear"></div><!--勿删-->
+        <!--/按钮组-->
+  
+    <!--框架弹窗-->
+    <!--<div class="row">
+        <div class="col-xs-12">
+            <div class="box box-default">
+                <div class="box-body" style="margin:20px">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+                         弹窗
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">添加功能</h4>
+                </div>
+                <div class="modal-body">
+                    <p>One fine body&hellip;</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>-->
+    <!-- /.modal -->
+
+    <ul class="steplist">
+        <li class="on">① 步骤一</li>
+        <li>② 步骤二</li>
+    </ul>
+
+    <div class="stepbox" style="padding:15px">
+
+        <!-- form start -->
+        <form class="form-horizontal form1">
+            <div class="box-header with-border">
+                <h3 class="box-title">步骤1</h3>
+            </div>
+            <div class="box-body">
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Disabled Result</label>
+                    <div class="col-sm-10">
+                        <select class="form-control select2" style="width: 100%;">
+                            <option selected="selected">Alabama</option>
+                            <option>Alaska</option>
+                            <option disabled="disabled">California (disabled)</option>
+                            <option>Delaware</option>
+                            <option>Tennessee</option>
+                            <option>Texas</option>
+                            <option>Washington</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.box-body -->
+        </form>
+
+        <!-- form start -->
+        <form class="form-horizontal form2">
+            <div class="box-header with-border">
+                <h3 class="box-title">步骤2</h3>
+            </div>
+            <div class="box-body">
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Email2</label>
+
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label">Password2</label>
+
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Disabled Resul2</label>
+                    <div class="col-sm-10">
+                        <select class="form-control select2" style="width: 100%;">
+                            <option selected="selected">Alabama</option>
+                            <option>Alaska</option>
+                            <option disabled="disabled">California (disabled)</option>
+                            <option>Delaware</option>
+                            <option>Tennessee</option>
+                            <option>Texas</option>
+                            <option>Washington</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.box-body -->
+        </form>
+
+        <div class="box-footer">
+            <!--<button type="submit" class="btn btn-default">Cancel</button>-->
+            <button type="submit" class="btn btn-info pull-right">完成</button>
+            <button type="submit" class="btn btn-default mr15px pull-right" onclick="next()">下一步</button>
+            <button type="submit" class="btn btn-default mr15px pull-right" onclick="prev()">上一步</button>
+        </div>
+        <!-- /.box-footer -->
+
+    </div>
+</body>
+<script src="../../js/bootstrap.js"></script>
+<script src="../../js/adminlte.lite.js"></script>
+<script>
+    function next() {
+        $(".steplist li").eq(1).addClass("on");
+        $(".form1").addClass("hide");
+        $(".form2").css("display", "block");
+    }
+    function prev() {
+        $(".steplist li").eq(1).removeClass("on");
+        $(".form1").removeClass("hide");
+        $(".form2").css("display", "none");
+    }
+
+    $(function () {
+        $(".steplist li:eq(1)").click(function () {
+            $(".steplist li").eq(1).addClass("on");
+            $(".form1").addClass("hide");
+            $(".form2").css("display", "block");
+        })
+    })
+</script>
+</html>

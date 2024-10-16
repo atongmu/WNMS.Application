@@ -1,0 +1,209 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SelectGUIPage</title>
+    <link rel="stylesheet" href="~/css/font-awesome.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link href="~/css/AllotRtu_User.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css//iconfont.css">
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <script src="~/js/bootstrap.min.js"></script>
+    <style>
+        html, body {
+            height: 100%
+        }
+
+        .a_box {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #eee
+        }
+
+        .a_left {
+            width: 210px;
+            margin-right: 5px;
+            height: 100%;
+            overflow: auto;
+            float: left;
+            background: #fff
+        }
+
+        .a_right {
+            width: calc(100% - 0px);
+            float: right;
+            height: 100%;
+            background: #fff;
+            position: relative
+        }
+
+        .a_seach {
+            padding: 5px 10px;
+            position: relative;
+            border-bottom: solid 1px #c5c5c5;
+            width: 100%;
+            background: #fff;
+        }
+
+            .a_seach i {
+                position: absolute;
+                top: 16px;
+                left: 19px;
+                color: #999;
+            }
+
+            .a_seach input {
+                text-indent: 1em
+            }
+
+        .listcont {
+            width: 100%;
+            color: #fff
+        }
+
+            .listcont .ons span {
+                color: #666;
+                font-weight: 400;
+            }
+
+            .listcont .ons {
+                border: 1px solid #4A5B79;
+                background: url(data:image/gif;base64,R0lGODlhCgAKAKIAAP////7+/v39/fr7+/n6+0xde0pbef///yH5BAEHAAcALAAAAAAKAAoAAAMdeLprzMa9EyWsr8ZbQ9OBRxkDYITFGIVEUWiRUCUAOw==) no-repeat right bottom;
+            }
+
+            .listcont li {
+                border: 1px solid #ccc;
+                cursor: pointer;
+                float: left;
+                margin-right: 10px;
+                border-radius: 3px;
+                height: 170px;
+                width: 400px;
+                margin-bottom: 10px
+            }
+
+                .listcont li > span, .listcont p {
+                    /*float: left;
+                    height: 170px*/
+                    padding:5px 10px;background:#DBEEFF;color:#666 !important
+                }
+
+                .listcont li > span {
+                    
+                    color:#666 !important; 
+                    text-align: center;
+                    
+                }
+
+                    .listcont li > span img {
+                        display: inline-block;
+                        padding-top: 5px
+                    }
+
+            .listcont p {              
+                width:100%
+            }
+
+                .listcont p span {
+                    display: block
+                }
+
+        .ul-over {
+            overflow: auto;
+            margin: 10px;
+            position: absolute;
+            top: 50px;
+            width: calc(100% - 20px);
+            height: calc(100% - 70px)
+        }
+    </style>
+</head>
+<body>
+    <div class="a_box">
+       
+        <div class="a_right">
+            <div style="border-bottom:1px solid #ddd">
+
+
+                @*<input type="text" class="form-control" placeholder="搜索&quot;泵房&quot;名称">*@
+                <div class="prompt" style="margin:5px 5px 4px">温馨提示：选中并提交即可完成工艺图的选择</div>
+
+            </div>
+            <div class="ul-over">
+                <ul class="listcont" id="guiList">
+                    @{
+                        var guilist = ViewBag.guiList as IEnumerable<SwsGuiinfo>;
+                        foreach (var item in guilist)
+                        {
+                            if (item.Num == ViewBag.guiid)
+                            {
+                                        <li data-id="@item.Num" class='ons'>
+                                            <p class="overflow pl10px pr10px" >
+                                                <span class='left ellipsis1'>名称：@item.Guiname</span>
+                                                <span class='right ellipsis1'>泵数量：@item.PumpNum</span>
+                                            </p>
+                                            <div style="width:398px;height:130px;background:url(@(item.ImageUrl.Replace("\\","/"))) no-repeat center;background-size:contain">
+                                            @*<img src="@item.ImageUrl" style="height:130px;width:380px;" />*@
+                                            </div>
+
+
+
+                                        </li>
+                            }
+                            else
+                            {
+                                      <li data-id="@item.Num">
+                                          <p class="overflow pl10px pr10px">
+                                              <span class='left ellipsis1'>名称：@item.Guiname</span>
+                                              <span class='right ellipsis1'>泵数量：@item.PumpNum</span>
+                                          </p>
+                                          <div style="width:398px;height:130px;background:url(@(item.ImageUrl.Replace("\\","/"))) no-repeat center;background-size:contain">
+                                          @*<img src="@item.ImageUrl" style="height:130px;width:398px;" />*@
+                                          </div>
+
+                                    </li>
+                                }
+                            }
+
+                        }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var stationid = @ViewBag.stationid;
+        $(function () {
+             $(document).on("click", ".listcont li", function () {
+                var $this = $(this);
+                if ($this.hasClass("ons")) {
+                    $this.removeClass("ons");
+                   
+                } else {
+                    $this.addClass("ons").siblings('li').removeClass('ons');
+                    
+                }
+
+            })
+        })
+        function saveForm(func) {
+            var guinum = 0;
+            if ($("ul .ons").length > 0) {
+                guinum=$("ul .ons").data("id");
+            }
+            $.post("/Sws/Sws_StationAccess/SetGuiOfStation", { stationid: stationid, guinum:guinum }, function (data) {
+                func(data);
+             });
+        }
+    </script>
+</body>
+</html>

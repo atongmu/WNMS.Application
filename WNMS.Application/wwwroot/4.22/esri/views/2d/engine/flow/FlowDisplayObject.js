@@ -1,0 +1,6 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define("exports ../../../../chunks/_rollupPluginBabelHelpers ../../../../core/mathUtils ../../../../core/maybe ../../../../chunks/mat3 ../../../../chunks/mat3f32 ../DisplayObject".split(" "),function(k,l,p,m,d,q,f){f=function(n){function e(){var a=n.apply(this,arguments)||this;a._displayData=null;return a}l._inheritsLoose(e,n);var g=e.prototype;g.clear=function(){m.isSome(this._displayData)&&(this._displayData.destroy(),this._displayData=null,this.requestRender())};g.setTransform=function(a){var {displayData:c}=
+this;if(!m.isNone(c)){var h=[0,0];a.toScreen(h,[c.extent.xmin,c.extent.ymax]);c=(c.extent.xmax-c.extent.xmin)/c.size[0]/a.resolution;var r=p.deg2rad(a.rotation),{dvs:b}=this.transforms;d.identity(b);d.translate(b,b,[-1,1,0]);d.scale(b,b,[2/(a.size[0]*a.pixelRatio),-2/(a.size[1]*a.pixelRatio),1]);d.translate(b,b,[h[0],h[1],0]);d.rotate(b,b,r);d.scale(b,b,[c*a.pixelRatio,c*a.pixelRatio,1])}};g._createTransforms=function(){return{dvs:q.create()}};l._createClass(e,[{key:"displayData",get:function(){return this._displayData},
+set:function(a){this._displayData=a;this.requestRender()}}]);return e}(f.DisplayObject);k.FlowDisplayObject=f;Object.defineProperty(k,"__esModule",{value:!0})});

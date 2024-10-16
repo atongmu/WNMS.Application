@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+*/
+import{_ as t}from"./tslib.es6.js";import o from"../core/Accessor.js";import{I as e}from"./Identifiable.js";import{property as s}from"../core/accessorSupport/decorators/property.js";import"../core/lang.js";import"./ensureType.js";import{subclass as r}from"../core/accessorSupport/decorators/subclass.js";let i=0,p=class extends(e(o)){constructor(t){super(t),this.id=`${Date.now().toString(16)}-analysis-${i++}`,this.title=null,this.parent=null,this.visible=!0}cloneBaseAnalysisProperties(){return{title:this.title,visible:this.visible}}};t([s({type:String,constructOnly:!0})],p.prototype,"id",void 0),t([s({type:String})],p.prototype,"title",void 0),t([s({readOnly:!0})],p.prototype,"type",void 0),t([s()],p.prototype,"parent",void 0),t([s({readOnly:!0})],p.prototype,"extent",void 0),t([s({type:Boolean})],p.prototype,"visible",void 0),p=t([r("esri.analysis.Analysis")],p);const l=p;export{l as A};

@@ -1,0 +1,127 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>巡检位置</title>
+    <!--<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" media="screen" />-->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!--<link rel="stylesheet" href="https://localhost:10042/4.15/esri/themes/light/main.css" />-->
+    <!--<script src="https://js.arcgis.com/4.22/"></script>-->
+    <!--<script src="https://localhost:10042/4.15/dojo/dojo.js"></script>-->
+    <!--<script src="4.15/init.js"></script>-->
+    <link href="4.15/esri/themes/light/main.css" rel="stylesheet" />
+    <script src="4.15/dojo/dojo.js"></script>
+    <!--<script src="4.15/esri/layers/TileLayer.js"></script>-->
+
+    <style>
+        html,
+        body,
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .left_btn > div {
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            padding: 7px;
+            position: fixed;
+            cursor: pointer;
+            text-align: center;
+        }
+
+            .left_btn > div:active {
+                background: rgba(102, 0, 255, 0.75);
+            }
+
+        .left_btn img {
+            width: 18px;
+            height: 18px;
+        }
+
+        #btn1 {
+            top: 85px;
+            left: 15px;
+        }
+
+        #btn2 {
+            top: 125px;
+            left: 15px;
+        }
+
+        #btn3 {
+            top: 165px;
+            left: 15px;
+        }
+
+        .rightSelect {
+            right: 20px;
+            top: 5px;
+            background: #fff;
+            padding: 7px;
+            position: fixed;
+        }
+    </style>
+
+    <script>
+        require(["esri/config", "esri/Map", "esri/views/MapView", "esri/layers/TileLayer", "esri/Graphic",
+            "esri/layers/GraphicsLayer"], function (esriConfig, Map, MapView, TileLayer, Graphic, GraphicsLayer) {
+
+
+                var layer = new TileLayer({
+                    url:
+                        "https://192.168.0.234:6443/arcgis/rest/services/tile/MapServer" //自己的底图地址
+                });
+
+                var map = new Map({
+                    basemap: "",
+                    layers: [layer]
+                });
+
+                var view = new MapView({
+                    map: map,
+                    center: [118.24896, 35.012673], // Longitude, latitude
+                    zoom: 13, // Zoom level
+                    container: "viewDiv" // Div element
+                });
+
+                const graphicsLayer = new GraphicsLayer();
+                map.add(graphicsLayer);
+                const point = { //Create a point118.338223
+                    type: "point",
+                    //longitude: -118.80657463861,
+                    //latitude: 34.0005930608889
+                    longitude: 118.338223,
+                    latitude: 35.084641
+                };
+                const simpleMarkerSymbol = {
+                    type: "simple-marker",
+                    color: [226, 119, 40],  // Orange
+                    path: "../images/bf.png",
+                    style: "path",
+                    size:14
+                    //outline: {
+                    //    color: [255, 255, 255], // White
+                    //    width: 1
+                    //}
+                };
+                const pointGraphic = new Graphic({
+                    geometry: point,
+                    symbol: simpleMarkerSymbol
+                });
+                graphicsLayer.add(pointGraphic);
+            });
+    </script>
+</head>
+
+<body>
+    <div id="viewDiv"></div>
+    <img src="images/bf.png" />
+</body>
+
+</html>

@@ -1,0 +1,405 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+    <div class="zlw_manage">
+        <div class="zlw_managecon" style="padding-left:0px">
+            <div class="zlw_manageconrgcon zlw_bfxx">
+                <div class="" style="height:51px;border-bottom:1px solid #ddd">
+                    <div class="btn-group pull-left" style="margin-top:10px;margin-left:10px">
+                        <input type="text" id="searchtext" class="hyl_input" placeholder="输入器件名称或器件类型" autocomplete="off" />
+                        <button class="hyl_btn" id="searchbtn"> <i class="fa fa-search"></i> 查询</button>
+                    </div>
+                    <div class="btn-group mar10px  pull-right">
+                        @*@await Component.InvokeAsync("ModuleButtons")*@
+                        <button type="button" class="btn btn-default" id="addbtn"><i class="fa fa-plus"></i> 添加</button>
+                        <button type="button" class="btn btn-default" id="editebtn"><i class="fa fa-pencil-square-o"></i> 编辑</button>
+                        <button type="button" class="btn btn-default" id="deletebtn"><i class="fa fa-trash-o"></i> 删除</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-reorder"></i>&nbsp更多
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <button class="btn btn-sm btn-success fileinput-button" style="background-color:#428bca;border-color:#428bca">
+                                        <form id="upfile" enctype="multipart/form-data" method="POST">
+                                            <input type="file" name="excelfile" onchange="AccessoriesImport()" />
+                                        </form>
+                                    </button>
+                                </li>
+                                <li><a id="DeviceExport" href="~/DownloadFile/器件导入模板.xlsx">下载器件模板</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan" style="height:calc(100% - 50px);margin-top:10px">
+                    <table id="table" class="table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var pageindex = 1;
+        var order = "", sort = "";
+        $(function () {
+            // 时间选择
+            $(".zlw_mjkzyi ul li").not("#detailType").click(function () {
+                $(this).siblings('.zlw_mjkzyi ul li').removeClass('sjlbxz');  // 删除其他兄弟元素的样式
+                $(this).addClass('sjlbxz');// 添加当前元素的样式
+
+                if ($(this)[0].id == "自定义") {
+                    $("#detailType").css("display", "block");
+                }
+                else {
+                    $("#detailType").css("display", "none");
+                    pageindex = 1;
+                    refreshTable();
+                }
+
+            })
+
+
+            var $table = $("#table");
+            $table.bootstrapTable({
+                method: "post",
+                url: "/Com/Accessories/QueryAccessoriesTable",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                height: $(window).height() - 60,
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 15, 20],        //可供选择的每页的行数（*）
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        pagesize: params.limit,   //每页条数
+                        pageindex: (params.offset / params.limit) + 1, //页码
+                        SearchText: $("#searchtext").val(),
+                        order: params.order,
+                        sort: params.sort == undefined ? "ID" : params.sort
+                    };
+                    order = params.order;
+                    sort = params.sort == undefined ? "ID" : params.sort;
+                    pageindex = (params.offset / params.limit) + 1;
+                    return temp;
+                },//传递参数（*）
+                uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+
+                responseHandler: function (res) {
+                    var aa = JSON.parse(res.rows);
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+                },
+                columns: [
+                    {
+                        checkbox: true
+                    },
+                    {
+                        sortable: true,
+                        field: 'ID',
+                        title: '器件编号'
+                    },
+                    {
+                        sortable: true,
+                        field: 'Name',
+                        title: '器件名称'
+                    },
+                    {
+
+                        field: 'Type',
+                        title: '器件类型'
+                    },
+                    {
+                        sortable: true,
+                        field: 'Material',
+                        title: '材质'
+                        
+                    },
+                    {
+                        sortable: true,
+                        field: 'Model',
+                        title: '型号'
+
+                    },
+                    {
+                        sortable: true,
+                        field: 'Manufacturer',
+                        title: '生产商',
+                    },
+                    {
+                        sortable: true,
+                        field: 'Place',
+                        title: '产地',
+                    },
+                    {
+                        sortable: true,
+                        field: 'ItemName',
+                        title: '保养周期'
+                    },
+                    {
+                        sortable: true,
+                        field: 'ReplacementCycle',
+                        title: '更换周期'
+                    },
+                    {
+                        sortable: true,
+                        field: 'Unit',
+                        title: '计量单位'
+                    },
+                    {
+                        sortable: true,
+                        field: 'tj',
+                        title: '库存量/在用量',
+                        formatter: function (value, row, index) {
+                            var val = value.split(",");
+                            return '<span>' + val[0] + '</span>' + ' / ' + '<a href="#" style="color: blue" onclick="ViewEqu(\'' + row["ID"] +'\' )">' + val[1] +'</a>';
+                        }
+                    },
+                    //{
+                    //    sortable: true,
+                    //    field: 'quantity',
+                    //    title: '在用量'
+                    //},
+                    {
+                        sortable: true,
+                        field: 'IsConsumable',
+                        title: '是否是易消耗品',
+                        formatter: function (value, row, index) {
+                            if (value) {
+                                return "是";
+                            } else {
+                                return "否";
+                            }
+                        }
+                    }
+                    //,
+                    //{
+                    //    sortable: true,
+                    //    field: 'Isinuse',
+                    //    title: '是否在用',
+                    //    formatter: function (value, row, index) {
+                    //        if (value==1) {
+                    //            return "是";
+                    //        } else {
+                    //            return "否";
+                    //        }
+                    //    }
+                    //}
+                ]
+
+            });
+
+
+        })
+ 
+        $("#searchbtn").click(function () {
+            pageindex = 1;
+            refreshTable();
+
+        })
+        $("#searchtext").keydown(function (e) {
+            if (e.keyCode == 13) {
+                pageindex = 1;
+                refreshTable();
+                return false;
+            }
+        });
+        function refreshTable() {
+            var opt = {
+                pageNumber: pageindex
+            };
+            $("#table").bootstrapTable('refresh', opt);
+
+        }
+        //添加
+        $("#addbtn").click(function () {
+
+            iframe("添加器件信息", "800px", "640px", "/Com/Accessories/AddPage");
+
+        })
+        //修改
+        $("#editebtn").click(function () {
+            var lenthcheck = $("#table").bootstrapTable('getSelections');
+            if (lenthcheck.length == 1) {
+                var MID = lenthcheck[0].ID;
+
+                iframe("编辑器件信息", "800px", "640px", "/Com/Accessories/EditePage/" + MID);
+            }
+            else {
+                alert("请选中一行");
+            }
+        })
+        //删除
+        $("#deletebtn").click(function () {
+            var lenthcheck = $("#table").bootstrapTable('getSelections');
+            if (lenthcheck.length <= 0) {
+                layer.msg("请至少选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                var id = "";
+                for (i = 0; i < lenthcheck.length; i++) {
+                    id += lenthcheck[i].ID + ",";
+                }
+                id = id.substring(0, id.length - 1);
+                layer.confirm("确定要删除选中器件？", {
+                    btn: ["确定", "取消"]
+                },
+                    function () {
+                        DeleteAccessories(id);
+                    },
+                    function () { }
+                );
+            }
+        })
+
+        //删除
+        function DeleteAccessories(id) {
+            $.ajax({
+                url: '/Com/Accessories/DeleteAccessories',
+                type: 'POST',
+                datatype: "json",
+                //contentType: 'application/json',
+                data: { "": id },
+                success: function (data) {
+                    if (data == "ok") {
+                        layer.msg("删除成功");
+                        pageindex = 1;
+                        refreshTable();
+                    }
+                    else {
+                        if (data == "no") {
+                            layer.msg("删除失败");
+                        }
+                        else {
+                            layer.alert(data);
+                            pageindex = 1;
+                            refreshTable();
+                        }
+                    }
+                },
+                error: function (data) {
+                    layer.msg("删除失败");
+                }
+            })
+        }
+
+        //删除数据
+        function removeFile() {
+            var file = $('input[name="excelfile"]');
+            file.after(file.clone().val(""));
+            file.remove();
+        }
+        //导入数据
+        function AccessoriesImport() {
+            var formData = new FormData($("#upfile")[0]);
+            $.ajax({
+                url: '/Com/Accessories/Import',
+                url: '/Com/Accessories/Import',
+                type: 'POST',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (res) {
+                if (res == "ok") {
+                    layer.alert("导入成功！");
+                    //location.reload()
+                    refreshTable();
+                    removeFile();
+                } else
+                    if (res == "error") {
+                        removeFile();
+                        layer.alert("导入失败！");
+                    } else
+                        if (res == "typeno") {
+                            removeFile();
+                            layer.alert("文件类型不对！");
+                        } else
+                            if (res == "not") {
+                                removeFile();
+                                layer.alert("文件不存在！");
+                            } else
+                                if (res == "exception") {
+                                    removeFile();
+                                    layer.alert("请检查数据格式！");
+                                } else {
+                                    removeFile();
+                                    layer.alert(res);
+                                }
+            });
+        }
+    
+        function iframeView(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["取消"],
+            
+                cancel: function (index) {
+
+                }
+            });
+        }
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+
+                    window.frames[0].saveForm();
+                },
+                cancel: function (index) {
+
+                }
+            });
+        }
+    </script>
+</body>
+</html>

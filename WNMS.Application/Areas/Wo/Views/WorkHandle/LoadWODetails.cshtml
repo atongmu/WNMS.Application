@@ -1,0 +1,703 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+@using Newtonsoft.Json;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>工单详情</title>
+    <!--设置是否为缩放模式 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="~/js/bootstrap.min.js"></script>
+
+    <script src="~/js/jQuery.print.min.js"></script>
+
+    <!--layui样式框架-->
+    <link href="~/lib/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/lib/layui/layui.all.js"></script>
+    <!--icon图表库-->
+    <link href="~/lib/Ionicons/css/ionicons.min.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <!--可编辑样式/JS-->
+    <link href="~/lib/dist/gdstyle.css" rel="stylesheet" />
+    <link href="~/lib/dist/patrol.css" rel="stylesheet" />
+    <script src="~/lib/dist/patrol.js"></script>
+
+    <style>
+        .txt-left {
+            text-align: left;
+            text-indent: 1em;
+        }
+
+        .red {
+            color: #f00;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .btnGroup {
+            padding: 5px 20px;
+            background: #fff;
+            display: block;
+        }
+
+        .btn-bg {
+            background: #027ED0;
+        }
+
+        .bg-none:hover {
+            color: #027ED0
+        }
+
+        .bg-none {
+            background: none;
+            color: #027ED0;
+        }
+
+        .none {
+            display: none;
+        }
+
+        .titlebar {
+            height: 40px;
+            line-height: 40px;
+        }
+
+            .titlebar button {
+                width: 70px;
+                margin-top: 8px;
+                float: left;
+            }
+
+        .btn-gray {
+            background: #9B9B99;
+            color: #fff;
+        }
+
+        .td-blues {
+            color: #2079A3;
+            font-weight: bold;
+        }
+
+        .btn-no {
+            background: #CF524C;
+            width: 35px;
+        }
+
+        .items {
+            margin-top: 15px;
+            background-color: #D8EAF6;
+            text-align: left;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px #D3E0E6 solid
+        }
+
+            .items h5 {
+                font-size: 14px;
+                font-weight: bold;
+                color: #666;
+            }
+
+            .items p {
+                color: #999;
+                font-size: 12px;
+                line-height: 30px;
+            }
+
+        .potrolSjxq .potrolSjxq_box .potrolSjxq_head span i.fa-chevron-down {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body id="printArea">
+    <div class="potrolSjxq">
+        <span class="btnGroup no-print">
+            <button class="layui-btn layui-btn-sm btn-bg active">工单基础信息</button>
+            <button class="layui-btn layui-btn-sm bg-none">工单操作历史</button>
+            @*<button class="layui-btn layui-btn-sm bg-none">工单材料</button>*@
+        </span>
+        <div class="no-print" style="position:relative;top:-35px;right:15px;">
+            <button class="layui-btn layui-btn-sm right" style="background:#DF5944;margin-right:10px;" id="TurnDown">驳回</button>
+            <button class="layui-btn layui-btn-sm right" style="background:#0061C8;margin-right:10px;" id="Review">审核</button>
+            <button class="layui-btn layui-btn-sm right" style="background:#666;margin-right:10px;" id="chargeback">退单</button>
+            <button class="layui-btn layui-btn-sm right" style="background:#42A2D4;" id="transfer">派单</button>
+            <button class="layui-btn layui-btn-sm right" style="background:#42A2D4;" id="btnPrint"><i class="fa fa-print" style="margin-right: 5px;"></i>打印</button>
+
+
+            @*<button class="layui-btn layui-btn-sm right" style="background:#0061C8;">返回</button>*@
+            @*<button class="layui-btn layui-btn-sm right" style="background:#DF5944;" id="recallwo">撤回</button>*@
+        </div>
+        <div class="tabbox">
+            <section class="operate-baseinfo">
+                @{
+                    dynamic dy = ViewBag.wo_event as dynamic;
+                    var dyjson = JsonConvert.SerializeObject(dy);
+                    var json = JsonConvert.DeserializeObject(dyjson);
+                    <div class="potrolSjxq_box">
+                        <div class="potrolSjxq_head">
+                            @*<span class="left">*@
+                            <i class="fa fa-file-text"></i> <label> 工单基础信息</label>
+                            @*</span>*@
+                            <span class="potrolSjxq_head_btn">
+                                <i class="fa fa-chevron-down"></i>
+                                <i class="fa fa-chevron-up"></i>
+                            </span>
+                        </div>
+                        <div class="potrolSjxq_table">
+                            <table class="layui-table" lay-even="" lay-size="">
+                                <tr>
+                                    <td class="layui-col-xs2"><label>工单编号</label></td>
+                                    <td class="layui-col-xs4" colspan="3">@json["Num"]</td>
+                                    <td class="layui-col-xs2"><label>报修设备</label></td>
+                                    <td class="layui-col-xs4" colspan="3">@json["DeviceName"]</td>
+                                </tr>
+                                <tr>
+                                    <td><label>事件来源</label></td>
+                                    <td><span class="red">@(Enum.GetName(typeof(WNMS.Model.CustomizedClass.IncidentSource), int.Parse(json["IncidentSource"].ToString())))</span></td>
+                                    <td><label>上报时间</label></td>
+                                    <td>@json["ReportTime"]</td>
+                                    <td><label>上报人</label></td>
+                                    <td>@json["Account"]</td>
+                                    <td><label>所属班组</label></td>
+                                    <td>@json["TeamName"]</td>
+                                </tr>
+                                <tr>
+                                    <td><label>事件类型</label></td>
+                                    <td>@(Enum.GetName(typeof(WNMS.Model.CustomizedClass.IncidentType), int.Parse(json["IncidentType"].ToString())))</td>
+                                    <td><label>事件内容</label></td>
+                                    <td>@json["IncidentContent"]</td>
+                                    <td><label>紧急程度</label></td>
+                                    <td>@(Enum.GetName(typeof(WNMS.Model.CustomizedClass.EmergencyDegree), int.Parse(json["Degree"].ToString())))</td>
+                                    <td><label>处理级别</label></td>
+                                    <td>@(Enum.GetName(typeof(WNMS.Model.CustomizedClass.ProcessingLevel), int.Parse(json["HandleLevel"].ToString())))</td>
+                                </tr>
+                                <tr>
+                                    <td><label>现场照片</label></td>
+                                    @if (int.Parse(json["ImgCount"].ToString()) > 0)
+                                    {
+                                        <td><button type="button" id="btn_img" class="btn btn-success btn-xs" onclick="ShowWoImage(@json["EventID"],1,5)">查看</button></td>
+                                    }
+                                    else
+                                    {
+                                        <td>暂无图片</td>
+                                    }
+                                    <td><label>录音说明</label></td>
+                                    @if (int.Parse(json["recordCount"].ToString()) > 0)
+                                    {
+                                        <td><button type="button" id="btn_record" class="btn btn-success btn-xs" onclick="ShowWoAudio(@json["EventID"],2,5)">查看</button></td>
+                                    }
+                                    else
+                                    {
+                                        <td>暂无录音</td>
+                                    }
+                                    <td><label>事件地址</label></td>
+                                    <td colspan="2">@json["Address"]</td>
+                                    <td><button class="layui-btn layui-btn-sm" onclick="posit(@json["EventID"])">定位</button></td>
+                                </tr>
+                                <tr>
+                                    <td><label>缩略图预览</label></td>
+                                    @if (int.Parse(json["ImgCount"].ToString()) > 0)
+                                    {
+                                        List<WoResource> img = ViewBag.Img as List<WoResource>;
+                                        <td colspan="5">
+                                            @foreach (var item in img)
+                                            {
+                                                <div class="col-sm-6 col-md-2">
+                                                    <a href="#" class="thumbnail">
+                                                        <img src="@item.Path" style="width:100%;height:60px" />
+                                                    </a>
+                                                </div>
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="10">该事件未上传现场图片</td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td><label>事件描述</label></td>
+                                    <td colspan="10">@json["Description"]</td>
+                                </tr>
+                                <tr>
+                                    <td><label>分派人员</label></td>
+                                    <td>@json["ReleaseUser"]</td>
+                                    <td><label>分派时间</label></td>
+                                    <td>@json["ReleaseTime"]</td>
+                                    <td><label>预计完成时间</label></td>
+                                    <td>@json["CompleteTime"]</td>
+                                    <td colspan="2"></td>
+                                    @*<td><label>延期完成</label></td>
+                                        <td></td>*@
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                }
+                <div class="potrolSjxq_box">
+                    <div class="potrolSjxq_head" style="margin-bottom:20px;">
+                        <i class="fa fa-file-text"></i><label>工单维修信息</label>
+                        <span class="potrolSjxq_head_btn">
+                            <i class="fa fa-chevron-down"></i>
+                            <i class="fa fa-chevron-up"></i>
+                        </span>
+                    </div>
+                    <div class="potrolSjxq_table">
+                        <table class="layui-table" lay-even="" lay-size="">
+                            <tr>
+                                <td><label>所属班组</label></td>
+                                <td>@ViewBag.depName</td>
+                                <td><label>维修人员</label></td>
+                                <td>@ViewBag.userInfo</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><label>当前阶段</label></td>
+                                <td><label>时间</label></td>
+                                <td><label>说明</label></td>
+                                <td><label>现场图片</label></td>
+                                <td><label>录音</label></td>
+                            </tr>
+                            @*<tr id="weixiu">*@
+                            @{
+                                List<dynamic> dycList = ViewBag.opcData as List<dynamic>;
+                                foreach (var item in dycList)
+                                {
+                                    <tr>
+                                        @{
+                                            var itemjson = JsonConvert.SerializeObject(item);
+                                            var jsonitem = JsonConvert.DeserializeObject(itemjson);
+                                            <td><label>@(Enum.GetName(typeof(WNMS.Model.CustomizedClass.WOOperationType), int.Parse(jsonitem["Type"].ToString())))</label></td> 
+                                            <td><label>@jsonitem["OperationTime"]</label></td>
+                                            <td><label>@jsonitem["Description"]</label></td>
+                                            if (int.Parse(jsonitem["ImgCount"].ToString()) > 0)
+                                            {
+                                                <td><button type="button" id="btn_img" class="btn btn-success btn-xs" onclick="ShowWoImage(@jsonitem["ID"],1,6)">查看</button></td>
+                                            }
+                                            else
+                                            {
+                                                <td>暂无图片</td>
+                                            }
+                                            if (int.Parse(jsonitem["recordCount"].ToString()) > 0)
+                                            {
+                                                <td><button type="button" id="btn_record" class="btn btn-success btn-xs" onclick="ShowWoAudio(@jsonitem["ID"],2,6)">查看</button></td>
+                                            }
+                                            else
+                                            {
+                                                <td>暂无录音</td>
+                                            }
+                                        }
+
+                                    </tr>
+                                }
+
+                            }
+                            @*</tr>*@
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="operate-history none">
+                <div class="potrolSjxq">
+                    <div class="potrolSjxq_box">
+                        <div class="potrolSjxq_head">
+                            <i class="fa fa-file-text"></i><label>维修工单操作历史</label>
+                            <span class="potrolSjxq_head_btn">
+                                <i class="fa fa-chevron-down"></i>
+                                <i class="fa fa-chevron-up"></i>
+                            </span>
+                        </div>
+                        <div class="potrolSjxq_table">
+                            <table class="layui-table" lay-even="" lay-size="">
+                                <tr class="td-blues">
+                                    @*<td>序号</td>*@
+                                    <td class="layui-col-xs1">操作说明</td>
+                                    <td class="layui-col-xs1">人员名称</td>
+                                    <td class="layui-col-xs1">所属班组</td>
+                                    <td>操作时间</td>
+                                    <td class="layui-col-xs2">照片</td>
+                                    <td class="layui-col-xs2">录音</td>
+                                    <td class="layui-col-xs3">操作描述</td>
+                                </tr>
+                                @{
+                                    List<dynamic> dyList = ViewBag.opData as List<dynamic>;
+                                    foreach (var item in dyList)
+                                    {
+                                        <tr>
+                                            @{
+                                                var itemjson = JsonConvert.SerializeObject(item);
+                                                var jsonitem = JsonConvert.DeserializeObject(itemjson);
+                                                <td><label>@(Enum.GetName(typeof(WNMS.Model.CustomizedClass.WOOperationType), int.Parse(jsonitem["Type"].ToString())))</label></td>
+                                                <td><label>@jsonitem["Account"]</label></td>
+                                                <td><label>@jsonitem["TeamName"]</label></td>
+                                                <td><label>@jsonitem["OperationTime"]</label></td>
+                                                if (int.Parse(jsonitem["ImgCount"].ToString()) > 0)
+                                                {
+                                                    <td><button type="button" id="btn_img" class="btn btn-success btn-xs" onclick="ShowWoImage(@jsonitem["ID"],1,6)">查看</button></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><button class="layui-btn layui-btn-xs layui-btn-radius btn-no">无</button></td>
+                                                }
+                                                if (int.Parse(jsonitem["recordCount"].ToString()) > 0)
+                                                {
+                                                    <td><button type="button" id="btn_record" class="btn btn-success btn-xs" onclick="ShowWoAudio(@jsonitem["ID"],2,6)">查看</button></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><button class="layui-btn layui-btn-xs layui-btn-radius btn-no">无</button></td>
+                                                }
+                                                <td><label>@jsonitem["Description"]</label></td>
+                                            }
+                                        </tr>
+
+                                    }
+
+                                }
+                            </table>
+                        </div>
+                    </div>
+                    <div class="potrolSjxq_box">
+                        <div class="potrolSjxq_head">
+                            <i class="fa fa-file-text"></i><label>维修工单延期信息</label>
+                            <span class="potrolSjxq_head_btn">
+                                <i class="fa fa-chevron-down"></i>
+                                <i class="fa fa-chevron-up"></i>
+                            </span>
+                        </div>
+                        <div class="potrolSjxq_table">
+                            @{
+                                List<dynamic> exList = ViewBag.extension as List<dynamic>;
+                                if (exList.Count > 0)
+                                {
+                                    <table class="layui-table" lay-even="" lay-size="">
+                                        <tr class="td-blues">
+                                            @*<td>序号</td>*@
+                                            @* <td class="layui-col-xs1">工单编号</td>*@
+                                            <td class="layui-col-xs1">申请人</td>
+                                            <td class="layui-col-xs1">申请时间</td>
+                                            <td class="layui-col-xs1">延期完成时间</td>
+                                            <td class="layui-col-xs2">审核人</td>
+                                            <td class="layui-col-xs2">审核时间</td>
+                                            <td class="layui-col-xs3">审核状态</td>
+                                            <td class="layui-col-xs3">申请原因</td>
+                                        </tr>
+
+                                        @{
+                                            foreach (var item in exList)
+                                            {
+                                                <tr>
+                                                    @{
+                                                        var itemjson = JsonConvert.SerializeObject(item);
+                                                        var jsonitem = JsonConvert.DeserializeObject(itemjson);
+
+                                                        @*<td><label>@jsonitem["WOID"]</label></td>*@
+                                                        <td><label>@jsonitem["Exuser"]</label></td>
+                                                        <td><label>@jsonitem["ExtensionTime"]</label></td>
+                                                        <td><label>@jsonitem["CompleteTime"]</label></td>
+                                                        <td><label>@jsonitem["Auditor"]</label></td>
+                                                        <td><label>@jsonitem["AuditingTime"]</label></td>
+                                                        <td><label>@jsonitem["State"]</label></td>
+                                                        <td><label>@jsonitem["Reason"]</label></td>
+                                                    }
+                                                </tr>
+                                            }
+
+                                        }
+
+                                    </table>
+                                }
+                                else
+                                {
+                                    <div class="items">
+                                        <h5>未查询到工单相关的延期信息！</h5>
+                                        <p>该工单维修负责人未发起延期</p>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                    <div class="potrolSjxq_box">
+                        <div class="potrolSjxq_head">
+                            <i class="fa fa-file-text"></i><label>维修工单退单信息</label>
+                            <span class="potrolSjxq_head_btn">
+                                <i class="fa fa-chevron-down"></i>
+                                <i class="fa fa-chevron-up"></i>
+                            </span>
+                        </div>
+                        <div class="potrolSjxq_table">
+                            @{
+                                List<dynamic> tdData = ViewBag.tdData as List<dynamic>;
+                                if (tdData.Count > 0)
+                                {
+                                    <table class="layui-table" lay-even="" lay-size="">
+                                        <tr class="td-blues">
+                                            @*<td>序号</td>*@
+                                            <td class="layui-col-xs1">操作说明</td>
+                                            <td class="layui-col-xs1">人员名称</td>
+                                            <td class="layui-col-xs1">所属班组</td>
+                                            <td>操作时间</td>
+                                            @*<td class="layui-col-xs2">照片</td>
+                                                <td class="layui-col-xs2">录音</td>*@
+                                            <td class="layui-col-xs3">操作描述</td>
+                                        </tr>
+
+                                        @{
+                                            foreach (var item in tdData)
+                                            {
+                                                <tr>
+                                                    @{
+                                                        var itemjson = JsonConvert.SerializeObject(item);
+                                                        var jsonitem = JsonConvert.DeserializeObject(itemjson);
+                                                        <td><label>@(Enum.GetName(typeof(WNMS.Model.CustomizedClass.WOOperationType), int.Parse(jsonitem["Type"].ToString())))</label></td>
+                                                        <td><label>@jsonitem["Account"]</label></td>
+                                                        <td><label>@jsonitem["TeamName"]</label></td>
+                                                        <td><label>@jsonitem["OperationTime"]</label></td>
+                                                        @*if (int.Parse(json["ImgCount"].ToString()) > 0)
+                                                            {
+                                                                <td><button type="button" id="btn_img" class="btn btn-success btn-xs">查看</button></td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td><button class="layui-btn layui-btn-xs layui-btn-radius btn-no">无</button></td>
+                                                            }
+                                                            if (int.Parse(json["recordCount"].ToString()) > 0)
+                                                            {
+                                                                <td><button type="button" id="btn_record" class="btn btn-success btn-xs">查看</button></td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td><button class="layui-btn layui-btn-xs layui-btn-radius btn-no">无</button></td>
+                                                            }*@
+                                                        <td><label>@jsonitem["Description"]</label></td>
+                                                    }
+                                                </tr>
+                                            }
+
+                                        }
+
+                                    </table>
+                                }
+                                else
+                                {
+                                    <div class="items">
+                                        <h5>未查询到工单相关的退单信息！</h5>
+                                        <p>该工单维修负责人未发起退单</p>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+
+    </div>
+
+
+    <script>
+        var id =@ViewBag.WOID;
+        $(function () {
+            $('.potrolSjxq_head_btn').click(function () {
+                $(this).parent().siblings('.potrolSjxq_table').toggle();
+                $(this).children().toggle();
+            });
+            //title
+            $(".btnGroup button").click(function () {
+                var $indx = $(this).index();
+                $(this).addClass('active').siblings().removeClass('active');
+                $(this).addClass("btn-bg")
+                    .removeClass("bg-none")
+                    .siblings("button")
+                    .removeClass("btn-bg")
+                    .addClass("bg-none");
+
+                //选项卡
+                $(".tabbox section").eq($indx).show().siblings("section").hide();
+            })
+            $("#recallwo").click(function () {
+                recallwo();
+            })
+            $("#chargeback").click(function () {
+                chargeback();
+            })
+            $("#transfer").click(function () {
+                transfer();
+            });
+             $("#Review").click(function () {
+                Review();
+             })
+             $("#TurnDown").click(function () {
+                TurnDown();
+            });
+
+            /**
+             * 打印
+             */
+            $('#btnPrint').click(function () {
+                // 同时显示基础信息和操作历史供打印
+                $('.operate-baseinfo, .operate-history').show();
+
+                $("#printArea").print();
+
+                // 打印弹窗已弹出
+                var activeIndex = $('.btnGroup button.active').index();
+                switch (activeIndex) {
+                    case 0:
+                        // 工单基础信息
+                        $('.operate-baseinfo').show();
+                        $('.operate-history').hide();
+                        break;
+                    case 1:
+                        // 工单操作历史
+                        $('.operate-baseinfo').hide();
+                        $('.operate-history').show();
+                        break;
+                }
+            });
+        })
+        //撤回工单
+        function recallwo() {
+            layer.confirm("确定撤回？", {
+                btn: ['确定', '取消'], icon: 3, title: ['提示', 'color:#fff;background: #D04040']
+            }, function () {
+                $.post("/GD_WorkOrder/RecallWO", { id: id }, function (data) {
+                    if (data == "ok") {
+                        layer.msg("工单撤回成功");
+                    } else if (data == "cannot") {
+                        layer.msg("工单已接收，不能撤回");
+                    } else if (data == "repeat") {
+                        layer.msg("请勿重复撤回");
+                    }
+                    else {
+                        layer.msg("工单撤回失败");
+                    }
+                })
+            }, function () {
+
+            });
+
+        }
+        //退单
+        function chargeback() {
+            layer.confirm("确定退单？", {
+                btn: ['确定', '取消'], icon: 3, title: ['提示', 'color:#fff;background: #D04040']
+            }, function () {
+                $.post("/Wo/WorkHandle/ChargebackWO", { id: id }, function (data) {
+                    if (data == "ok") {
+                        layer.msg("工单退单成功", function () {
+                            window.parent.location.reload();
+                        });
+                    } else if (data == "cannot") {
+                        layer.msg("工单已接收，不能退单");
+                    } else if (data == "repeat") {
+                        layer.msg("该工单不能退单");
+                    }
+                    else {
+                        layer.msg("工单退单失败");
+                    }
+                })
+            }, function () {
+
+            });
+        }
+        //驳回重做
+        function TurnDown() {
+            layer.confirm("确定驳回？", {
+                btn: ['确定', '取消'], icon: 3, title: ['提示', 'color:#fff;background: #D04040']
+            }, function () {
+                $.post("/Wo/WorkHandle/TurnDown", { id: id }, function (data) {
+                    if (data == "ok") {
+                        layer.msg("驳回成功", function () {
+                            window.parent.location.reload();
+                        });
+                    } else if (data == "cannot") {
+                        layer.msg("该工单无法驳回");
+                    }
+                    else {
+                        layer.msg("驳回失败");
+                    }
+                })
+            }, function () {
+
+            });
+        }
+        //审核工单
+        function Review() {
+             iframe(['工单审核'], "700px", "400px", "/Wo/WorkHandle/WorkOrderAudit/" + id)
+        }
+        //定位
+        function posit(id) {
+            iframes(['事件定位'], "80%", "80%", "/Wo/WorkHandle/Positioning/" + id);
+        }
+        //图片展示
+        function ShowWoImage(id, type, ResourceType) {
+            iframes(['图片列表'], "600px", "600px", "/Wo/WorkHandle/ShowImage?id=" + id+ "&type= " + type + "" + "&ResourceType= " + ResourceType+"");
+        }
+        //音频展示
+        function ShowWoAudio(id, type, ResourceType) {
+            iframes(['音频列表'], "354px", "450px", "/Wo/WorkHandle/ShowAudio?id=" + id+ "&type= " + type + "" + "&ResourceType= " + ResourceType+"");
+        }
+
+        //派单
+        function transfer() {
+             $.post("/Wo/WorkHandle/WoIsDispatch", { WOID: id }, function (data) {
+                    if (data == "ok") {
+                         iframe(['派单'], "1100px", "600px", "/Wo/WorkHandle/DispatchWo/" + id);
+                    }
+                    else {
+                        layer.msg("工单已派发，请勿重复派发");
+                    }
+                })
+
+        }
+        function iframes(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.8,
+                area: [width, height],
+                content: url
+            });
+        }
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.8,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    window.frames[0].SubmitData();
+                }, cancel: function (index) {
+
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
+

@@ -1,0 +1,233 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+@model SysDataItem;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_SetDataClassify</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
+    @*<link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <!-- 树 -->
+    <link href="~/lib/ztree/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <style>
+        .star {
+            position: absolute;
+            left: 58px;
+            top: -4px;
+            font-size: 25px;
+            color: red
+        }
+       
+     
+    </style>
+</head>
+<body>
+    <div style="padding:20px" class="xiugai">
+        <form action="/Sys/Sys_DataItem/SetDataClassify" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body">
+                <input id="ItemId" name="ItemId" type="hidden" value="@Model.ItemId" />
+                <input id="Pid" name="Pid" type="hidden" value="@Model.Pid" />
+                <input id="ItemValue" name="ItemValue" type="hidden" value="@Model.ItemValue" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>分类名称 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="ItemName" name="ItemName" value="@Model.ItemName" autocomplete="off">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>上级</label>
+                                    <div class="input-group relative">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-sitemap"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="PIDName" name="PIDName" value="@ViewBag.ItemName" style="border-radius:4px;border-top-left-radius:0;border-bottom-left-radius:0;">
+                                        <div class="treeslide opacity0">
+                                            <div id="treeDemo" class="ztree">
+                                            </div>
+                                        </div>
+
+                                        <!-- /.input group -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group" style="position:relative;z-index:999">
+                                    <label>字典排序 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-sort-amount-asc"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Sort" name="Sort" value="@Model.Sort" autocomplete="off">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="row">
+                           
+                            <div class="col-sm-12">
+                                <div class="form-group" style="z-index:999">
+                                    <label>备注</label>
+                                    <textarea id="Reamrk" style="height:34px" name="Reamrk" rows="2" cols="20" class="form-control">@Model.Reamrk</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+                @*<div class="form-group">
+            <label>分类值:</label>
+
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <i class="fa fa-phone"></i>
+                </div>
+                <input type="text" class="form-control" id="ItemValue" name="ItemValue" value="@Model.ItemValue">
+            </div>
+
+        </div>*@
+                
+
+               
+            </div>
+        
+        </form>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $(".treeslide").click(function (e) {
+                e.stopPropagation();
+            })
+           
+            $(document).click(function () {
+                $(".treeslide").addClass("opacity0").css({"z-index":"99"});
+            })
+            
+        })
+
+        var setting = {
+            data:{
+                simpleData: {
+                    enable: true
+                }
+            },callback:{
+                onClick: zTreeOnClick
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true
+            }
+        };
+        var zNodes = @ViewBag.treenodes;
+        var treeObj;
+        var index = parent.layer.getFrameIndex(window.name);
+        function saveFormChirldren() {
+
+            $("form").submit();
+        }
+
+        $(function () {
+             validateForm();
+             treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            
+        })
+         $("#PIDName").click(function (e) {
+
+               $(".treeslide").removeClass("opacity0").css("z-index","1000");
+               e.stopPropagation();
+               
+             var pid = $("#Pid").val();
+             if (pid != 0) {
+                 var node = treeObj.getNodeByParam("id", pid, null);
+                 treeObj.selectNode(node);
+             }
+            });
+          function zTreeOnClick(event, treeId, treeNode) {
+             
+            if (treeNode.id == -1) {
+                 $("#Pid").val(0);
+                $("#PIDName").val("");
+            }
+            else {
+                $("#Pid").val(treeNode.id);
+                $("#PIDName").val(treeNode.name);
+            }
+          $(".treeslide").addClass("opacity0");
+        };
+         function validateForm() {
+            $("#MFForm").validate({
+                debug: true,
+                ignore: "",
+                rules: {
+                    ItemName: "required",
+                    Sort: {
+                        required: true,
+                        
+                        digits: true
+                    }                  
+                   
+                },
+                messages: {
+                    ItemName: "请输入字典名称",
+                    Sort: "请输入排序"
+                    
+                }
+            });
+        }
+        function _addFun(data) {
+            if (data == "ok") {
+
+                parent.layer.close(index);
+                parent.refreshTable();
+                parent.parent.freashTree();
+            }
+            else {
+                if (data == "same") {
+                    layer.msg("所选父级不能是分类本身");
+                }
+                else {
+                    layer.msg("操作失败");
+                }
+                
+            }
+        }
+
+    </script>
+</body >
+</html >

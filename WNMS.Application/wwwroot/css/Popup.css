@@ -1,0 +1,525 @@
+#Ejectone {
+    font-family: "Î¢ÈíÑÅºÚ";
+    position: absolute;
+    top:50px;
+    width:250px;
+    text-align: center;
+    right:3%;
+    z-index: 600;
+}
+
+    #Ejectone li {
+        width: 250px;
+        border-radius: 5px;
+        display: inline-block;
+        overflow: hidden;
+        box-shadow: 1px 2px 1px #666;
+        position: relative;
+        left: 0;
+        top: 0;
+        border-left: 1px solid #ccc;
+        background: #fff;
+        -webkit-animation-duration: 500ms;
+        -webkit-animation-name: shineRed;
+        -webkit-animation-iteration-count: infinite;
+        height: 250px;
+    }
+
+        #Ejectone li h1 {
+            background: #D9534F;
+            height: 35px;
+            line-height: 35px;
+            width: 100%;
+            color: #fff;
+            font-size: 15px;
+            overflow: hidden;
+            text-align: left;
+            margin: 0;
+            padding: 0;
+            padding-left: 10px;
+        }
+
+        #Ejectone li > div {
+            width: 100%;
+            margin: 0 auto;
+            line-height: 40px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            text-align: left;
+            height: 180px;
+        }
+
+    #Ejectone .close {
+        position: absolute;
+        right: 20px;
+        height: 35px;
+        line-height: 35px;
+        font-weight: bold;
+        font-size: 17px;
+        cursor: pointer;
+    }
+
+    #Ejectone a {
+        background: #D9534F;
+        display: block;
+        width: 50px;
+        height: 20px;
+        line-height: 18px;
+        color: #fff;
+        border-radius: 5px;
+        text-align: center;
+        margin: 2px;
+        float: right;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+
+        #Ejectone a:hover {
+            text-decoration: none;
+            color: #DDE4FD;
+            cursor: pointer;
+        }
+
+    #Ejectone li div table {
+        width: 100%;
+   margin:10px 0 0 0 
+
+    }
+
+        #Ejectone li div table td {
+            text-align: left;
+            height: 25px;
+            line-height: 25px;
+            float: left;
+            padding-left: 10px;
+            font-size:12px
+        }
+
+#Ejecttwo {
+    font-family: "Î¢ÈíÑÅºÚ";
+    position: absolute;
+    top: 33%;
+    width: 250px;
+    text-align: center;
+    right: 3%;
+    z-index: 550;
+}
+
+    #Ejecttwo li {
+        width: 250px;
+        border-radius: 5px;
+        display: inline-block;
+        overflow: hidden;
+        box-shadow: 1px 2px 1px #666;
+        position: relative;
+        left: 0;
+        top: 0;
+        border-left: 1px solid #ccc;
+        background: #fff;
+        -webkit-animation-duration: 1500ms;
+        -webkit-animation-name: shineBlue;
+        -webkit-animation-iteration-count: infinite;
+        /*height:200px;*/
+    }
+
+        #Ejecttwo li h1 {
+            background: #fbb321;
+            height: 35px;
+            line-height: 35px;
+            width: 100%;
+            color: #fff;
+            font-size: 15px;
+            overflow: hidden;
+            text-align: left;
+            margin: 0;
+            padding: 0;
+            padding-left: 10px;
+        }
+
+        #Ejecttwo li > div {
+            width: 100%;
+            margin: 0 auto;
+            line-height: 40px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            text-align: left;
+            height: 180px;
+        }
+
+    #Ejecttwo .close {
+        position: absolute;
+        right: 20px;
+        height: 30px;
+        line-height: 30px;
+        font-weight: bold;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    #Ejecttwo a {
+        background: #fbb321;
+        display: block;
+        width: 50px;
+        height: 20px;
+        line-height:18px;
+        color: #fff;
+        border-radius: 5px;
+        text-align: center;
+        margin: 2px;
+        float: right;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+
+        #Ejecttwo a:hover {
+            text-decoration: none;
+            color: #DDE4FD;
+        }
+
+    #Ejecttwo li div table {
+        width: 100%;
+        font-size: 15px;
+    }
+
+        #Ejecttwo li div table td {
+            text-align: left;
+            height: 25px;
+            line-height: 25px;
+            float: left;
+            padding-left: 10px;
+            font-size:12px;
+        }
+
+#Ejectthree {
+    font-family: "Î¢ÈíÑÅºÚ";
+    position: absolute;
+    bottom: 1px;
+    width: 250px;
+    text-align: center;
+    right: 3%;
+    z-index: 500;
+}
+
+    #Ejectthree li {
+        width: 250px;
+        border-radius: 5px;
+        display: inline-block;
+        overflow: hidden;
+        box-shadow: 1px 2px 1px #666;
+        position: relative;
+        left: 0;
+        top: 0;
+        border-left: 1px solid #8a8a8a;
+        background: #fff;
+    }
+
+        #Ejectthree li h1 {
+            background: #8a8a8a;
+            height: 35px;
+            line-height: 35px;
+            width: 100%;
+            color: #fff;
+            font-size: 15px;
+            overflow: hidden;
+            text-align: left;
+            margin: 0;
+            padding: 0;
+            padding-left: 10px;
+        }
+
+        #Ejectthree li > div {
+            width: 100%;
+            margin: 0 auto;
+            line-height: 40px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            text-align: left;
+            height: 180px;
+        }
+
+    #Ejectthree .close {
+        position: absolute;
+        right: 20px;
+        height: 30px;
+        line-height: 30px;
+        font-weight: bold;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    #Ejectthree a {
+        background: #8a8a8a;
+        display: block;
+        width: 50px;
+        height: 20px;
+        line-height: 18px;
+        color: #fff;
+        border-radius: 5px;
+        text-align: center;
+        margin: 2px;
+        float: right;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+
+        #Ejectthree a:hover {
+            text-decoration: none;
+            color: #DDE4FD;
+        }
+
+    #Ejectthree li div table {
+        width: 100%;
+        font-size: 15px;
+        margin:10px 0 0 0
+    }
+
+        #Ejectthree li div table td {
+            text-align: left;
+            height: 25px;
+            line-height: 25px;
+            float: left;
+            padding-left: 10px;
+            font-size:12px;
+        }
+
+@-webkit-keyframes shineRed {
+    from {
+        -webkit-box-shadow: 0 0 0px #bbb;
+        width: 250px;
+        height: 255px;
+    }
+
+    50% {
+        -webkit-box-shadow: 0 0 30px #D9534F;
+        width: 250px;
+        height: 255px;
+    }
+
+    to {
+        -webkit-box-shadow: 0 0 0px #bbb;
+        width: 250px;
+        height: 255px;
+    }
+}
+
+@-webkit-keyframes shineBlue {
+    from {
+        -webkit-box-shadow: 0 0 0px #333;
+        width: 250px;
+        height: 255px;
+    }
+
+    50% {
+        -webkit-box-shadow: 0 0 50px #fbb321;
+        width: 250px;
+        height: 255px;
+    }
+
+    to {
+        -webkit-box-shadow: 0 0 0px #333;
+        width: 250px;
+        height: 255px;
+    }
+}
+
+@keyframes shake-little {
+    0% {
+        transform: translate(0px, 0px) rotate(0deg)
+    }
+
+    2% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    4% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    6% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    8% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    10% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    12% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    14% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    16% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    18% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    20% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    22% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    24% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    26% {
+        transform: translate(-1px, 0px) rotate(-0.5deg)
+    }
+
+    28% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    30% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    32% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    34% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    36% {
+        transform: translate(-1px, 0px) rotate(-0.5deg)
+    }
+
+    38% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    40% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    42% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    44% {
+        transform: translate(-1px, 0px) rotate(-0.5deg)
+    }
+
+    46% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    48% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    50% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    52% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    54% {
+        transform: translate(-1px, 0px) rotate(-0.5deg)
+    }
+
+    56% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    58% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    60% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    62% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    64% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    66% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    68% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    70% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    72% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    74% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    76% {
+        transform: translate(-1px, 0px) rotate(-0.5deg)
+    }
+
+    78% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    80% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    82% {
+        transform: translate(-1px, 0px) rotate(-0.5deg)
+    }
+
+    84% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    86% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    88% {
+        transform: translate(0px, 0px) rotate(-0.5deg)
+    }
+
+    90% {
+        transform: translate(-1px, -1px) rotate(-0.5deg)
+    }
+
+    92% {
+        transform: translate(-1px, 0px) rotate(-0.5deg)
+    }
+
+    94% {
+        transform: translate(-1px, 0px) rotate(-0.5deg)
+    }
+
+    96% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+
+    98% {
+        transform: translate(0px, -1px) rotate(-0.5deg)
+    }
+}

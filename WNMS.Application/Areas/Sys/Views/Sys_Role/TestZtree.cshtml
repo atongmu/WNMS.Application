@@ -1,0 +1,372 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>权限管理</title>
+    <link href="~/css/AdminLTE.css" rel="stylesheet" />
+    <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <!-- 树 -->
+    <link href="~/lib/NewZtree/zTree_v3/css/demo.css" rel="stylesheet" />
+    <link href="~/lib/NewZtree/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/lib/NewZtree/zTree_v3/js/jquery.ztree.all.js"></script>
+    <script type="text/javascript" src="~/lib/NewZtree/zTree_v3/js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="~/lib/NewZtree/zTree_v3/js/jquery.ztree.excheck.min.js"></script>
+
+    <style>
+        .form2 {
+            display: none
+        }
+    </style>
+    <style type="text/css">
+
+        .ztree * {
+            font-size: 10pt;
+            font-family: "Microsoft Yahei",Verdana,Simsun,"Segoe UI Web Light","Segoe UI Light","Segoe UI Web Regular","Segoe UI","Segoe UI Symbol","Helvetica Neue",Arial
+        }
+
+        .ztree li ul {
+            margin: 0;
+            padding: 0
+        }
+
+        .ztree li {
+            line-height: 30px;
+        }
+
+            .ztree li a {
+                width: 200px;
+                height: 30px;
+                padding-top: 0px;
+            }
+
+                .ztree li a:hover {
+                    text-decoration: none;
+                    background-color: #E7E7E7;
+                }
+
+                .ztree li a span.button.switch {
+                    visibility: hidden
+                }
+
+        .ztree.showIcon li a span.button.switch {
+            visibility: visible
+        }
+
+        .ztree li a.curSelectedNode {
+            background-color: #D4D4D4;
+            border: 0;
+            height: 30px;
+        }
+
+        .ztree li span {
+            line-height: 30px;
+        }
+
+            .ztree li span.button {
+                margin-top: -7px;
+            }
+
+                .ztree li span.button.switch {
+                    width: 16px;
+                    height: 16px;
+                }
+
+            /*.ztree li a.level0 span {
+            font-size: 150%;
+            font-weight: bold;
+        }*/
+
+            .ztree li span.button {
+                /*background-image: url("./left_menuForOutLook.png");*/
+                background-image: url('../../../lib/newztree/ztree_v3/demo/cn/super/left_menuforoutlook.png');
+                /**background-image: url("./left_menuForOutLook.gif")*/
+                *background-image: url("../../../lib/newztree/ztree_v3/demo/cn/super/left_menuforoutlook.gif")
+            }
+
+                .ztree li span.button.switch.level0 {
+                    width: 20px;
+                    height: 20px
+                }
+
+                .ztree li span.button.switch.level1 {
+                    width: 20px;
+                    height: 20px
+                }
+
+                .ztree li span.button.noline_open {
+                    background-position: 0 0;
+                }
+
+                .ztree li span.button.noline_close {
+                    background-position: -18px 0;
+                }
+
+                .ztree li span.button.noline_open.level0 {
+                    background-position: 0 -18px;
+                }
+
+                .ztree li span.button.noline_close.level0 {
+                    background-position: -18px -18px;
+                }
+    </style>
+</head>
+<body>
+
+    <ul class="steplist">
+        <li class="on">① 模块权限</li>
+        <li>② 按钮权限</li>
+    </ul>
+
+    <div class="stepbox" style="padding:15px">
+
+        <!-- form start -->
+        <form class="form-horizontal form1">
+            <div class="box-header with-border">
+                <h3 class="box-title">步骤1</h3>
+            </div>
+            <div class="box-body">
+                <div id="tree">
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>
+            </div>
+
+            <!-- /.box-body -->
+        </form>
+
+        <!-- form start -->
+        <form class="form-horizontal form2">
+            <div class="box-header with-border">
+                <h3 class="box-title">步骤2</h3>
+            </div>
+            <div class="box-body">
+                <div id="treeSec">
+                    <ul id="treeDemoSec" class="ztree"></ul>
+                </div>
+            </div>
+
+            <!-- /.box-body -->
+        </form>
+
+        <div class="box-footer">
+            <!--<button type="submit" class="btn btn-default">Cancel</button>-->
+            <button id="submitFor" type="submit" class="btn btn-info pull-right">完成</button>
+            <button type="submit" class="btn btn-default mr15px pull-right" onclick="next()">下一步</button>
+            <button type="submit" class="btn btn-default mr15px pull-right" onclick="prev()">上一步</button>
+        </div>
+        <!-- /.box-footer -->
+    </div>
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/adminlte.lite.js"></script>
+    <script>
+        var zTreeObjSec;
+        var zNodesSec;
+        var settingSec = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }, callback: {
+                onClick: zTreeOnClickSec
+            }, view: {
+                showTitle: false,
+                showLine: true,
+                nameIsHTML: true
+            }
+
+        };
+        function next() {
+            $(".steplist li").eq(1).addClass("on");
+            $(".form1").addClass("hide");
+            $(".form2").css("display", "block");
+            GetCheckedNodes();
+        }
+        function prev() {
+            $(".steplist li").eq(1).removeClass("on");
+            $(".form1").removeClass("hide");
+            $(".form2").css("display", "none");
+
+        }
+
+        $(function () {
+            $(".steplist li:eq(1)").click(function () {
+                $(".steplist li").eq(1).addClass("on");
+                $(".form1").addClass("hide");
+                $(".form2").css("display", "block");
+            })
+        })
+        //获取上级所选的权限id，传给下一步，
+        function GetCheckedNodes() {
+            var str = "";
+            var checkedNodes = zTreeObj.getCheckedNodes(true);
+            var ckLength = checkedNodes.length;
+            if (ckLength > 0) {
+                for (var i = 0; i < ckLength; i++) {
+                    str += checkedNodes[i].id + ",";
+                }
+            }
+            if (str != "") {
+                str = str.substring(0, str.length - 1);
+            }
+            $.post("/Sys/Sys_Role/LoadButAction", { roleId: RoleID, actionids: str }, function (data) {
+                if (data != "") {
+                    var zNodesSec1 = JSON.parse(data);
+                    zNodesSec = eval(zNodesSec1);//格式化（object）数据
+                    zTreeObjSec = $.fn.zTree.init($("#treeDemoSec"), settingSec, zNodesSec);
+                    zTreeObjSec.expandAll(true);
+                }
+
+            });
+        }
+        function zTreeOnClickSec(event, treeId, treeNodes) { }
+    </script>
+    <script>
+        var zTreeObj;var curMenu = null, zTree_Menu = null;
+        var setting = {
+            view: {
+				showLine: false,
+				showIcon: false,
+				selectedMulti: false,
+				dblClickExpand: false,
+				addDiyDom: addDiyDom
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			}, check: {
+                enable: true
+            },
+			callback: {
+				beforeClick: beforeClick
+			}
+            //check: {
+            //    enable: true
+            //},
+            //data: {
+            //    simpleData: {
+            //        enable: true
+            //    }
+            //}, callback: {
+            //    onClick: zTreeOnClick
+            //}, view: {
+            //    showTitle: false,
+            //    showLine: true,
+            //    nameIsHTML: true
+            //}
+
+        };
+        var RoleID =@ViewBag.RoleID;
+        var zNodes = @ViewBag.TreeNodes;
+        @*var zNodes = @ViewBag.TreeNodes;*@
+         
+        var zNodes1 =[
+			{ id:1, pId:0, name:"文件夹", open:true},
+			{ id:11, pId:1, name:"收件箱"},
+			{ id:111, pId:11, name:"收件箱1"},
+			{ id:112, pId:111, name:"收件箱2"},
+			{ id:113, pId:112, name:"收件箱3"},
+			{ id:114, pId:113, name:"收件箱4"},
+			{ id:12, pId:1, name:"垃圾邮件"},
+			{ id:13, pId:1, name:"草稿"},
+			{ id:14, pId:1, name:"已发送邮件"},
+			{ id:15, pId:1, name:"已删除邮件"},
+			{ id:3, pId:0, name:"快速视图"},
+			{ id:31, pId:3, name:"文档"},
+			{ id:32, pId:3, name:"照片"}
+		];
+        $(function () {
+             $("#submitFor").click(function () {
+       
+                SubmitFor();
+            });
+            var treeObj = $("#treeDemo");
+			$.fn.zTree.init(treeObj, setting, zNodes);
+			zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
+			//curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
+			//zTree_Menu.selectNode(curMenu);
+
+			treeObj.hover(function () {
+				if (!treeObj.hasClass("showIcon")) {
+					treeObj.addClass("showIcon");
+				}
+			}, function() {
+				treeObj.removeClass("showIcon");
+			});
+            //zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            //zTreeObj.expandAll(true);
+            // //为角色分配权限
+           
+        })
+        function addDiyDom(treeId, treeNode) {
+			var spaceWidth = 5;
+			var switchObj = $("#" + treeNode.tId + "_switch"),
+			icoObj = $("#" + treeNode.tId + "_ico");
+			switchObj.remove();
+			icoObj.before(switchObj);
+
+			if (treeNode.level > 1) {
+				var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
+				switchObj.before(spaceStr);
+			}
+        }
+        function beforeClick(treeId, treeNode) {
+			if (treeNode.level == 0 ) {
+				var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+				zTree.expandNode(treeNode);
+				return false;
+			}
+			return true;
+		}
+        function zTreeOnClick(event, treeId, treeNodes) { }
+        function SubmitFor() {
+            var str = "";
+            var strSec = ""; 
+            var checkedNodes = zTreeObj.getCheckedNodes(true);
+            var ckLength = checkedNodes.length;
+            if (ckLength > 0) {
+                for (var i = 0; i < ckLength; i++) {
+                    str += checkedNodes[i].id + ",";
+                }
+            }
+           
+             if (str != "") {
+                str = str.substring(0, str.length - 1);
+            }
+             alert(str);
+            var checkedNodesSec = zTreeObjSec.getCheckedNodes(true);
+            var ckLengthSec = checkedNodesSec.length;
+            if (ckLengthSec > 0) {
+                for (var i = 0; i < ckLengthSec; i++) {
+                    if (checkedNodesSec[i].type == 2) {
+                        strSec += checkedNodesSec[i].id + ",";
+                    }
+                }
+            }
+            if (strSec != "") {
+                strSec = strSec.substring(0, strSec.length - 1);
+            }
+           
+            //$.post("/Sys/Sys_Role/SetRoleAction", { roleId: RoleID, actionids: str,btnActions:strSec }, function (data) {
+            //    if (data != "") {
+            //        alert(data);
+            //    }
+
+            //});
+        }
+    </script>
+</body>
+
+</html>

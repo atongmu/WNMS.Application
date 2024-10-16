@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define(["exports","../../../../core/screenUtils"],function(e,c){e.createAnimatedFlowRendererSettings=function(a){const d=c.pt2px(a.lineWidth),f=2*d,g=Math.round(c.pt2px(a.lineLength)/f)+1;var b=a.lineColor.toRgba();b=[b[0]/255,b[1]/255,b[2]/255,b[3]];const {lineSpeed:h,fadeDuration:k,density:l}=a;a=c.pt2px(a.smoothing);return{lineRenderWidth:d,segmentLength:f,verticesPerLine:g,lineCollisionWidth:d,lineSpacing:10,lineColor:b,lineSpeed:h,fadeDuration:k,density:l,smoothing:a,velocityScale:1,minWeightThreshold:.001,
+minSpeedThreshold:.001,maxTurnAngle:1,mergeLines:!0,interpolate:!0,profile:!1}};Object.defineProperty(e,"__esModule",{value:!0})});

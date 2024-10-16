@@ -1,0 +1,319 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+@model SwsAccessControl
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_SetAccessControl</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .star {
+            position: absolute;
+            left: 59px;
+            top: -4px;
+            font-size: 25px;
+            color: red
+        }
+        .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+         background-color: #fff;
+         opacity: 1;
+             }
+        
+       
+    </style>
+</head>
+<body>
+    <div style="padding:20px" class="xiugai">
+        <form action="/Sws/Sws_AccessControl/SetAccessControl" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body">
+                <input id="DoorID" name="DoorID" type="hidden" value="@Model.DoorId" />
+                <input type="password" style="width:0px;height:0px;position:absolute;z-index:-1;opacity:0" />
+                <input type="text" style="width:0px;height:0px;position:absolute;z-index:-1;opacity:0" />
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>门禁编号 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Num" name="Num" value="@Model.Num" autocomplete="off">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6 relative">
+                                <div class="form-group relative">
+                                    <label>门禁名称 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-sitemap"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="AccessName" name="AccessName" value="@Model.AccessName" autocomplete="off">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>门禁IP <span class="star" style="left: 44px;">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-television"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Ip" name="Ip" value="@Model.Ip" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>门禁端口 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-share-alt"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Port" name="Port" value="@Model.Port" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>AppKey <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-television"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="AppKey" name="AppKey" value="@Model.AppKey" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>Secret<span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-share-alt"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Secret" name="Secret" value="@Model.Secret" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group" style="position:relative;">
+                                    <label>门禁品牌 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-bandcamp"></i>
+                                        </div>
+                                        <select class="form-control" id="Brand" name="Brand">
+                                            @{
+                                                var brandtypes = ViewBag.brandList as IEnumerable<SysDataItemDetail>;
+                                                foreach (var item in brandtypes)
+                                                {
+                                                    if (Model != null && Model.Brand == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>用户名 <span class="star" style="left: 44px;">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user-circle-o"></i>
+                                        </div>
+
+                                        <input type="text" autocomplete="off" class="form-control" id="UserName" name="UserName" value="@Model.UserName">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <input type="text" style="width:0px;height:0px;position:absolute;z-index:-1;opacity:0" />
+                    <input type="password" style="width:0px;height:0px;position:absolute;z-index:-1;opacity:0" />
+                    <div class="col-sm-12  z-indx">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>密码 <span class="star" style="left: 30px">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-fax"></i>
+                                        </div>
+
+                                        <input type="password" autocomplete="off" class="form-control" id="PassWord" name="PassWord" value="@Model.PassWord">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>泵房名称 </label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-university"></i>
+                                        </div>
+                                        <input type="button" class="form-control" id="StationName" name="StationName" value="@ViewBag.StationName" onclick="SelectStation(@ViewBag.StationId)">
+                                        <input id="StationId" type="hidden" name="StationId" value="@Model.StationId" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script type="text/javascript">
+        var index = parent.layer.getFrameIndex(window.name);
+        $(function () {
+
+            validateForm();
+            //ip验证
+            jQuery.validator.addMethod("isIP", function(value, element) {    
+              var tel = /^(?=(\b|\D))(((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))\.){3}((\d{1,2})|(1\d{1,2})|(2[0-4]\d)|(25[0-5]))(?=(\b|\D))$/;    
+              return this.optional(element) || (tel.test(value));    
+            }, "请正确填写的IP。");
+            jQuery.validator.addMethod("isPort", function(value, element) {    
+              var tel = /^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/;    
+              return this.optional(element) || (tel.test(value));    
+              }, "请正确填写的端口号。");
+         })
+        function saveForm() {
+             $("form").submit();
+        }
+        function validateForm() {
+             $("#MFForm").validate({
+                 ignore: "",
+                 rules: {
+                     Num: "required",
+                     AccessName: "required",
+                     Brand:"required",
+                     Ip: {
+                         required: true,
+                         isIP: true
+                     },
+                     Port: {
+                         required: true,
+                         isPort: true
+                     },
+                     UserName: "required",
+                     PassWord: "required"
+                    
+                     //StationName:"required"
+                },
+                messages: {
+                    Num: "请输入门禁编号",
+                    AccessName: "请输入门禁名称",
+                    Brand: "请选择门禁品牌",
+                    Ip: {
+                         required: "请输入IP",
+                         isIP: "请输入正确的IP"
+                     },
+                    Port: {
+                         required: "请输入端口号",
+                         isIP: "请输入正确的端口号"
+                    },
+                    UserName: "请输入用户名",
+                    PassWord: "请输入密码"
+                   
+                    //StationName:"请选择泵房"
+                   
+                }
+            });
+        }
+        function _addFun(data) {
+            if (data == "ok") {
+                parent.layer.close(index);
+                parent.refreshTable();
+                parent.layer.msg("操作成功");
+            }
+            else {
+                if (data == "has") {
+                     layer.msg("门禁编号重复");
+                }
+                else {
+
+                    layer.msg("操作失败");
+                }
+               
+            }
+        }
+        //选择泵房
+        function SelectStation(stationid) {
+            parent.iframeWithBtns("泵房选择", "80%", "90%", "/Sws/Sws_AccessControl/SelectStationInfo", false, function (formIndex, formLayer) {
+                    var currentIframe =parent.window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm1(function (stationid,stationname) {
+                        $("#StationId").val(stationid);
+                        $("#StationName").val(stationname);
+                        parent.layer.close(formIndex);
+                        if ($('#StationName-error').length > 0) {
+
+                            $('#StationName-error').css("display", "none");
+                            $('#StationName').removeClass("error");
+                        }
+                       
+                    });
+                });
+             
+        }
+       
+       
+     </script>
+</body>
+</html>

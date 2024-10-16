@@ -1,0 +1,371 @@
+﻿
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="keywords" content="智慧供水平台">
+    <meta name="description" content="智慧供水平台">
+    <title>数据分析</title>
+    <link rel="stylesheet" href="/mobile/css/reset.css">
+    <link rel="stylesheet" href="/mobile/css/common.css">
+    <link rel="stylesheet" href="/mobile/css/theme1.css">
+    <script src="/mobile/js/plugins/adaption.js"></script>
+</head>
+<body>
+    <div class="window-height fixed">
+        <div class="tab-primary full-height">
+            <div class="tab-nav">
+                <a href="javascript:;" class="item active">图表分析</a>
+                <a href="javascript:;" class="item">数据报表</a>
+            </div>
+            <div class="tab-content">
+                <div class="tab-content-item filter">
+                    <div class="filter-container">
+                        <form id="formFilter1" class="form form-filter clearfix">
+                            <div class="form-group">
+                                <div class="label">日期范围：</div>
+                                <input type="text" name="timeInterval1" class="form-control advanceDate time-dhm-range" placeholder="开始时间-结束时间">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="searchType1" name="searchType1" value="" class="form-control select searchType" data-id="searchType1" readonly="" style="width: 1rem;">
+                            </div>
+                            <div class="btn-group fr">
+                                <button type="submit" class="btn btn-primary">查询</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-content-wrap full-height">
+                        <!-- 1、图表分析 -->
+                        <div id="echarts1" class="echarts"></div>
+
+                        <div class="nothing absolute">
+                            <div class="nothing-content">
+                                <div class="icon"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content-item filter">
+                    <div class="filter-container">
+                        <form id="formFilter2" class="form form-filter clearfix">
+                            <div class="form-group">
+                                <div class="label">日期范围：</div>
+                                <input type="text" name="timeInterval2" class="form-control advanceDate time-dhm-range" placeholder="开始时间-结束时间">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="searchType2" name="searchType2" value="" class="form-control select searchType" data-id="searchType2" readonly="" style="width: 1rem;">
+                            </div>
+                            <div class="btn-group fr">
+                                <button type="submit" class="btn btn-primary">查询</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-content-wrap full-height">
+                        <table id="table2" class="table table-data">
+                        </table>
+
+                        <div class="nothing absolute">
+                            <div class="nothing-content">
+                                <div class="icon"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设置时间框宽度，仅供占位使用 -->
+    <div class="time-value-content time-width-dhm-range">2021-01-01 00:00 ~ 2021-07-05 21:00</div>
+    <div class="time-value-content time-width-d-range">2021-01-01 ~ 2021-07-05</div>
+
+    <script src="/mobile/js/libs/jquery-1.12.4/jquery-1.12.4.min.js"></script>
+    <script src="/mobile/js/libs/layer/layer.js"></script>
+
+    <script src="/mobile/js/plugins/echarts/echarts.js"></script>
+    <script src="/mobile/js/plugins/echarts/customed.js"></script>
+
+    <link rel="stylesheet" href="/mobile/js/plugins/mobiscroll-date/mobiscroll.min.css">
+    <script src="/mobile/js/plugins/mobiscroll-date/mobiscroll.js"></script>
+
+    <link rel="stylesheet" href="/mobile/js/plugins/mobileSelect/mobileSelect.css">
+    <script src="/mobile/js/plugins/mobileSelect/mobileSelect.min.js"></script>
+
+    <script src="/mobile/js/common.js"></script>
+
+    <script>
+        var cnname;
+        /**
+         * 图表配置
+         */
+        var echartsApp = [],
+            // 1、图表曲线
+            options1 = {
+                color: ['#ff8a8a', '#75b1ff'],
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var html = params[0].name + '<br />';
+                        for (var i = 0; i < params.length; i++) {
+                            html += params[i].marker + params[i].seriesName + '：' + params[i].value + 'kW·h<br>'
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    top: 35,
+                    left: .14 * baseSize,
+                    right: .28 * baseSize,
+                    bottom: .14 * baseSize,
+                    containLabel: true
+                },
+                dataZoom: [
+                    {
+                        show: true,
+                        height: 20,
+                        xAxisIndex: [0],
+                        bottom: 5,
+                        "start": 0,
+                        "end": 100,
+                        handleStyle: {
+                            color: "#5B3AAE",
+                        },
+                    }, {
+                        type: "inside",
+                        show: true,
+                        height: 15,
+                        start: 1,
+                        end: 35
+                    },
+                ],
+                legend: {
+                    right: .14 * baseSize,
+                    top: 0,
+                    data: ['累计流量', '累计电量']
+                },
+                xAxis: [{
+                    type: 'category',
+                    axisLabel: {
+                        formatter: function (value) {
+                            value = value.replace(' ', '\n');
+                            return value;
+                        }
+                    },
+                    data: [],
+                }],
+                yAxis: [{
+                    type: 'value',
+                }],
+                series: [
+                    {
+                        name: '累计流量',
+                        type: 'bar',
+                        barWidth: 12,
+                        barGap: '50%',
+                        itemStyle: {
+                            normal: {
+                                barBorderRadius: [30, 30, 0, 0],
+                            }
+                        },
+                        data: []
+                    }, {
+                        name: '累计电量',
+                        type: 'bar',
+                        barWidth: 12,
+                        barGap: '50%',
+                        itemStyle: {
+                            normal: {
+                                barBorderRadius: [30, 30, 0, 0],
+                            }
+                        },
+                        data: []
+                    }
+                ]
+            };
+
+        $(function () {
+            /**
+             * 选项卡切换
+             */
+            tabNavClick();
+
+            /**
+             * 日期范围
+             */
+            $('.advanceDate').each(function () {
+                $(this).mobiscroll().range({
+                    theme: 'android-holo-light',
+                    lang: 'zh',
+                    dateFormat: 'yyyy-mm-dd',
+                    dateOrder: 'yyyymmdd',
+                    display: 'center',
+                    controls: ['datetime'],
+                    max: new Date(),
+                    defaultValue: [new Date(), new Date()]
+                });
+            });
+
+            /**
+             * 查询类型
+             */
+            $('.searchType').each(function () {
+                var id = $(this).data('id');
+                
+                new MobileSelect({
+                    trigger: '#' + id,
+                    title: '',
+                    wheels: [
+                        {
+                            data: ['余氯', '浊度', 'PH', '溶解氧', 'OPP', '盐度'],
+                        }
+                    ],
+                    callback: function (indexArr, data) {
+                       
+                        // 赋值输入框
+                        $('#' + id).val(data[0]);
+                    }
+                });
+            });
+
+            /**
+             * 搜索表单
+             */
+            // 图表分析搜索
+            $('#formFilter1').submit(function () {
+                console.log('1您搜索的条件是：');
+                var $timeInterval = $('input[name="timeInterval1"]'),
+                    $searchType = $('input[name="searchType1"]');
+
+                if ($timeInterval.val() == '') {
+                    $timeInterval.trigger('click');
+                    return false;
+                }
+                else if ($searchType.val() == '') {
+                    $searchType.trigger('click');
+                    return false;
+                }
+
+                var timeIntervalArr = $timeInterval.val().split(' - ');
+                console.log('您搜索的条件是：');
+                console.log(timeIntervalArr[0]);
+                console.log(timeIntervalArr[1]);
+                console.log($searchType.val());
+                cnname = $searchType.val();
+                getData1(cnname, timeIntervalArr[0], timeIntervalArr[1]);
+                //return false;
+            });
+
+            // 数据报表搜索
+            $('#formFilter2').submit(function () {
+                console.log('2您搜索的条件是：');
+                var $timeInterval = $('input[name="timeInterval2"]'),
+                    $searchType = $('input[name="searchType2"]');
+
+                if ($timeInterval.val() == '') {
+                    $timeInterval.trigger('click');
+                    return false;
+                }
+                else if ($searchType.val() == '') {
+                    $searchType.trigger('click');
+                    return false;
+                }
+
+                var timeIntervalArr = $timeInterval.val().split(' - ');
+                console.log('您搜索的条件是：');
+                console.log(timeIntervalArr[0]);
+                console.log(timeIntervalArr[1]);
+                console.log($searchType.val());
+
+                return false;
+            });
+
+            /**
+             * 初始化图表
+             */
+            // 1、图表曲线
+            echartsApp[1] = echarts.init($('#echarts1')[0], 'customed');
+            echartsApp[1].setOption(options1);
+
+            // 1、图表曲线
+            getData1();
+
+            // 2、数据报表
+            getData2();
+        });
+
+        /**
+         * ***** 数据绑定 *****
+         */
+        /**
+         * 1、实时曲线
+         */
+        function getData1(dataid,beginDate,endDate) {
+            /**
+             * 模拟获取到的数据
+             */
+       
+
+            $.post("/Sws/WaterAnalysis/GetOverLayTimeHistory",
+                {
+                    Cnname: cnname,
+                    beginDate: beginDate,
+                    endDate: endDate,
+                    deviceID: @ViewBag.did       
+                },
+                function (data)
+                {
+                    console.log(data.result);
+                    var nuits = data.datainfo;
+                    console.log(data.result.length);
+                    if (data.result.length > 0)  {
+                        $('#echarts1').show().next().hide();
+                       
+                        //options1.xAxis[0].data = data.result.name;
+                        options1.xAxis[0].data = ['10-06 08:00', '10-06 08:10', '10-06 08:20', '10-06 08:30', '10-06 08:40', '10-06 08:50', '10-06 09:00'];
+                        options1.series[0].data = data.result.data;
+                     //options1.series[1].data = [6, 6, 3, 2, 5, 3, 6];
+                       // options1.series[0].data = [6, 6, 3, 2, 5, 3, 6];
+                        echartsApp[1].setOption(options1, true);
+                    }
+                    else {
+                        // 空数据提示
+                         
+                        //$('#echarts1').hide().next().show();
+                    }
+                }
+            );
+          
+            
+        }
+
+        /**
+         * 数据报表
+         */
+        function getData2() {
+            /**
+             * 模拟获取到的数据
+             */
+            var res = {
+                code: 0,
+            };
+
+            if (res.code == 0) {
+                var html = '<tbody><tr><td>时间</td><td>总用电量(kW·h)</td><td>1#累计用电量(kW·h)</td><td>2#累计用电量(kW·h)</td><td>3#累计用电量(kW·h)</td><td>4#累计用电量(kW·h)</td></tr><tr><td>平均值</td><td>0</td><td>--</td><td>--</td><td>--</td><td>--</td></tr><tr><td>时间</td><td>总用电量(kW·h)</td><td>1#累计用电量(kW·h)</td><td>2#累计用电量(kW·h)</td><td>3#累计用电量(kW·h)</td><td>4#累计用电量(kW·h)</td></tr><tr><td>平均值</td><td>0</td><td>--</td><td>--</td><td>--</td><td>--</td></tr><tr><td>时间</td><td>总用电量(kW·h)</td><td>1#累计用电量(kW·h)</td><td>2#累计用电量(kW·h)</td><td>3#累计用电量(kW·h)</td><td>4#累计用电量(kW·h)</td></tr><tr><td>平均值</td><td>0</td><td>--</td><td>--</td><td>--</td><td>--</td></tr><tr><td>时间</td><td>总用电量(kW·h)</td><td>1#累计用电量(kW·h)</td><td>2#累计用电量(kW·h)</td><td>3#累计用电量(kW·h)</td><td>4#累计用电量(kW·h)</td></tr><tr><td>平均值</td><td>0</td><td>--</td><td>--</td><td>--</td><td>--</td></tr><tr><td>时间</td><td>总用电量(kW·h)</td><td>1#累计用电量(kW·h)</td><td>2#累计用电量(kW·h)</td><td>3#累计用电量(kW·h)</td><td>4#累计用电量(kW·h)</td></tr><tr><td>平均值</td><td>0</td><td>--</td><td>--</td><td>--</td><td>--</td></tr></tbody>';
+                $('#table2').html(html);
+            }
+            else {
+                // 空数据提示
+                $('#table2').hide().next().show();
+            }
+        }
+    </script>
+</body>
+</html>

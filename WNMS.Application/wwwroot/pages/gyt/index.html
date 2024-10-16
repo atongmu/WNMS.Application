@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>深井泵工艺图</title>
+<link rel="stylesheet" type="text/css" href="css/layui.css"/>
+<link rel="stylesheet" type="text/css" href="css/normalize.css"/>
+<link rel="stylesheet" type="text/css" href="css/hyl2.css" />
+<link rel="stylesheet" type="text/css" href="css/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="css/animate.css"/>
+<link rel="stylesheet" type="text/css" href="css/noticejs.css"/>
+</head>
+<body>
+	<div class="ibox relative">
+		<!--
+        	作者：hyl
+        	时间：2019-12-12
+        	描述：gyt img
+       -->				
+		<div class="ditu">
+			<!-- 底图 -->
+			<div class="bg1"></div>
+			<!-- 深井泵 -->
+			<div class="bg2"></div>
+			
+			<div class="jingwater">
+				<!-- 深井液位  -->
+				<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave"><defs></defs><path id="feel-the-wave" d="M 0 124.30723895345872 C 180 148.95836124426083 180 148.95836124426083 360 136.63280009885978 C 540 124.30723895345872 540 124.30723895345872 720 139.65475793925918 C 900 155.00227692505962 900 155.00227692505962 1080 132.31745565873254 C 1260 109.63263439240545 1260 109.63263439240545 1440 139.65475793925918 L 1440 683 L 0 683 Z" fill="#7BA8EB"></path></svg>
+				<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave"><defs></defs><path id="feel-the-wave-two" d="M 0 98.25730896788401 C 240 80.07254501985514 240 80.07254501985514 480 89.16492699386959 C 720 98.25730896788401 720 98.25730896788401 960 71.64635340791777 C 1200 45.0353978479515 1200 45.0353978479515 1440 80.46222454559705 L 1440 683 L 0 683 Z" fill="#4782DC"></path></svg>
+			</div>
+			
+			<!-- 水池液位 -->
+			<div class="scwater">
+				<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave"><defs></defs><path id="feel-the-wave2" d="M 0 124.30723895345872 C 180 148.95836124426083 180 148.95836124426083 360 136.63280009885978 C 540 124.30723895345872 540 124.30723895345872 720 139.65475793925918 C 900 155.00227692505962 900 155.00227692505962 1080 132.31745565873254 C 1260 109.63263439240545 1260 109.63263439240545 1440 139.65475793925918 L 1440 683 L 0 683 Z" fill="#7BA8EB"></path></svg>
+				<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" class="wave"><defs></defs><path id="feel-the-wave-two2" d="M 0 98.25730896788401 C 240 80.07254501985514 240 80.07254501985514 480 89.16492699386959 C 720 98.25730896788401 720 98.25730896788401 960 71.64635340791777 C 1200 45.0353978479515 1200 45.0353978479515 1440 80.46222454559705 L 1440 683 L 0 683 Z" fill="#4782DC"></path></svg>
+			</div>
+		</div>
+		<!--
+        	作者：hyl
+        	时间：2019-12-12
+        	描述：text
+        -->
+        <div class="txt1 bgGray overflow">
+        	<span class="left">
+        		<i class="iconfont icon-shujuguanlisvg79"></i>
+        	</span>
+        	<span class="left">
+        		<em>高液位休眠</em>
+        		<em>2.76m</em>
+        	</span>
+        </div>
+        <div class="txt2 bgGray overflow">
+        	<span class="left">
+        		<i class="iconfont icon-shujuguanlisvg90"></i>
+        	</span>
+        	<span class="left">
+        		<em>低液位休眠</em>
+        		<em>0.67m</em>
+        	</span>
+        </div>
+        <div class="txt3 textCenter bgGray2 overflow">     	
+        	<span>深井液位：2.06m</span>
+        </div>
+        <div class="txt4 bgGray overflow">
+        	<span class="left xz">
+        		<i class="iconfont f24px icon-bengye"></i>
+        	</span>
+        	<span class="left">
+        		<form class="layui-form" action="">
+	        		<em>阀门控制</em>
+	        		<em>
+	        			<input type="checkbox" lay-skin="switch" lay-filter="switchTest" lay-text="开启|关闭" checked>
+	        		</em>
+        		</form>
+        	</span>
+        </div>
+        <div class="txt5 textCenter bgGray2 overflow">     	
+        	<span>水池液位：1.05m</span>
+        </div>
+        
+        <svg viewBox="0 0 1200 680" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:11;">           
+            <path class="path1" d="M 348 600 V355 Q345 345 363 344 H493 Q503 344 503 353 V425 Q503 425 510 433 H565 Q575 433 575 423 V234 Q575 224 595 224 H620" stroke-width="5" stroke="#4782DC" stroke-dasharray='8 3' fill="none"></path>       	
+        	<path class="path1" d="M 710 224 H850 Q866 224 866 234 V270" stroke-width="5" stroke="#4782DC" stroke-dasharray='8 3' fill="none"></path>       	
+        </svg>
+        
+       	<div class="textCenter">
+       		<button id="big" class="layui-btn layui-btn-sm layui-btn-normal">放大</button> 
+       		<button id="small" class="layui-btn layui-btn-sm layui-btn-normal">缩小</button>
+       		<button id="normal" class="layui-btn layui-btn-sm layui-btn-normal">还原</button>
+       	</div>
+	</div>
+	
+</body>
+
+<script type="text/javascript" src="js/TweenMax.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="js/wavify.js"></script>
+<script type="text/javascript" src="js/jquery.wavify.js"></script>
+<script src="js/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/notice.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="js/hyl.js" charset="utf-8"></script>
+</html>

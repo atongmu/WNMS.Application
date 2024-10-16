@@ -1,0 +1,27 @@
+html,body{height:100%;}
+.hide{display:none;}
+@keyframes water{
+    0%{
+        stroke-dashoffset: 100;       
+    }
+   100%{
+        stroke-dashoffset: 0;
+    }
+}
+.path1{
+    animation: water 5s infinite linear;    
+}
+
+.shanye_1{
+	-webkit-animation:xuanzhan 5s linear infinite;
+	animation:xuanzhan 5s linear infinite;
+	
+	}
+@-webkit-keyframes xuanzhan{
+	0%{-webkit-transform:rotate(0deg);}
+	100%{-webkit-transform:rotate(360deg);}
+}
+@keyframes xuanzhan{
+	0%{transform:rotate(0deg);}
+	100%{transform:rotate(360deg);}
+}

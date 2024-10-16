@@ -1,0 +1,88 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GetStationPosition</title>
+    <script src="~/js/jquery.min.js"></script>
+    <link href="~/leafletmap/css/leaflet.css" rel="stylesheet" />
+    <script src="~/leafletmap/1.3.1/leaflet.js"></script>
+    <script src="~/leafletmap/lib/esri-leaflet-v3.0.4/esri-leaflet.js"></script>
+
+    <script src="~/leafletmap/plugins/Proj4Leaflet-master/proj4.js"></script>
+    <script src="~/leafletmap/plugins/Proj4Leaflet-master/proj4leaflet.js"></script>
+    <style>
+        .amap-icon img,
+        .amap-marker-content img {
+            width: 25px;
+            height: 34px;
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        .amap-logo, .amap-copyright {
+            display: none !important;
+        }
+    </style>
+
+</head>
+<body style="margin:0">
+    <div id="zlw-scjkmainmitopkditu" style="height:calc(100% - 10px)"></div>
+    <script>
+
+        var lng =@ViewBag.lng;
+        var lat = @ViewBag.lat;
+        var stationnum = "@ViewBag.StationNum";
+        var stationName = "@Html.Raw(ViewBag.StationName)";
+        var address = "";
+
+        var myIcon = L.icon({
+            iconUrl: '../../../images/定位.png',
+            iconSize: [35,35]
+        });
+        var crs1 = new L.Proj.CRS("EPSG:2436", "+proj=tmerc +lat_0=0 +lon_0=117 +k=1 +x_0=500000 +y_0=0 +ellps=krass +towgs84=15.8,-154.4,-82.3,0,0,0,0 +units=m +no_defs",
+        {
+            origin: [-5123300.0, 10002300],  // 将刚刚的 Origin 复制到这里
+            resolutions: [                 // 所有的分辨率复制到这里
+                76.43695495724326,
+                38.21834518669038,
+                19.109040301413938,
+                9.554387858775717,
+                4.777061637456608,
+                2.3883985267970536,
+                1.1940669714672763,
+                0.5969011938023876,
+                0.2984505969011938
+            ]
+            /*bounds: L.bounds([516911.9087096499, 2739564.213902506], [522879.9046456418, 2744911.94059796])*/
+        });
+
+        var centerPoint = new L.LatLng(lat, lng);
+        var num = 3;
+        var map = L.map('zlw-scjkmainmitopkditu', { crs: crs1 }).setView(centerPoint, 2);
+        var tileMapLayer = L.esri.tiledMapLayer({
+            minzoom: 0,
+            maxzoom: 10,
+            url: "@ViewBag.arcgisUrl"
+        });
+
+        map.addLayer(tileMapLayer);
+
+        var marker = L.marker([lat, lng], { icon: myIcon, title: stationName}).addTo(map);
+
+        var content = "<p style='margin-top: 10px;font-weight: bold;'><span>泵房编号 :</span><span style='color: green;'>" + stationnum + "</span></p><p style='font-weight: bold;margin-top: -5px;'><span>泵房名称 :</span><span style='color: green;'>" + stationName + "</span></p><p style='font-weight: bold;margin-top: -5px;' class='input-item'><span>泵房地址 :</span><span style='color: green;'>" + address + "</span></p>"
+
+        marker.on("click", function () {
+            marker.bindPopup(content).openPopup();
+        });
+
+    </script>
+</body>
+</html>

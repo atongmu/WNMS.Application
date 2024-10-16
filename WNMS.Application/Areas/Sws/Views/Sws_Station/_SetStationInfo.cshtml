@@ -1,0 +1,892 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_SetStationInfo</title>
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/lib/webuploader/webuploader.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-datepicker.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <!--图片上传-->
+    <script src="~/lib/webuploader/webuploader.min.js"></script>
+    <link href="~/lib/image-upload/css/helper.css" rel="stylesheet" />
+    @*<link href="~/lib/image-upload/css/style.css" rel="stylesheet" />*@
+    <link href="~/lib/image-upload/style.css" rel="stylesheet" />
+    <script src="~/lib/image-upload/upload1.js"></script>
+    <style>
+        .star {
+            position: absolute;
+            left: 59px;
+            top: -4px;
+            font-size: 25px;
+            color: red;
+        }
+
+        .nav-tabs-custom > .nav-tabs > li {
+            margin-right: 0
+        }
+
+        .nav-tabs-custom {
+            box-shadow: none
+        }
+
+        #filePicker div:nth-child(2) {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        #filePicker2 div:nth-child(1) {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        #uploader .queueList {
+            margin: 10px;
+        }
+
+        #rt_rt_1d9jnfk57oli12g5t8hvtugn11 {
+            display: none;
+        }
+
+        .upload_box {
+            padding: 0px;
+            max-height: 240px;
+            overflow-y: auto;
+            margin: 0;
+        }
+
+            .upload_box .upload_list {
+                padding: 10px 5px;
+                border-bottom: 1px solid #ddd;
+                position: relative;
+            }
+
+                .upload_box .upload_list:last-child {
+                    border: none;
+                }
+
+                .upload_box .upload_list img {
+                    width: 25px;
+                    height: 35px;
+                    margin-right: 10px;
+                    cursor: pointer;
+                }
+
+                .upload_box .upload_list label {
+                    cursor: pointer;
+                    font-weight: 500;
+                    color: #242424;
+                    font-size: 14px;
+                }
+
+                .upload_box .upload_list span {
+                    float: right;
+                }
+
+                    .upload_box .upload_list span i {
+                        font-size: 22px;
+                        cursor: pointer;
+                        line-height: 37px;
+                    }
+
+                        .upload_box .upload_list span i.fa-check-circle {
+                            color: #5cb95c;
+                            margin-right: 5px;
+                        }
+
+                        .upload_box .upload_list span i.fa-cloud-download {
+                            color: #3499db;
+                            margin-right: 5px;
+                        }
+
+                        .upload_box .upload_list span i.fa-minus-circle {
+                            color: #bb4a48;
+                            margin-right: 5px;
+                        }
+
+        .lr-uploader-progress {
+            position: absolute;
+            bottom: 2px;
+            left: 60px;
+            height: 4px;
+            width: 500px;
+            width: calc(100% - 90px);
+        }
+
+        .lr-uploader-progress-bar {
+            position: relative;
+            height: 100%;
+            background-color: #039cfd;
+            border-radius: 4px;
+        }
+
+        .zlw_gs label {
+            line-height: 35px;
+            margin-bottom: 0px;
+        }
+
+            .zlw_gs label span {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                padding-top: 5px;
+                float: left;
+                margin-left: 5px;
+            }
+
+            .zlw_gs label i {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                float: left;
+                font-weight: bold;
+            }
+
+        .nav-tabs-custom > .nav-tabs > li > a:hover {
+            background: #d2ebff;
+            color: #333;
+        }
+
+        label.error {
+            top: 60px;
+        }
+    </style>
+</head>
+<body style="color: #333;">
+    @model WNMS.Model.DataModels.SwsStation
+    <!-- Custom Tabs -->
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1" data-toggle="tab">泵房信息(必填)</a></li>
+            <li><a href="#tab_2" data-toggle="tab">泵房信息</a></li>
+            <li><a href="#tab_3" data-toggle="tab">设备信息</a></li>
+            <li><a href="#tab_4" data-toggle="tab">附件信息</a></li>
+
+        </ul>
+        <div class="tab-content" style="padding:20px 20px 0">
+            <div class="tab-pane active" id="tab_1">
+                @*<div style="padding:20px">*@
+                <form id="basefrom">
+                    <input id="StationID" name="StationID" type="hidden" value="@Model.StationId" />
+                    <input id="CreateTime" name="CreateTime" type="hidden" value="@Model.CreateTime" />
+                    <input id="InType" name="InType" type="hidden" value="@Model.InType" />
+                    <input id="GuiNum" name="GuiNum" type="hidden" value="@Model.GuiNum" />
+                    <input id="DoorID" name="DoorID" type="hidden" value="@Model.DoorId" />
+                    <select name="DoorInsert" id="DoorInsert" style="display:none">
+                        @{ if (Model.DoorInsert == true)
+                            {
+                                <option value="true" selected="selected">是</option>
+                                <option value="false">否</option>
+                            }
+                            else
+                            {
+                                <option value="true">是</option>
+                                <option value="false" selected="selected">否</option>
+                            }
+                        }
+                    </select>
+                    <select name="CameraMonitor" id="CameraMonitor" style="display:none">
+                        @{ if (Model.CameraMonitor == true)
+                            {
+                                <option value="true" selected="selected">是</option>
+                                <option value="false">否</option>
+                            }
+                            else
+                            {
+                                <option value="true">是</option>
+                                <option value="false" selected="selected">否</option>
+                            }
+                        }
+                    </select>
+                    <select name="WaterDisinfection" id="WaterDisinfection" style="display:none">
+                        @{ if (Model.WaterDisinfection == true)
+                            {
+                                <option value="true" selected="selected">是</option>
+                                <option value="false">否</option>
+                            }
+                            else
+                            {
+                                <option value="true">是</option>
+                                <option value="false" selected="selected">否</option>
+                            }
+                        }
+                    </select>
+
+
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group relative">
+                                            <label for="DeviceNum">泵房编号</label><span class="star">*</span>
+                                            <input type="text" class="form-control" id="StationNum" name="StationNum" placeholder="WWG-001" value="@Model.StationNum" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group relative">
+                                            <label for="DeviceName">泵房名称<span class="star">*</span></label>
+                                            <input type="text" class="form-control" id="StationName" name="StationName" placeholder="" value="@Model.StationName" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group relative">
+                                            <label for="InstallationDate">安装日期<span class="star">*</span></label>
+                                            <input type="text" class="form-control" name="InstallationDate" id="InstallationDate" value="@Model.InstallationDate" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group relative">
+                                            <label for="AcceptanceDate">验收日期<span class="star">*</span></label>
+                                            <input type="text" class="form-control" name="AcceptanceDate" id="AcceptanceDate" value="@Model.AcceptanceDate" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group relative">
+                                            <label for="QualityEndDate">质保结束日期<span class="star" style="left:86px">*</span></label>
+                                            <input type="text" class="form-control" name="QualityEndDate" id="QualityEndDate" value="@Model.QualityEndDate" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="QualityEndDate">配置坐标</label>
+                                            <input type="button" value="配置坐标" id="btnGIS" name="btnGIS" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group relative">
+                                            <label for="Lng">经度<span class="star" style="left:32px">*</span></label>
+                                            <input type="text" class="form-control" name="Lng" id="Lng" value="@Model.Lng" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group relative">
+                                            <label for="Lat">纬度<span class="star" style="left:32px">*</span></label>
+
+                                            <input type="text" class="form-control" name="Lat" id="Lat" value="@Model.Lat" autocomplete="off">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </form>
+
+                @*</div>*@
+            </div>
+            <div class="tab-pane" id="tab_2">
+                <div>
+                    <form id="Stationfrom">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="Partition">泵房类型</label>
+                                                <select id="StaitonType" name="StaitonType" class="form-control">
+                                                    @{
+                                                        var typeList = ViewBag.typelist as IEnumerable<WNMS.Model.DataModels.SysDataItemDetail>;
+
+                                                        foreach (var dt in typeList)
+                                                        {
+                                                            if (Model.StaitonType == int.Parse(dt.ItemValue))
+                                                            {
+                                                                <option value="@dt.ItemValue" selected="selected">@dt.ItemName</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@dt.ItemValue">@dt.ItemName</option>
+                                                            }
+                                                        }
+                                                    }
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="OccupancyRate">入住率(%)</label>
+
+                                                <input type="text" class="form-control" id="OccupancyRate" name="OccupancyRate" placeholder="请输入入住率" value="@Model.OccupancyRate" autocomplete="off">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="InspectionCycle">巡检周期(月一次)</label>
+                                                <input type="text" class="form-control" id="InspectionCycle" name="InspectionCycle" placeholder="请输入巡检周期" value="@Model.InspectionCycle" autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="InspectionCycle">保养周期(月一次)</label>
+                                                <input type="text" class="form-control" id="MaintenanceCycle" name="MaintenanceCycle" placeholder="请输入保养周期" value="@Model.MaintenanceCycle" autocomplete="off">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="CleaningCycle">水箱清洗周期(月一次)</label>
+
+                                                <input type="text" class="form-control" id="CleaningCycle" name="CleaningCycle" placeholder="请输入水箱清洗周期" value="@Model.CleaningCycle" autocomplete="off">
+
+                                            </div>
+                                        </div>
+                                        @*<div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="Manager">负责人</label>
+
+                                                <input type="text" class="form-control" id="Manager" name="Manager" placeholder="请输入负责人" value="@Model.Manager" autocomplete="off">
+
+                                            </div>
+                                        </div>*@
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="Manager">负责人</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-suitcase"></i>
+                                                    </div>
+                                                    <select id="Manager" name="Manager" class="form-control">
+                                                        <option value="">==请选择==</option>
+                                                        @{
+                                                            IEnumerable<SysUser> userList = ViewBag.UserList as IEnumerable<SysUser>;
+                                                            string phone = "";
+                                                            foreach (var u in userList)
+                                                            {
+                                                                phone = u.Phone;
+                                                                if (Model.Manager == u.UserId)
+                                                                {
+                                                                    <option value="@u.UserId" data-phone="@u.Phone" selected="selected">@u.NickName</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option data-phone="@u.Phone" value="@u.UserId">@u.NickName</option>
+                                                                }
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="ManagerPhone">负责人电话</label>
+                                                @if (!string.IsNullOrEmpty(Model.ManagerPhone))
+                                                {
+                                                    <input type="text" class="form-control" id="ManagerPhone" name="ManagerPhone" placeholder="请输入负责人电话" value="@Model.ManagerPhone" autocomplete="off">
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" class="form-control" id="ManagerPhone" name="ManagerPhone" placeholder="请输入负责人电话" value="@phone" autocomplete="off">
+                                                }
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label for="Remark">备注</label>
+                                                <textarea id="Remark" name="Remark" rows="2" cols="20" class="form-control">@Model.Remark</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_3">
+                <div>
+                    <form id="Devicefrom">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="WaterTankNum">水箱个数</label>
+
+                                                <input type="text" class="form-control" id="WaterTankNum" name="WaterTankNum" placeholder="请输入水箱个数" value="@Model.WaterTankNum" autocomplete="off">
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="SwitchingCycle">换药周期</label>
+
+                                                <input type="text" class="form-control" id="SwitchingCycle" name="SwitchingCycle" placeholder="请输入换药周期" value="@Model.SwitchingCycle" autocomplete="off">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="WaterTankPublic">水箱是否公用</label>
+
+                                                <select id="WaterTankPublic" name="WaterTankPublic" class="form-control">
+                                                    @{
+                                                        if (Model.WaterTankPublic == true)
+                                                        {
+                                                            <option value="True" selected="selected">是</option>
+                                                            <option value="False">否</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="True">是</option>
+                                                            <option value="False" selected="selected">否</option>
+                                                        }
+                                                    }
+                                                </select>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="ControlMonitor">控制接入</label>
+
+                                                <select id="ControlMonitor" name="ControlMonitor" class="form-control">
+                                                    @{
+                                                        if (Model.ControlMonitor == true)
+                                                        {
+                                                            <option value="True" selected="selected">是</option>
+                                                            <option value="False">否</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="True">是</option>
+                                                            <option value="False" selected="selected">否</option>
+                                                        }
+                                                    }
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="WaterQualityMonitor">水质接入</label>
+
+                                                <select id="WaterQualityMonitor" name="WaterQualityMonitor" class="form-control">
+                                                    @{
+                                                        if (Model.WaterQualityMonitor == true)
+                                                        {
+                                                            <option value="True" selected="selected">是</option>
+                                                            <option value="False">否</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="True">是</option>
+                                                            <option value="False" selected="selected">否</option>
+                                                        }
+                                                    }
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_4">
+                <input id="ID" type="hidden" name="ID" />  @*主键*@
+                <div class="form-group" id="filelist">
+
+                    <label>附件<i class="ion-compose"></i></label>
+
+                    <div id="wrapper" style="border-radius:3px;">
+                        <div id="container">
+                            <!--头部，相册选择和格式选择-->
+                            <div id="uploader">
+                                <div class="queueList">
+                                    <div id="dndArea" class="placeholder">
+                                        <div id="filePicker" style="display:block;width:100%;z-index:999"></div>
+                                        <p style="margin-bottom:25px;">或将照片拖到这里，单次最多可选300张</p>
+                                    </div>
+                                </div>
+                                <div class="statusBar" style="display:none;">
+                                    <div class="progress">
+                                        <span class="text">0%</span>
+                                        <span class="percentage"></span>
+                                    </div><div class="info"></div>
+                                    <div class="btns">
+                                        <div id="filePicker2"></div><div class="uploadBtn" style="position:relative;left:10px">开始上传</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/adminlte.lite.js"></script>
+    <script type="text/javascript">
+        var _loading = null;
+        var index = parent.layer.getFrameIndex(window.name);
+        var id = $("#StationID").val();
+        var idName = "StationID";
+        var ControllerName = "Sws_Station";
+        var classifyName = "泵房";
+        $(function () {
+
+            if (@Model.StationId== 0) {
+                $("#Lng").val("");
+                $("#Lat").val("");
+                $("#InstallationDate").val("");
+                $("#AcceptanceDate").val("");
+                $("#QualityEndDate").val("");
+            }
+            else {
+                $("#StationNum").attr("readonly", "readonly");
+                //$("#StationNum").css("");
+            }
+              // 联系电话(手机/电话皆可)验证
+            jQuery.validator.addMethod("isTel", function(value,element) {
+                var length = value.length;
+                var mobile = /^(((13[0-9]{1})|(15[0-9]{1}))+\d{8})$/;
+                var tel = /^(\d{3,4}-?)?\d{7,9}$/g;
+                return this.optional(element) || tel.test(value) || (length==11 && mobile.test(value));
+             }, "请正确填写您的联系方式");
+
+        })
+        function execute() {
+
+            if ($("input.error").length > 0) {
+                return;
+            }
+
+            var baseinfo = JSON.stringify($("#basefrom").serializeObject());
+            var Stationinfo = JSON.stringify($("#Stationfrom").serializeObject());
+            var deviceInfo = JSON.stringify($("#Devicefrom").serializeObject());
+            var urls = geturl();
+            var sizes = getsize();
+            var suffixs = getsuffix();
+            var names = getname();
+            if ($("input.error").length == 0) {
+                _loading = layer.load(1, { shade: false });
+                $.post("/Sws/Sws_Station/SetStationInfo", {
+                    baseinfo: baseinfo,
+                    Stationinfo: Stationinfo,
+                    deviceInfo: deviceInfo,
+                    urls: urls,
+                    sizes: sizes,
+                    suffixs: suffixs,
+                    names: names,
+                    idFlag:$("#ID").val()
+                }, function (data) {
+                    layer.close(_loading);
+                        if (data == "ok") {
+                            parent.refreshTable();
+                            parent.layer.close(index);
+                            parent.layer.msg("操作成功");
+                        }
+                        else {
+                            if (data == "has") {
+                                layer.msg("泵房编码重复，请修改泵房编码");
+                            }
+                            else {
+                                layer.msg("操作失败");
+                            }
+                        }
+
+                })
+            }
+        }
+        function geturl() {
+            var urls = $("#filelist").find("[name='url']");
+            var urlstring = "";
+            for (var i = 0; i < urls.length; i++) {
+                urlstring+= urls[i].value+"|";
+            }
+            if (urlstring != "") {
+                urlstring = urlstring.substring(0,urlstring.length-1);
+            }
+            return urlstring;
+        }
+        function getsize() {
+             var sizes = $("#filelist").find("[name='size']");
+            var sizestring = "";
+            for (var i = 0; i < sizes.length; i++) {
+                sizestring+= sizes[i].value+",";
+            }
+            if (sizestring != "") {
+                sizestring = sizestring.substring(0,sizestring.length-1);
+            }
+            return sizestring;
+        }
+        function getsuffix() {
+             var suffixs = $("#filelist").find("[name='suffix']");
+            var suffixstring = "";
+            for (var i = 0; i < suffixs.length; i++) {
+                suffixstring+= suffixs[i].value+",";
+            }
+            if (suffixstring != "") {
+                suffixstring = suffixstring.substring(0,suffixstring.length-1);
+            }
+            return suffixstring;
+        }
+        function getname() {
+             var names = $("#filelist").find("[name='names']");
+            var namestring = "";
+            for (var i = 0; i < names.length; i++) {
+                namestring+= names[i].value+",";
+            }
+            if (namestring != "") {
+                namestring = namestring.substring(0,namestring.length-1);
+            }
+            return namestring;
+        }
+        function validateForm() {
+            $("#basefrom").validate({
+                submitHandler: function (form) {
+                    ////execute();
+                },
+                ignore: "",
+                rules: {
+                    StationNum: "required",
+                    StationName: "required",
+                    InstallationDate: "required",
+                    AcceptanceDate: "required",
+                    QualityEndDate:"required",
+                    Lng: {
+                        required: true,
+                        number: true
+                    },
+                    Lat: {
+                        required: true,
+                        number: true
+                    }
+
+                },
+                messages: {
+                    StationNum: "请输入泵房编号",
+                    StationName: "请输入泵房名称",
+                    InstallationDate: "请选择安装日期",
+                    AcceptanceDate: "请选择验收日期",
+                    QualityEndDate:"请选择质保结束日期",
+                    Lng: {
+                        required: "请输入经度",
+                        number: "请输入浮点数"
+                    },
+                    Lat: {
+                        required: "请输入纬度",
+                        number: "请输入浮点数"
+                    }
+
+                }
+            });
+            $("#Stationfrom").validate({
+                submitHandler: function (form) {
+                    //execute();
+                },
+                ignore: "",
+                rules: {
+                    InspectionCycle: {
+                        required:true,
+                        digits: true
+                    },
+                    MaintenanceCycle: {
+                        required:true,
+                        digits: true
+                    },
+                    CleaningCycle: {
+                        required:true,
+                        digits: true
+                    },
+                    ManagerPhone: {
+                        isTel: true
+                    },
+                    OccupancyRate: {
+                        number: true,
+                        min: 0,
+                        required:true,
+                    }
+                },
+                messages: {
+                    InspectionCycle: {
+                        required:"请输入巡检周期",
+                        digits: "请输入整数"
+                    },
+                    MaintenanceCycle: {
+                        required:"请输入保养周期",
+                        digits: "请输入整数"
+                    },
+                    CleaningCycle: {
+                        required:"请输入清洗周期",
+                        digits: "请输入整数"
+                    },
+                    ManagerPhone: "请输入正确的联系方式",
+                    OccupancyRate:"请输入浮点数"
+                }
+            });
+            $("#Devicefrom").validate({
+                 submitHandler: function (form) {
+                    //execute();
+                },
+                ignore: "",
+                rules: {
+                    WaterTankNum: {
+                        required:true,
+                        digits: true
+                    },
+                    SwitchingCycle: {
+                        required:true,
+                        digits: true
+                    }
+
+                },
+                messages: {
+                    WaterTankNum: {
+                        required:"请输入水箱个数",
+                        digits: "请输入整数"
+                    },
+                    SwitchingCycle: {
+                        required:"请输入换药周期",
+                       digits: "请输入整数"
+                    }
+
+                }
+            });
+        }
+         //表单提交
+        function saveForm() {
+            validateForm();
+            $("#basefrom").submit();
+            $("#Stationfrom").submit();
+            $("#Devicefrom").submit();
+            execute();
+        }
+
+         //配置坐标
+        $("#btnGIS").click(function(){
+            getGIS();
+        });
+        function getGIS() {
+            window.parent.layer.open({
+                type: 2,
+                title: "坐标配置",
+                //title: false,
+                shadeClose: true,
+                shade: [0.1, '#000'],
+                area: ["1200px", "800px"],
+                offset: 'rt',
+                anim: 2,
+                content: "/Sws/Sws_Station/GetMap/"
+            });
+        }
+          $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+
+        $("#Manager").change(function () {
+            GetPhone();
+        });
+        function GetPhone() {
+            $("#ManagerPhone").val($("#Manager option:selected").data("phone"));
+        }
+    </script>
+</body>
+</html>

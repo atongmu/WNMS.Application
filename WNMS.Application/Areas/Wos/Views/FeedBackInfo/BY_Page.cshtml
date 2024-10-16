@@ -1,0 +1,376 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>BY_Page</title>
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .zlw_manage, .zlw_managecon {
+            background: #fff
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_manage">
+        <div class="zlw_managecon" style="padding-left:0px">
+            <div class="zlw_manageconrgcon">
+                <div class="overflow" style="height:51px;border-bottom:1px solid #ddd">
+                    <div class="btn-group pull-left mt10px ml10px">
+                        <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" placeholder="开始时间" id="BeginDate" class="hyl_input hyl_input-sm" value="@ViewBag.datemin" autocomplete="off">
+                        <span class="pl10px lh30px pr10px">至</span>
+                        <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" placeholder="结束时间" id="EndDate" class="hyl_input hyl_input-sm" value="@ViewBag.datemax" autocomplete="off">
+                        <button class="hyl_btn" id="searchbtn"> <i class="fa fa-search"></i> 查询</button>
+                    </div>
+                    <div class="btn-group mar10px pull-right">
+
+
+                        <button type="button" class="btn btn-default" id="addbtn"><i class="fa fa-plus"></i> 添加</button>
+                        <button type="button" class="btn btn-default" id="editebtn"><i class="fa fa-pencil-square-o"></i> 编辑</button>
+                        <button type="button" class="btn btn-default" id="deletebtn"><i class="fa fa-trash-o"></i> 删除</button>
+
+
+                    </div>
+                </div>
+
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan" style="height:calc(100% - 51px);margin-top:10px">
+                    <table id="table" class="table-striped">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var pageindex = 1;
+        var order = "", sort = "";
+        var stationid = parent.stationid;
+        $(function () {
+            var $table = $("#table");
+            $table.bootstrapTable({
+                method: "post",
+                url: "/Wos/FeedBackInfo/QueryBYTable",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                smartDisplay: false,
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 15, 20],        //可供选择的每页的行数（*）
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        pagesize: params.limit,   //每页条数
+                        pageindex: (params.offset / params.limit) + 1, //页码
+                        beginDate: $("#BeginDate").val(),
+                        endDate: $("#EndDate").val(),
+                        order: params.order,
+                        sort: params.sort == undefined ? "MaintainTime" : params.sort,
+                        stationid: stationid
+
+                    };
+                    order = params.order;
+                    sort = params.sort == undefined ? "MaintainTime" : params.sort;
+                    pageindex = (params.offset / params.limit) + 1;
+                    return temp;
+                },//传递参数（*）
+                uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+
+                responseHandler: function (res) {
+                    var aa = JSON.parse(res.rows);
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+                },
+                columns: [
+                    {
+                        checkbox: true
+
+                    },
+                    {
+                        field: 'rownumber',
+                        title: '序号'
+                    }, {
+                        sortable: true,
+                        field: 'StationName',
+                        title: '泵房名称'
+                    },
+                    {
+                        sortable: true,
+                        field: 'Num',
+                        title: '维保编号'
+                    },
+                    {
+                        sortable: true,
+                        field: 'MaintainTime',
+                        title: '维保时间',
+                        formatter: changeDateFormat
+                    },
+                    {
+                        sortable: true,
+                        field: 'Account',
+                        title: '维保人员'
+                    },
+                    {
+                        sortable: true,
+                        field: 'ProjectName',
+                        title: '维保项目'
+                    },
+                    {
+                        sortable: true,
+                        field: 'MaintainStateName',
+                        title: '维保情况'
+                    },
+                    {
+                        sortable: true,
+                        field: 'FeedbackMsg',
+                        title: '维保说明'
+                    }
+
+                ]
+
+            });
+
+        })
+        function changeDateFormat(cellval) {
+            if (cellval != null) {
+                var date = cellval.replace("T", " ");
+                return date;
+            }
+        }
+        function refreshTable() {
+            stationid = parent.stationid;
+            var opt = {
+                pageNumber: pageindex,
+            };
+            $("#table").bootstrapTable('refresh', opt);
+
+        }
+        $("#searchbtn").click(function () {
+            refreshTable();
+        })
+        //添加
+        $("#addbtn").click(function () {
+            iframeWithBtns1("添加维保反馈", "1000px", "730px", "/Wos/FeedBackInfo/AddBYPage/" + stationid, false, function (formIndex, formLayer) {
+                var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                currentIframe.saveForm(function (data) {
+                    if (data == "ok") {
+                        layer.msg("添加成功");
+                        refreshTable();
+                        layer.close(formIndex);
+                    }
+                    else {
+                        layer.msg("添加失败");
+                    }
+                })
+            },
+                function (formIndex, formLayer) {
+                    var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.DeleteFlie_Cancle(function (data) {
+                        if (data == "ok") {
+
+                            layer.close(formIndex);
+                        }
+                        else {
+                            layer.msg("删除本地图片失败");
+                        }
+                    })
+                },
+                function (formIndex, formLayer) {
+                    var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.DeleteFlie_Cancle(function (data) {
+                        if (data == "ok") {
+
+                            layer.close(formIndex);
+                        }
+                        else {
+                            layer.msg("删除本地图片失败");
+                        }
+                    })
+                }
+            );
+        })
+        //修改
+        $("#editebtn").click(function () {
+            var lenthcheck = $("#table").bootstrapTable('getSelections');
+            if (lenthcheck.length == 1) {
+                var repairID = lenthcheck[0].MaintainID;
+                iframeWithBtns1("编辑保养反馈", "1000px", "730px", "/Wos/FeedBackInfo/EditeBYPage/" + repairID, false, function (formIndex, formLayer) {
+                    var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm(function (data) {
+                        if (data == "ok") {
+                            layer.msg("添加成功");
+                            refreshTable();
+                            layer.close(formIndex);
+                        }
+                        else {
+                            layer.msg("添加失败");
+                        }
+                    })
+                },
+                    function (formIndex, formLayer) {
+                        var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                        currentIframe.DeleteFlie_Cancle(function (data) {
+                            if (data == "ok") {
+
+                                layer.close(formIndex);
+                            }
+                            else {
+                                layer.msg("删除本地图片失败");
+                            }
+                        })
+                    },
+                    function (formIndex, formLayer) {
+                        var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                        currentIframe.DeleteFlie_Cancle(function (data) {
+                            if (data == "ok") {
+
+                                layer.close(formIndex);
+                            }
+                            else {
+                                layer.msg("删除本地图片失败");
+                            }
+                        })
+                    }
+                );
+            }
+            else {
+                layer.msg("请选择一行");
+            }
+        })
+        //删除
+        $("#deletebtn").click(function () {
+            var lenthcheck = $("#table").bootstrapTable('getSelections');
+            if (lenthcheck.length <= 0) {
+                layer.msg("请至少选中一行", {
+                    offset: 't',
+                    anim: 6
+                });
+            } else {
+                var id = "";
+                for (i = 0; i < lenthcheck.length; i++) {
+                    id += lenthcheck[i].MaintainID + ",";
+                }
+                id = id.substring(0, id.length - 1);
+                layer.confirm("确定要删除保养反馈信息？", {
+                    btn: ["确定", "取消"]
+                },
+                    function () {
+                        deleteBYFeedBackInfo(id);
+                    },
+                    function () { }
+                );
+            }
+        })
+
+        //删除保养
+        function deleteBYFeedBackInfo(id) {
+            $.ajax({
+                url: '/Wos/FeedBackInfo/DeleteBYFeedBack',
+                type: 'POST',
+                datatype: "json",
+                //contentType: 'application/json',
+                data: { "": id },
+                success: function (data) {
+                    if (data == "ok") {
+                        layer.msg("删除成功");
+                        pageindex = 1;
+                        refreshTable();
+                    }
+                    else {
+                        if (data == "no") {
+                            layer.msg("删除失败");
+                        }
+                        else {
+                            layer.msg(data);
+                            pageindex = 1;
+                            refreshTable();
+                        }
+                    }
+                },
+                error: function (data) {
+                    layer.msg("删除失败");
+                }
+            })
+        }
+        function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                offset: ['10px'],
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function (index, layero) {
+                   
+                }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+        function iframeWithBtns1(title, width, height, url, isParent, func,funcClose) {
+            var options = {
+                type: 2,
+                title: title,
+                shadeClose: false,
+                shade: 0.7,
+                offset: ['10px'],
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                btn2: function (index, layero) {
+                    funcClose(index, layero);
+                    return false;
+                },
+                cancel: function (index, layero) {
+                    funcClose(index, layero);
+                    return false;
+                }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+    </script>
+</body>
+</html>

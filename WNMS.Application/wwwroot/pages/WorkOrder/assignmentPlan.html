@@ -1,0 +1,816 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>巡检分派</title>
+    <!--设置是否为缩放模式 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="/WorkOrder//WorkOrder/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/WorkOrder/Content/newself/css/bootstrap-reset.css" rel="stylesheet" />
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="/WorkOrder/Scripts//jquery-3.1.1.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="/WorkOrder/Content/bootstrap/js/bootstrap.min.js"></script>
+    <!--layui样式框架-->
+    <link href="/WorkOrder/Content/layui/css/layui.css" rel="stylesheet" />
+    <script src="/WorkOrder/Content/layui/layui.all.js"></script>
+
+    <!--icon图表库-->
+    <link href="/WorkOrder/Content/newself/css/ionicons.min.css" rel="stylesheet" />
+    <link href="/WorkOrder/Content/newself/css/font-awesome.css" rel="stylesheet" />
+    <!--可编辑样式/JS-->
+    <link href="/WorkOrder/Content/newself/css/index.css" rel="stylesheet" />
+    <link href="/WorkOrder/Content/newself/css/patrol.css" rel="stylesheet" />
+    <link href="/WorkOrder/Content/newself/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" />
+    <script src="/WorkOrder/Content/newself/My97DatePicker/WdatePicker.js"></script>
+    <script src="/WorkOrder/Content/newself/js/patrol.js"></script>
+
+    <style>
+        body {
+            background: #eee
+        }
+
+
+        .potrolTbale_top {
+            background: #eee;
+            padding: 0 10px 5px
+        }
+
+        .potrolTbale {
+            background: #eee
+        }
+
+        .potrol_filter {
+            padding: 0;
+            padding-top: 5px;
+            background: #eee;
+            margin-bottom: 5px
+        }
+
+            .potrol_filter .potrol_filter_box {
+                font-size: 12px !important;
+                background: #eee !important;
+                margin-bottom: 0 !important;
+                padding-top: 5px
+            }
+
+        .layui-laypage {
+            margin-top: 0
+        }
+
+        .txt-left {
+            text-align: left;
+            text-indent: 1em;
+        }
+
+        .red {
+            color: #f00;
+        }
+
+        .title_pad {
+            padding: 10px;
+            padding-bottom: 0;
+        }
+
+        .btn-bg {
+            background: #027ED0;
+        }
+
+        .bg-none {
+            background: none;
+            color: #027ED0;
+        }
+
+            .bg-none:hover {
+                color: #027ED0;
+                background: #EDEEED;
+            }
+
+        .right {
+            float: right;
+        }
+
+        em, i {
+            font-style: normal
+        }
+
+        .btn-gray {
+            background: #9B9B99;
+            color: #fff;
+        }
+
+        .td-blues {
+            color: #2079A3;
+            font-weight: bold;
+        }
+
+        .btn-no {
+            background: #CF524C;
+            width: 35px;
+        }
+
+        .del {
+            background: #CF524C
+        }
+
+        .items {
+            margin-top: 15px;
+            background-color: #D8EAF6;
+            text-align: left;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px #D3E0E6 solid
+        }
+
+            .items h5 {
+                font-size: 14px;
+                font-weight: bold;
+                color: #666;
+            }
+
+            .items p {
+                color: #999;
+                font-size: 12px;
+                line-height: 30px;
+            }
+
+        .attr-box {
+            margin: 10px 0
+        }
+
+            .attr-box label {
+                height: 40px;
+                line-height: 40px;
+                padding: 0 10px;
+            }
+
+            .attr-box select, .attr-box input {
+                height: 30px;
+                width: 10%;
+                border: 1px solid #ccc
+            }
+
+            .attr-box input {
+                width: 15%;
+                text-indent: 0.5em;
+            }
+
+        .layui-btn {
+            padding: 0 10px;
+        }
+
+        .labels {
+            border-radius: 100%;
+            margin-left: 20px;
+            padding: 0;
+            display: inline-block;
+            color: #FFB800;
+            line-height: 20px;
+            width: 24px;
+            text-align: center;
+            border: 2px solid #FFB800
+        }
+
+        .layui-btn-gray {
+            background: #ccc;
+        }
+        /*灰色按钮*/
+        .layui-table td, .layui-table th {
+            position: initial;
+        }
+
+        .potrol_filter_box a.active, .layui-laypage .layui-laypage-curr .layui-laypage-em {
+            background: #47a0b5 !important;
+        }
+
+        .layui-table tr:first-child th {
+            color: #fff;
+            background: #47a0b5
+        }
+
+        .potrolTbale_select #eventsType,
+        .potrolTbale_select #dpt,
+        .potrolTbale_select #us,
+        .potrolTbale_top .potrolTbale_input #message {
+            box-shadow: inset 0 0px 0px transparent;
+            border-color: #9c9c9c !important;
+        }
+
+        .potrolTbale_select label {
+            color: #444;
+        }
+
+        .potrolTbale_input label {
+            color: #444;
+        }
+
+        .potrolTbale_input #btn_Address {
+            background-color: #0d79ca !important;
+            border-color: #0d79ca !important;
+        }
+
+        #eventsType option {
+            line-height: 28px;
+            display: block;
+            color: #333;
+            height: 28px;
+        }
+
+        #us option {
+            line-height: 28px;
+            display: block;
+            color: #333;
+            height: 28px;
+        }
+
+        #dpt option {
+            line-height: 28px;
+            display: block;
+            color: #333;
+            height: 28px;
+        }
+
+        #zlw_hg {
+            line-height: 22px;
+            padding: 8px 10px;
+            height: auto;
+        }
+
+            #zlw_hg label {
+                color: #444;
+            }
+
+        .layui-laypage {
+            border: none
+        }
+
+        #treeArea li span.button.ico_open {
+            margin-right: 2px;
+            background-position: 0 0;
+            vertical-align: top;
+            background-image: url(./img/zTreeStandard.png);
+        }
+
+        #treeArea li span {
+            line-height: 16px;
+            line-height: 20px;
+            margin-right: 2px;
+            color: #fff;
+        }
+
+        .myinput {
+            border-radius: 5px;
+            width: 100px;
+            margin-left: 10px;
+        }
+
+        .zlw-yanyi {
+            background-color: #1a903a;
+        }
+
+            .zlw-yanyi:hover {
+                background-color: #126127;
+                color: #fff;
+            }
+
+        .zlw-yaner {
+            background-color: #0d79ca;
+        }
+
+            .zlw-yaner:hover {
+                background-color: #0660a5;
+                color: #fff;
+            }
+
+        .zlw-yansan {
+            background-color: #018dd0;
+        }
+
+            .zlw-yansan:hover {
+                background-color: #096b9a;
+                color: #fff;
+            }
+
+        .zlw-yansi {
+            background-color: #1296bd;
+        }
+
+            .zlw-yansi:hover {
+                background-color: #0d7898;
+                color: #fff;
+            }
+
+        .zlw-yanwu {
+            background-color: #4b9a8f;
+        }
+
+            .zlw-yanwu:hover {
+                background-color: #3e847a;
+                color: #fff;
+            }
+
+        .potrolTbale_btn button {
+            color: #fff;
+        }
+
+        #Table_plan .layui-table-view .layui-table-box .layui-table-header table thead tr th {
+            background: #47a0b5;
+        }
+
+            #Table_plan .layui-table-view .layui-table-box .layui-table-header table thead tr th span {
+                font-weight: bold;
+                color: #fff;
+            }
+
+        .potrolTbale_top .potrolTbale_select select {
+            height: 30px;
+            line-height: 30px;
+            padding: 0 10px;
+            font-size: 12px;
+            color: #333;
+            background-color: #EEEEEE;
+            border: 1px solid #888 !important;
+            border-radius: 2px;
+            vertical-align: bottom;
+            vertical-align: middle;
+        }
+
+            .potrolTbale_top .potrolTbale_select select option {
+                line-height: 25px;
+                height: 25px;
+                font-size: 14px;
+            }
+
+        .potrolTbale_top .potrolTbale_input input[type=text] {
+            width: 260px;
+            float: left;
+            margin-right: 4px;
+            height: 30px;
+            line-height: 30px;
+            padding: 0 10px;
+            font-size: 12px;
+            color: #333;
+            background-color: #EEEEEE;
+            border: 1px solid #888 !important;
+            border-radius: 2px;
+            vertical-align: bottom;
+            vertical-align: middle;
+            -webkit-box-shadow: inset 0 1px 2px transparent;
+            -moz-box-shadow: inset 0 1px 2px transparent;
+            box-shadow: inset 0 1px 2px transparent;
+            /* -webkit-box-shadow: 0 0 0px 1000px white inset; */
+            padding-left: 10px;
+        }
+
+        #Table_plan .zlw_ypf {
+            display: block;
+            width: 100%;
+            text-align: center;
+            line-height: 28px;
+            background: #0d79ca;
+            color: #fff;
+            border-radius: 7px;
+        }
+
+        #Table_plan .zlw_wpf {
+            display: block;
+            width: 100%;
+            text-align: center;
+            line-height: 28px;
+            background: #ff7815;
+            color: #fff;
+            border-radius: 7px;
+        }
+
+        #Table_plan .zlw_ywc {
+            display: block;
+            width: 100%;
+            text-align: center;
+            line-height: 28px;
+            background: #9B9B99;
+            color: #fff;
+            border-radius: 7px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="conLitle">
+        <i class="glyphicon glyphicon-home"></i><span>巡检分派</span>/<span>Inspection Assignment</span>
+        <a class="refresh_btn"><i class="fa fa-refresh"></i></a>
+    </div>
+
+
+    <div class="potrol_filter">
+        <!--条件筛选部分,不用时删除整个div-->
+        <div class="potrol_filter_box kssj">
+            <label>开始时间:</label>
+            <a class="active">全部</a>
+            <a>昨天</a>
+            <a>上周</a>
+            <a>本周</a>
+            <a>下周</a>
+            <a>上月</a>
+            <a>本月</a>
+            <a>下月</a>
+            <a>自定义</a>
+
+        </div>
+        <div class="potrol_filter_box jhlx">
+            <label>计划类型:</label>
+            <a class="active" data-value="">全部</a>
+            <a data-value="1">常规</a>
+            <a data-value="2">临时</a>
+        </div>
+        <div class="potrol_filter_box pfzt">
+            <label>完成状态:</label>
+            <a class="active" data-value="">全部<span id="totalNum">(5)</span></a>
+            <a data-value="0">未派发<span id="UnAssignNum">(1)</span></a>
+            <a data-value="1">已派发<span id="AssignNum">(3)</span></a>
+            <a data-value="2">已完成<span id="FeedbackNum">(1)</span></a>
+        </div>
+
+    </div>
+    <div class="potrolTbale_top">
+        <!--增删改查,按钮/下拉/文本框等加在这-->
+        <div class="potrolTbale_select">
+
+            <label>创建人:</label>
+            <select id="creater">
+                <option value="0">全部</option>
+                <option value="1">超级管理员</option>
+                <option value="11">赵彬彬</option>
+                <option value="133344632">沈福贵</option>
+
+
+            </select>
+            <label>巡检员:</label>
+            <select id="inspector">
+                <option value="0">全部</option>
+                <option value="11">赵彬彬</option>
+                <option value="133344547">张继昌</option>
+                <option value="133344551">张广富</option>
+                <option value="133344560">郭艳林</option>
+
+            </select>
+        </div>
+        <div class="potrolTbale_input">
+            <!--搜索框div-->
+            <label>搜索:</label>
+            <input type="text" class="form-control input-sm" id="searchText" placeholder="计划名称、分区名称、备注" />
+            <button type="button" id="btn_Address" class="btn btn-primary btn-sm m-b-5">
+                <i class="glyphicon glyphicon-search"></i>
+                <span>查询</span>
+            </button>
+        </div>
+        <div class="potrolTbale_btn">
+            <!--right按钮-->
+
+            <button class="btn zlw-yaner  btn-sm m-b-5" id="btn_assign">
+                <i class="glyphicon glyphicon-random"></i>
+                任务派发
+            </button>
+            <button class="btn zlw-yansan  btn-sm m-b-5" id="btn_watch">
+                <i class="glyphicon glyphicon-eye-open"></i>
+                查看
+            </button>
+            <button class="btn zlw-yansi  btn-sm m-b-5" id="btn_edite">
+                <i class="glyphicon glyphicon-wrench"></i>
+                编辑
+            </button>
+            <button class="btn zlw-yanwu btn-sm m-b-5" id="btn_delete">
+                <i class="glyphicon glyphicon-trash"></i>
+                删除
+            </button>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="potrolTbale">
+        <div id="Table_plan"></div>
+        <div id="page_plan"></div>
+    </div>
+    <script>
+			var sorttd = "CreateTime";
+			var sort = "desc";
+			var pageSize = 10;
+			var table = layui.table;
+			$(function() {
+				//筛选条件
+				var a1 = $('.kssj a') //条件筛选切换
+				for (var i = 0; i < a1.length; i++) {
+					a1[i].index = i;
+					a1[i].onclick = function() {
+						for (var i = 0; i < a1.length; i++) {
+							a1[i].className = ''
+						}
+						this.className = 'active';
+						if (this.text == "自定义") {
+							$('.kssj #BeginTime').remove();
+							$('.kssj #EndTime').remove();
+							$('.kssj').append(
+								'<input id="BeginTime" type="text" readonly="readonly" class="myinput" onClick = "WdatePicker({dateFmt:\'yyyy-MM-dd\'})" placeholder="开始时间"/> ' +
+								'<input id="EndTime" type="text" readonly="readonly" class="myinput" onClick = "WdatePicker({dateFmt:\'yyyy-MM-dd\'})" placeholder="结束时间"/> '
+							);
+						} else {
+							$('.kssj #BeginTime').remove();
+							$('.kssj #EndTime').remove();
+							LoadAssignPlanData(1);
+						}
+					}
+				}
+
+				var a2 = $('.jhlx a') //条件筛选切换
+				for (var i = 0; i < a2.length; i++) {
+					a2[i].index = i;
+					a2[i].onclick = function() {
+						for (var i = 0; i < a2.length; i++) {
+							a2[i].className = ''
+						}
+						this.className = 'active';
+						LoadAssignPlanData(1);
+					}
+				}
+				var a3 = $('.pfzt a') //条件筛选切换
+				for (var i = 0; i < a3.length; i++) {
+					a3[i].index = i;
+					a3[i].onclick = function() {
+						for (var i = 0; i < a3.length; i++) {
+							a3[i].className = ''
+						}
+						this.className = 'active';
+						LoadAssignPlanData(1);
+					}
+				}
+				table.on('sort(demo)', function(obj) {
+					if (obj.type == "desc" || obj.type == "null") {
+						sort = "desc";
+					} else {
+						sort = "asc";
+					}
+					sorttd = obj.field;
+					LoadAssignPlanData(1);
+				});
+
+				LoadAssignPlanData(1);
+			})
+			//查询
+			$("#btn_Address").click(function() {
+				LoadAssignPlanData(1);
+			})
+			//加载数据
+			function LoadAssignPlanData(curr) {
+				var load = layer.load(0, {
+					shade: false
+				});
+				$.post('http://47.93.6.250:10041/GD_AssignmentPlan/GetTableData', {
+					SeachText: $('#searchText').val(),
+					BeginTime: $("#BeginTime").val(),
+					EndTime: $("#EndTime").val(),
+					executeTime: $(".kssj .active").text(),
+					PlanType: $(".jhlx .active").data("value"),
+					State: $(".pfzt .active").data("value"),
+					Creater: $("#creater").val(),
+					Inspector: $("#inspector").val(),
+					//InObject: $("#inspectionObject").val(),
+					order: sorttd,
+					sort: sort,
+					pageIndex: curr || 1,
+					pageSize: pageSize
+
+				}, function(res) {
+					layer.close(load);
+
+					// 前端模拟数据，请后台自行删除
+					var res = {};
+					res.dataTable = '<div><table lay-filter="demo" class="layui-table" id="demo"><thead><tr><th lay-data="{type:\'checkbox\',field:\'PlanID\',width:50}"></th><th lay-data="{field:\'rownum\',width:60}">序号</th><th lay-data="{field:\'PlanName\',sort:\'true\'}">计划名称</th><th lay-data="{field:\'PlanType\',sort:\'true\'}">类型</th><th lay-data="{field:\'DMAName\',sort:\'true\'}">分区名称</th><th lay-data="{field:\'Travel\',width:90}">行进方式</th><th lay-data="{field:\'InspectCycle\',width:100}">巡检周期</th><th lay-data="{field:\'InspectorName\',sort:\'true\',width:100}">巡检员</th><th lay-data="{field:\'CreaterName\',sort:\'true\',width:100}">创建人</th><th lay-data="{field:\'BeginDate\',sort:\'true\',width:100}">开始日期</th><th lay-data="{field:\'EndDate\',sort:\'true\',width:100}">结束日期</th><th lay-data="{field:\'CreateTime\',sort:\'true\',width:170}">创建日期</th><th lay-data="{field:\'Remark\',sort:\'true\',width:100}">备注</th><th lay-data="{field:\'State\',sort:\'true\',width:100}">状态</th></tr></thead><tbody><tr><td>6</td><td>1</td><td>设备巡查</td><td>常规</td><td>临沂市</td><td>车巡</td><td>一月一次</td><td>张广富</td><td>沈福贵</td><td>2021/3/7</td><td>2021/3/7</td><td>2021/3/6 22:34:52</td><td>1</td><td id="wwww"><span class="zlw_ypf">已派发</span></td></tr><tr><td>5</td><td>2</td><td>测试</td><td>常规</td><td>临沂市</td><td>车巡</td><td>一日一次</td><td>赵彬彬</td><td>赵彬彬</td><td>2020/8/21</td><td>2020/8/21</td><td>2020/8/21 8:54:03</td><td>测试</td><td><span class="zlw_ywc">已完成</span></td></tr><tr><td>4</td><td>3</td><td>IOS巡检计划</td><td>常规</td><td>临沂市</td><td>人巡</td><td>一周一次</td><td>郭艳林</td><td>超级管理员</td><td>2019/10/29</td><td>2019/10/29</td><td>2019/10/24 10:03:18</td><td>IOS巡检计划</td><td id="wwww"><span class="zlw_ypf">已派发</span></td></tr><tr><td>3</td><td>4</td><td>测试</td><td>常规</td><td>临沂市</td><td>车巡</td><td>一周一次</td><td>张继昌</td><td>超级管理员</td><td>2019/9/28</td><td>2019/9/28</td><td>2019/9/22 9:02:08</td><td>放到</td><td><span class="zlw_wpf">未派发</span></td></tr><tr><td>2</td><td>5</td><td>测试</td><td>常规</td><td>临沂市</td><td>车巡</td><td>一周一次</td><td>张继昌</td><td>超级管理员</td><td>2019/9/28</td><td>2019/9/28</td><td>2019/9/21 14:51:53</td><td>放到</td><td id="wwww"><span class="zlw_ypf">已派发</span></td></tr></tbody></table></div>';
+
+					$("#Table_plan").html(res.dataTable);
+
+
+					var pageHeight = $(".potrolTbale").height();
+
+					var tbHeight = pageHeight > 500 ? pageHeight - 60 : 500;
+
+
+					//转换静态表格
+					table.init('demo', {
+						height: tbHeight,
+						limit: pageSize,
+						autoSort: false,
+						page: false,
+						skin: 'row',
+						even: true,
+						//size: 'sm',
+						initSort: {
+							field: sorttd,
+							type: sort
+						}
+					});
+
+					layui.use('laypage', function() {
+						var laypage = layui.laypage;
+						//执行一个laypage实例
+						laypage.render({
+							skin: 'molv',
+							elem: 'page_plan',
+							count: res.TotalCount,
+							layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip'],
+							skip: true,
+							curr: curr || 1,
+							limit: pageSize,
+							jump: function(obj, first) {
+								if (!first) {
+									pageSize = obj.limit;
+									LoadAssignPlanData(obj.curr);
+								}
+							}
+						});
+					});
+				});
+			}
+			//巡检对象条件发生变化
+			$("#inspectionObject").change(function() {
+				LoadAssignPlanData();
+			})
+			//创建人条件变化
+			$("#creater").change(function() {
+				LoadAssignPlanData();
+			})
+			//巡检人条件变化
+			$("#inspector").change(function() {
+				LoadAssignPlanData();
+			})
+			//查看功能
+			$("#btn_watch").click(function() {
+				var checkStatus = table.checkStatus('demo'),
+					data = checkStatus.data;
+				if (data.length == 1) {
+
+					// iframe1(['任务查看',
+					// 	'color:#fff;background: linear-gradient(to right, rgba(30,147,236,1),rgba(62,88,201,1),rgba(52,72,161,0.7));'
+					// ], "90%", "90%", "http://47.93.6.250:10041/GD_AssignmentPlan/WatchPlan/" + data[0].PlanID);
+
+					iframe1(['任务查看',
+						'color:#fff;background: linear-gradient(to right, rgba(30,147,236,1),rgba(62,88,201,1),rgba(52,72,161,0.7));'
+					], "90%", "90%", "WatchPlan.html");
+
+				} else {
+					layer.msg("请选中一条");
+				}
+			})
+			//任务派发
+			$("#btn_assign").click(function() {
+				var checkStatus = table.checkStatus('demo'),
+					data = checkStatus.data;
+				if (data.length > 0) {
+					var planIDs = "";
+					for (var i = 0; i < data.length; i++) {
+						if (data[i].State.indexOf("未派发") != -1) {
+							planIDs += data[i].PlanID + ',';
+						}
+					}
+					if (planIDs != "") {
+						planIDs = planIDs.substring(0, planIDs.length - 1);
+
+						layer.confirm("是否派发已勾选的巡检任务？", {
+							btn: ['确定', '取消'],
+							icon: 3,
+							title: ['提示', 'color:#fff;background: #D04040']
+						}, function() {
+							AssignmentPlan(planIDs);
+						}, function() {
+
+						});
+					} else {
+						layer.msg("请至少选中一条未派发的计划");
+					}
+				}
+			})
+			//任务分派
+			function AssignmentPlan(planIDs) {
+				$.post("http://47.93.6.250:10041/GD_AssignmentPlan/AssignmentPlan", {
+					PlanIDs: planIDs
+				}, function(data) {
+					if (data == "ok") {
+						var num = planIDs.split(',').length;
+						var unum = $("#UnAssignNum").text().substring(1, $("#UnAssignNum").text().length - 1);
+
+						var unNum = parseInt(unum) - num;
+						$("#UnAssignNum").text("(" + unNum + ")");
+
+						var assignnum = $("#AssignNum").text().substring(1, $("#AssignNum").text().length - 1);
+						var assignNumNow = parseInt(assignnum) + num;
+						$("#AssignNum").text("(" + assignNumNow + ")");
+						LoadAssignPlanData(); //刷新表格
+						layer.msg("任务派发成功");
+					}
+				})
+			}
+
+			//计划编辑
+			$("#btn_edite").click(function() {
+				var checkStatus = table.checkStatus('demo'),
+					data = checkStatus.data;
+				if (data.length == 1) {
+
+					if (data[0].State.indexOf("未派发") != -1) {
+						iframe1(['编辑计划',
+							'color:#fff;background: linear-gradient(to right, rgba(30,147,236,1),rgba(62,88,201,1),rgba(52,72,161,0.7));'
+						], "90%", "99%", "http://47.93.6.250:10041/GD_AssignmentPlan/EditePlan/" + data[0].PlanID);
+
+					} else {
+						layer.msg("请选中一条未派发的计划");
+					}
+				} else {
+					layer.msg("请选中一条计划");
+				}
+			})
+
+			//删除计划任务
+			$("#btn_delete").click(function() {
+				var checkStatus = table.checkStatus('demo'),
+					data = checkStatus.data;
+				if (data.length > 0) {
+					var planIDs = "";
+					for (var i = 0; i < data.length; i++) {
+
+						planIDs += data[i].PlanID + ',';
+
+					}
+					if (planIDs != "") {
+						planIDs = planIDs.substring(0, planIDs.length - 1);
+
+						layer.confirm("是否删除已勾选的巡检任务？", {
+							btn: ['确定', '取消'],
+							icon: 3,
+							title: ['提示', 'color:#fff;background: #D04040']
+						}, function() {
+							DeletePlan(planIDs);
+						}, function() {
+
+						});
+					} else {
+						layer.msg("请至少选中一条巡检任务");
+					}
+				}
+
+			})
+
+			function DeletePlan(planIDs) {
+				$.post("http://47.93.6.250:10041/GD_AssignmentPlan/DeletePlan", {
+					PlanIDs: planIDs
+				}, function(data) {
+					if (data.message == "ok") {
+						$("#totalNum").text("(" + data.totalNum + ")");
+						$("#UnAssignNum").text("(" + data.unAssignNum + ")");
+						$("#AssignNum").text("(" + data.assignNum + ")");
+						LoadAssignPlanData(); //刷新表格
+						layer.msg("任务删除成功");
+					}
+				})
+			}
+
+			//添加临时任务
+			$("#btn_add").click(function() {
+				//window.location.href = "/Dma_AssignmentPlan/AddPlan";
+				iframe1(['添加计划',
+					'color:#fff;background: linear-gradient(to right, rgba(30,147,236,1),rgba(62,88,201,1),rgba(52,72,161,0.7));'
+				], "90%", "99%", "http://47.93.6.250:10041/GD_AssignmentPlan/AddPlan/");
+
+			})
+
+			function iframe(title, width, height, url) {
+				layer.open({
+					type: 2,
+					title: title,
+					shadeClose: true,
+					shade: 0.8,
+					area: [width, height],
+					content: url,
+					btn: ['提交', '取消'],
+					yes: function(index, layero) {
+						window.frames[0].saveForm();
+					},
+					cancel: function(index) {
+
+					}
+				});
+			}
+
+			function iframe1(title, width, height, url) {
+				layer.open({
+					type: 2,
+					title: title,
+					shadeClose: true,
+					shade: 0.8,
+					area: [width, height],
+					content: url
+
+				});
+			}
+    </script>
+</body>
+</html>

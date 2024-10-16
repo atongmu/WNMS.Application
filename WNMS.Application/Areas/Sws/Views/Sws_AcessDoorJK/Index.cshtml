@@ -1,0 +1,394 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="/css/iconfont.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <style>
+        .nohasDoor {
+            display: none
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_control">
+        <div class="zlw_controlcon">
+            <div class="zlw_controlconlf">
+                <div class="zlw_controlconlf_nr">
+                    <!-- 点击按钮 -->
+                    <div class="zlw-content-lfdj"></div>
+                    <div class="zlw_controlconlf_nryi">
+                        <div class="zlw_controlconlf_nryicon">
+                            <i class="glyphicon glyphicon-search" onclick="LoadStationList()"></i>
+
+                            <input id="stationName" type="text" placeholder="搜索泵房" class="zlw-ssk" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="zlw_controlconlf_nrer">
+                        <div class="zlw-tree pt5px">
+                            <ul class="sxt_list" id="dataList">
+                                @{
+                                    var stationSates = ViewBag.stationState as IEnumerable<dynamic>;
+                                    if (stationSates.Count() > 0)
+                                    {
+                                        var States = stationSates.ToList();
+                                        for (var i = 0; i < States.Count; i++)
+                                        {
+                                            var classSate = "";
+                                            if (States[i].state == "在线")
+                                            {
+                                                classSate = "clcle-green";
+                                            }
+                                            else if (States[i].state == "报警")
+                                            {
+                                                classSate = "clcle-red";
+                                            }
+                                            else
+                                            {
+                                                classSate = "clcle-gray";
+
+                                            }
+                                            var doorclass = "";
+                                            if (States[i].HasDoor == false)
+                                            {
+                                                doorclass = "nohasDoor";
+                                            }
+                                            else
+                                            {
+                                                doorclass = "";
+                                            }
+
+                                            if (i == 0)
+                                            {
+                                                <li class="on" data-key="@States[i].StationID">
+                                                    <em class="@classSate"></em>
+                                                    <span class="chaochu">@States[i].StationName</span>
+                                                    <i class="iconfont icon-menjinfangkeguanli @doorclass"></i>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li data-key="@States[i].StationID">
+                                                    <em class="@classSate"></em>
+                                                    <span class="chaochu">@States[i].StationName</span>
+                                                    <i class="iconfont icon-menjinfangkeguanli @doorclass"></i>
+                                                </li>
+                                            }
+                                        }
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="zlw_controlconrg">
+                <div class="left-icon"></div>
+                <div class="zlw_controlconrgcon" style="padding:0">
+                    <div class="zlw_mjkzyi pl10px clearfloat" style="padding-top:10px">
+                        <label class="hyl_label left">时间列表：</label>
+                        <ul class="clearfloat">
+                            @*<li class="sjlbxz" id=""><span>全部</span></li>
+                                <li id="本月"><span>本月</span></li>
+                                <li id="上月"><span>上月</span></li>
+                                <li id="本周"><span>本周</span></li>
+                                <li id="上周"><span>上周</span></li>
+                                <li id="自定义"><span>自定义</span></li>*@
+                            <li id="detailType" class="clearfloat">
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" placeholder="开始时间" id="BeginDate" class="hyl_input hyl_input-sm" value="@ViewBag.beginTime" autocomplete="off">
+                                <span class="pl10px pr10px" style="cursor: text;margin:0">至</span>
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" placeholder="结束时间" id="EndDate" class="hyl_input hyl_input-sm" value="@ViewBag.endTime" autocomplete="off">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="zlw_mjkzer clearfloat" style="padding:10px 0 10px 10px;border-bottom:1px solid #ddd">
+                        <label class="hyl_label left">快速检索：</label>
+                        <ul class="clearfloat">
+                            <li style="margin-right:5px"><input type="text" class="hyl_input" d id="searchText" placeholder="请输入人员姓名" autocomplete="off"></li>
+                            <li><button class="hyl_btn left" id="searchbtn"> <i class="fa fa-search"></i> 查询</button></li>
+                            @*<li><input type="submit" value="提交" class="zlw_mjformtj"></li>
+                                <li><input type="reset" value="重置" class="zlw_mjformcz"></li>*@
+                        </ul>
+                    </div>
+                    <div class="zlw_manageconrgconsan" style="height:calc(100% - 70px);padding:10px;">
+                        <table id="tabledata" class=" table-striped ">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        var stationid = 0;
+        $(function () {
+
+            // 点击按钮门禁左侧宽度为0
+            $(".zlw-content-lfdj").click(function () {
+                $(".zlw-content-lfdj").hide();
+                $(".left-icon").css("display", "block");
+                $(".zlw_controlconlf").css({ "width": "0", "padding": "0" });
+                $(".zlw_controlconrg").css("width", "100%");
+            });
+            $(".left-icon").click(function () {
+                $(".zlw-content-lfdj").fadeIn();
+                $(".left-icon").css("display", "none");
+                $(".zlw_controlconlf").css({ "width": "220px", "padding": "0px" });
+                $(".zlw_controlconrg").css("width", "calc(100% - 220px)");
+            })
+            $(document).on('click', '.sxt_list li', function () {
+                $(this).addClass('on').siblings('li').removeClass('on');
+
+
+                stationid = $(this).data("key");
+
+                //$("#tabledata").bootstrapTable('refresh');
+                refreshTable();
+            });
+            // 时间选择
+            $(".zlw_mjkzyi ul li").not("#detailType").click(function () {
+                $(this).siblings('.zlw_mjkzyi ul li').removeClass('sjlbxz');  // 删除其他兄弟元素的样式
+                $(this).addClass('sjlbxz');                            // 添加当前元素的样式
+                if ($(this)[0].id == "自定义") {
+                    $("#detailType").css("display", "block");
+                }
+                else {
+                    $("#detailType").css("display", "none");
+                    //$("#tabledata").bootstrapTable('refresh');
+                    refreshTable();
+                }
+            });
+
+
+            if ($("#dataList .on").length > 0) {
+
+                stationid = $("#dataList .on").data("key");
+            }
+            $("#tabledata").bootstrapTable({
+                method: "post",
+                url: "/Sws/Sws_AcessDoorJK/QueryAcessTableByHK",
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "desc",                   //排序方式
+                //height: $(window).height()-60,
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 20,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        stationid: stationid,
+                        pagesize: params.limit,   //每页条数
+                        pageindex: (params.offset / params.limit) + 1, //页码
+                        SearchText: $("#searchText").val(),
+                        order: params.order,
+                        sort: params.sort == undefined ? "eventTime" : params.sort,
+                        //time: $('.zlw_mjkzyi ul .sjlbxz')[0].id,
+                        beginDate: $("#BeginDate").val(),
+                        endDate: $("#EndDate").val()
+                    };
+                    //order = params.order;
+                    //sort = params.sort == undefined ? "PoliceTime" : params.sort;
+                    return temp;
+                },//传递参数（*）
+
+                showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+
+                responseHandler: function (res) {
+                    var aa = JSON.parse(res.rows);
+                    return {
+                        'total': res.total, //总的数据长度
+                        'rows': JSON.parse(res.rows) //单页查询返回的数据
+                    }
+                },
+                columns: [
+                    //{
+                    //    title: '序号',
+                    //    formatter: function (value, row, index) {
+                    //        return index + 1;
+                    //    }
+                    //},
+                    {
+
+                        field: 'personName',
+                        title: '人员姓名'
+                    }, {
+
+                        field: 'cardNo',
+                        title: '卡号'
+                    },
+                    {
+
+                        field: 'doorName',
+                        title: '门禁名称'
+                    },
+                    {
+
+                        field: 'readerDevIndexCode',
+                        title: '读卡器IndexCode',
+                        width: 300
+                    },
+                    {
+                        sortable: true,
+                        field: 'eventTime',
+                        title: '时间',
+                        formatter: changeDateFormat
+                    },
+                    { 
+                        field: 'inAndOutType',
+                        title: '进出状态',
+                        formatter: function (value, row, index) {
+                            return revType(value)
+                        },
+                    },
+                    {
+                        field: 'jobNo',
+                        title: '工号'
+                    }
+                ]
+            });
+
+            $('.fixed-table-loading').hide();
+        });
+        //表格查询
+        $("#searchbtn").click(function () {
+            //$("#tabledata").bootstrapTable('refresh');
+            refreshTable();
+        })
+        //左侧树查询回车事件
+        $("#stationName").keydown(function (e) {
+            if (e.keyCode == 13) {
+                LoadStationList();
+                return false;
+            }
+        });
+        $("#searchText").keydown(function (e) {
+            if (e.keyCode == 13) {
+                refreshTable();
+                return false;
+            }
+        })
+        //左侧泵房查询
+        function LoadStationList() {
+            var searchText = $("#stationName").val();
+            var flag = false;
+            $.post("/Sws/Sws_AcessDoorJK/SearchStationList", { stationName: searchText }, function (res) {
+                $("#dataList").empty();
+                if (res.data.length > 0) {
+                    var appends = "";
+                    var States = res.data;
+                    for (var i = 0; i < States.length; i++) {
+
+                        var classSate = "";
+                        if (States[i].state == "在线") {
+                            classSate = "clcle-green";
+                        }
+                        else if (States[i].state == "报警") {
+                            classSate = "clcle-red";
+                        }
+                        else {
+                            classSate = "clcle-gray";
+
+                        }
+                        var doorclass = "";
+                        if (States[i].HasDoor == false) {
+                            doorclass = "nohasDoor";
+                        }
+                        else {
+                            doorclass = "";
+                        }
+                        if (States[i].StationID == stationid) {
+                            appends += ' <li class="on"  data-key="' + States[i].StationID + '">' +
+                                '<em class="' + classSate + '"></em>' +
+                                '<span class="chaochu">' + States[i].StationName + '</span>' +
+                                ' <i class="iconfont icon-menjinfangkeguanli ' + doorclass + '"></i>' +
+                                '</li>';
+                            flag = true;
+                        }
+                        else {
+                            appends += ' <li   data-key="' + States[i].StationID + '">' +
+                                '<em class="' + classSate + '"></em>' +
+                                '<span class="chaochu">' + States[i].StationName + '</span>' +
+                                ' <i class="iconfont icon-menjinfangkeguanli ' + doorclass + '"></i>' +
+                                '</li>';
+                        }
+
+                    }
+                    $("#dataList").html(appends);
+                }
+                if (flag == false) {
+
+                    stationid = 0;
+                }
+            })
+
+        }
+
+        function changeDateFormat(cellval) {
+            if (cellval != null) {
+                var date = cellval.replace("T", " ");
+                date = date.substring(0, 19);
+                return date;
+            }
+        }
+        function revType(cellval) {
+            if (cellval != null) {
+                if (cellval == 1) {
+                    return "进";
+                } else if (cellval == 0) {
+                    return "出";
+                } else {
+                    return "未知";
+                }
+
+            }
+        }
+        function refreshTable() {
+            var opt = {
+                pageNumber: 1,
+                queryParams: function (params) {
+                    var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                        stationid: stationid,
+                        pagesize: params.limit,   //每页条数
+                        pageindex: (params.offset / params.limit) + 1, //页码
+                        SearchText: $("#searchText").val(),
+                        order: params.order,
+                        sort: params.sort == undefined ? "PoliceTime" : params.sort,
+                        time: $('.zlw_mjkzyi ul .sjlbxz')[0].id,
+                        beginDate: $("#BeginDate").val(),
+                        endDate: $("#EndDate").val()
+                    };
+
+                    return temp;
+                }//传递参数（*）
+            };
+            $("#tabledata").bootstrapTable('refresh', opt);
+        }
+    </script>
+</body>
+</html>

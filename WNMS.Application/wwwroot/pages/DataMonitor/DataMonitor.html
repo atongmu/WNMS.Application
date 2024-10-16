@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="../../css/zlw.css">
+	<link rel="stylesheet" href="../../css/font-awesome.css">
+	<script src="../../js/jquery-1.12.4.min.js"></script>
+	<!-- 日历 -->
+
+	<script src="../../lib/My97DatePicker/WdatePicker.js"></script>
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="../../css/bootstrap/bootstrap.css">
+	<script src="../../js/bootstrap/bootstrap.min.js"></script>
+	<!-- echart -->
+	<script src="../../js/echarts.min.js"></script>
+	<!-- 树 -->
+	<link rel="stylesheet" href="../../lib/ztree/zTreeStyle.css">
+	<script src="../../lib/ztree/jquery.ztree.core-3.5.js"></script>
+	<script src="../../lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+	<script type="text/javascript">
+		var setting = {
+			check: {
+				enable: true,
+				chkDisabledInherit: true
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			}
+		};
+
+		var zNodes = [
+			{ id: 1, pId: 0, name: "湛江自来水骏景花园高区", open: true },
+			{ id: 11, pId: 1, name: "湛江自来水骏景花园高区#低区", open: true },
+			{ id: 111, pId: 11, name: "出水压力", },
+			{ id: 112, pId: 11, name: "进水压力" },
+			{ id: 113, pId: 11, name: "累计电量" },
+			{ id: 114, pId: 11, name: "瞬时流量" },
+			{ id: 115, pId: 11, name: "累计电量" },
+			{ id: 12, pId: 1, name: "湛江自来水骏景花园高区#中区区", open: true },
+			{ id: 121, pId: 12, name: "进水压力", },
+			{ id: 122, pId: 12, name: "出水压力", },
+			{ id: 123, pId: 12, name: "设定压力", },
+			{ id: 124, pId: 12, name: "1#瞬时流量", },
+			{ id: 125, pId: 12, name: "PH", },
+			{ id: 126, pId: 12, name: "余氯", },
+			{ id: 127, pId: 12, name: "液位", },
+			{ id: 2, pId: 0, name: "日照港烟小区", open: true },
+			{ id: 21, pId: 2, name: "日照港烟小区#低区" },
+			{ id: 211, pId: 21, name: "出水压力", },
+			{ id: 212, pId: 21, name: "进水压力" },
+			{ id: 213, pId: 21, name: "累计电量" },
+			{ id: 214, pId: 21, name: "瞬时流量" },
+			{ id: 215, pId: 21, name: "累计电量" },
+			{ id: 22, pId: 2, name: "日照港烟小区#中区", },
+			{ id: 221, pId: 22, name: "出水压力", },
+			{ id: 222, pId: 22, name: "进水压力" },
+			{ id: 223, pId: 22, name: "累计电量" },
+			{ id: 224, pId: 22, name: "瞬时流量" },
+			{ id: 225, pId: 22, name: "累计电量" },
+			{ id: 226, pId: 22, name: "新罗区", },
+			{ id: 227, pId: 22, name: "延平区" },
+			{ id: 23, pId: 2, name: "日照港烟小区#高区" },
+			{ id: 231, pId: 23, name: "出水压力", },
+			{ id: 232, pId: 23, name: "进水压力" },
+			{ id: 233, pId: 23, name: "累计电量" },
+			{ id: 234, pId: 23, name: "瞬时流量" },
+			{ id: 235, pId: 23, name: "累计电量" },
+			{ id: 236, pId: 23, name: "新罗区", },
+			{ id: 237, pId: 23, name: "延平区" }
+		];
+
+		function disabledNode(e) {
+			var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+				disabled = e.data.disabled,
+				nodes = zTree.getSelectedNodes(),
+				inheritParent = false, inheritChildren = false;
+			if (nodes.length == 0) {
+				alert("请先选择一个节点");
+			}
+			if (disabled) {
+				inheritParent = $("#py").attr("checked");
+				inheritChildren = $("#sy").attr("checked");
+			} else {
+				inheritParent = $("#pn").attr("checked");
+				inheritChildren = $("#sn").attr("checked");
+			}
+
+			for (var i = 0, l = nodes.length; i < l; i++) {
+				zTree.setChkDisabled(nodes[i], disabled, inheritParent, inheritChildren);
+			}
+		}
+
+		$(document).ready(function () {
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			$("#disabledTrue").bind("click", { disabled: true }, disabledNode);
+			$("#disabledFalse").bind("click", { disabled: false }, disabledNode);
+
+		});
+		//-->
+	</script>
+</head>
+<body>
+    <div class="zlw_datamain">
+        <div class="zlw_datamaincon">
+            <!-- star left -->
+            <div class="zlw_datamain_lf">
+				<div class="zlw_datamain_lfcon">
+					<!-- 搜索框 -->
+					<div class="zlw_datamain_lfconsea">
+						<form action="">
+							<i class="glyphicon glyphicon-search"></i>
+							<input type="text" class="form-control" placeholder="搜索&quot;泵房&quot;名称" />
+						</form>
+					</div>
+					<div id="treeDemo" class="ztree">
+						<!-- tree渲染区域 -->
+                	</div>
+				</div>
+            </div>
+            <!-- left end -->
+            <!-- star right -->
+            <div class="zlw_datamain_rg">
+				<div class="zlw_datamain_rgcon">
+					<!-- 列表 -->
+					<div class="zlw_datamain_rgyi clearfloat">
+						<!-- 时间 -->
+						<div class="zlw_datamain_rgyiyi clearfloat left">
+							<h4>时间选择：</h4>
+							<ul class="clearfloat zlw_time_con">
+								<li class="zlw_bgact"><i>近1小时</i></li>
+								<li><i>近4小时</i></li>
+								<li><i>近12小时</i></li>
+								<li><i>近24小时</i></li>
+							</ul>
+						</div>
+						<div class="zlw_datamain_rgyier left">
+							<input id="d11" type="text" onClick="WdatePicker()"/>
+							<span> 至 </span>
+							<input id="d11" type="text" onClick="WdatePicker()"/>
+						</div>
+					</div>
+					<!-- 表格 -->
+					<div class="zlw_datamain_rger">
+							<div class="zlw_datamain_rgernr" id="zlw_datamain_rgernr"></div>
+							<script>
+								var myChart01= echarts.init(document.getElementById('zlw_datamain_rgernr'));
+								myChart01.setOption({
+									legend: {
+										left:'center',
+										top:5,
+										textStyle:{
+											color:'#333'
+										},
+										data:['应收水费']
+									},						
+									tooltip: { 
+										trigger: 'axis'
+									},
+									grid: {
+										left: 10,
+										right:10,
+										top:50,
+										bottom: 10,
+										containLabel: true
+									},
+									xAxis: {
+										type: 'category',
+										data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+									},
+									yAxis: {
+										type: 'value'
+									},
+									series: [{
+										name:'应收水费',
+										data: [820, 932, 901, 934, 1290, 1330, 1320],
+										type: 'line'
+									}]
+								});
+								window.onresize = function () {
+									myChart01.resize();
+								}
+							</script>
+
+					</div>
+				</div>
+            </div>
+            <!-- right end -->
+        </div>
+	</div>
+	<script>
+		// 按钮切换样式
+		$(function(){
+			$(".zlw_time_con li").click(function() {
+				$(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+				$(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+			});
+		}); 
+	</script>
+</body>
+</html>

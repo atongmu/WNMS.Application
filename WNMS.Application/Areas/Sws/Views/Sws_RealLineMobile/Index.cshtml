@@ -1,0 +1,521 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="keywords" content="智慧供水平台">
+	<meta name="description" content="智慧供水平台">
+	<title>压力曲线</title>
+	<link href="~/mobile/css/reset.css" rel="stylesheet" />
+	<link href="~/mobile/css/common.css" rel="stylesheet" />
+	<link href="~/mobile/css/theme1.css" rel="stylesheet" />
+	<script src="~/mobile/js/plugins/adaption.js"></script>
+	<script src="~/js/jquery 2.1.4/jquery.min.js"></script>
+	<script src="~/mobile/js/plugins/echarts/echarts.js"></script>
+	@*<script src="~/mobile/js/plugins/echarts/customed.js"></script>*@
+	<script src="~/mobile/js/common.js"></script>
+	<link rel="stylesheet" href="~/mobile/js/plugins/mobiscroll-date/mobiscroll.min.css">
+	<script src="~/mobile/js/plugins/mobiscroll-date/mobiscroll.js"></script>
+
+	<link rel="stylesheet" href="~/mobile/js/plugins/mobileSelect/mobileSelect.css">
+	<script src="~/mobile/js/plugins/mobileSelect/mobileSelect.min.js"></script>
+	<script src="~/mobile/js/libs/layer/layer.js"></script>
+	
+	<style>
+        .nothing {
+            position: relative !important;
+        }
+	</style>
+
+</head>
+<body>
+	<div class="window-height fixed">
+		<div class="tab-primary full-height">
+			<div class="tab-nav">
+				<a href="javascript:;" class="item active">实时曲线</a>
+				<a href="javascript:;" class="item">历史曲线</a>
+			</div>
+			<div class="tab-content">
+				<div class="tab-content-item">
+					<!-- 1、实时曲线 -->
+					<div id="echarts1" class="echarts"></div>
+
+					<div class="nothing absolute">
+						<div class="nothing-content">
+							<div class="icon"></div>
+						</div>
+					</div>
+				</div>
+                <div class="tab-content-item">
+                    <div class="tab-content-item filter">
+                        <div class="filter-container">
+                            <form id="formFilter2" class="form form-filter clearfix">
+                                <div class="form-group">
+                                    <div class="label">日期范围：</div>
+                                    <input type="text" name="timeInterval1" class="form-control advanceDate time-dhm-range" placeholder="开始时间-结束时间" value="@ViewBag.TimeRange">
+                                </div>
+
+                                <div class="btn-group fr">
+                                    <button type="button" class="btn btn-primary" id="SearchBtn">查询</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-content-wrap full-height">
+                            <!-- 2、历史曲线 -->
+                            <div id="echarts2" class="echarts"></div>
+
+                            <div class="nothing absolute">
+                                <div class="nothing-content">
+                                    <div class="icon"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+	<!-- 设置时间框宽度，仅供占位使用 -->
+	<div class="time-value-content time-width-dhm-range">2021-01-01 00:00 ~ 2021-07-05 21:00</div>
+	<div class="time-value-content time-width-d-range">2021-01-01 ~ 2021-07-05</div>
+	<script type="text/javascript">
+		/**
+	 * 图表配置
+	 */
+		
+        var loadhaistory = true;
+        var rtuid =@ViewBag.rtuid;
+        var partition =@ViewBag.partition;
+        var type;
+        var realfresh;
+		var echartsApp = [],
+			// 1、实时曲线
+			options1 = {
+				color: ['#611ec6', '#0672bb', '#f8200b'],
+				tooltip: {
+					trigger: 'axis',
+					formatter: function (params) {
+						var html = params[0].name + '<br />';
+						for (var i = 0; i < params.length; i++) {
+							html += params[i].marker + params[i].seriesName + '：' + params[i].value[1] + ' MPa<br>'
+						}
+						return html;
+					}
+				},
+				grid: {
+					top: 35,
+					left: .14 * baseSize,
+					right: .28 * baseSize,
+					bottom: .14 * baseSize,
+					containLabel: true
+				},
+				//dataZoom: [
+				//	{
+				//		show: true,
+				//		height: 20,
+				//		xAxisIndex: [0],
+				//		bottom: 5,
+				//		"start": 0,
+				//		"end": 100,
+				//		handleStyle: {
+				//			color: "#5B3AAE",
+				//		},
+				//	}, {
+				//		type: "inside",
+				//		show: true,
+				//		height: 15,
+				//		start: 1,
+				//		end: 35
+				//	},
+				//],
+				legend: {
+					right: .14 * baseSize,
+					top: 1,
+					data: ['进水压力', '出水压力', '设定压力']
+				},
+				xAxis: [{
+					type: 'time',
+					boundaryGap: false,
+					//axisLabel: {
+					//	formatter: function (value) {
+					//		value = value.replace(' ', '\n');
+					//		return value;
+					//	}
+					//}
+					
+				}],
+				yAxis: [{
+					type: 'value',
+					name: 'MPa',
+					nameTextStyle: {
+						color: '#00332d'
+					},
+				}],
+				series: [
+					{
+						name: '进水压力',
+						type: 'line',
+						smooth: true,
+                        data: [],
+						showSymbol: false
+					}, {
+						name: '出水压力',
+						type: 'line',
+						smooth: true,
+                        data: [],
+						showSymbol: false
+					}, {
+						name: '设定压力',
+						type: 'line',
+						smooth: true,
+                        data: [],
+						showSymbol: false
+					}
+				]
+			},
+
+			// 2、历史曲线
+			options2 = {
+				color: ['#611ec6', '#0672bb', '#f8200b'],
+				tooltip: {
+					trigger: 'axis',
+					formatter: function (params) {
+						var html = params[0].name + '<br />';
+						for (var i = 0; i < params.length; i++) {
+							html += params[i].marker + params[i].seriesName + '：' + params[i].value[1] + ' MPa<br>'
+						}
+						return html;
+					}
+				},
+				grid: {
+					top: 35,
+					left: .14 * baseSize,
+					right: .28 * baseSize,
+					bottom: .14 * baseSize,
+					containLabel: true
+				},
+				dataZoom: [
+					{
+						show: true,
+						height: 20,
+						xAxisIndex: [0],
+						bottom: 5,
+						start: 0,
+						end: 100,
+						handleStyle: {
+							color: "#5B3AAE",
+                        },
+                        realtime: false,
+                        startValue: "",
+                        endValue: "",
+						
+					}, {
+						type: "inside",
+						
+					},
+				],
+				legend: {
+					right: .14 * baseSize,
+					top: 1,
+					data: ['进水压力', '出水压力', '设定压力']
+				},
+                xAxis: [{
+					type: 'time',
+					boundaryGap: false,
+					show:true
+				}],
+				yAxis: [{
+					type: 'value',
+					name: 'MPa',
+					nameTextStyle: {
+						color: '#00332d'
+					},
+				}],
+				series: [
+					{
+						name: '进水压力',
+						type: 'line',
+						smooth: true,
+                        data: [],
+						showSymbol: false
+					}, {
+						name: '出水压力',
+						type: 'line',
+                        smooth: true,
+						showSymbol: false,
+						data: []
+					}, {
+						name: '设定压力',
+						type: 'line',
+                        smooth: true,
+						showSymbol: false,
+						data: []
+					}
+				]
+			};
+
+        $(function () {
+            if ("@ViewBag.hasOwn" != "True") {
+
+                $(".window-height").empty();
+            }
+			
+			/**
+			 * 选项卡切换
+			 */
+			tabNavClick(function (index) {
+				// 重新渲染图表
+                if (index == 1) {//历史曲线
+                    //clearInterval(realfresh);
+                    if (loadhaistory) {
+                        // 设置时间输入框宽度
+                        var $formFilter = $('.form-filter'),
+                            advanceDateMaxWidth = $formFilter.outerWidth() - $formFilter.children('.form-group').eq(0).outerWidth() - .1 * baseSize - .1 * baseSize - $formFilter.children('.btn-group').outerWidth();
+                        timeWidthDhmRange = (timeWidthDhmRange > advanceDateMaxWidth) ? advanceDateMaxWidth : timeWidthDhmRange;
+                        $('.time-dhm-range').outerWidth(timeWidthDhmRange + .42 * baseSize);
+                        GetHistoryData();
+                        loadhaistory = false;
+                    }
+                }
+                else {
+                    //getRealData();
+                }
+                echartsApp[index + 1].resize();
+                
+			});
+
+			/**
+			 * 初始化图表
+			 */
+			// 1、实时曲线
+			echartsApp[1] = echarts.init($('#echarts1')[0], 'customed');
+			//echartsApp[1].setOption(options1);
+
+			// 2、历史曲线
+			echartsApp[2] = echarts.init($('#echarts2')[0], 'customed');
+            //echartsApp[2].setOption(options2);
+            echartsApp[2].on('dataZoom', function (event) {
+               
+                if (type != 1) {
+
+                    var begintime = timestampToTime(echartsApp[2].getModel().option.dataZoom[0].startValue);
+                    var endtime = timestampToTime(echartsApp[2].getModel().option.dataZoom[0].endValue);
+                    var start, end;
+                    if (event.batch) {
+                        start = event.batch[0].start;
+                        end = event.batch[0].end;
+                    } else {
+                        start = event.start;
+                        end = event.end;
+                    };
+                    AddHistoryData(begintime, endtime,start,end);
+                }
+            });
+
+			// 1、实时曲线
+			getRealData();
+
+			
+			/**
+			 * 日期范围
+			 */
+			$('.advanceDate').each(function () {
+				$(this).mobiscroll().range({
+					theme: 'android-holo-light',
+					lang: 'zh',
+					dateFormat: 'yy-mm-dd',
+					dateOrder: 'yyyymmdd',
+					display: 'center',
+					controls: ['datetime'],
+					max: new Date(),
+					defaultValue: [new Date(), new Date()]
+				});
+            });
+			
+		});
+
+		/**
+		 * ***** 数据绑定 *****
+		 */
+		/**
+		 * 1、实时曲线
+		 */
+		function getRealData() {
+            $.post("/Sws/Sws_RealLineMobile/RealHistoryData", {rtuid:rtuid,partition:partition}, function (res) {
+                if (res.resultIN != "") {
+                    $('#echarts1').show().next().hide();
+                    options1.series[0].data = eval(res.resultIN);
+                    options1.series[1].data = eval(res.resultOut);
+                    options1.series[2].data = eval(res.resultSet);
+
+                    echartsApp[1].setOption(options1, true);
+                }
+                else {
+                    // 空数据提示
+                    $('#echarts1').hide().next().show();
+					options1.series[0].data = [];
+                    options1.series[1].data = [];
+                    options1.series[2].data = [];
+
+                    echartsApp[1].setOption(options1, true);
+                }
+                realfresh = setInterval(function () {
+                    $.post("/Sws/Sws_RealLineMobile/UpdateRealData", { rtuid: rtuid, partition: partition }, function (res) {
+                        
+                        if (res.resultIN != "") {
+							 $('#echarts1').show().next().hide();
+                            if (options1.series[0].data.length > 0) {
+                                if (options1.series[0].data[options1.series[0].data.length - 1].name != eval(res.resultIN)[0].name) {
+                                    options1.series[0].data.push(eval(res.resultIN)[0]);
+                                    options1.series[1].data.push(eval(res.resultOut)[0]);
+									options1.series[2].data.push(eval(res.resultSet)[0]);
+                                }
+                            }
+                            else {
+                                options1.series[0].data.push(eval(res.resultIN)[0]);
+
+                                options1.series[1].data.push(eval(res.resultOut)[0]);
+                                options1.series[2].data.push(eval(res.resultSet)[0]);
+                            }
+                            var seris_f = [];
+                            seris_f = options1.series;
+                            echartsApp[1].setOption({
+                                series: seris_f
+                            });
+                        }
+                    });
+
+                }, 30 * 1000);
+            })
+			
+		}
+
+	
+		
+        function GetHistoryData() {
+            var $timeInterval = $('input[name="timeInterval1"]');
+            if ($timeInterval.val() == '') {
+                $timeInterval.trigger('click');
+                return false;
+            }
+            var index_ = $timeInterval.val().indexOf("-", 9);
+            //var timeIntervalArr = $timeInterval.val().split('~');
+            var begindate = $timeInterval.val().substring(0, index_);
+			var endate=$timeInterval.val().substring(index_+1);
+            $.post("/Sws/Sws_RealLineMobile/HistoryLine", {
+                rtuid: rtuid,
+                partition: partition,
+                begindate: begindate,
+				enddate:endate
+            }, function (res) {
+                    type = res.type;
+                    if (res.resultIN != "") {
+						 echartsApp[2].clear();
+                        $('#echarts2').show().next().hide();
+                        var indata = eval(res.resultIN);
+                        options2.series[0].data = indata;
+                        options2.series[1].data = eval(res.resultOut);
+                        options2.series[2].data = eval(res.resultSet);
+                        options2.dataZoom[0].start = 0;
+                        options2.dataZoom[0].end = 100;
+                        echartsApp[2].setOption(options2, true);
+                    }
+                    else {
+                        // 空数据提示
+                       $('#echarts2').hide().next().show();
+                        options2.series[0].data = [];
+                        options2.series[1].data = [];
+                        options2.series[2].data = [];
+
+                        echartsApp[2].setOption(options2, true);
+                    }
+            });
+        }
+        $("#SearchBtn").click(function () {
+            GetHistoryData();
+        })
+        function AddHistoryData(begintime,endtime,start,end) {
+			 $.post("/Sws/Sws_RealLineMobile/HistoryLine", {
+                rtuid: rtuid,
+                partition: partition,
+                begindate: begintime,
+				enddate:endtime
+            }, function (res) {
+                   
+                    if (res.resultIN != "") {
+                      
+                       
+                        var data0 = eval(res.resultIN), data1 = eval(res.resultOut), data2 = eval(res.resultSet);
+                        
+                        var firstdate = data0[0].name;
+                        firstdate = firstdate.indexOf(":") > -1 ? firstdate : (firstdate + " 00:00");
+                        var firstdate_old = options2.series[0].data[0].name;
+						firstdate_old=firstdate_old.indexOf(":") > -1 ? firstdate_old : (firstdate_old + " 00:00");
+                        if (new Date(firstdate).getTime() != new Date(firstdate_old).getTime()) {
+                            var oldarray = [options2.series[0].data[0]];
+                            data0 = oldarray.concat(data0);
+
+                            var oldarray1 = [options2.series[1].data[0]];
+                            data1 = oldarray1.concat(data1);
+
+                            var oldarray2 = [options2.series[2].data[0]];
+                            data2 = oldarray2.concat(data2);
+
+                        }
+                        var lastdate = data0[data0.length - 1].name;
+                        lastdate = lastdate.indexOf(":") > -1 ? lastdate : (lastdate + " 00:00");
+                        var lastdate_old = options2.series[0].data[options2.series[0].data.length - 1].name;
+                        lastdate_old = lastdate_old.indexOf(":") > -1 ? lastdate_old : (lastdate_old + " 00:00");
+                        if (new Date(lastdate).getTime() != new Date(lastdate_old).getTime()) {
+                            var lastarray = [options2.series[0].data[options2.series[0].data.length - 1]];
+                            data0 = data0.concat(lastarray);
+
+                            var lastarray1 = [options2.series[1].data[options2.series[1].data.length - 1]];
+                            data1 = data1.concat(lastarray1);
+
+                            var lastarray2 = [options2.series[2].data[options2.series[2].data.length - 1]];
+                            data2 = data2.concat(lastarray2);
+                        }
+                       
+                        options2.series[0].data = data0;
+
+                       
+                        options2.series[1].data = data1;
+
+						
+                        options2.series[2].data = data2;
+                       
+                        options2.dataZoom[0].start = start;
+                        options2.dataZoom[0].end = end;
+                        echartsApp[2].clear();
+                        echartsApp[2].setOption(options2, true);
+                    }
+                    else {
+                     
+                        options2.series[0].data = [];
+                        options2.series[1].data = [];
+                        options2.series[2].data = [];
+
+                        echartsApp[2].setOption(options2, true);
+                    }
+            });
+        }
+        function timestampToTime(timestamp) {
+            var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            var Y = date.getFullYear() + '-';
+            var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+            var D = date.getDate() + ' ';
+            var h = date.getHours() + ':';
+            var m = date.getMinutes() + ':';
+            var s = date.getSeconds();
+            return Y + M + D + h + m + s;
+        }
+	</script>
+</body>
+</html>

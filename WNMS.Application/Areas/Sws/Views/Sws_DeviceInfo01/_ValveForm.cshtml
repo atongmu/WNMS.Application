@@ -1,0 +1,114 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model WNMS.Model.DataModels.SwsValveWith01
+<form>
+    <div class="con6_right" style="width:330px;">
+        <input type="text" id="id_Valve" name="id_Valve" value="@Model.ValveId" style="display:none;" />
+
+        @Html.HiddenFor(model => model.ValveId)
+        @Html.HiddenFor(model => model.DeviceId)
+        <div class="con6_text">
+            <label for="ValveName" class="valveLabel">阀门名称:</label>
+            @Html.TextBoxFor(model => model.ValveName, new { id = "ValveName", name = "ValveName", placeholder = "请输入阀门名称" })
+        </div>
+        <div class="con6_text">
+            <label for="ValveNum" class="valveLabel">阀门号:</label>
+
+            <select id="ValveNum" name="ValveNum" style="margin-left:8px;width:160px">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <div class="con6_text">
+            <label for="IsAdjusted" class="valveLabel">开度是否可调:</label>
+
+            <select id="IsAdjusted" name="IsAdjusted" style="margin-left:8px;width:160px">
+                <option value="False">否</option>
+                <option value="True">是</option>
+            </select>
+        </div>
+        <div class="con6_text">
+            <label for="IsRemote" class="valveLabel">是否远程:</label>
+
+            <select id="IsRemote" name="IsRemote" style="margin-left:8px;width:160px">
+                <option value="False">否</option>
+                <option value="True">是</option>
+            </select>
+        </div>
+
+        <input type="button" class="btn" id="submit" value="提交">
+        <input type="button" class="btn" id="btncancel" value="重置">
+    </div>
+</form>
+
+<script type="text/javascript">
+    $(function () {
+        //validateForm();
+        if(@Model.ValveId!=0){
+            $("#ValveNum").val("@Model.ValveNum");
+            $("#IsAdjusted").val("@Model.IsAdjusted");
+            $("#IsRemote").val("@Model.IsRemote");
+        }
+    });
+    $("#submit").click(function () {
+        if ($("#ValveName").val() != "") {
+            $.ajax({
+                url: '/Sws/Sws_DeviceInfo01/SetValve',
+                type: 'post',
+
+                data: $("form").serializeArray(),
+                success: function (data) {
+                    if (data == "false") {
+                        layer.alert("此阀门编号已经存在，请重新选择");
+                    }else{
+                        if (data == "ok") {
+                            window.location.reload();
+                        } else {
+                            layer.alert("提交失败！");
+                        }
+                    }   
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+        else {
+            layer.msg("请输入阀门名称");
+        }
+    })
+    //function validateForm() {
+    //    $("#FormValve").validate({
+    //        rules: {
+    //            ValveName: {
+    //                required: true
+    //            }
+    //        },
+    //        messages: {
+    //            ValveName: {
+    //                required: "请输入阀门名称"
+    //            }
+    //        }
+    //    });
+    //}
+    //function _addFun(data) {
+    //    if (data == "false") {
+    //        layer.alert("此阀门编号已经存在，请重新选择");
+    //    }else{
+    //        if (data == "ok") {
+    //            window.location.reload();
+    //        } else {
+    //            layer.alert("提交失败！");
+    //        }
+    //    }
+    //}
+
+    $("#btncancel").click(function () {
+        GetValveForm(0);
+    });
+</script>
+

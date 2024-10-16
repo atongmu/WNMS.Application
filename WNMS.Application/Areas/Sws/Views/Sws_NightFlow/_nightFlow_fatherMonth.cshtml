@@ -1,0 +1,81 @@
+﻿
+@model IEnumerable<dynamic>
+@using Newtonsoft.Json;
+<thead>
+    <tr>
+        <th data-width="150px" data-rowspan="2">泵房名称</th>
+        @{
+            var dates = ViewBag.tabledate as IEnumerable<string>;
+            foreach (var item in dates)
+            {
+                <th data-width="80px" data-rowspan="2">@item</th>
+            }
+        }
+        <th data-width="160px" data-colspan="2">最大值</th>
+        <th data-width="160px" data-colspan="2">最小值</th>
+        <th data-width="240px" data-colspan="3">平均值</th>
+    </tr>
+    <tr>
+        <th>流量</th>
+        <th>时间</th>
+        <th>流量</th>
+        <th>时间</th>
+        <th>上月</th>
+        <th>本月</th>
+        <th>环比(%)</th>
+    </tr>
+</thead>
+<tbody>
+    @{
+        if (Model.Count() > 0)
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @{
+                        var itemjson = JsonConvert.SerializeObject(item);
+                        var dy = JsonConvert.DeserializeObject(itemjson);
+                        var heads = ViewBag.tableheads as IEnumerable<string>;
+                        foreach (var h in heads)
+                        {
+                            var data = dy[h];
+                            if (h == "StationName")
+                            {
+                                <td>@data</td>
+                            }
+                            else if (h == "maxTime" || h == "minTime")
+                            {
+                                if (data.ToString() == "")
+                                {
+                                    <td>@("--")</td>
+                                }
+                                else
+                                {
+                                    var time = data + "日";
+                                    <td>@time</td>
+                                }
+                            }
+                            else
+                            {
+                                if (data.ToString() == "")
+                                {
+                                    <td>@("--")</td>
+                                }
+                                else
+                                {
+                                    <td>@(Math.Round(Convert.ToDouble(data), 2))</td>
+                                }
+
+                            }
+
+                        }
+                    }
+                </tr>
+
+            }
+        }
+    }
+
+</tbody>
+
+

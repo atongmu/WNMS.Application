@@ -1,0 +1,347 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+@model SwsPropertyInfo
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_SetPropertyInfo</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+        <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <style>
+        .star {
+            font-size: 25px;
+            color: red;
+            position: absolute;
+            top: -4px;
+            left: 60px
+        }
+
+        .form-group {
+            position: relative
+        }
+
+        
+
+        .zlw_gs label {
+            /*line-height: 35px;*/
+            margin-bottom: 2px;
+        }
+
+            .zlw_gs label span {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                padding-top: 5px;
+                float: left;
+                margin-left: 5px;
+            }
+
+            .zlw_gs label i {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                float: left;
+                font-weight: bold;
+            }
+    </style>
+</head>
+<body>
+    <div  class="xiugai" style="padding:20px 30px">
+        <form action="/Sws/Sws_PropertyInfo/SetPropertyInfo" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body zlw_gs">
+                <input id="PropertyId" name="PropertyId" type="hidden" value="@Model.PropertyId" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>资产名称 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>资产类型</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select id="Type" name="Type" class="form-control">
+                                            @{
+                                                IEnumerable<SysDataItemDetail> ptypes = ViewBag.typelist as IEnumerable<SysDataItemDetail>;
+                                                foreach (var item in ptypes)
+                                                {
+                                                    if (Model != null && Model.Type == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>泵房名称</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="button" class="form-control" id="StationName" name="StationName" value="@ViewBag.StationName" onclick="SelectStation()">
+                                        <input id="StationId" type="hidden" name="StationId" value="@Model.StationId" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>厂商</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Manufacturer" name="Manufacturer" value="@Model.Manufacturer" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>品牌</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="BrandName" name="BrandName" value="@Model.BrandName" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>规格型号</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Size" name="Size" value="@Model.Size" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>购买日期 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="BuyDate" name="BuyDate" value="@Model.BuyDate" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>购买金额(￥) <em class="star" style="left:85px">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="BuyMonery" name="BuyMonery" value="@Model.BuyMonery" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>质保期</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="WarrantyPeriod" name="WarrantyPeriod" value="@Model.WarrantyPeriod" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>保管人 <em class="star" style="left:45px">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Custodian" name="Custodian" value="@Model.Custodian" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>存放位置</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="StorePosition" name="StorePosition" value="@Model.StorePosition" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>备注</label>
+                                    <textarea id="Remark" name="Remark" rows="2" cols="20" class="form-control">@Model.Remark</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script type="text/javascript">
+       
+        var index = parent.layer.getFrameIndex(window.name);
+        function saveForm() {
+
+            $("form").submit();
+        }
+
+        $(function () {
+            if (@Model.PropertyId== 0) {
+                $("#BuyDate").val("");
+            }
+             validateForm();
+           
+
+        })
+        
+         function validateForm() {
+            $("#MFForm").validate({
+                debug: true,
+                ignore: "",
+                rules: {
+                    Name: "required",
+                    BuyDate:"required",
+                    BuyMonery: {
+                        required: true,
+                        number: true,
+                        min:0
+                    },
+                    Custodian: "required"
+  
+                },
+                messages: {
+                    Name: "请输入资产名称",
+                    BuyDate:"请选择购买日期",
+                    BuyMonery: {
+                          required: "请输入购买金额",
+                        number: "请输入数字",
+                        min:"输入的值应大于等于0"
+                    },
+                    Custodian:"请输入保管人"
+                }
+            });
+        }
+         function _addFun(data) {
+            if (data == "ok") {
+
+                parent.layer.close(index);
+                parent.refreshTable();
+
+            }
+            else {
+
+                    layer.msg("操作失败");
+
+
+            }
+        }
+           //选择泵房
+         function SelectStation() {
+            parent.iframeWithBtns("泵房选择", "800px", "700px", "/Sws/Sws_PropertyInfo/SelectStationInfo", false, function (formIndex, formLayer) {
+                    var currentIframe =parent.window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm1(function (stationid,stationname) {
+                        $("#StationId").val(stationid);
+                        $("#StationName").val(stationname);
+                        parent.layer.close(formIndex);
+                       
+                       
+                    });
+                });
+             
+        }
+       
+       
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860StationName
+*@
+@using WNMS.Model.CustomizedClass;
+@model IEnumerable<DeviceInfo02Info>
+<thead>
+    <tr>
+        <th data-checkbox="true"></th>
+        <th data-field="DeviceID" data-visible="false"></th>
+        <th data-field="RtuNum">通讯编号</th>
+        <th data-sortable="true" data-field="DeviceName">设备名称</th>
+        <th data-field="DeviceNum">设备编号</th>
+        <th data-field="StationName">所属泵房</th>
+        <th data-field="PartitionName">分区</th>
+        <th data-field="DeviceTypeName">设备类型</th>
+        <th data-field="ManufacturerName">厂商</th>
+        <th data-sortable="true" data-field="ProductionDate">生产日期</th>
+    </tr>
+</thead>
+<tbody>
+    @{
+        foreach (var item in Model)
+        {
+            <tr>
+                <td data-checkbox="true"></td>
+                <td data-visible="false">@item.DeviceID</td>
+                <td>@item.RtuNum</td>
+                <td>@item.DeviceName</td>
+                <td>@item.DeviceNum</td>
+                <td>@item.StationName</td>
+                <td>@item.PartitionName</td>
+                <td>@item.DeviceTypeName</td>
+                <td>@item.ManufacturerName</td>
+                <td>@(item.ProductionDate == null ? "" : Convert.ToDateTime(item.ProductionDate).ToString("yyyy-MM-dd"))</td>
+            </tr>
+        }
+    }
+</tbody>

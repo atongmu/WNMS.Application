@@ -1,0 +1,1759 @@
+﻿@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+
+@model SysUser
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>二次供水 - 首页</title>
+    <link rel="Shortcut Icon" href="~/UploadImg/Logo/logo.png" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.css" rel="stylesheet" />
+    <!-- 二供字体 -->
+    <link href="~/css/ergongiconfont.css" rel="stylesheet" />
+    <!-- Theme style -->
+    <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />
+    <link href="~/css/AdminLTE.min.css" rel="stylesheet" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+     folder instead of downloading all of them to reduce the load. -->
+    <link href="~/css/skins/all-skins.min.css" rel="stylesheet" />
+    <link href="~/css/Popup.css" rel="stylesheet" />
+    <style type="text/css">
+        /*width: 22px;
+        height: 22px;
+        margin-right: 8px*/
+        html {
+            overflow: hidden;
+        }
+
+        .systitle {
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: default;
+        }
+
+            .systitle:hover {
+                cursor: default;
+                background-color: transparent;
+            }
+
+        .subsystitle {
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .menu_tab {
+            padding: 0 10px !important;
+        }
+
+        .page_tab_title {
+            padding-right: 3px;
+            font-size: 1.1em;
+        }
+
+        a {
+            border: none !important
+        }
+
+        .page_tab_close {
+            cursor: pointer;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+
+
+        .layui-layer-content {
+            color: #000 !important;
+        }
+
+        .tpwthwidt {
+            padding: 10px;
+        }
+
+        .iconbox {
+            position: relative;
+        }
+
+        .mask {
+            position: absolute;
+            top: 0;
+            left: 54px;
+            background: rgba(91, 142, 200, 0.9);
+            opacity: 0;
+            width: 50%;
+            height: 90px;
+            width: 90px;
+            border-radius: 50%;
+        }
+
+        .iconbox > img {
+            z-index: 5;
+            height: 90px;
+            width: 90px;
+            border: 3px solid;
+            border-color: transparent;
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .icontip {
+            line-height: 90px;
+            color: #fff;
+        }
+
+            .icontip:hover {
+                color: #fff;
+            }
+
+        .iconbox .mask:hover {
+            opacity: 1;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .pull-left img {
+            width: 50px !important;
+            height: 50px !important;
+            padding: 5px;
+        }
+
+        .menu {
+            background-color: #f4f4f4;
+        }
+
+            .menu p {
+                margin-top: 5px !important;
+                color: #000 !important;
+            }
+
+            .menu li {
+                background-color: #fff;
+                margin-bottom: 3px;
+                /*border-left: 4px solid red;*/
+            }
+
+                .menu li h4 {
+                    color: unset !important;
+                    font-size: 13px !important;
+                }
+
+        .no-img {
+            position: absolute;
+            left: 0;
+            top: 30%;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+
+        .main-title {
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 50px;
+            display: inline-block;
+            height: 50px;
+            color: #fff;
+            margin-left: 30px;
+            font-family: '宋体';
+        }
+
+        .skin-black .main-title {
+            color: #000;
+        }
+
+        .noborder {
+            border-bottom: 1px solid #eee;
+            position: relative;
+            height: 115px;
+            padding: 15px
+        }
+
+        .layui-layer-content section:last-child {
+            border: none !important
+        }
+
+        .sidebar-mini .layui-layer-tips .layui-layer-content {
+            box-shadow: 0px 0px 6px rgba(0,0,0,.6);
+        }
+
+        #ctrlbar-content a:hover {
+            cursor: pointer !important;
+        }
+
+        .badge1 {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            line-height: 10px;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            background-color: #f39c12 !important;
+            border-radius: 10px;
+            position: absolute;
+            top: 9px;
+            right: 7px;
+            font-size: 9px;
+            padding: 2px 3px;
+        }
+
+        #eventCamera {
+            font-family: "微软雅黑";
+            position: absolute;
+            top: 60%;
+            width: 250px;
+            text-align: center;
+            right: 3%;
+            z-index: 10000;
+        }
+
+            #eventCamera li {
+                width: 250px;
+                border-radius: 5px;
+                display: inline-block;
+                overflow: hidden;
+                box-shadow: 1px 2px 1px #666;
+                position: relative;
+                left: 0;
+                top: 0;
+                border-left: 1px solid #ccc;
+                background: #fff;
+                -webkit-animation-duration: 500ms;
+                -webkit-animation-name: shineRed;
+                -webkit-animation-iteration-count: infinite;
+                height: 250px;
+            }
+
+                #eventCamera li h1 {
+                    background: #D9534F;
+                    height: 35px;
+                    line-height: 35px;
+                    width: 100%;
+                    color: #fff;
+                    font-size: 15px;
+                    overflow: hidden;
+                    text-align: left;
+                    margin: 0;
+                    padding: 0;
+                    padding-left: 10px;
+                }
+
+        .allarea {
+            width: 100%;
+            margin: 0 auto;
+            line-height: 40px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            text-align: left;
+            height: 180px;
+        }
+
+        #eventCamera .close {
+            position: absolute;
+            right: 20px;
+            height: 35px;
+            line-height: 35px;
+            font-weight: bold;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        #eventCamera a {
+            background: #D9534F;
+            display: block;
+            width: 50px;
+            height: 20px;
+            line-height: 18px;
+            color: #fff;
+            border-radius: 5px;
+            text-align: center;
+            margin: 2px;
+            float: right;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+            #eventCamera a:hover {
+                text-decoration: none;
+                color: #DDE4FD;
+                cursor: pointer;
+            }
+
+        #eventCamera li div table {
+            width: 100%;
+            margin: 10px 0 0 0
+        }
+
+            #eventCamera li div table td {
+                text-align: left;
+                height: 25px;
+                line-height: 25px;
+                float: left;
+                padding-left: 10px;
+                font-size: 12px
+            }
+
+        hr {
+            border-top: 1px dotted #ff5e00;
+            margin-top: 40px;
+        }
+
+        .content-iframe {
+            background-color: #fff;
+        }
+
+            .content-iframe .tab-content,
+            .content-iframe .tab-content .tab-pane,
+            .content-iframe .tab-content .tab_iframe {
+                height: 100%;
+            }
+    </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="hold-transition skin-black sidebar-mini">
+    <noscript>
+        <div style=" position:absolute; z-index:100000; height:2046px;top:0px;left:0px; width:100%; background:white; text-align:center;">
+            <h3>您所用的浏览器未启用脚本，系统无法正常工作！</h3>
+        </div>
+    </noscript>
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <span class="logo-mini" style="background-image: url(/UploadImg/Logo/@ViewBag.Logo)"></span>
+                @*<span class="logo-lg" style="height:50px;width:100%;"></span>*@
+                <span class="logo-lg" style="height:50px;width:100%;background-image: url(/UploadImg/Logo/@ViewBag.Logo2)"></span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+
+                @*<a href="#" class="logo"></a>*@
+
+                <span class="main-title">@ViewBag.SystemName</span>
+
+                @*<script>
+                        (function (a, h, g, f, e, d, c, b) { b = function () { d = h.createElement(g); c = h.getElementsByTagName(g)[0]; d.src = e; d.charset = "utf-8"; d.async = 1; c.parentNode.insertBefore(d, c) }; a["SeniverseWeatherWidgetObject"] = f; a[f] || (a[f] = function () { (a[f].q = a[f].q || []).push(arguments) }); a[f].l = +new Date(); if (a.attachEvent) { a.attachEvent("onload", b) } else { a.addEventListener("load", b, false) } }(window, document, "script", "SeniverseWeatherWidget", "//cdn.sencdn.com/widget2/static/js/bundle.js?t=" + parseInt((new Date().getTime() / 100000000).toString(), 10)));
+                        window.SeniverseWeatherWidget('show', {
+                            flavor: "slim",
+                            location: "WX4FBXXFKE4F",
+                            geolocation: true,
+                            language: "zh-Hans",
+                            unit: "c",
+                            theme: "auto",
+                            token: "7e423420-d384-492a-a171-cf5d2dfd84b9",
+                            hover: "disabled",
+                            container: "tp-weather-widget"
+                        })
+                    </script>*@
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        @*<li id="tp-weather-widget"></li>*@
+                        <li>
+                            <a href="javascript:;" id="refreshIframe" title="刷新">
+                                <i class="fa fa-refresh"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" id="WarnRuleData" title="预警">
+                                <i class="fa fa-bullhorn" id="warnBell"></i>
+                                <span class="badge1" style="display:none"></span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#" id="displayEvent" title="报警">
+                                <i class="fa fa fa-bell-o" id="alarmBell"></i>
+                                <span class="label label-warning" id="alarmNum">@(ViewBag.alramCount == 0 ? "" : ViewBag.alramCount)</span>
+                                @*<i class="glyphicon glyphicon-bell"></i>
+                <span class="badge box1">@ViewBag.alramCount</span>*@
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" id="Upcoming" title="待办">
+                                <i class="fa fa fa-calendar" id="UpComingBell"></i>
+                                <span class="label label-warning" id="MaintenanceNum">@(ViewBag.Allcount == 0 ? "" : ViewBag.Allcount)</span>
+                                @*<span class="label label-warning" id="WoNum">@(ViewBag.WoCount == 0 ? "" : ViewBag.WoCount)</span>*@
+                            </a>
+                        </li>
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="@ViewBag.userimge" class="user-image" alt="User Image">
+                                @*<i class="fa fa-user-circle user-image"></i>*@
+                                <span class="hidden-xs nickname">@Model.NickName</span>
+                            </a>
+                            <ul class="dropdown-menu" style="width:220px;box-shadow: 0 2px 4px rgba(0,0,0,.32);border: 1px solid #d2d2d2;">
+                                <!-- User image -->
+                                <li class="user-header" style="background:#fff;">
+                                    <div class="iconbox">
+                                        <img src="@ViewBag.userimge" class="img-circle" alt="User Image">
+                                        <div class="mask">
+                                            <a href="javacript:void(0);" class="icontip">点我修改</a>
+                                        </div>
+                                    </div>
+                                    <p style="color:#000;">
+                                        <span class="nickname">@Model.NickName</span> - @ViewBag.DptName
+                                        <small style="font-size: 15px;">@DateTime.Now.ToString()</small>
+                                    </p>
+                                </li>
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="javascript:void(0)" id="editPassWord" class="btn btn-default btn-flat" style="background: #09a2ea;color: #fff;border-radius: 5px;">密码修改</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="/Login/LoginOut" class="btn btn-default btn-flat" style="background: #09a2ea;color: #fff;border-radius: 5px;">退出</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Control Sidebar Toggle Button -->
+                        @*<li>
+            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+        </li>*@
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <ul class="sidebar-menu">
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" id="content-wrapper" style="min-height: 421px;">
+            <!--bootstrap tab风格 多标签页-->
+            <div class="content-tabs">
+                <button class="roll-nav roll-left tabLeft" onclick="scrollTabLeft()">
+                    <i class="fa fa-backward"></i>
+                </button>
+                <nav class="page-tabs menuTabs tab-ui-menu" id="tab-menu">
+                    <div class="page-tabs-content" style="margin-left: 0px;">
+
+                    </div>
+                </nav>
+                <button class="roll-nav roll-right tabRight" onclick="scrollTabRight()">
+                    <i class="fa fa-forward" style="        margin-left: 3px;
+"></i>
+                </button>
+                <div class="btn-group roll-nav roll-right">
+                    <button class="dropdown tabClose" data-toggle="dropdown">
+                        页签操作<i class="fa fa-caret-down" style=" padding-left: 3px; "></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" style="        min-width: 128px;
+">
+                        <li><a class="tabReload" href="javascript:refreshTab();">刷新当前</a></li>
+                        <li><a class="tabCloseCurrent" href="javascript:closeCurrentTab();">关闭当前</a></li>
+                        <li><a class="tabCloseAll" href="javascript:closeOtherTabs(true);">全部关闭</a></li>
+                        <li><a class="tabCloseOther" href="javascript:closeOtherTabs();">关闭其他</a></li>
+                    </ul>
+                </div>
+                <button class="btn-refresh" onclick="refreshTab()">
+                    <i class="fa fa-refresh"></i>
+                </button>
+                <button class="roll-nav roll-right fullscreen" onclick="App.handleFullScreen()">
+                    <i class="fa fa-arrows-alt"></i>
+                </button>
+            </div>
+            <div class="content-iframe">
+                <div class="tab-content " id="tab-content">
+
+                </div>
+            </div>
+        </div>
+        <!-- /.content-wrapper -->
+        <!--<footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 2.0
+            </div>
+            <strong>Copyright &copy; <a href="#">www.sanli.com</a>.</strong> All rights reserved.-->
+        <!-- <a  onclick="addTabs({id:'90023',title: '添加',close: true,url: 'forms/editors_iframe.html',urlType: 'relative'});">添加</a> -->
+        <!--</footer>-->
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Create the tabs -->
+            <ul class="nav nav-tabs nav-justified control-sidebar-tabs" style="display: none;">
+                <li class="active">
+                    <a href="#control-sidebar-theme-demo-options-tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-wrench"></i></a>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content" id="ctrlbar-content">
+            </div>
+        </aside>
+        <!-- /.control-sidebar -->
+        <!-- Add the sidebar's background. This div must be placed
+        immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+        <ul id="Ejectone" class="biaoshi"></ul>
+        <ul id="Ejecttwo" class="biaoshi"></ul>
+        <ul id="Ejectthree" class="biaoshi"></ul>
+        <ul id="eventCamera" class="biaoshi"></ul>
+    </div>
+
+    <!-- ./wrapper -->
+    @*<script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>*@
+    <script src="~/js/jquery 2.1.4/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.6 -->
+    @*<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+    <script src="~/js/twitter-bootstrap-3.3.7/bootstrap.min.js"></script>
+    <!-- Slimscroll -->
+    <script src="~/js/jquery.slimscroll.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/js/adminlte.lite.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/js/adminlte.skin.js"></script>
+    <script src="~/js/jquery.blockUI.min.js"></script>
+    <!--tabs-->
+    <script src="~/js/app_iframe.js"></script>
+    <script src="~/lib/SignalR/signalr.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/js/WebSpeech.js"></script>
+    <script src="~/js/jquery.signalR-2.2.1.min.js"></script>
+    <script type="text/javascript">
+        //测试signalr
+
+        var src = "";// 初始化Aduio
+        var audio = new Audio();
+        var playPromise;
+        var MaintenanceCount = @ViewBag.MaintenanceCount;
+        var WoCount = @ViewBag.WoCount;
+        var opentipFlag = 0;
+        var mopentipFlag = 0;
+        var alarmindex;
+        var Maintenanceindex;
+        var offsetLeft = 0, offsetTop = 0, height = 0;  //子页面用
+        var serialNums = "@ViewBag.SerialNum";
+        var serialNum_array = serialNums == "" ? [] : serialNums.split(",");
+        var isadmin = "@ViewBag.IsAdmin";
+        var offsetLeft1 = 0, offsetTop1 = 0, titleHeight1 = 0;  //视频弹窗
+       var connection = new signalR.HubConnectionBuilder().withUrl("/api/chatHub").build();
+
+        connection.on("ReceiveMessage", function (eventinfo, CancleEvent) {
+
+                showNotice(eventinfo,CancleEvent);
+
+        });
+        //预警开始
+         connection.on("ReceiveWarn", function () {
+             //查看当前账号下是否有预警
+             $.post("/Sws/WarnRule/HaveWarninfo", {}, function (res) {
+                 if (res.num > 0) {
+                     $(".badge1").css("display", "block");
+                 }
+                 else {
+                     $(".badge1").css("display", "none");
+                 }
+             })
+
+
+         });
+        function ChangeLog() {
+            $.post("/Home/CheckLoginLog", {}, function (res) {
+                console.log(res)
+            })
+            
+        }
+        function CheckWarnInfo() {
+             //查看当前账号下是否有预警
+             $.post("/Sws/WarnRule/HaveWarninfo", {}, function (res) {
+                 if (res.num > 0) {
+                     $(".badge1").css("display", "block");
+                 }
+                 else {
+                     $(".badge1").css("display", "none");
+                 }
+             })
+        }
+        //预警结束
+       //事件开始
+        // connection.on("EventRcv_test", function (data) {
+        //     console.log("事件回调" + data);
+
+
+        //});
+        connection.on("EventRcv", function (data) {
+             console.log("事件回调" + data);
+            var json = JSON.parse(data);
+            if (isadmin == "True") {//管理员
+                for (var i = 0; i < json.length; i++) {
+                    var uniqueID = json[i].srcIndex + json[i].eventType;
+                    if ($("#eventCamera #" + uniqueID + "").length > 0) {
+                        $("#eventCamera #" + uniqueID + " .happenTime").text(json[i].happenTime);
+                    }
+                    else {
+                        var icon = "/images/highAlarm1.png";
+                        var JEventLevelhtml = "";
+
+                        if ($("#eventCamera li").length == 0) {
+                            JEventLevelhtml = "<li><span class='close' style='color:#fff;'>X</span><h1 style='font-weight:bold;'><img style='height: 28px; width: 28px;margin-right:5px;margin-bottom:2px;' src='" + icon + "'/>事件信息</h1><div class='allarea'>";
+                        }
+                        JEventLevelhtml += "<div id='" + uniqueID + "'><table><tr  title=" + json[i].srcName + "><td>事件源：</td><td>" + json[i].srcName + "</td></tr >"
+                            + "<tr  title=" + json[i].eventTypeName + "><td>事件类型：</td><td >" + json[i].eventTypeName + "</td></tr>"
+                            + "<tr><td>发生时间：</td><td class='happenTime'>" + json[i].happenTime + "</td></tr></table><a id='select' data-uniqueID='" + uniqueID + "' data-srcIndex='" + json[i].srcIndex + "'>查看</a><hr /></div>";
+                        audioPlay("../webspeech/提示声.WAV");
+
+
+                        if ($("#eventCamera li").length == 0) {
+                            JEventLevelhtml += "</div></li >";
+
+                            $("#eventCamera").append(JEventLevelhtml);
+                        }
+                        else {
+                            $("#eventCamera .allarea").append(JEventLevelhtml);
+                        }
+
+
+                    }
+
+                }
+                //console.log("事件回调" + data);
+            }
+            else {//非管理员
+
+                for (var i = 0; i < json.length; i++) {
+
+                    var uniqueID = json[i].srcIndex + json[i].eventType;
+                    if (!arraySearch(json[i].srcIndex)) {
+                        return;
+                    }
+
+                    if ($("#eventCamera #" + uniqueID + "").length > 0) {
+                        $("#eventCamera #" + uniqueID + " .happenTime").text(json[i].happenTime);
+                    }
+                    else {
+                        var icon = "/images/highAlarm1.png";
+                        var JEventLevelhtml = "";
+
+                        if ($("#eventCamera li").length == 0) {
+                            JEventLevelhtml = "<li><span class='close' style='color:#fff;'>X</span><h1 style='font-weight:bold;'><img style='height: 28px; width: 28px;margin-right:5px;margin-bottom:2px;' src='" + icon + "'/>事件信息</h1><div class='allarea'>";
+                        }
+                        JEventLevelhtml += "<div id='" + uniqueID + "'><table><tr  title=" + json[i].srcName + "><td>事件源：</td><td>" + json[i].srcName + "</td></tr >"
+                            + "<tr  title=" + json[i].eventTypeName + "><td>事件类型：</td><td >" + json[i].eventTypeName + "</td></tr>"
+                            + "<tr><td>发生时间：</td><td class='happenTime'>" + json[i].happenTime + "</td></tr></table><a id='select' data-uniqueID='" + uniqueID + "' data-srcIndex='" + json[i].srcIndex + "'>查看</a><hr /></div>";
+                        audioPlay("../webspeech/提示声.WAV");
+
+
+                        if ($("#eventCamera li").length == 0) {
+                            JEventLevelhtml += "</div></li >";
+
+                            $("#eventCamera").append(JEventLevelhtml);
+                        }
+                        else {
+                            $("#eventCamera .allarea").append(JEventLevelhtml);
+                        }
+
+
+                    }
+
+                }
+                //console.log("事件回调" + data);
+            }
+
+        });
+
+        $(document).on("click", "#eventCamera li #select", function () {
+
+            var uniqueid=$(this)[0].getAttribute("data-uniqueid");
+            var srcIndex = $(this)[0].getAttribute("data-srcindex");
+
+             layer.open({
+                type: 2,
+                title: "视频监控",
+                shadeClose: true,
+                shade: [0.1, '#000'],
+                area: ["900px", "600px"],
+                resize: false,
+                fixed: true,
+                move:false,
+                content: "/Home/GetCameraDetail?srcIndex=" + srcIndex + "",
+                success: function (layero, index) {
+                    offsetLeft1 = layero[0].offsetLeft;
+                    offsetTop1 = layero[0].offsetTop;
+                    titleHeight1 = window.$(".layui-layer-title")[0].clientHeight;
+                 },
+                 end: function () {
+                     $(".allarea #" + uniqueid + "").remove();
+                     if ($(".allarea div").length == 0) {
+                         //$('#eventCamera').css('cssText', ' display:none;');
+                         $('#eventCamera').empty();
+                     }
+                 }
+            });
+        })
+        $(document).on("click", "#eventCamera li .close", function () {
+            $('#eventCamera').empty();
+        })
+        $(document).on("click", "#eventCamera li", function () {
+             $('#eventCamera li').css('cssText', '-webkit-animation-duration: 0s;');
+        })
+        function arraySearch(text){
+            if (serialNum_array.length > 0) {
+                for (var i = 0; i < serialNum_array.length; i++) {
+                    if (serialNum_array[i] == text) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else {
+                return false;
+            }
+        }
+
+        //事件结束
+        $("#signalTest").click(function () {
+
+          connection.invoke("SendMessage", "3,2000", false).catch(function (err) {
+           return console.error(err.toString());
+           });
+
+        })
+        connection.start();
+        //window.addEventListener('load', function () {
+        //   Notification.requestPermission(function (status) {
+        //    // 这将使我们能在 Chrome/Safari 中使用 Notification.permission
+        //   if (Notification.permission !== status) {
+        //      Notification.permission = status;
+        //        }
+        //     });
+        //    });
+
+//        function mesgNotice(eventinfo) {
+//            Notification.requestPermission().then(function(result) {
+//                if (result === 'denied') {
+//                    console.log('Permission wasn\'t granted. Allow a retry.');
+//                    return;
+//                }
+//                else {
+//                    showNotice(eventinfo);
+//                    return;
+//                }
+
+//  // Do something with the granted permission.
+//});
+//            //if (window.Notification && Notification.permission != "denied") {
+//            //    Notification.requestPermission(function (status) {
+//            //        showNotice(eventinfo);
+//            //    });
+//            //}
+//            //else if(Notification.permission === "granted") {
+//            //    showNotice(eventinfo);
+//            //}
+//        }
+        function audioPlay(src) {
+             audio.src = src;
+             playPromise = audio.play();
+
+            if (playPromise) {
+                playPromise.then(function() {
+                     // 音频加载成功
+                    // 音频的播放需要耗时
+                    (function () {
+                        // 后续操作
+                        console.log("done.");
+                    })
+                    ,audio.duration * 1000 // audio.duration 为音频的时长单位为秒
+                }).catch(function (e) {
+                    // 音频加载失败
+                })
+
+
+            }
+        }
+        function showNotice(eventinfo, cancelOperate) {
+            if (cancelOperate == false) {
+                $.post("/Sws/Sws_EventJK/GetDeviceAlarm", { ids: eventinfo }, function (res) {
+                    if (res.data.length != 0) {
+
+                            if (opentipFlag == 1) {
+                                GetEventList();
+                            }
+                            else {
+                                var allcount = $('#alarmNum').text();
+                                if (allcount != "") {
+                                    $('#alarmNum').text(parseInt(allcount) + 1);
+                                }
+                                else {
+
+                                    $('#alarmNum').text(1);
+                                }
+                            }
+                            var data = res.data[0];
+                            var level = "";
+                            var type = "";
+                            var icon = "";
+                            var sound = "../webspeech/ALARM1.WAV";
+                            var arrayid = eventinfo.split(',');
+                            var idflag = arrayid[0] + arrayid[1];
+
+                            if (data.EventLevel == 3) {
+                                level = "(提示性)";
+                                sound = "../webspeech/提示声.WAV";
+                            }
+                            else if (data.EventLevel == 2) {
+                                level = "(一般)";
+                                sound = "../webspeech/chm.WAV";
+                            }
+                            else {
+                                level = "(紧急)";
+
+                            }
+                            if (data.EventType != 0) {
+                                type = "【阈值报警,当前值：" + data.CurrentValue + "" + data.Unit + "】";
+                                icon = getdataTypeIcon(data);
+                            }
+                            else {
+                                if (data.EventSource == 1000 || data.EventSource == 1001) {
+                                    type = "【通讯报警】";
+                                    icon = "/images/calarm.png";
+                                }
+                                else {
+
+                                    icon = "/images/deviceAlarm" + data.EventLevel + ".png";
+
+                                }
+                            }
+
+                            //var bodys = type + " " + data.EventMessage + level + " " + data.EventTime.replace("T", " ");
+
+                        if (data.EventLevel == 1 || data.EventLevel == 2) {
+                              var aname=  data.StationName + data.ItemName;
+                            var mess = aname.replace("#", "") + "发生" + data.EventMessage.replace("#", "泵") + "报警," + "报警时间:" + data.EventTime.replace("T", " ") + "。";
+                            Announcements(mess);
+                             }
+
+                            if (data.EventLevel == 1) {
+
+                                $('#Ejectone').removeAttr("style");
+                                var JEventLevelhtml = "";
+                                if ($("#Ejectone li").length == 0) {
+                                    JEventLevelhtml = " <li><span class='close' style='color:#fff;'>X</span><h1 style='font-weight:bold;'><img style='height: 28px; width: 28px;margin-right:5px;margin-bottom:2px;' src='" + icon + "'/>紧急报警</h1><div><table>";
+                                }
+
+
+                                var devicename = data.StationName + "#" + data.ItemName;
+                                var olddevicenam = devicename;
+                                if (devicename.length >= 8) {
+                                    devicename = devicename.substr(0, 8) + "..";
+                                }
+                                var Message = data.EventMessage;
+
+
+                                if (Message.length >= 8) {
+                                    Message = Message.substr(0, 8) + "..";
+                                }
+                                JEventLevelhtml += "<tr class='" + idflag + "' title=" + olddevicenam + "><td>设备名称：</td><td>" + devicename + "</td></tr >"
+                                    + "<tr class='" + idflag + "' title=" + data.EventMessage + "><td>报警信息：</td><td >" + Message + "</td></tr>"
+                                    + "<tr style='border-bottom: 1px dotted #ff5e00' class='" + idflag + "'><td>报警时间：</td><td >" + data.EventTime.replace("T", " ") + "</td></tr>";
+
+
+
+                                audioPlay(sound);
+                                //$("<audio controls='controls'><source src='" + sound + "' /></audio>")[0].play();
+
+                                if ($("#Ejectone li").length == 0) {
+                                    JEventLevelhtml += "</table></div><a id='select'>查看</a></li >";
+
+                                    $("#Ejectone").append(JEventLevelhtml);
+                                }
+                                else {
+                                    $("#Ejectone table").append(JEventLevelhtml);
+                                }
+
+                                $("#Ejectone li").click(function () {
+                                    $('#Ejectone li').css('cssText', '-webkit-animation-duration: 0s;');
+                                });
+
+                                $("#Ejectone li #select").click(function () {
+                                    $('#Ejectone').css('cssText', ' display:none;');
+                                    window.top.homeAddTab("50100", "报警监控", "/Sws/Sws_EventJK/Index/");
+                                    $('#Ejectone').empty();
+                                    //parent.$("#tab").attr("src", "/EventJKInfo/Index");
+                                });
+                                $("#Ejectone li .close").click(function () {
+                                    $('#Ejectone').css('cssText', ' display:none;');
+                                    $('#Ejectone').empty();
+                                })
+                            }
+
+                            if (data.EventLevel == 2) {
+                                $('#Ejecttwo').removeAttr("style");
+                                var YEventLevelhtml = "";
+                                if ($("#Ejecttwo li").length == 0) {
+                                    YEventLevelhtml = " <li><span class='close' style='color:#fff;'>X</span><h1 style='font-weight:bold;'><img style='height: 28px; width: 28px;margin-right:5px;margin-bottom:2px;' src='" + icon + "'/>一般报警</h1><div><table>";
+                                }
+
+                                var devicename = data.StationName + "#" + data.ItemName;
+                                var olddevicenam = devicename;
+                                if (devicename.length >= 8) {
+                                    devicename = devicename.substr(0, 8) + "..";
+                                }
+                                var Message = data.EventMessage;
+                                if (Message.length >= 8) {
+                                    Message = Message.substr(0, 8) + "..";
+                                }
+                                YEventLevelhtml += "<tr class='" + idflag + "' title=" + olddevicenam + "><td>设备名称：</td><td>" + devicename + "</td></tr > "
+                                    + "<tr class='" + idflag + "' title=" + data.EventMessage + "><td>报警信息：</td><td >" + Message + "</td></tr>"
+                                    + "<tr style='border-bottom: 1px dotted #ff5e00' class='" + idflag + "'><td>报警时间：</td><td >" + data.EventTime.replace("T", " ") + "</td></tr>";
+
+
+
+                                audioPlay(sound);
+                                //$("<audio controls='controls'><source src='" + sound + "' /></audio>")[0].play();
+
+                                if ($("#Ejecttwo li").length == 0) {
+                                    YEventLevelhtml += "</table></div><a id='select'>查看</a></li >";
+
+                                    $("#Ejecttwo").append(YEventLevelhtml);
+                                }
+                                else {
+                                    $("#Ejecttwo table").append(YEventLevelhtml);
+                                }
+                                $("#Ejecttwo li").click(function () {
+                                    $('#Ejecttwo li').css('cssText', '-webkit-animation-duration: 0s;');
+                                });
+                                $("#Ejecttwo li #select").click(function () {
+                                    //parent.$("#tab").attr("src", "/EventJKInfo/Index");
+                                    window.top.homeAddTab("50100", "报警监控", "/Sws/Sws_EventJK/Index/");
+                                    $('#Ejecttwo').css('cssText', ' display:none;');
+                                    $('#Ejecttwo').empty();
+                                });
+                                $("#Ejecttwo li .close").click(function () {
+                                    $('#Ejecttwo').css('cssText', ' display:none;');
+                                    $('#Ejecttwo').empty();
+                                })
+                            }
+
+                            if (data.EventLevel == 3) {
+                                $('#Ejectthree').removeAttr("style");
+                                var TEventLevelhtml = "";
+                                if ($("#Ejectthree li").length == 0) {
+                                    TEventLevelhtml = " <li><span class='close' style='color:#fff;'>X</span><h1 style='font-weight:bold;'><img style='height: 28px; width: 28px;margin-right:5px;margin-bottom:2px;' src='" + icon + "'/>提示报警</h1><div><table>";
+                                }
+
+                                var devicename = data.StationName + "#" + data.ItemName;
+                                var olddevicenam = devicename;
+                                if (devicename.length >= 8) {
+                                    devicename = devicename.substr(0, 8) + "..";
+                                }
+                                var Message = data.EventMessage;
+                                if (Message.length >= 8) {
+                                    Message = Message.substr(0, 8) + "..";
+                                }
+                                TEventLevelhtml += "<tr class='" + idflag + "' title=" + olddevicenam + "><td>设备名称：</td><td>" + devicename + "</td></tr > "
+                                    + "<tr class='" + idflag + "' title=" + data.EventMessage + "><td>报警信息：</td><td>" + Message + "</td></tr>"
+                                    + "<tr style='border-bottom: 1px dotted #ff5e00' class='" + idflag + "'><td>报警时间：</td><td >" + data.EventTime.replace("T", " ") + "</td></tr>";
+
+                                audioPlay(sound);
+                                //$("<audio controls='controls'><source src='" + sound + "' /></audio>")[0].play();
+
+                                if ($("#Ejectthree li").length == 0) {
+                                    TEventLevelhtml += "</table></div><a id='select'>查看</a></li >";
+
+                                    $("#Ejectthree").append(TEventLevelhtml);
+                                }
+                                else {
+                                    $("#Ejectthree table").append(TEventLevelhtml);
+                                }
+                                $("#Ejectthree li #select").click(function () {
+                                    window.top.homeAddTab("50100", "报警监控", "/Sws/Sws_EventJK/Index/");
+                                    //parent.$("#tab").attr("src", "/EventJKInfo/Index");
+                                    $('#Ejectthree').css('cssText', ' display:none;');
+                                    $('#Ejectthree').empty();
+                                });
+                                $("#Ejectthree li .close").click(function () {
+                                    $('#Ejectthree').css('cssText', ' display:none;');
+                                    $('#Ejectthree').empty();
+                                })
+                            }
+
+                            //var notice_ = new Notification(data.StationName + "#" + data.ItemName, { body: bodys, icon: icon });
+                            // $("<audio controls='controls'><source src='"+sound+"' /></audio>")[0].play();
+                            //notice_.onclick = function () {//单击消息提示框，进入浏览器页面
+                            //    window.focus();
+                            //}
+                            //notice_.onshow = function () {
+                            //setTimeout(notice_.close.bind(notice_), 10000);
+                            //}
+                    }
+
+                });
+            }
+            else {//移除
+                  var arrayid = eventinfo.split(',');
+                    var idflag = arrayid[0] + arrayid[1];
+                    $(".biaoshi ." + idflag+ "").remove();
+                    if ($("#Ejectone tr").length==0)//tr 的count个数
+                    {
+                        $("#Ejectone").css("display","none");
+                    }
+                    if ($("#Ejecttwo tr").length == 0) {
+                        $("#Ejecttwo").css("display", "none");
+                    }
+                    if ($("#Ejectthree tr").length == 0) {
+                        $("#Ejectthree").css("display", "none");
+                    }
+                $.post("/Sws/Sws_EventJK/CheckAction", { ids: eventinfo }, function (data) {
+                    if (data == "ok") {
+
+                         if (opentipFlag == 1) {
+                                GetEventList();
+                            }
+                            else {
+                               var alarmtext = $('#alarmNum').text();
+                                if (alarmtext == "") {
+
+                                  }
+                               else {
+                               if ((parseInt(alarmtext) - 1) == 0) {
+                                   $('#alarmNum').text("");
+                                 }
+                                 else {
+                                  $('#alarmNum').text(parseInt(alarmtext) - 1);
+                                  }
+                         }
+                            }
+                    }
+
+                    })
+
+
+
+                     }
+        }
+        //WebSpeech.server = 'http://120.24.87.124/cgi-bin/ekho2.pl';
+        WebSpeech.server = '@ViewBag.WebSpeech';
+        WebSpeech.setVoice('BaiduMandarinMale');
+        function Announcements(str) {
+            //WebSpeech.pauseHtml();
+            WebSpeech.speak(str);
+
+            //WebSpeech.onfinish = function () {
+            //    WebSpeech.stopHtml();
+            //}
+
+        }
+        //阈值图片
+        function getdataTypeIcon(data) {
+            var icon = "";
+            if (data.EventType == 1 || data.EventType == 2) {//上线报警
+
+              icon = "/images/highAlarm"+data.EventLevel+".png";
+
+            }
+            else if (data.EventType == 3 || data.EventType == 4) {//下线报警
+                icon = "/images/lowAlarm"+data.EventLevel+".png";
+            }
+            return icon;
+        }
+        //报警集合
+        $("#displayEvent").click(function () {
+
+            if (opentipFlag == 0) {
+                GetEventList();
+            }
+            else {
+                layer.close(alarmindex);
+                opentipFlag = 0;
+            }
+        })
+
+        function GetEventList() {
+            var htmls = "";
+            var pagesize = 5;
+             $.post("/Sws/Sws_EventJK/GetDeviceAlarmList", { pagesize: pagesize }, function (res) {
+                    htmls += "<div style='border-bottom:1px solid #ddd;padding:10px 0;'><span style='font-size: large;'>报警通知</span>"+
+                        "<span class='' id='allread' title='全部标记为已读' style='float:right;cursor: pointer;color: #1c93d8;font-size:13px;'>全部标记为已读</span>"+
+                   " </div>";
+                    if (res.data.length > 0) {
+                        for (var i = 0; i < res.data.length; i++) {
+                            var data = res.data[i];
+                            var level = "";
+                            var type = "";
+                            var icon = "";
+                            if (data.EventLevel == 3) {
+                                level = "提示性";
+                            }
+                            else if (data.EventLevel == 2) {
+                                level = "一般";
+                            }
+                            else {
+                                level = "紧急";
+                            }
+                            if (data.EventType != 0) {
+                                type = "(阈值报警,当前值：" + data.CurrentValue + "" + data.Unit + ")";
+                                icon = getdataTypeIcon(data);
+                            }
+                            else {
+                                if (data.EventSource == 1000 || data.EventSource == 1001) {
+                                    type = "(通讯报警)";
+                                    icon = "/images/calarm.png";
+                                }
+                                else {
+
+                                    icon = "/images/deviceAlarm" + data.EventLevel + ".png";
+
+                                }
+                            }
+                            var alarmname = data.StationName + "#" + data.ItemName;
+                            var appendstring = "<section class='relative noborder' style='' id='e"+data.ID+"'>" +
+                                "<div style='position:absolute;right:10px;top:10px;'><i class='fa fa-check-square-o single' data-key='"+data.ID+"' title='标记为已读' style='color: #65658c;font-size: large;'></i></div>" +
+                                " <div style = 'float:left;width:15%'> <img style='height:50px; margin-top: 20px;' src='" + icon + "' /></div> " +
+                                "<table style='float:left;width:75%;margin-left:20px;font-size:13px;color:#666'>" +
+                                "<tr><td>报警设备</td><td title="+ alarmname +" style='color:#333;max-width:130px;font-weight:bold;overflow:hidden;text-overflow:ellipsis;white-space: nowrap;'>" + alarmname + "</td></tr>" +
+                                "<tr><td>报警级别</td><td>" + level + "" + type + "</td></tr>" +
+                                "<tr><td>报警信息</td><td title="+ data.EventMessage +" style=''>" + data.EventMessage + "</td></tr>" +
+                                "<tr><td>报警时间</td><td>" + data.EventTime.replace("T", " ") + "</td></tr>" +
+                                "</table>" +
+                                "</section>";
+                            htmls += appendstring;
+                        }
+                        if (res.totalCount > pagesize) {
+                            htmls += '<p id="moredata" style="text-align: center;font-size:13px;cursor: pointer;margin:0;color: #666;line-height:39px">显示更多</p>';
+                        }
+                        $('#alarmNum').text(res.totalCount);
+                        if (opentipFlag == 0) {
+                            var heights = 350 + 80 * res.data.length;
+                            layer.tips(htmls, '#alarmBell', {
+                                tips: [1, '#fff'],
+                                area: ['400px', '"+heights+"px'],
+                                time: 0,
+                                closeBtn: false,
+                                success: function (warnLayer, warnIndex) {
+                                    alarmindex = warnIndex;
+                                    opentipFlag = 1;
+                                },
+                                end: function (warnLayer, warnIndex) {
+                                    //$(warnLayer)[0].className -= 'warningtips';
+                                },
+                                cancel: function (index, layero) {
+                                    layer.close(index);
+                                    opentipFlag = 0;
+                                }
+
+                            });
+                        }
+                        else {
+                             var heights = 250 + 80 * res.data.length;
+                            $(".layui-layer-content").height(heights+"px");
+                            $(".layui-layer-content").empty().append(htmls);
+                        }
+                    }
+                    else {//暂无报警
+                        htmls = '<div class="no-img" id="imge">'+
+                            '<img src="/images/null.png" width="150">'+
+                            '<p class="gray">暂无数据</p>'+
+                            '</div>';
+                        if (opentipFlag == 0) {
+                             $('#alarmNum').text("");
+                            layer.tips(htmls, '#alarmBell', {
+                                tips: [1, '#fff'],
+                                area: ['400px', '400px'],
+                                time: 0,
+                                closeBtn: false,
+                                success: function (warnLayer, warnIndex) {
+                                    alarmindex = warnIndex;
+                                    opentipFlag = 1;
+                                },
+                                end: function (warnLayer, warnIndex) {
+                                    //$(warnLayer)[0].className -= 'warningtips';
+                                },
+                                cancel: function (index, layero) {
+                                    layer.close(index);
+                                    opentipFlag = 0;
+                                }
+
+                            });
+                        }
+                    }
+
+                })
+
+        }
+
+        $("#Upcoming").click(function () {
+            if (mopentipFlag == 0) {
+                GetMaintenanceList();
+            } else {
+                layer.close(Maintenanceindex);
+                mopentipFlag=0;
+            }
+
+        })
+        function GetMaintenanceList() {
+            var htmls = "";
+            htmls += "<a href='#'><p onClick=" + '"' + "addTabs({id:'130400',title: '保养提醒',close: true,url: '/Com/MaintenanceRt/Index',urlType: 'relative'});" + '"' + "' style='padding:10px;margin-bottom:0'><img width='22px' height='22px'  src='/images/RtMaintenance.png'><span style='padding-left:10px;display:inline-block;line-height:30px'>保养提醒 </span><span style='color:#0fd10a'> (" + MaintenanceCount + ")</span></p></a>";
+            htmls += "<a href='#'><p onClick=" + '"' + "addTabs({id:'121000',title: '维修办理',close: true,url: '/Wo/WorkHandle/Index',urlType: 'relative'});" + '"' + "' style='padding:10px;margin-bottom:0'><img width='22px' height='22px'  src='/images/RtMaintenance.png'><span style='padding-left:10px;display:inline-block;line-height:30px'>工单提醒 </span><span style='color:#0fd10a'> (" + WoCount + ")</span></p></a>";
+            htmls += "<a href='#'><p onClick=" + '"' + "addTabs({id:'121100',title: '维修延期',close: true,url: '/Wo/WorkExtension/Index',urlType: 'relative'});" + '"' + "' style='padding:10px;margin-bottom:0'><img width='22px' height='22px'  src='/images/RtMaintenance.png'><span style='padding-left:10px;display:inline-block;line-height:30px'>维修延期 </span><span style='color:#0fd10a'> (" + @ViewBag.WoExCount + ")</span></p></a>";
+            htmls += "<a href='#'><p onClick=" + '"' + "addTabs({id:'121200',title: '维修转发',close: true,url: '/Wo/WorkForward/Index',urlType: 'relative'});" + '"' + "' style='padding:10px;margin-bottom:0'><img width='22px' height='22px'  src='/images/RtMaintenance.png'><span style='padding-left:10px;display:inline-block;line-height:30px'>维修转发 </span><span style='color:#0fd10a'> (" + @ViewBag.WoFor + ")</span></p></a>";
+            htmls += "<a href='#'><p onClick=" + '"' + "addTabs({id:'121900',title: '维修退单',close: true,url: '/Wo/WorkTrun/Index',urlType: 'relative'});" + '"' + "' style='padding:10px;margin-bottom:0'><img width='22px' height='22px'  src='/images/RtMaintenance.png'><span style='padding-left:10px;display:inline-block;line-height:30px'>维修退单 </span><span style='color:#0fd10a'> (" + @ViewBag.WoTurn + ")</span></p></a>";
+            htmls += "<a href='#'><p onClick=" + '"' + "addTabs({id:'121600',title: '巡检延期',close: true,url: '/Wo/InsExtension/Index',urlType: 'relative'});" + '"' + "' style='padding:10px;margin-bottom:0'><img width='22px' height='22px'  src='/images/RtMaintenance.png'><span style='padding-left:10px;display:inline-block;line-height:30px'>巡检延期 </span><span style='color:#0fd10a'> (" + @ViewBag.InExCount + ")</span></p></a>";
+            htmls += "<a href='#'><p onClick=" + '"' + "addTabs({id:'121700',title: '巡检转发',close: true,url: '/Wo/InsForward/Index',urlType: 'relative'});" + '"' + "' style='padding:10px;margin-bottom:0'><img width='22px' height='22px'  src='/images/RtMaintenance.png'><span style='padding-left:10px;display:inline-block;line-height:30px'>巡检转发 </span><span style='color:#0fd10a'> (" + @ViewBag.InFor + ")</span></p></a>";
+            htmls += "<a href='#'><p onClick=" + '"' + "addTabs({id:'121800',title: '巡检退单',close: true,url: '/Wo/InsTurn/Index',urlType: 'relative'});" + '"' + "' style='padding:10px;margin-bottom:0'><img width='22px' height='22px'  src='/images/RtMaintenance.png'><span style='padding-left:10px;display:inline-block;line-height:30px'>巡检退单 </span><span style='color:#0fd10a'> (" + @ViewBag.InTurn + ")</span></p></a>";
+
+            if (mopentipFlag == 0) {
+                layer.tips(htmls, '#UpComingBell', {
+                    tips: [1, '#fff'],
+                    area: ['230px', '130'],
+                    time: 0,
+                    closeBtn: false,
+                    success: function (warnLayer, warnIndex) {
+                        Maintenanceindex = warnIndex;
+                        mopentipFlag = 1;
+                    },
+                    end: function (warnLayer, warnIndex) {
+                    },
+                    cancel: function (index, layero) {
+                        mopentipFlag = 0;
+                    }
+                });
+            }
+        }
+        //显示更多
+        $(document).on("click","#moredata", function () {
+            layer.close(alarmindex);
+            opentipFlag = 0;
+            window.top.homeAddTab("50100", "报警监控", "/Sws/Sws_EventJK/Index/");
+        })
+        //全部标记为已读
+        $(document).on("click", "#allread", function () {
+            layer.confirm("确定全部报警标记为已读？", {
+                    btn: ["确定", "取消"]
+                },
+                    function (index) {
+                        OperateAllRead();
+                        layer.close(index);
+                    },
+                    function () { }
+                );
+        })
+
+        //全部标记为已读
+        function OperateAllRead() {
+            $.post("/Sws/Sws_EventJK/OperateRead_all", {}, function (data) {
+                if (data == "ok") {
+                    $('#alarmNum').text("");
+                    layer.close(alarmindex);
+                    opentipFlag = 0;
+                }
+                else {
+                    layer.msg("操作失败");
+
+                }
+            })
+
+        }
+        //标记某个报警为已读
+        $(document).on("click", ".single", function () {
+            var eventid = $(this).data("key");
+            layer.confirm("确定该报警标记为已读？", {
+                    btn: ["确定", "取消"]
+                },
+                    function (index) {
+                        OperateRead(eventid);
+                         layer.close(index);
+                    },
+                    function () { }
+                );
+        })
+        function OperateRead(eventid) {
+               $.post("/Sws/Sws_EventJK/OperateRead", {eventid:eventid}, function (data) {
+                   if (data == "ok") {
+                       var allcount = $('#alarmNum').text();
+                       $('#alarmNum').text(parseInt(allcount) - 1);
+                      var aa = $("#e" + eventid + "").next();
+                        $("#e" + eventid + "").next().remove();
+                       $("#e" + eventid + "").remove();
+
+
+
+                }
+                else {
+                    layer.msg("操作失败");
+
+                }
+            })
+
+        }
+        //signalr测试结束
+
+        //登陆人员信息修改
+        $(".user-header").click(function () {
+            iframeWithBtns("800px", "500px", "/Home/EditUserInfo", false, function (myindex, mylayero) {
+                    var currentIframe =  $(mylayero).find("iframe")[0].contentWindow;
+                currentIframe.saveForm1(function (data, iconurl,nickname) {
+
+                        if (data == "ok") {
+                            layer.close(myindex);
+                            $(".img-circle").attr("src", iconurl);
+                            $(".user-image").attr("src", iconurl);
+                            $(".nickname").text(nickname);
+                        }  else {
+                             layer.msg("操作失败");
+                        }
+                    });
+                });
+
+        })
+
+
+
+
+
+        $(function () {
+            signalREevent();
+            CheckWarnInfo();//预警查看
+            ChangeLog();
+            App.setbasePath("../");
+            App.setGlobalImgPath("images/");
+
+            @{
+                var moudle = ViewBag.AddTab as SysModule;
+                if (moudle != null) {
+                     <text>
+                     addTabs({
+                        id: "@moudle.ModuleNum",
+                        text: "@moudle.ModuleName",
+                        url: "@moudle.Url",
+                        targetType: "iframe-tab",
+                        icon: "fa fa-circle-o",
+                        urlType: 'abosulte'
+                        });
+                    </text>
+
+                }
+
+            }
+
+
+
+            App.fixIframeCotent();
+
+            var menus=@ViewBag.Menus;
+            $('.sidebar-menu').sidebarMenu({ data: menus });
+            //console.log($('.sidebar-menu').html())
+            $("#editPassWord").click(function () {
+                iframeWithBtns("500px", "330px", "/Home/EditPassWord", false, function (myindex, mylayero) {
+                    var currentIframe = window[mylayero.find('iframe')[0]['name']];
+                    currentIframe.saveForm(function (data) {
+                        if (data == "ok") {
+                            layer.close(myindex);
+                        } else if (data == "error") {
+                            layer.msg("旧密码不正确");
+                        } else {
+                             layer.msg("修改密码失败");
+                        }
+                    });
+                });
+            });
+        });
+
+        function homeAddTab(id,name,url) {
+            addTabs({
+                id: id,
+                text: name,
+                title:name,
+                url: url,
+                targetType: "iframe-tab",
+                icon: "fa fa-circle-o",
+                urlType: 'relative',
+                close: true
+            });
+        }
+        //预警页面
+        $("#WarnRuleData").click(function () {
+            if ($(".badge1").css("display") != "none") {
+               //链接到预警报告页面
+                 window.top.homeAddTab("50400", "预警报告", "/Sws/WarnRule/WarnReport/");
+            }
+        })
+
+
+        function iframeWithBtns(width, height, url, isParent, func) {
+            var options = {
+                skin: 'layui-ext-skin01',
+                type: 2,
+                title: false,
+                shadeClose: false,
+                closeBtn: 0,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+
+        /**
+         * 刷新右侧iframe
+         */
+        $('#refreshIframe').click(function() {
+            var activeId = $('.page-tabs-content .menu_tab.active').data('pageid');
+            document.getElementById('iframe_' + activeId).contentWindow.location.reload(true);
+        });
+         function signalREevent() {
+
+            var url = "@ViewBag.signalrHubs";
+            var conn = $.hubConnection(url);
+            var param = { "userId": @ViewBag.userid, "isAdmin": (isadmin == "True" ? true : false), "DisplayUserEventOnly": -1 };
+
+            conn.qs = { "userId": JSON.stringify(param) };
+
+            var chart = conn.createHubProxy('eventHub');//updateDataHub//messageHub
+            //增加EventType,CurrentValue,Unit字段
+             chart.on('revMsg', function (DeviceName, RtuId, Message, Eventlevel, Eventtime, Eventsource, EventType, CurrentValue, LimitValue, Unit, StationID, StationName) {
+
+                 //自动生成工单
+                 CreatWorkOrder(RtuId, Eventsource, Message, Eventtime, Eventlevel);
+                 var levelName = "";
+                 DeviceName = StationName + "#" + DeviceName;
+                if (opentipFlag == 1) {
+                    GetEventList();
+                }
+                else {
+                    var allcount = $('#alarmNum').text();
+                    if (allcount != "") {
+                        $('#alarmNum').text(parseInt(allcount) + 1);
+                    }
+                    else {
+
+                        $('#alarmNum').text(1);
+                    }
+                }
+                //var data = res.data[0];
+                var level = "";
+                var type = "";
+                var icon = "";
+                var sound = "../webspeech/ALARM1.WAV";
+
+                var idflag = RtuId + "" + Eventsource;
+
+                if (Eventlevel == 3) {
+                    level = "(提示性)";
+                    sound = "../webspeech/提示声.WAV";
+                    levelName = "提示性报警";
+                }
+                else if (Eventlevel == 2) {
+                    level = "(一般)";
+                    sound = "../webspeech/chm.WAV";
+                    levelName = "一般报警";
+                }
+                else {
+                    level = "(紧急)";
+                    levelName = "紧急报警";
+                }
+                if (EventType != 0) {
+                    type = "【阈值报警,当前值：" + CurrentValue + "" + Unit + "】";
+                    icon = getdataTypeLevelIcon(EventType,Eventlevel);
+                }
+                else {
+                    if (Eventsource == 1000 || Eventsource == 1001) {
+                        type = "【通讯报警】";
+                        icon = "/images/calarm.png";
+                    }
+                    else {
+
+                        icon = "/images/deviceAlarm" + Eventlevel + ".png";
+
+                    }
+                }
+
+
+
+                if (Eventlevel == 1 || Eventlevel == 2) {
+                    var aname = DeviceName;
+                    var mess = aname.replace("#", "") + "发生" + Message.replace("#", "泵") + "报警," + "报警时间:" + Eventtime.replace("T", " ") + "。";
+                    Announcements(mess);
+                }
+
+                if (Eventlevel == 1) {
+
+                    $('#Ejectone').removeAttr("style");
+                    var JEventLevelhtml = "";
+                    if ($("#Ejectone li").length == 0) {
+                        JEventLevelhtml = " <li><span class='close' style='color:#fff;'>X</span><h1 style='font-weight:bold;'><img style='height: 28px; width: 28px;margin-right:5px;margin-bottom:2px;' src='" + icon + "'/>紧急报警</h1><div><table>";
+                    }
+
+
+                    var devicename1 = DeviceName;
+
+                    if (devicename1.length >= 8) {
+                        devicename1 = devicename1.substr(0, 8) + "..";
+                    }
+                    var Message1 = Message;
+
+
+                    if (Message1.length >= 8) {
+                        Message1 = Message1.substr(0, 8) + "..";
+                    }
+                    JEventLevelhtml += "<tr class='" + idflag + "' title=" + DeviceName + "><td>设备名称：</td><td>" + devicename1 + "</td></tr >"
+                        + "<tr class='" + idflag + "' title=" + Message + "><td>报警信息：</td><td >" + Message1 + "</td></tr>"
+                        + "<tr style='border-bottom: 1px dotted #ff5e00' class='" + idflag + "'><td>报警时间：</td><td >" + Eventtime.replace("T", " ") + "</td></tr>";
+
+
+
+                    audioPlay(sound);
+
+
+                    if ($("#Ejectone li").length == 0) {
+                        JEventLevelhtml += "</table></div><a id='select'>查看</a></li >";
+
+                        $("#Ejectone").append(JEventLevelhtml);
+                    }
+                    else {
+                        $("#Ejectone table").append(JEventLevelhtml);
+                    }
+
+                    $("#Ejectone li").click(function () {
+                        $('#Ejectone li').css('cssText', '-webkit-animation-duration: 0s;');
+                    });
+
+                    $("#Ejectone li #select").click(function () {
+                        $('#Ejectone').css('cssText', ' display:none;');
+                        window.top.homeAddTab("50100", "报警监控", "/Sws/Sws_EventJK/Index/");
+                        $('#Ejectone').empty();
+                        //parent.$("#tab").attr("src", "/EventJKInfo/Index");
+                    });
+                    $("#Ejectone li .close").click(function () {
+                        $('#Ejectone').css('cssText', ' display:none;');
+                        $('#Ejectone').empty();
+                    })
+                }
+
+                if (Eventlevel == 2) {
+                    $('#Ejecttwo').removeAttr("style");
+                    var YEventLevelhtml = "";
+                    if ($("#Ejecttwo li").length == 0) {
+                        YEventLevelhtml = " <li><span class='close' style='color:#fff;'>X</span><h1 style='font-weight:bold;'><img style='height: 28px; width: 28px;margin-right:5px;margin-bottom:2px;' src='" + icon + "'/>一般报警</h1><div><table>";
+                    }
+
+                    var devicename1 = DeviceName;
+
+                    if (devicename1.length >= 8) {
+                        devicename1 = devicename1.substr(0, 8) + "..";
+                    }
+                    var Message1 = Message;
+                    if (Message1.length >= 8) {
+                        Message1 = Message1.substr(0, 8) + "..";
+                    }
+                    YEventLevelhtml += "<tr class='" + idflag + "' title=" + DeviceName + "><td>设备名称：</td><td>" + devicename1 + "</td></tr > "
+                        + "<tr class='" + idflag + "' title=" + Message + "><td>报警信息：</td><td >" + Message1 + "</td></tr>"
+                        + "<tr style='border-bottom: 1px dotted #ff5e00' class='" + idflag + "'><td>报警时间：</td><td >" + Eventtime.replace("T", " ") + "</td></tr>";
+
+
+
+                    audioPlay(sound);
+                    //$("<audio controls='controls'><source src='" + sound + "' /></audio>")[0].play();
+
+                    if ($("#Ejecttwo li").length == 0) {
+                        YEventLevelhtml += "</table></div><a id='select'>查看</a></li >";
+
+                        $("#Ejecttwo").append(YEventLevelhtml);
+                    }
+                    else {
+                        $("#Ejecttwo table").append(YEventLevelhtml);
+                    }
+                    $("#Ejecttwo li").click(function () {
+                        $('#Ejecttwo li').css('cssText', '-webkit-animation-duration: 0s;');
+                    });
+                    $("#Ejecttwo li #select").click(function () {
+                        //parent.$("#tab").attr("src", "/EventJKInfo/Index");
+                        window.top.homeAddTab("50100", "报警监控", "/Sws/Sws_EventJK/Index/");
+                        $('#Ejecttwo').css('cssText', ' display:none;');
+                        $('#Ejecttwo').empty();
+                    });
+                    $("#Ejecttwo li .close").click(function () {
+                        $('#Ejecttwo').css('cssText', ' display:none;');
+                        $('#Ejecttwo').empty();
+                    })
+                }
+
+                if (Eventlevel == 3) {
+                    $('#Ejectthree').removeAttr("style");
+                    var TEventLevelhtml = "";
+                    if ($("#Ejectthree li").length == 0) {
+                        TEventLevelhtml = " <li><span class='close' style='color:#fff;'>X</span><h1 style='font-weight:bold;'><img style='height: 28px; width: 28px;margin-right:5px;margin-bottom:2px;' src='" + icon + "'/>提示报警</h1><div><table>";
+                    }
+
+                    var devicename1 = DeviceName;
+                    if (devicename1.length >= 8) {
+                        devicename1 = devicename1.substr(0, 8) + "..";
+                    }
+                    var Message1 = Message;
+                    if (Message1.length >= 8) {
+                        Message1 = Message1.substr(0, 8) + "..";
+                    }
+                    TEventLevelhtml += "<tr class='" + idflag + "' title=" + DeviceName + "><td>设备名称：</td><td>" + devicename1 + "</td></tr > "
+                        + "<tr class='" + idflag + "' title=" + Message1 + "><td>报警信息：</td><td>" + Message + "</td></tr>"
+                        + "<tr style='border-bottom: 1px dotted #ff5e00' class='" + idflag + "'><td>报警时间：</td><td >" + Eventtime.replace("T", " ") + "</td></tr>";
+
+                    audioPlay(sound);
+                    //$("<audio controls='controls'><source src='" + sound + "' /></audio>")[0].play();
+
+                    if ($("#Ejectthree li").length == 0) {
+                        TEventLevelhtml += "</table></div><a id='select'>查看</a></li >";
+
+                        $("#Ejectthree").append(TEventLevelhtml);
+                    }
+                    else {
+                        $("#Ejectthree table").append(TEventLevelhtml);
+                    }
+                    $("#Ejectthree li #select").click(function () {
+                        window.top.homeAddTab("50100", "报警监控", "/Sws/Sws_EventJK/Index/");
+                        //parent.$("#tab").attr("src", "/EventJKInfo/Index");
+                        $('#Ejectthree').css('cssText', ' display:none;');
+                        $('#Ejectthree').empty();
+                    });
+                    $("#Ejectthree li .close").click(function () {
+                        $('#Ejectthree').css('cssText', ' display:none;');
+                        $('#Ejectthree').empty();
+                    })
+                }
+
+                 //详情页报警
+                 var stationPage = "sta" + StationID;
+                 var haveiframe = document.getElementById('iframe_' + stationPage);
+                 if (haveiframe != null) {
+                     var reg = new RegExp("-", "g");//g,表示全部替换。
+                     Eventtime = Eventtime.replace("T", " ");
+                     document.getElementById('iframe_' + stationPage).contentWindow.pushEvent(RtuId, Eventsource, Eventlevel, Eventtime.replace(reg,"/"), Message, levelName, CurrentValue, LimitValue);
+                 // document.getElementById('iframe_' + stationPage).contentWindow.pushEvent(1,1001,1,"2021-09-23","中区1#泵故障",levelName,0.5,0.3);
+                 }
+            });
+            chart.on('cancelEvent', function (RtuId, Eventsource,StationID) {
+
+                var idflag = RtuId + "" + Eventsource;
+                $(".biaoshi ." + idflag + "").remove();
+                if ($("#Ejectone tr").length == 0)//tr 的count个数
+                {
+                    $("#Ejectone").css("display", "none");
+                }
+                if ($("#Ejecttwo tr").length == 0) {
+                    $("#Ejecttwo").css("display", "none");
+                }
+                if ($("#Ejectthree tr").length == 0) {
+                    $("#Ejectthree").css("display", "none");
+                }
+                if (opentipFlag == 1) {
+                    GetEventList();
+                }
+                else {
+                    var alarmtext = $('#alarmNum').text();
+                    if (alarmtext == "") {
+
+                    }
+                    else {
+                        if ((parseInt(alarmtext) - 1) == 0) {
+                            $('#alarmNum').text("");
+                        }
+                        else {
+                            $('#alarmNum').text(parseInt(alarmtext) - 1);
+                        }
+                    }
+                }
+                //详情页报警取消
+                var stationPage = "sta" + StationID;
+                 var haveiframe = document.getElementById('iframe_' + stationPage);
+                if (haveiframe != null) {
+
+                    document.getElementById('iframe_' + stationPage).contentWindow.removeEvent(idflag);
+                     //document.getElementById('iframe_' + stationPage).contentWindow.removeEvent("11001");
+                }
+
+            });
+            // 开启hub连接
+            conn.start().done(function () {
+                console.log("connection is ok");
+            }).fail(function () {
+                console.log("connection is error");
+            });
+            
+             //conn.disconnected (function () {
+             //    console.log("断开");
+             //    //setTimeout(function () {
+             //    //     conn.start();
+             //    //}, 5000); // Restart connection after 5 seconds.
+             //});
+             // conn.received(function () {
+             //    console.log("接受");
+             //    //setTimeout(function () {
+             //    //     conn.start();
+             //    //}, 5000); // Restart connection after 5 seconds.
+             // });
+             //conn.connectionSlow(function () {
+             //    console.log("缓慢");
+             //    //setTimeout(function () {
+             //    //     conn.start();
+             //    //}, 5000); // Restart connection after 5 seconds.
+             //});
+
+        }
+
+        //报警推送工单自动生成
+        function CreatWorkOrder(Rtuid, eventsource, message, eventtime, eventlevel) {
+            $.post("/Sws/Sws_EventJK/CreatWorkOrder", { rtuid: Rtuid, source: eventsource, message: message, eventtime: eventtime, eventLevel:eventlevel }, function (res) {
+            });
+        }
+         //阈值图片
+        function getdataTypeLevelIcon(EventType,Eventlevel) {
+
+            var icon = "";
+            if (EventType == 1 || EventType == 2) {//上线报警
+
+              icon = "/images/highAlarm"+Eventlevel+".png";
+
+            }
+            else if (EventType == 3 || EventType == 4) {//下线报警
+                icon = "/images/lowAlarm"+Eventlevel+".png";
+            }
+            return icon;
+        }
+    </script>
+    <!-- 判断是什么浏览器 -->
+
+
+</body>
+
+</html>
+
+

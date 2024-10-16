@@ -1,0 +1,1487 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>地图监测</title>
+    <link rel="stylesheet" href="../../css/hyl.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../css/iconfont.css">
+    <link rel="stylesheet" href="../../css/ziti.css">
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../css/gdmap.css">
+
+    <!-- 地图 -->
+    <link href="~/leafletmap/css/leaflet.1.3.1.css" rel="stylesheet" />
+    <link href="~/leafletmap/plugins/Leaflet.MousePosition-master/L.Control.MousePosition.css" rel="stylesheet" />
+    <script src="~/leafletmap/1.3.1/leaflet.js"></script>
+    <script src="~/leafletmap/lib/esri-leaflet-v3.0.4/esri-leaflet.js"></script>
+    <script src="~/leafletmap/plugins/Leaflet.MousePosition-master/L.Control.MousePosition.js"></script>
+    <script src="~/leafletmap/plugins/Proj4Leaflet-master/proj4.js"></script>
+    <script src="~/leafletmap/plugins/Proj4Leaflet-master/proj4leaflet.js"></script>
+    <script src="~/leafletmap/plugins/leaflet.mapcache.js"></script>
+    @*<script src="~/leafletmap/1.3.1/leaflet-src.js"></script>*@
+    @*<script src="~/leafletmap/plugins/Leaflet.markercluster/leaflet.markercluster.js"></script>*@
+
+    <style>
+        .custom-input-card {
+            width: 18rem;
+        }
+
+            .custom-input-card .btn:last-child {
+                margin-left: 1rem;
+            }
+
+        .content-window-card {
+            position: relative;
+            width: 23rem;
+            padding: 0.75rem 0 0 1.25rem;
+            box-shadow: none;
+            bottom: 0;
+            left: 0;
+        }
+
+        .chaochu {
+            text-align: left !important
+        }
+
+            .chaochu i {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 10px;
+                margin-right: 6px;
+                background: #0fd10a
+            }
+
+        .ls {
+            background: #0fd10a !important
+        }
+
+        .hs {
+            background: #ff0202 !important
+        }
+
+        .huis {
+            background: #666 !important
+        }
+
+        .content-window-card p {
+            height: 2rem;
+        }
+
+        .clearfloat:after {
+            content: "";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+
+        input {
+            outline: none
+        }
+
+        .amap-container img {
+            position: relative;
+            left: -1px;
+            top: 1px;
+        }
+
+        .clearfloat {
+            zoom: 1;
+        }
+        /*#map_monitor {
+            height: 100%;
+            width: 100%;
+            background: white;
+            position: absolute;
+        }*/
+
+        .zlw_map_layer {
+            position: absolute;
+            width: calc(100% - 380px);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .shuai_layui {
+            z-index: 999
+        }
+
+        .zlwdb {
+            position: relative;
+            padding-left: 30px;
+            padding-right: 10px;
+            width: 110px;
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_map">
+        <!-- star 地图层 -->
+        <div class="zlw_map_layer">
+            <div id="map_monitor"></div>
+        </div>
+        <!-- 地图层 end -->
+        <!-- star 数据层 -->
+        <div class="data_layer">
+            <div class="data_layercon">
+                <div class="data_layeryi">
+                    <div class="data_layeryitop">
+                        <ul class="clearfloat">
+                            <li>
+                                <div class="data_layeryitopyi clearfloat">
+                                    <img src="~/images/泵房.png" alt="">
+                                    <i>监控泵房</i>
+                                </div>
+                                <div class="data_layeryitoper">
+                                    <p><span id="stationNum"></span>个</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="data_layeryitopyi clearfloat">
+                                    <img src="~/images/泵房1.png" alt="">
+                                    <i>监控机组</i>
+                                </div>
+                                <div class="data_layeryitoper">
+                                    <p><span id="deviceName"></span>个</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="data_layerer">
+                    <ul>
+                        <li class="clearfloat">
+                            <div class="zlw_tj_yi">
+                                <i></i>正常运行
+                            </div>
+                            <div class="zlw_tj_er">
+                                <p> <i id="okNum"></i>个</p>
+                            </div>
+                        </li>
+                        <li class="clearfloat">
+                            <div class="zlw_tj_yi">
+                                <i></i>报警
+                            </div>
+                            <div class="zlw_tj_er">
+                                <p> <i id="alerNum"></i>个</p>
+                            </div>
+                        </li>
+                        <li class="clearfloat">
+                            <div class="zlw_tj_yi">
+                                <i></i>离线
+                            </div>
+                            <div class="zlw_tj_er">
+                                <p> <i id="outNum"></i>个</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="data_layersan">
+                    <div class="data_layersancon">
+                        <div class="data_layersan_title">
+                            <p>实时监测数据</p>
+                        </div>
+                        <div class="data_layersan_nr">
+                            <div class="data_layersan_nrbt clearfloat">
+                                <span>二供泵房</span>
+                                <span>采集时间</span>
+                                <span>操作</span>
+                            </div>
+                            <div class="data_layersan_nrcon">
+                                <div id="stationData">
+
+                                </div>
+                                <div id="zstationData">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 数据层 end  -->
+        <!-- star 筛选层 -->
+        <div class="shuai_layui">
+            <div class="shuai_layui_yi clearfloat">
+                <!-- 搜索框 -->
+                <div class="shuai_layui_sea left">
+                    <input id="stationName" type="text" autoComplete="off" placeholder="搜索">
+                </div>
+                <!-- 复选 -->
+                <div class="shuai_layui_fux left">
+                    <ul class="clearfloat">
+                        <li>
+                            <input name="state" onclick="resh()" type="checkbox" data-value="正常" checked><i></i>正常
+                        </li>
+                        <li>
+                            <input name="state" onclick="resh()" type="checkbox" data-value="故障" checked><i></i>报警
+                        </li>
+                        <li>
+                            <input name="state" onclick="resh()" type="checkbox" data-value="离线" checked><i></i>离线
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="shuai_layui_er">
+            <span>单位说明</span>
+            <p>压力：MPa</p>
+            <p>瞬流：m³/h</p>
+        </div>
+    </div>
+    <!-- 收缩按钮 -->
+    <div class="zlw_ss">
+
+        <!-- 筛选层 end -->
+    </div>
+    <script>
+        var isselect = 0;
+        var areaname = '@Html.Raw(@ViewBag.AreaName)';
+        var map;
+        var layers = [];
+        var myGroup;
+        var ArcgisUrl = '@ViewBag.ArcgisUrl';
+        var PipeUrl = '@ViewBag.PipeUrl';
+        var zoomend = @ViewBag.zoom;
+        var markericon = '' +
+            '<div>' +
+            '<img src="../../images/main.png">' +
+            '</div>';
+        var markerContent = '' +
+            '<div class="makercon overflow pad10px">' +
+            '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang blue"></i><p class="mt5px">二供泵房</p></div>' +
+            '<div class="makercon-right">' +
+            '<p class="f18px ellipsis1">万象新城</p>' +
+            '<div class="green f16px fb tb-f"><span>4.31</span><span>0.85</span><span>0.81</span></div>' +
+            '<div class="tb-f f12px"><span>出瞬流</span><span>低区</span><span>中区</span></div>' +
+            '</div > ' +
+            '</div>' +
+            '<div class="sj"></div>';
+        $(function () {
+            var layui_yi = $('.data_layeryi').height();
+            var layui_er = $('.data_layerer').height();
+            var layuisanpadding = (layui_yi + layui_er + 30) + 'px';
+            $('.data_layersan').css('padding-top', layuisanpadding)
+            // 搜索框点击变长
+            $(".shuai_layui_sea input").focus(function () {
+                $('.shuai_layui_sea input').css('width', '200px')
+            });
+            $(".shuai_layui_sea input").blur(function () {
+                $('.shuai_layui_sea input').css('width', '60px')
+            });
+
+            // 窗口宽度
+            var windowWidth = $(window).width();
+
+            // 点击收缩
+            $('.zlw_ss').click(function () {
+                if ($(".zlw_ss").hasClass("ss_active")) {
+                    // 收缩->展开
+                    $('.zlw_map_layer').width(windowWidth - 380);
+
+                    $('.data_layer').css('right', '0px');
+                    $('.shuai_layui').css('right', '385px');
+                    $('.zlw_ss').css('right', '378px').removeClass('ss_active');
+                    $('.zlw_ss').css('background-image', 'url(../../images/收缩-触发-白色.svg)')
+                } else {
+                    // 展开->收缩
+                    $('.zlw_map_layer').width('100%');
+                    $('.data_layer').css('right', '-380px');
+                    $('.shuai_layui').css('right', '0px');
+                    $('.zlw_ss').css('right', '0px').addClass('ss_active');
+                    $('.zlw_ss').css('background-image', 'url(../../images/展开-未触发-白色.svg)')
+                }
+            });
+            LoadNum();
+            LoadPumState();
+            initMap();
+
+            document.onkeydown = keyDownSearch;
+            function keyDownSearch(e) {
+                // 兼容FF和IE和Opera    
+                var theEvent = e || window.event;
+                var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                // 13 代表 回车键
+                if (code == 13) {
+                    // 要执行的函数 或者点击事件
+                    if ($("#stationName").val() != "") {
+                        isselect = 1;
+                    }
+                    LoadZoom();
+                }
+                return true;
+            }
+        })
+        function resh() {
+            //LoadPumState();
+            LoadZoom();
+        }
+        function checkedType() {
+            var typecheck = "";
+            $("input:checkbox[name='state']:checked").each(function () {
+                typecheck += $(this).data("value") + ",";
+            })
+            if (typecheck != "") {
+                typecheck = typecheck.substring(0, typecheck.length - 1);
+            }
+            else {
+                typecheck = "无";
+            }
+            return typecheck;
+        }
+        function LoadNum() {
+            $.post("/Sws/Map/QueryStationNum", {}, function (data) {
+                $("#stationNum").html(data.allNum);
+                $("#deviceName").html(data.deviceNum);
+                $("#okNum").html(data.onlineNum);
+                $("#alerNum").html(data.alarmNum);
+                $("#outNum").html(data.offLineNum);
+            })
+        }
+        //地图初始化
+        function initMap() {
+            //proj4.defs("EPSG:2436", "+proj=tmerc +lat_0=0 +lon_0=117 +k=1 +x_0=500000 +y_0=0 +ellps=krass +towgs84=15.8,-154.4,-82.3,0,0,0,0 +units=m +no_defs");
+
+            //var r = proj4("EPSG:2436", "EPSG:4326", [520061.79607555206, 2737925.6849408206]);
+            /* var centerPoint = new L.LatLng(r[1], r[0]);*/
+            var centerPoint = new L.LatLng(@ViewBag.lat, @ViewBag.lng);
+
+            var crs1 = new L.Proj.CRS("EPSG:2436", "+proj=tmerc +lat_0=0 +lon_0=117 +k=1 +x_0=500000 +y_0=0 +ellps=krass +towgs84=15.8,-154.4,-82.3,0,0,0,0 +units=m +no_defs",
+                {
+                    origin: [-5123300.0, 10002300],  // 将刚刚的 Origin 复制到这里
+                    resolutions: [                 // 所有的分辨率复制到这里
+                        76.43695495724326,
+                        38.21834518669038,
+                        19.109040301413938,
+                        9.554387858775717,
+                        4.777061637456608,
+                        2.3883985267970536,
+                        1.1940669714672763,
+                        0.5969011938023876,
+                        0.2984505969011938
+                    ]
+                    /*bounds: L.bounds([516911.9087096499, 2739564.213902506], [522879.9046456418, 2744911.94059796])*/
+                });
+             
+            map = L.map('map_monitor', { crs: crs1 }).setView(centerPoint, 0).setZoom(zoomend);
+            var tileMapLayer = L.esri.tiledMapLayer({
+                minzoom: 0,
+                maxzoom: 6,
+                url: ArcgisUrl
+            });
+
+            map.addLayer(tileMapLayer);
+
+            var tileMapLayer1 = L.esri.dynamicMapLayer({
+                url: PipeUrl
+            });
+            //监听地图级别
+            map.on('zoomend', (e) => {
+                var zoom = e.target.getZoom();
+                LoadZoom(zoom);
+            })
+            map.addLayer(tileMapLayer1);
+            myGroup = L.layerGroup();
+            //var markericon1 = '' +
+            //    '<div>' +
+            //    '<div class="round">  ' +
+            //    '<div class="circle">' +
+            //    '<img src="../../images/bftb.png">' +
+            //    '</div> ' +
+            //    '<div class="circle_bottom animation "></div>' +
+            //    '<div class="circle_bottom2 animation2 "></div>' +
+            //    '</div>' +
+            //    '</div>';
+            //var htmlStr = '<p><span class="map-circle-name">marker</span></p>';
+            //var icon = L.divIcon({
+            //    html: markericon1,
+            //    iconSize: [80, 80],
+            //    className: 'map-circle'
+            //});
+
+
+
+            //L.marker(centerPoint, { icon: icon }).addTo(map).on("click", function (e) {
+            //    alert("我是一个 marker 点");
+            //}).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+
+
+            //map.on("click", function (e) {
+            //    //弹出的是 EPSG:4326 坐标系
+            //    alert(JSON.stringify(e.latlng));
+            //});
+
+            /*L.marker(centerPoint).addTo(map);*/
+
+
+        }
+        //右侧table加载 $("#roleName").val()
+        function LoadPumState() {
+            $.post("/Sws/Map/QueryTableData", { typecheck: checkedType(), stationName: "" }, function (data) {
+                $("#stationData").empty();
+                var html = "";
+                for (var i = 0; i < data.dataTable.length; i++) {
+                    html += '<div class="data_layersan_item clearfloat" onclick="Positioning(' + data.dataTable[i].stationID + ',1)">'
+                    if (data.dataTable[i].state == "故障") {
+                        html += '<span class="chaochu"><i class="hs"></i>' + data.dataTable[i].stationName + '</span>'
+                    } else if (data.dataTable[i].state == "正常") {
+                        html += '<span class="chaochu"><i></i>' + data.dataTable[i].stationName + '</span>'
+                    } else {
+                        html += '<span class="chaochu"><i class="huis"></i>' + data.dataTable[i].stationName + '</span>'
+                    }
+
+
+                    html += '<span>' + data.dataTable[i].updateTime + '</span>'
+                    // html += ' <span><a href="javascript:void(0);" onClick="window.top.homeAddTab("sta'+data.dataTable[i].stationID+'","'+data.dataTable[i].stationName+'","/Sws/Sws_Detail/Index/'+data.dataTable[i].stationID+'")">详情</a></span>'
+                    html += "<span><a href='javascript:void(0);' onClick=" + '"' + "window.top.homeAddTab('sta" + data.dataTable[i].stationID + "','" + data.dataTable[i].stationName + "','/Sws/Sws_Detail/Index/" + data.dataTable[i].stationID + "')" + '"' + "'>详情</a></span> </div>"
+                    html += ' </div>'
+                    var markericon;
+                    //var marker;
+                    if (data.dataTable[i].state == "故障") {
+                        markericon = '' +
+                            '<div>' +
+                            '<div class="round">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+
+                    } else if (data.dataTable[i].state == "正常") {
+                        markericon = '' +
+                            '<div>' +
+                            '<div class="zhengchang">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+
+                    } else {
+                        markericon = '' +
+                            '<div>' +
+                            '<div class="xiaxian">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+
+                    }
+                    var icon = L.divIcon({
+                        html: markericon,
+                        iconSize: [80, 80],
+                        className: 'map-circle'
+                    });
+                    var maker = L.marker([data.dataTable[i].lat, data.dataTable[i].lng], {
+                        icon: icon
+                    }).addTo(map)
+                    var aa = data.dataTable[i].stationID;
+                    Object.defineProperties(maker, {
+                        id: {
+                            value: aa
+                        }
+                    });
+                    maker.on("mouseover", function (e) {
+                        //var html = '<div class="makercon overflow clearfloat pad10px"><div class="maptitle"><i class="iconfont f24px icon-bengfang green"></i><p><span class="fb f16px" > 碧水绿洲（BTG）</span ></p ></div ><ul class="maplist"><li class="maplistnr1"><span>分区</span><span>进压力</span><span>出压力</span><span>出瞬时</span></li><li><span>低区</span><span>0</span><span>0.75</span><span>11</span></li><li><span>中区</span><span>0</span><span>1.1</span><span>8.8</span></li><li><span>高区</span><span>0</span><span>1.3</span><span>10.3</span></li></ul><div class="sj"></div></div >'
+                        //maker.bindPopup(html).openPopup()
+                        LoadStationJkData(e);
+                    });
+                    maker.on('mouseout', function (e) {
+                       
+                    });
+                    layers.push(maker);
+                    myGroup = L.layerGroup(layers);
+                    map.addLayer(myGroup);
+                    //proj4.defs("EPSG:2436", "+proj=tmerc +lat_0=0 +lon_0=117 +k=1 +x_0=500000 +y_0=0 +ellps=krass +towgs84=15.8,-154.4,-82.3,0,0,0,0 +units=m +no_defs");
+
+                    //var r = proj4("EPSG:2436", "EPSG:4326", [520061.79607555206, 2737925.6849408206]);
+                    /* var centerPoint = new L.LatLng(r[1], r[0]);*/
+                    /*var centerPoint = new L.LatLng(24.72632916218198, 117.17988728962449);*/
+                    //var centerPoint = new L.LatLng(data.dataTable[i].lat, data.dataTable[i].lng);
+                    //console.log(centerPoint);
+                    //var aa = data.dataTable[i].stationID;
+                    ////var html = '<div class="makercon overflow clearfloat pad10px"><div class="maptitle"><i class="iconfont f24px icon-bengfang green"></i><p><span class="fb f16px" > 碧水绿洲（BTG）</span ></p ></div ><ul class="maplist"><li class="maplistnr1"><span>分区</span><span>进压力</span><span>出压力</span><span>出瞬时</span></li><li><span>低区</span><span>0</span><span>0.75</span><span>11</span></li><li><span>中区</span><span>0</span><span>1.1</span><span>8.8</span></li><li><span>高区</span><span>0</span><span>1.3</span><span>10.3</span></li></ul><div class="sj"></div></div >'
+                    //L.marker(centerPoint, { icon: icon }).addTo(map).on("mouseover", function (e) {
+
+                    //})
+                       /* .bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();*/
+
+                    //map.on("click", function (e) {
+                    //    //弹出的是 EPSG:4326 坐标系
+                    //    alert(JSON.stringify(e.latlng));
+                    //});
+
+                }
+                $("#stationData").append(html);
+            })
+           /* LoadZPumState();*/
+        }
+
+        //根据不同的地图级别获取方法
+        function LoadZoom(zoom) {
+            //for (var i = 0; i < myGroup.length; i++) {
+
+            //    map.removeLayer(myGroup[i]);
+            //}
+            myGroup.clearLayers();
+            layers = [];
+            console.log(layers);
+            if (zoom > 5) {
+                LoadZoomData(zoom);
+            } else {
+                $.post("/Sws/Map/QueryTableData", { typecheck: checkedType(), stationName: $("#stationName").val() }, function (data) {
+                    var markericon;
+                    for (var i = 0; i < data.dataTable.length; i++) {
+                        if (data.dataTable[i].state == "故障") {
+                            markericon = '' +
+                                '<div>' +
+                                '<div class="round">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                        } else if (data.dataTable[i].state == "正常") {
+
+                            markericon = '' +
+                                '<div>' +
+                                '<div class="zhengchang">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                        } else {
+
+                            markericon = '' +
+                                '<div>' +
+                                '<div class="xiaxian">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                        }
+                        var icon = L.divIcon({
+                            html: markericon,
+                            iconSize: [80, 80],
+                            className: 'map-circle'
+                        });
+                        var maker = L.marker([data.dataTable[i].lat, data.dataTable[i].lng], {
+                            icon: icon
+                        }).addTo(map)
+                        var aa = data.dataTable[i].stationID;
+                        Object.defineProperties(maker, {
+                            id: {
+                                value: aa
+                            }
+                        });
+                        maker.on("mouseover", function (e) {
+                            LoadStationJkData(e);
+                        })
+                         
+                        layers.push(maker);
+                        myGroup = L.layerGroup(layers);
+                        map.addLayer(myGroup);
+                    }
+
+                })
+
+
+            }
+        }
+        function LoadZoomData(zoomlevel) {
+            $.post("/Sws/Map/QueryTableData", { typecheck: checkedType(), stationName: $("#stationName").val() }, function (data) {
+
+                if (isselect == 1) {
+                    if (data.toLat != 0 && data.toLng != 0) {
+
+                    }
+                    isselect = 0;
+                }
+                myGroup.clearLayers();
+                layers = [];
+                var markericon;
+                for (var i = 0; i < data.dataTable.length; i++) {
+                    if (5 <= zoomlevel && zoomlevel <= 6) {
+                        //var marker;
+                        if (data.dataTable[i].state == "故障") {
+                            markericon = '' +
+                                '<div>' +
+                                '<div class="round">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                        } else if (data.dataTable[i].state == "正常") {
+                            markericon = '' +
+                                '<div>' +
+                                '<div class="zhengchang">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                        } else {
+                            markericon = '' +
+                                '<div>' +
+                                '<div class="xiaxian">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                        }
+                        var icon = L.divIcon({
+                            html: markericon,
+                            iconSize: [80, 80],
+                            className: 'map-circle'
+                        });
+                        var maker = L.marker([data.dataTable[i].lat, data.dataTable[i].lng ], {
+                            icon: icon
+                        }).addTo(map)
+                        var aa = data.dataTable[i].stationID;
+                        Object.defineProperties(maker, {
+                            id: {
+                                value: aa
+                            }
+                        });
+                        maker.on("mouseover", function (e) {
+                            //var html = '<div class="makercon overflow clearfloat pad10px"><div class="maptitle"><i class="iconfont f24px icon-bengfang green"></i><p><span class="fb f16px" > 碧水绿洲（BTG）</span ></p ></div ><ul class="maplist"><li class="maplistnr1"><span>分区</span><span>进压力</span><span>出压力</span><span>出瞬时</span></li><li><span>低区</span><span>0</span><span>0.75</span><span>11</span></li><li><span>中区</span><span>0</span><span>1.1</span><span>8.8</span></li><li><span>高区</span><span>0</span><span>1.3</span><span>10.3</span></li></ul><div class="sj"></div></div >'
+                            //maker.bindPopup(html).openPopup()
+                            LoadStationJkData(e);
+                        }) 
+                        layers.push(maker);
+                        myGroup = L.layerGroup(layers);
+                        map.addLayer(myGroup);
+                    }
+                    /*else if (zoomlevel == 13) {*/
+                    else if (zoomlevel >= 7) {
+                        //var marker;
+                        markericon = '' +
+                            //报警 替换下面bgGreen 为 bgRed
+                            '<div class="mapiconbox overflow  clearfloat bgGreen zlwdb">' +
+                            '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p class="left">出瞬流 0.70</p>' +
+                            '</div>';
+
+                        if (data.dataTable[i].state == "故障") {
+                            markericon = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow  clearfloat  bgRed zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p>出瞬流 ' + data.dataTable[i].allInFlow + '</p>' +
+                                '</div>';
+
+                        } else if (data.dataTable[i].state == "正常") {
+                            markericon = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow clearfloat bgGreen zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p>出瞬流 ' + data.dataTable[i].allInFlow + '</p>' +
+                                '</div>';
+
+                        } else {
+                            markericon = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow clearfloat bgGray zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p>出瞬流 ' + data.dataTable[i].allInFlow + '</p>' +
+                                '</div>';
+
+                        }
+                        var icon = L.divIcon({
+                            html: markericon,
+                            iconSize: [80, 80],
+                            className: 'map-circle'
+                        });
+                        var maker = L.marker([data.dataTable[i].lat, data.dataTable[i].lng], {
+                            icon: icon
+                        }).addTo(map)
+                        var aa = data.dataTable[i].stationID;
+                        Object.defineProperties(maker, {
+                            id: {
+                                value: aa
+                            }
+                        });
+                        maker.on("mouseover", function (e) {
+                            //var html = '<div class="makercon overflow clearfloat pad10px"><div class="maptitle"><i class="iconfont f24px icon-bengfang green"></i><p><span class="fb f16px" > 碧水绿洲（BTG）</span ></p ></div ><ul class="maplist"><li class="maplistnr1"><span>分区</span><span>进压力</span><span>出压力</span><span>出瞬时</span></li><li><span>低区</span><span>0</span><span>0.75</span><span>11</span></li><li><span>中区</span><span>0</span><span>1.1</span><span>8.8</span></li><li><span>高区</span><span>0</span><span>1.3</span><span>10.3</span></li></ul><div class="sj"></div></div >'
+                            //maker.bindPopup(html).openPopup()
+                            LoadStationJkData(e);
+                        })
+                        layers.push(maker);
+                        myGroup = L.layerGroup(layers);
+                        map.addLayer(myGroup);
+                    }
+                    else if (zoomlevel > 18) {//设置18是为了不显示这一层
+                        var markerContent = '';
+                        if (data.dataTable[i].state == "故障") {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang red"></i><p class="mt5px">二供泵房</p></div>';
+
+                        } else if (data.dataTable[i].state == "正常") {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang green"></i><p class="mt5px">二供泵房</p></div>';
+                        } else {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang gray"></i><p class="mt5px">二供泵房</p></div>';
+                        }
+                        markerContent += '<div class="makercon-right">';
+                        markerContent += '<p class="f16px fb ellipsis1">' + data.dataTable[i].stationName + '</p>';
+                        markerContent += '<div class="green f16px fb tb-f">';
+                        var szstr = '';//各区数值
+                        var fqstr = '<div class="tb-f f12px">';//各区名称
+                        if (data.dataTable[i].deviceJKs.length > 0) {
+                            for (var j = 0; j < data.dataTable[i].deviceJKs.length; j++) {
+                                if (data.dataTable[i].deviceJKs[j].pressOut.Value == true) {
+                                    szstr += '<span class="red">' + data.dataTable[i].deviceJKs[j].pressOut.Key + '</span>'
+                                } else {
+                                    szstr += '<span>' + data.dataTable[i].deviceJKs[j].pressOut.Key + '</span>'
+                                }
+                                if (data.dataTable[i].deviceJKs[j].partition == 1) {
+                                    fqstr += '<span>低区</span>'
+                                } else if (data.dataTable[i].deviceJKs[j].partition == 2) {
+                                    fqstr += '<span>中区</span>'
+                                }
+                                else if (data.dataTable[i].deviceJKs[j].partition == 3) {
+                                    fqstr += '<span>高区</span>'
+                                }
+                                else if (data.dataTable[i].deviceJKs[j].partition == 4) {
+                                    fqstr += '<span>超高区</span>'
+                                } else if (data.dataTable[i].deviceJKs[j].partition == 5) {
+                                    fqstr += '<span>超超高区</span>';
+                                } else if (data.dataTable[i].deviceJKs[j].partition == 6) {
+
+                                    fqstr += '<span>智能泵房</span>';
+                                }
+                            }
+                            fqstr += '</div>';
+                            szstr += '</div>';
+                            markerContent += szstr + fqstr;
+                        }
+                        markerContent += '</div></div><div class="sj">';
+                        var icon = L.divIcon({
+                            html: markerContent,
+                            iconSize: [80, 80],
+                            className: 'map-circle'
+                        });
+                        var maker = L.marker([data.dataTable[i].lat, data.dataTable[i].lng], {
+                            icon: icon
+                        }).addTo(map)
+                        var aa = data.dataTable[i].stationID;
+                        Object.defineProperties(maker, {
+                            id: {
+                                value: aa
+                            }
+                        });
+                        maker.on("mouseover", function (e) {
+                            //var html = '<div class="makercon overflow clearfloat pad10px"><div class="maptitle"><i class="iconfont f24px icon-bengfang green"></i><p><span class="fb f16px" > 碧水绿洲（BTG）</span ></p ></div ><ul class="maplist"><li class="maplistnr1"><span>分区</span><span>进压力</span><span>出压力</span><span>出瞬时</span></li><li><span>低区</span><span>0</span><span>0.75</span><span>11</span></li><li><span>中区</span><span>0</span><span>1.1</span><span>8.8</span></li><li><span>高区</span><span>0</span><span>1.3</span><span>10.3</span></li></ul><div class="sj"></div></div >'
+                            //maker.bindPopup(html).openPopup()
+                            LoadStationJkData(e);
+                        })
+                        layers.push(maker);
+                        myGroup = L.layerGroup(layers);
+                        map.addLayer(myGroup);
+                    }
+                    else if (zoomlevel < 10) {
+
+                    }
+                }
+               /* LoadZZoomData(map.getZoom());*/
+            })
+
+        }
+        //弹出框数据加载
+        function LoadStationJkData(e) {
+            $.post("/Sws/Map/LoadDataByStationID", { id: e.target.id }, function (data) {
+                if (data != null) {
+                    var clore = '';
+                    if (data.jk.state == "故障") {
+                        clore = 'red';
+                    } else if (data.jk.state == "正常") {
+                        clore = 'green';
+                    } else {
+                        clore = 'gray';
+                    }
+                    var table = '<div class="makercon overflow clearfloat pad10px">';
+                    //table += '<div class="maptitle"><i class="iconfont f24px icon-bengfang ' + clore + '"></i><p><span class="fb f16px">' + data.jk.stationName + '</span></p></div>';
+                    //table += '<div class="maptitle"><i class="iconfont f24px icon-bengfang ' + clore + '"></i><p><span class="fb f16px">' + data.jk.stationName + '</span></p></div>';
+                    table += "<div class='maptitle'><i class='iconfont f24px icon-bengfang " + clore + "'></i><p><span class='fb f16px' onClick=" + '"' + "window.top.homeAddTab('sta" + data.jk.stationID + "','" + data.jk.stationName + "','/Sws/Sws_Detail/Index/" + data.jk.stationID + "')" + '"' + "'>" + data.jk.stationName + "</span></p></div>";
+                    table += '<ul class="maplist">';
+                    table += '<li class="maplistnr1" ><span>分区</span><span>进水压力</span><span>出水压力</span><span>出水瞬时</span></li>';
+                    if (data.jk.deviceJKs.length > 0) {
+                        for (var i = 0; i < data.jk.deviceJKs.length; i++) {
+                            var pin = data.jk.deviceJKs[i].pressIN;
+                            var pout = data.jk.deviceJKs[i].pressOut;
+                            if (data.jk.deviceJKs[i].partition == "1") {
+                                table += '<li><span>低区</span>';
+                            } else if (data.jk.deviceJKs[i].partition == "2") {
+                                table += '<li><span>中区</span>';
+                            }
+                            else if (data.jk.deviceJKs[i].partition == "3") {
+                                table += '<li><span>高区</span>';
+                            }
+                            else if (data.jk.deviceJKs[i].partition == "4") {
+                                table += '<li><span>超高区</span>';
+                            } else if (data.jk.deviceJKs[i].partition == "5") {
+                                table += '<li><span>超超高区</span>';
+                            } else if (data.jk.deviceJKs[i].partition == "6") {
+                                table += '<li><span>智能泵房</span>';
+                            }
+                            if (pin.Value == true) {
+                                table += '<span class="red">' + pin.Key + ' MPa' + '</span>'
+                            } else {
+                                table += '<span>' + pin.Key + ' MPa' + '</span>'
+                            }
+                            if (pout.Value == true) {
+                                table += '<span class="red">' + pout.Key + ' MPa' + '</span>'
+                            } else {
+                                table += '<span>' + pout.Key + ' MPa' + '</span>'
+                            }
+                            table += '<span>' + data.jk.deviceJKs[i].inflow + ' m³/h' + '</span>'
+                            table += '</li>'
+                        }
+                    }
+                    table += '</ul><div class="sj"></div>';
+                    //var popup =  L.Popup().setLatLng(e.latlng).setContent(table);
+                    //map.openPopup(popup);
+                   
+                    var popup = L.popup({
+                        offset: [-10, -20]
+                    })
+                        .setLatLng(e.latlng)
+                        .setContent(table)
+                        .openOn(map); 
+                }
+            })
+        }
+        //===================直饮水数据加载===================//
+        function LoadZPumState() {
+            $.post("/Sws/Map/QueryZTableData", { typecheck: checkedType(), stationName: "" }, function (data) {
+                var html = "";
+                for (var i = 0; i < data.dataTable.length; i++) {
+                    html += '<div class="data_layersan_item clearfloat" onclick="Positioning(' + data.dataTable[i].stationID + ',2)">'
+                    if (data.dataTable[i].state == "故障") {
+                        html += '<span class="chaochu"><i class="hs"></i>' + data.dataTable[i].stationName + '</span>'
+                    } else if (data.dataTable[i].state == "正常") {
+                        html += '<span class="chaochu"><i></i>' + data.dataTable[i].stationName + '</span>'
+                    } else {
+                        html += '<span class="chaochu"><i class="huis"></i>' + data.dataTable[i].stationName + '</span>'
+                    }
+                    html += '<span>' + data.dataTable[i].updateTime + '</span>'
+                    //html += '<span><a href="javascript:void(0);" onClick="window.top.homeAddTab("sta' + data.dataTable[i].stationID + ',"' + data.dataTable[i].stationName + '","/Sws/Sws_Detail/Index/' + data.dataTable[i].stationID + '");">详情</a></span>';
+                    html += "<span><a href='javascript:void(0);' onClick=" + '"' + "window.top.homeAddTab('sta" + data.dataTable[i].stationID + "','" + data.dataTable[i].stationName + "','/Sws/Sws_Detail/Index/" + data.dataTable[i].stationID + "')" + '"' + "'>详情</a></span> </div>"
+                    html += ' </div>';
+                    var markericon;
+                    if (data.dataTable[i].state == "故障") {
+                        markericon = '' +
+                            '<div>' +
+                            '<div class="round">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            offset: new AMap.Pixel(-32, -10),
+                            name: data.dataTable[i].stationName,
+                            content: markericon1,
+                            //offset: new AMap.Pixel(-100, -40),
+
+                        });
+                    } else if (data.dataTable[i].state == "正常") {
+                        markericon = '' +
+                            '<div>' +
+                            '<div class="zhengchang">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            name: data.dataTable[i].stationName,
+                            offset: new AMap.Pixel(-32, -10),
+                            content: markericon2
+
+                        });
+                    } else {
+                        markericon = '' +
+                            '<div>' +
+                            '<div class="xiaxian">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            name: data.dataTable[i].stationName,
+                            offset: new AMap.Pixel(-32, -10),
+                            content: markericon3
+
+                        });
+                    }
+
+
+                }
+                $("#zstationData").append(html);
+            })
+        }
+        function LoadZZoomData(zoomlevel) {
+            $.post("/Sws/Map/QueryZTableData", { typecheck: checkedType(), stationName: $("#stationName").val() }, function (data) {
+                if (isselect == 1) {
+                    if (data.toLat != 0 && data.toLng != 0) {
+                        map.setZoomAndCenter(zoomlevel, [data.toLng, data.toLat]); //同时设置地图层级与中心点
+                    }
+                    isselect = 0;
+                }
+                for (var i = 0; i < data.dataTable.length; i++) {
+                    if (11 <= zoomlevel && zoomlevel <= 12) {
+                        if (data.dataTable[i].state == "故障") {
+                            var markericon1 = '' +
+                                '<div>' +
+                                '<div class="round">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon1,
+                                offset: new AMap.Pixel(-32, -10), //相对于基点的偏移位置
+
+                            });
+
+                        } else if (data.dataTable[i].state == "正常") {
+                            var markericon2 = '' +
+                                '<div>' +
+                                '<div class="zhengchang">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon2,
+                                offset: new AMap.Pixel(-32, -10), //相对于基点的偏移位置
+                                //offset: new AMap.Pixel(-100, -40), //相对于基点的偏移位置
+
+                            });
+                        } else {
+                            var markericon3 = '' +
+                                '<div>' +
+                                '<div class="xiaxian">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon3,
+                                offset: new AMap.Pixel(-32, -10), //相对于基点的偏移位置
+                                //offset: new AMap.Pixel(-100, -40), //相对于基点的偏移位置
+
+                            });
+                        }
+                        marker.id = data.dataTable[i].stationID;
+                        marker.on('mouseover', function (e) {
+                            var id = this.id;
+                            LoadZStationJkData(id, e);
+                        })
+                        marker.on('mouseout', function (e) {
+                            var id = this.id;
+                            map.clearInfoWindow();
+                        })
+                         marker.on('dblclick', function (e) {
+                            map.setZoomAndCenter(map.getZoom() + 1, e.target.getPosition());
+                        })
+                        map.add(marker);
+                        layers.push(marker);
+                    }
+                    else if (zoomlevel == 13) {
+                        //var marker;
+                        var markericon4 = '' +
+                            //报警 替换下面bgGreen 为 bgRed
+                            '<div class="mapiconbox overflow clearfloat bgGreen zlwdb">' +
+                            '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p>净出压 0.70</p>' +
+                            '</div>';
+
+                        if (data.dataTable[i].state == "故障") {
+                            markericon4 = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow  clearfloat bgRed zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p> ' + data.dataTable[i].stationName + '</p>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon4,
+                                offset: new AMap.Pixel(-50, -1), //相对于基点的偏移位置
+
+                            });
+                        } else if (data.dataTable[i].state == "正常") {
+                            markericon4 = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow clearfloat bgGreen zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p> ' + data.dataTable[i].stationName + '</p>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon4,
+                                offset: new AMap.Pixel(-50, -1), //相对于基点的偏移位置
+                                //offset: new AMap.Pixel(-100, -40), //相对于基点的偏移位置
+
+                            });
+                        } else {
+                            markericon4 = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow clearfloat bgGray zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p> ' + data.dataTable[i].stationName + '</p>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon4,
+                                offset: new AMap.Pixel(-50, -1), //相对于基点的偏移位置
+                                //offset: new AMap.Pixel(-100, -40), //相对于基点的偏移位置
+                            });
+                        }
+                        marker.id = data.dataTable[i].stationID;
+                        marker.on('mouseover', function (e) {
+                            var id = this.id;
+                            LoadZStationJkData(id, e);
+                        })
+                        marker.on('mouseout', function (e) {
+                            var id = this.id;
+                            map.clearInfoWindow();
+                        })
+                         marker.on('dblclick', function (e) {
+                            map.setZoomAndCenter(map.getZoom() + 1, e.target.getPosition());
+                        })
+                        map.add(marker);
+                        layers.push(marker);
+                    }
+                    else if (zoomlevel > 13) {
+                        var markerContent = '';
+                        if (data.dataTable[i].state == "故障") {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang red"></i><p class="mt5px">直饮水泵房</p></div>';
+
+                        } else if (data.dataTable[i].state == "正常") {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang green"></i><p class="mt5px">直饮水泵房</p></div>';
+                        } else {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang gray"></i><p class="mt5px">直饮水泵房</p></div>';
+                        }
+                        markerContent += '<div class="makercon-right">';
+                        markerContent += '<p class="f16px fb ellipsis1">' + data.dataTable[i].stationName + '</p>';
+                        markerContent += '<div class="green f16px fb tb-f">';
+                        var szstr = '';//各区数值
+                        var fqstr = '<div class="tb-f f12px">';//各区名称
+                        if (data.dataTable[i].deviceJKs.length > 0) {
+                            for (var j = 0; j < data.dataTable[i].deviceJKs.length; j++) {
+                                if (data.dataTable[i].deviceJKs[j].jPressOut.Value == true) {
+                                    szstr += '<span class="red">' + data.dataTable[i].deviceJKs[j].jPressOut.Key + '</span>'
+                                } else {
+                                    szstr += '<span>' + data.dataTable[i].deviceJKs[j].jPressOut.Key + '</span>'
+                                }
+                                if (data.dataTable[i].deviceJKs[j].partition == 1) {
+                                    fqstr += '<span>低区</span>'
+                                } else if (data.dataTable[i].deviceJKs[j].partition == 2) {
+                                    fqstr += '<span>中区</span>'
+                                }
+                                else if (data.dataTable[i].deviceJKs[j].partition == 3) {
+                                    fqstr += '<span>高区</span>'
+                                }
+                                else if (data.dataTable[i].deviceJKs[j].partition == 4) {
+                                    fqstr += '<span>超高区</span>'
+                                }
+                                else {
+                                    fqstr += '<span>低区</span>'
+                                }
+                            }
+                            fqstr += '</div>';
+                            szstr += '</div>';
+                            markerContent += szstr + fqstr;
+                        }
+                        markerContent += '</div></div><div class="sj">'
+                        //设置宽度
+                        var div = document.createElement('div');
+                        if (data.dataTable[i].deviceJKs.length == 1) {
+                            div.style.width = (data.dataTable[i].deviceJKs.length * 50 + 200) + 'px';
+                        }
+                        else if (data.dataTable[i].deviceJKs.length == 0) {
+                            div.style.width = '300px';
+                        }
+                        else {
+                            div.style.width = (data.dataTable[i].deviceJKs.length * 50 + 125) + 'px';
+                        }
+                        div.setAttribute("class", "makercon overflow pad10px");
+
+                        div.innerHTML = markerContent;
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            name: data.dataTable[i].stationName,
+                            content: div,
+                            offset: new AMap.Pixel(-139, -100), //相对于基点的偏移位置
+                        });
+                        marker.id = data.dataTable[i].stationID;
+                        marker.on('mouseover', function (e) {
+                            var id = this.id;
+                            LoadZStationJkData(id, e);
+                        })
+                        marker.on('mouseout', function (e) {
+                            var id = this.id;
+                            map.clearInfoWindow();
+                        })
+                         marker.on('dblclick', function (e) {
+                            map.setZoomAndCenter(map.getZoom() + 1, e.target.getPosition());
+                        })
+                        map.add(marker);
+                        layers.push(marker);
+                    }
+                    else if (zoomlevel < 10) {
+
+                    }
+                }
+            })
+        }
+        //弹出框数据加载
+        function LoadZStationJkData(id, e) {
+            $.post("/Sws/Map/LoadDataByZStationID", { id: id }, function (data) {
+                if (data != null) {
+                    var clore = '';
+                    if (data.jk.state == "故障") {
+                        clore = 'red';
+                    } else if (data.jk.state == "正常") {
+                        clore = 'green';
+                    } else {
+                        clore = 'gray';
+                    }
+                    var table = '<div class="makercon overflow pad10px">';
+                   // table += '<div class="maptitle"><i class="iconfont f24px icon-bengfang ' + clore + '"></i><p><span class="fb f16px">' + data.jk.stationName + '</span></p></div>';
+                    table += "<div class='maptitle'><i class='iconfont f24px icon-bengfang " + clore + "'></i><p><span class='fb f16px' onClick=" + '"' +"window.top.homeAddTab('sta" + data.jk.stationID + "','" + data.jk.stationName + "','/Sws/Sws_Detail/Index/" + data.jk.stationID + "')"  + '"' + "'>" + data.jk.stationName + "</span></p></div>";
+                    table += '<ul class="maplist">';
+                    table += '<li><span>分区</span><span>PH</span><span>浊度</span><span>余氯</span></li>';
+                    if (data.jk.deviceJKs.length > 0) {
+                        for (var i = 0; i < data.jk.deviceJKs.length; i++) {
+                            if (data.jk.deviceJKs[i].partition == "1") {
+                                table += '<li><span>低区</span>';
+                            } else if (data.jk.deviceJKs[i].partition == "2") {
+                                table += '<li><span>中区</span>';
+                            }
+                            else if (data.jk.deviceJKs[i].partition == "3") {
+                                table += '<li><span>高区</span>';
+                            }
+                            else if (data.jk.deviceJKs[i].partition == "4") {
+                                table += '<li><span>超高区</span>';
+                            }
+                            table += '<span>' + data.jk.deviceJKs[i].ph + '</span>'
+                            table += '<span>' + data.jk.deviceJKs[i].turbidity + '</span>'
+                            table += '<span>' + data.jk.deviceJKs[i].cl + '</span>'
+                            table += '</li>'
+                        }
+                    }
+                    table += '</ul><div class="sj"></div>';
+                    infoWindow = new AMap.InfoWindow({
+                        content: table,  //使用默认信息窗体框样式，显示信息内容
+                        //offset: new AMap.Pixel(-55, -10), //相对于基点的偏移位置
+                    });
+                    //infoWindow.open(map, [data.jk.lng, data.jk.lat]);
+                    infoWindow.open(map, e.target.getPosition());
+                }
+            })
+        }
+
+        //双击泵房  定位地图中心点
+        function Positioning(stationid, type) {
+            if (type == 1) {
+                $.post("/Sws/Map/LoadDataByStationID", { id: stationid }, function (data) {
+                    if (data != null) {
+                        var clore = '';
+                        if (data.jk.state == "故障") {
+                            clore = 'red';
+                        } else if (data.jk.state == "正常") {
+                            clore = 'green';
+                        } else {
+                            clore = 'gray';
+                        }
+                        var table = '<div class="makercon overflow clearfloat pad10px">';
+                        //table += '<div class="maptitle"><i class="iconfont f24px icon-bengfang ' + clore + '"></i><p><span class="fb f16px">' + data.jk.stationName + '</span></p></div>';
+                        //table += '<div class="maptitle"><i class="iconfont f24px icon-bengfang ' + clore + '"></i><p><span class="fb f16px">' + data.jk.stationName + '</span></p></div>';
+                        table += "<div class='maptitle'><i class='iconfont f24px icon-bengfang " + clore + "'></i><p><span class='fb f16px' onClick=" + '"' + "window.top.homeAddTab('sta" + data.jk.stationID + "','" + data.jk.stationName + "','/Sws/Sws_Detail/Index/" + data.jk.stationID + "')" + '"' + "'>" + data.jk.stationName + "</span></p></div>";
+                        table += '<ul class="maplist">';
+                        table += '<li class="maplistnr1" ><span>分区</span><span>进水压力</span><span>出水压力</span><span>出水瞬时</span></li>';
+                        if (data.jk.deviceJKs.length > 0) {
+                            for (var i = 0; i < data.jk.deviceJKs.length; i++) {
+                                var pin = data.jk.deviceJKs[i].pressIN;
+                                var pout = data.jk.deviceJKs[i].pressOut;
+                                if (data.jk.deviceJKs[i].partition == "1") {
+                                    table += '<li><span>低区</span>';
+                                } else if (data.jk.deviceJKs[i].partition == "2") {
+                                    table += '<li><span>中区</span>';
+                                }
+                                else if (data.jk.deviceJKs[i].partition == "3") {
+                                    table += '<li><span>高区</span>';
+                                }
+                                else if (data.jk.deviceJKs[i].partition == "4") {
+                                    table += '<li><span>超高区</span>';
+                                }else if (data.jk.deviceJKs[i].partition == "5") {
+                                table += '<li><span>超超高区</span>';
+                            }else if (data.jk.deviceJKs[i].partition == "6") {
+                                table += '<li><span>智能泵房</span>';
+                            }
+                                if (pin.Value == true) {
+                                    table += '<span class="red">' + pin.Key+ ' MPa' + '</span>'
+                                } else {
+                                    table += '<span>' + pin.Key+ ' MPa' + '</span>'
+                                }
+                                if (pout.Value == true) {
+                                    table += '<span class="red">' + pout.Key+ ' MPa' + '</span>'
+                                } else {
+                                    table += '<span>' + pout.Key+ ' MPa' + '</span>'
+                                }
+                                table += '<span>' + data.jk.deviceJKs[i].inflow+ ' m³/h' + '</span>'
+                                table += '</li>'
+                            }
+                        }
+                        table += '</ul><div class="sj"></div>';
+
+                        var div = document.createElement("div");
+                        div.innerHTML = table;
+                        var popup = L.popup({
+                            offset: [-10, -20]
+                        })
+                            .setLatLng([data.jk.lat, data.jk.lng])
+                            .setContent(div)
+                            .openOn(map);
+
+                        map.setView([data.jk.lat, data.jk.lng]);
+                    }
+                })
+            } else {
+                $.post("/Sws/Map/LoadDataByZStationID", { id: stationid }, function (data) {
+                    if (data != null) {
+                        var clore = '';
+                        if (data.jk.state == "故障") {
+                            clore = 'red';
+                        } else if (data.jk.state == "正常") {
+                            clore = 'green';
+                        } else {
+                            clore = 'gray';
+                        }
+                        var table = '<div class="makercon overflow pad10px">';
+                        table += '<div class="maptitle"><i class="iconfont f24px icon-bengfang ' + clore + '"></i><p><span class="fb f16px">' + data.jk.stationName + '</span></p></div>';
+
+                        table += '<ul class="maplist">';
+                        table += '<li><span>分区</span><span>PH</span><span>浊度</span><span>余氯</span></li>';
+                        if (data.jk.deviceJKs.length > 0) {
+                            for (var i = 0; i < data.jk.deviceJKs.length; i++) {
+                                if (data.jk.deviceJKs[i].partition == "1") {
+                                    table += '<li><span>低区</span>';
+                                } else if (data.jk.deviceJKs[i].partition == "2") {
+                                    table += '<li><span>中区</span>';
+                                }
+                                else if (data.jk.deviceJKs[i].partition == "3") {
+                                    table += '<li><span>高区</span>';
+                                }
+                                else if (data.jk.deviceJKs[i].partition == "4") {
+                                    table += '<li><span>超高区</span>';
+                                }
+                                else if (data.jk.deviceJKs[i].partition == "5") {
+                                table += '<li><span>超超高区</span>';
+                            }else if (data.jk.deviceJKs[i].partition == "6") {
+                                table += '<li><span>智能泵房</span>';
+                            }
+                                table += '<span>' + data.jk.deviceJKs[i].ph + '</span>'
+                                table += '<span>' + data.jk.deviceJKs[i].turbidity + '</span>'
+                                table += '<span>' + data.jk.deviceJKs[i].cl + '</span>'
+                                table += '</li>'
+                            }
+                        }
+                        table += '</ul><div class="sj"></div>';
+                        infoWindow = new AMap.InfoWindow({
+                            content: table,  //使用默认信息窗体框样式，显示信息内容
+                            //offset: new AMap.Pixel(-55, -10), //相对于基点的偏移位置
+                        });
+                        infoWindow.open(map, [data.jk.lng, data.jk.lat]);
+                        map.setZoomAndCenter(map.getZoom(), [data.jk.lng, data.jk.lat]);
+                        //infoWindow.open(map, e.target.getPosition());
+                    }
+                })
+            }
+
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+<!--
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="~/leafletmap/css/leaflet.1.3.1.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/gdmap.css">
+    <link href="~/leafletmap/plugins/Leaflet.MousePosition-master/L.Control.MousePosition.css" rel="stylesheet" />
+    <script src="~/leafletmap/1.3.1/leaflet.js"></script>
+    <script src="~/leafletmap/lib/esri-leaflet-v3.0.4/esri-leaflet.js"></script>
+    <script src="~/leafletmap/plugins/Leaflet.MousePosition-master/L.Control.MousePosition.js"></script>
+    <script src="~/leafletmap/plugins/Proj4Leaflet-master/proj4.js"></script>
+    <script src="~/leafletmap/plugins/Proj4Leaflet-master/proj4leaflet.js"></script>
+    <script src="~/leafletmap/plugins/leaflet.mapcache.js"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #mapdiv {
+            height: 100%;
+            width: 100%;
+            background: white;
+            position: absolute;
+        }
+
+        .map-circle-name {
+            width: 50px;
+            height: 50px;
+            background-color: forestgreen;
+            border-radius: 50px;
+            display: block;
+            text-align: center;
+            line-height: 50px;
+            animation: glow 800ms ease-out infinite alternate;
+        }
+    </style>
+</head>-->
+@*<body>
+        <div id="mapdiv"></div>
+        <script type="text/javascript">
+
+            proj4.defs("EPSG:2436", "+proj=tmerc +lat_0=0 +lon_0=117 +k=1 +x_0=500000 +y_0=0 +ellps=krass +towgs84=15.8,-154.4,-82.3,0,0,0,0 +units=m +no_defs");
+
+            var r = proj4("EPSG:2436", "EPSG:4326", [520061.79607555206, 2737925.6849408206]);
+            var centerPoint = new L.LatLng(r[1], r[0]);
+
+            var crs1 = new L.Proj.CRS("EPSG:2436", "+proj=tmerc +lat_0=0 +lon_0=117 +k=1 +x_0=500000 +y_0=0 +ellps=krass +towgs84=15.8,-154.4,-82.3,0,0,0,0 +units=m +no_defs",
+                {
+                    origin: [-5123300.0, 10002300],  // 将刚刚的 Origin 复制到这里
+                    resolutions: [                 // 所有的分辨率复制到这里
+                        76.43695495724326,
+                        38.21834518669038,
+                        19.109040301413938,
+                        9.554387858775717,
+                        4.777061637456608,
+                        2.3883985267970536,
+                        1.1940669714672763,
+                        0.5969011938023876,
+                        0.2984505969011938
+                    ]
+                    /*bounds: L.bounds([516911.9087096499, 2739564.213902506], [522879.9046456418, 2744911.94059796])*/
+                });
+
+
+            var num = 6;
+            var map = L.map('mapdiv', { crs: crs1 }).setView(centerPoint, 0);
+            var tileMapLayer = L.esri.tiledMapLayer({
+                minzoom: 0,
+                maxzoom: 6,
+                url: "http://120.33.89.2:6080/arcgis/rest/services/LM_DXT20211216/MapServer"
+            });
+
+            map.addLayer(tileMapLayer);
+
+            var tileMapLayer1 = L.esri.dynamicMapLayer({
+                url: "http://120.33.89.2:6080/arcgis/rest/services/SS_GWT_01_1216/MapServer"
+            });
+
+            map.addLayer(tileMapLayer1);
+            var markericon1 = '' +
+                '<div>' +
+                '<div class="round">  ' +
+                '<div class="circle">' +
+                '<img src="../../images/bftb.png">' +
+                '</div> ' +
+                '<div class="circle_bottom animation "></div>' +
+                '<div class="circle_bottom2 animation2 "></div>' +
+                '</div>' +
+                '</div>';
+            var htmlStr = '<p><span class="map-circle-name">marker</span></p>';
+            var icon = L.divIcon({
+                html: markericon1,
+                iconSize: [80, 80],
+                className: 'map-circle'
+            });
+
+
+
+            L.marker(centerPoint, { icon: icon }).addTo(map).on("click", function (e) {
+                alert("我是一个 marker 点");
+            }).bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+
+
+            map.on("click", function (e) {
+                //弹出的是 EPSG:4326 坐标系
+                alert(JSON.stringify(e.latlng));
+            });
+
+            /*L.marker(centerPoint).addTo(map);*/
+
+
+        </script>
+    </body>*@
+<!--</html>-->

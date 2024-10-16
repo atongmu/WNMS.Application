@@ -1,0 +1,13 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+*/
+/*!
+ * All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+ * See https://github.com/Esri/calcite-components/blob/master/LICENSE.md for details.
+ */
+const t=()=>[2,1,1,1,3].map((t=>{let r="";for(let e=0;e<t;e++)r+=(65536*(1+Math.random())|0).toString(16).substring(1);return r})).join("-")
+/*!
+ * All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+ * See https://github.com/Esri/calcite-components/blob/master/LICENSE.md for details.
+ */,r={autoTheme:"calcite-theme-auto",darkTheme:"calcite-theme-dark",lightTheme:"calcite-theme-light",rtl:"calcite--rtl"},e={loading:"Loading"};function n(r){return r?r.id=r.id||`${r.tagName.toLowerCase()}-${t()}`:""}function o(t){return Array.isArray(t)?t:Array.from(t)}function u(t){return d(t,`.${r.darkTheme}`)?"dark":"light"}function l(t){const r=d(t,"[dir]");return r?r.getAttribute("dir"):"ltr"}function i(t,r,e){const n=`[${r}]`,o=t.closest(n);return o?o.getAttribute(r):e}function c(t){return t.getRootNode()}function s(t){return t.host||null}function a(t,r){return function t(e,n){if(!e)return n;e.assignedSlot&&(e=e.assignedSlot);const o=c(e),u=Array.from(o.querySelectorAll(r)).filter((t=>!n.includes(t)));n=[...n,...u];const l=s(o);return l?t(l,n):n}(t,[])}function f(t,r){return function t(e){if(!e)return null;e.assignedSlot&&(e=e.assignedSlot);const n=c(e),o=n.querySelector(r),u=s(n);return o||(u?t(u):null)}(t)}function d(t,r){return function t(e){return e?e.closest(r)||t(s(c(e))):null}(t)}function m(t){return"function"==typeof(null==t?void 0:t.setFocus)}async function g(t){if(t)return m(t)?t.setFocus():t.focus()}function h(t,r,e){const n=`[slot="${r}"]`;return(null==e?void 0:e.all)?function(t,r,e){let n=Array.from(t.querySelectorAll(r));n=e&&!1===e.direct?n:n.filter((r=>r.parentElement===t));const o=null==e?void 0:e.selector;return o?n.map((t=>Array.from(t.querySelectorAll(o)))).reduce(((t,r)=>[...t,...r]),[]).filter((t=>!!t)):n}(t,n,e):function(t,r,e){let n=t.querySelector(r);n=e&&!1===e.direct||(null==n?void 0:n.parentElement)===t?n:null;const o=null==e?void 0:e.selector;return o?n.querySelector(o):n}(t,n,e)}function y(t,r){return Array.from(t.children).filter((t=>t.matches(r)))}function A(t,r,e){return"string"==typeof r&&""!==r?r:""===r?t[e]:void 0}function S(t,r){return!(r.left>t.right||r.right<t.left||r.top>t.bottom||r.bottom<t.top)}export{r as C,e as T,h as a,t as b,d as c,u as d,i as e,g as f,l as g,y as h,S as i,n as j,m as k,a as l,o as n,f as q,A as s};

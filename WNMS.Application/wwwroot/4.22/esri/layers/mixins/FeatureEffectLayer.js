@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define("exports ../../chunks/_rollupPluginBabelHelpers ../../chunks/tslib.es6 ../../core/accessorSupport/decorators/property ../../core/arrayUtils ../../core/has ../../core/accessorSupport/ensureType ../../core/accessorSupport/decorators/subclass ../support/FeatureEffect".split(" "),function(b,g,c,h,m,n,p,k,l){b.FeatureEffectLayer=a=>{a=function(d){function e(){var f=d.apply(this,arguments)||this;f.featureEffect=null;return f}g._inheritsLoose(e,d);return e}(a);c.__decorate([h.property({type:l,json:{origins:{"web-map":{write:{allowNull:!0}}}}})],
+a.prototype,"featureEffect",void 0);return a=c.__decorate([k.subclass("esri.layers.mixins.FeatureEffectLayer")],a)};Object.defineProperty(b,"__esModule",{value:!0})});

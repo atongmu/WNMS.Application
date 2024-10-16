@@ -1,0 +1,114 @@
+﻿@using WNMS.Model.CustomizedClass;
+@model IEnumerable<dynamic>
+<div class="sl_warning_block tab-pane fade in active" id="sl_all">
+    <ul class="clearfloat zlw_slxg">
+        @{
+            if (Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+
+                    var stationNames = item.StationName + "#" + item.ItemName;
+                    var cClass = "";
+                    var levelName = "";
+                    var lineClass = "";
+                    @if (item.EventLevel == 1)
+                    {
+                        cClass = "redcolor";
+                        lineClass = "redcolor_line";
+                        levelName = item.EventMessage+"(紧急)";
+                    }
+                    else if (item.EventLevel == 2)
+                    {
+                        cClass = "orangecolor";
+                        lineClass = "orangecolor_line";
+                        levelName =item.EventMessage+ "(一般)";
+                    }
+                    else
+                    {
+                        cClass = "bluecolor";
+                        lineClass = "bluecolor_line";
+                        levelName =item.EventMessage+ "(提示性)";
+                    }
+                    var alarmMesage = "";
+
+
+                    <li>
+                        <div class="sl_warning_block_item zlw_jjbj" style="width:100%;margin:0;">
+                            <div class="top @lineClass">
+                                <p class="col">
+                                    @if (item.EventType == 0)
+                                    {
+                                        alarmMesage = stationNames +";" +item.EventMessage;
+                                        <i class="iconfont ml5px icon-fangzidaiquan @cClass"></i>@stationNames
+                                    }
+                                    else
+                                    {
+                                        alarmMesage = stationNames + ";" +item.EventMessage+";"+item.CurrentValue+"("+item.Unit+")";
+                                        if (item.EventType == 1 || item.EventType == 1)
+                                        {
+                                            <i class="ml5px fa fa-arrow-circle-o-up @cClass" style="margin-top: 5px;"></i>@stationNames
+                                        }
+                                        else
+                                        {
+                                            <i class="ml5px fa fa-arrow-circle-o-down @cClass" style="margin-top: 5px;"></i>@stationNames
+                                        }
+                                    }
+                                </p>
+                                <p class="col2">
+                                    <i class="fa fa-trash-o right" onclick="DeleteEvents('@item.EventTime',@item.RTUID,@item.EventSource,@item.ID)" style="line-height: 35px;margin-left: 10px;color:#333;"></i>
+                                    @if (item.IsHandle == 1)
+                                    {
+                                        <i class="fa fa-edit right" onclick="HandleEvent(true,'@alarmMesage','@item.EventTime',@item.RTUID,@item.EventSource)" style="margin-left: 17px;line-height: 35px;color:#afbbbb"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-edit right" onclick="HandleEvent(false,'@alarmMesage','@item.EventTime',@item.RTUID,@item.EventSource)" style="margin-left: 17px;line-height: 35px;color: #333;"></i>
+                                    }
+                                    @if (item.IsAttend == 0)
+                                    {
+                                        <i class="fa fa-star-o right xing" onclick="OperateAttend(true,@item.EventSource)" style="line-height: 35px;margin-left: 10px;color: #ffc107;"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-star right xing" onclick="OperateAttend(false,@item.EventSource)" style="line-height: 35px;margin-left: 10px;color: #ffc107;"></i>
+                                    }
+
+                                </p>
+                            </div>
+                            <div class="main">
+                                <div class="clearfloat sl_pressure">
+                                    @if (item.EventType != 0)
+                                    {
+                                    <p class="left" style="padding-left: 3px 0px;"><span class="@cClass" style="font-size: 16px;">@item.CurrentValue @item.Unit&nbsp;&nbsp;</span><span>/&nbsp;&nbsp;@item.LimitValue @item.Unit</span></p>
+                                    }
+                                    <p class="right" style="padding: 3px 12px;background-color: #f6f4fc;">@item.stationTypeName</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>报警内容</span>
+                                    <p class="right chaochu @cClass">@levelName</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>报警时间</span>
+                                    <p class="right chaochu @cClass">@item.EventTime</p>
+                                </div>
+                                <div class="clearfloat sl_lb">
+                                    <span>持续时间</span>
+                                    @{
+                                        TimeSpan ts = DateTime.Now - Convert.ToDateTime(item.EventTime);
+                                        var times = ts.Days + "天" + ts.Hours + "时" + ts.Minutes + "分" + ts.Seconds + "秒";
+                                        <p class="right chaochu @cClass">@times</p>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                }
+            }
+        }
+      
+    </ul>
+
+</div>

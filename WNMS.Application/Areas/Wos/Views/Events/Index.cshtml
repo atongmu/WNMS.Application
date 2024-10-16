@@ -1,0 +1,311 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>事件处理</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap-table.min.css">
+    <link href="~/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="../../css/anniu.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <script src="../../lib/layer/layer.css"></script>
+    <!-- bootstrap -->
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../lib/layer/layer.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <style>
+        .selct select {
+            height: 30px;
+            width: 150px;
+            line-height: 30px;
+            border: 1px #999 solid;
+            border-radius: 5px;
+            margin-right: 15px;
+            outline: none
+        }
+
+        .zlw_manageconrgconyi {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            height: 100%;
+            margin-top: 7px;
+        }
+
+        .zlw_manageconrgconsan .bootstrap3 {
+            height: calc(100% - 37px)
+        }
+
+        .fixed-table-container {
+            height: calc(100% - 115px);
+            overflow: auto
+        }
+        .bootstrap3  .fixed-table-container {overflow:hidden}
+        .acl a {
+            margin-left: 10px;
+            margin-right: 10px;
+            line-height: 40px;
+        }
+         .acl a:hover {
+           color:#999
+        }
+        .acl .active {
+            background-color:#3c8dbc;color:#fff;border-radius:3px;padding:0 5px
+        }
+        .acl .active:hover {
+            color:#fff;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- star right -->
+    <div class="zlw_bjjl">
+        <div class="zlw_bjjlcon" style="padding-top:0">
+            <!-- star 查询 -->
+            <div class="">
+                <div class="clearfloat">
+                    <div class="zlw_datamain_rgyiyi clearfloat overflow left" id="datename" style="padding-bottom:5px">
+                        <label class="hyl_label left">查询时间：</label>
+                        <ul class="clearfloat zlw_time_con">
+                            <li value="0"><i>全部</i></li>
+                            <li value="1"><i>昨天</i></li>
+                            <li value="2"><i>本周</i></li>
+                            <li value="3"><i>上周</i></li>
+                            <li class="zlw_bgact" value="4"><i>本月</i></li>
+                            <li value="5"><i>上月</i></li>
+                            <li value="6"><i>自定义</i></li>
+                        </ul>
+                        <input id="datevalue" style="display:none;" value="0" />
+                    </div>
+                    <div class="left overflow selectDate hidden">
+                        <div class="mt10px left">
+                            <input id="beginTime" type="text" class="hyl_input left hyl_input-sm" onclick="WdatePicker()" value="@ViewBag.datemin">
+                            <span class="left lh30px pl10px pr10px">至</span>
+                            <input id="endTime" type="text" class="hyl_input left hyl_input-sm" onclick="WdatePicker()" value="@ViewBag.datemax">
+                        </div>
+                        <div class="left mt10px ml5px">
+                            <input type="text" id="EventsName" class="hyl_input" placeholder="事件信息" />
+                            <button id="selectData" class="hyl_btn" onclick="refresh()"><i class="fa fa-search mr5px"></i>查询</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="pl10px" style="border-bottom:1px solid #ddd">
+                <ul class="clearfloat">
+                    <li class="left zlw_bjjlernr">
+                        <div id="eventLevel" class="acl">
+                            <label class="hyl_label left">事件状态：</label>
+                            <a class="active" data-value="8">全部(@ViewBag.TotalCount)</a>
+                            <a data-value="0">未处理(@ViewBag.untreated)</a>
+                            <a data-value="1">已分派(@ViewBag.treated)</a>
+                            <a data-value="2">无效(@ViewBag.invalid)</a>
+                            <b>|</b>
+                            <a data-value="6" data-type="reload">含撤回(@ViewBag.recall)</a>
+                            <a data-value="7" data-type="reload">含退单(@ViewBag.back)</a>
+                            <input id="statevalue" style="display:none;" value="8" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="pl10px " style="border-bottom:1px solid #ddd">
+                <ul class="clearfloat">
+                    <li class="left zlw_bjjlernr">
+                        <div id="incidentType" class="acl">
+                            <label class="hyl_label left">事件类型：</label>
+                            <a class="active" data-value="8">全部(@ViewBag.TotalCount)</a>
+                            @{
+                                foreach (WNMS.Model.CustomizedClass.IncidentType item in Enum.GetValues(typeof(WNMS.Model.CustomizedClass.IncidentType)))
+                                {
+                                    int value = (int)item;
+                                    <a data-value="@value">@item.ToString()</a>
+                                }
+                            }
+                            <input id="typevalue" style="display:none;" value="8" />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- 查询 end -->
+            <!-- 表格 -->
+            <div class="zlw_manageconrgconsan" id="tablebox" style="margin-top:10px">
+                <table id="tabledata" data-toggle="table" data-pagination="true" data-side-pagination="server" data-page-list="[15, 25, 50, 100]" data-height="500" data-page-size="15" class="table-striped">
+                    <tr></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        $table = $("#tabledata");
+        var options = $table.bootstrapTable('getOptions');
+        $(function () {
+            // 时间按钮切换样式
+            $(".zlw_time_con li").click(function () {
+                $(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+                $("#datevalue").val(this.value);
+            });
+            $(".zlw_time_con li").not("li:eq(6)").click(function () {
+                $(".selectDate").addClass("hidden");
+                refresh();
+            });
+            $(".zlw_time_con li:eq(6)").click(function () {
+                $(".selectDate").removeClass("hidden");
+                refresh();
+            });
+
+            //类型按钮切换
+            var a2 = $('#incidentType a')//条件筛选切换
+            for (var i = 0; i < a2.length; i++) {
+                a2[i].index = i;
+                a2[i].onclick = function () {
+                    for (var i = 0; i < a2.length; i++) {
+                        a2[i].className = ''
+                    }
+                    this.className = 'active';
+                    $('#typevalue').val($(this).data('value'));
+                    refresh();
+                }
+            }
+            //状态按钮切换
+            var a3 = $('#eventLevel a')//条件筛选切换
+            for (var i = 0; i < a3.length; i++) {
+                a3[i].index = i;
+                a3[i].onclick = function () {
+                    for (var i = 0; i < a3.length; i++) {
+                        a3[i].className = ''
+                    }
+                    this.className = 'active';
+                    $('#statevalue').val($(this).data('value'));
+                    refresh();
+                }
+            }
+
+            //初次加载数据
+            LoadData(1,15, "", "desc");
+
+            //查询列表
+            $("#selectData").click(function () {
+                LoadData(1, options.pageSize, "", "desc");
+            });
+            $("#EventsName").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    LoadData(1, options.pageSize, "", "desc");
+                }
+            });
+
+            $('.fixed-table-loading').hide()
+        });
+
+        //加载数据
+        function LoadData(index, pagesize, sort, order) {
+            $.post('/Wos/Events/LoadEventsInfo', {
+                beginDate: $("#beginTime").val(),
+                endDate: $("#endTime").val(),
+                message: $("#EventsName").val(),
+                date: $("#datevalue").val(),
+                state: $("#statevalue").val(),
+                type: $('#typevalue').val(),
+                pageindex: index || 1,
+                pagesize: pagesize,
+                sortName: sort,
+                sortOrder: order
+            }, function (res) {
+                //添加table
+                $("#tablebox").html('<table id="tabledata" data-sort-name="' + res.sortName + '" class="table table-striped" data-pagination="true" data-page-list="[10, 15,20]" data-toggle="table"  data-side-pagination="server"  ' +
+                    'data-total-rows="' + res.total + '" data-sort-order="' + res.order + '"  data-page-size="' + res.pageSize + '" data-height="' + ($(window).height() - 150) + '"  data-page-number="' + res.pageIndex + '">' + res.dataTable + '</table>')
+                $table = $("#tabledata").bootstrapTable({
+                    smartDisplay: false
+                });
+                options = $table.bootstrapTable('getOptions');
+                //分页
+                $table.on('page-change.bs.table', function (e, number, size) {
+                    LoadData(number, size, sort, order)
+                });
+
+                //排序
+                $table.on('sort.bs.table', function (e, field, order) {
+                    LoadData(index, pagesize, field, order)
+                });
+            });
+        }
+
+        function assignTask(id, state) {
+            if (state == 3) {
+                layer.alert("事件已处理完成，不可再派发");
+            } else {
+                iframe1(['事件处理'], "90%", "90%", "/Wos/Events/TreatEvent/" + id);
+            }
+        }
+
+        function auditIncident(id) {
+            iframe1(['事件审核'], "90%", "90%", "/Wos/EventsAudit/EventDetail/" + id);
+        }
+        //刷新数据
+        function refresh() {
+            var option = $table.bootstrapTable('getOptions');
+            LoadData(1, option.pageSize, "", "desc");
+        };
+
+        //弹出层
+        function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                skin: 'layui-ext-skin01',
+                type: 2,
+                title: title,
+                shadeClose: false,
+                closeBtn: 0,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+
+        //定义弹出层
+        function iframe1(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+                    window.frames[1].saveForm();
+                },
+                cancel: function (index) {
+                }
+            });
+        };
+    </script>
+</body>
+</html>

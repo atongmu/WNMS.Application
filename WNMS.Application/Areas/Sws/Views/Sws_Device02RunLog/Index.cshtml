@@ -1,0 +1,360 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>运行日志</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <style>
+        html, body {
+            height: 100%
+        }
+
+        /*.zlw_manageconrgconsan .bootstrap3 {
+            height: calc(100% - 10px)
+        }*/
+
+        .sl_chioce {
+            height: 50px
+        }
+
+        .no-date {
+            position: absolute;
+            width: 100%;
+            height: 100%
+        }
+
+            .no-date img {
+                margin-top: 12%
+            }
+
+        .sl_list {
+            height: calc(100% - 40px)
+        }
+
+
+
+        .fixed-table-container {
+            height: calc(100% - 130px) !important;
+            overflow: hidden;
+        }
+
+        .sl_chioce {
+            border-bottom: 0
+        }
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf">
+                <!-- 搜索框 -->
+                <div class="zlw_datamain_lfconsea">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search"></i>
+                        <input type="text" id="pumname" class="form-control" placeholder="搜索&quot;泵房&quot;名称" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:100%;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+            </div>
+            <div class="sl_rg">
+                <div class="sl_chioce relative" style="border-bottom:1px solid #ddd;height:51px">
+                    <nav aria-label="Page navigation" style="margin-left: 10px;margin-top: 10px;display: inline-block;">
+                        <ul class="paginations sl_chioDate">
+                            <li>
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" placeholder="开始时间" id="BeginDate" class="hyl_input hyl_input-sm" value="@ViewBag.beginDate">
+                                <span class="pl10px lh30px pr10px">至</span>
+                                <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" placeholder="结束时间" id="EndDate" class="hyl_input hyl_input-sm" value="@ViewBag.endDate">
+                                <select id="Template" class="hyl_select ml5px">
+                                    @{
+                                        var tempList = ViewBag.tempList as List<SwsTemplate>;
+                                        foreach (var item in tempList)
+                                        {
+                                            <option value="@item.Id">@item.TemplateName</option>
+                                        }
+                                    }
+
+                                </select>
+                                <button id="btnSelect" class="hyl_btn"> <i class="fa fa-search"></i> 查询</button>
+                                @*<button id="Btn_Template" class="hyl_btn"> <i class="fa fa-cogs"></i> 模板配置</button>
+                                    <button id="CorrectData" class="hyl_btn"> <i class="fa fa-paper-plane"></i> 数据矫正</button>
+                                    <button id="ExportBtn_History" class="hyl_btn"> <i class="fa fa-download"></i> 导出</button>*@
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="btn-group pull-right" role="group" aria-label="..." style="position:absolute;right:10px;top:10px">
+                        <button type="button" class="btn btn-default" id="Btn_Template"><i class="fa fa-cogs"></i> 模板配置</button>
+                        <button type="button" class="btn btn-default" id="CorrectData"><i class="fa fa-paper-plane"></i> 数据矫正</button>
+                        <button type="button" class="btn btn-default" id="ExportBtn_History"><i class="fa fa-download"></i> 导出</button>
+                    </div>
+                </div>
+                <div class="sl_list" style="margin-top:0px">
+                    <div class="zlw_manageconrgconsan mt10px" id="tablebox" style="height:calc(100% - 11px);position:relative">
+                        <div class="no-date textCenter">
+                            <img src="~/images/null.png" width="150" />
+                            <p>暂无数据</p>
+                        </div>
+                        <table id="tabledata" data-toggle="table" data-pagination="true" data-side-pagination="server" data-page-list="[15, 25, 50, 100]" data-page-size="15" class="table-striped">
+                            <tr></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- 树 -->
+    @*<link rel="stylesheet" href="~/lib/ztree/zTreeStyle.css">*@
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script type="text/javascript">
+		var setting = {
+            check: {
+                enable: false,
+			},callback: {
+                onClick: zTreeOnClick
+            },
+			data: {
+				simpleData: {
+					enable: true
+				}
+            },
+            view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            }
+		};
+        var zNodes =@ViewBag.TreeNodes;
+        var deviceid;
+        var zTreeObj;
+         $table = $("#tabledata");
+        var options = $table.bootstrapTable('getOptions');
+        $(document).ready(function () {
+			zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+             //初次加载数据
+            //var options = $table.bootstrapTable('getOptions');
+            $('.fixed-table-loading').hide();
+            $('.fixed-table-pagination').hide();
+            //查询
+            $("#btnSelect").click(function () {
+                searchData();
+            });
+
+
+             //数据矫正
+            $("#CorrectData").click(function () {
+                var nodes = zTreeObj.getSelectedNodes();
+                if (nodes.length != 1) {
+                    layer.alert("请选择1台设备");
+                }
+                else {
+                    if (nodes[0].isDevice == true) {
+                        if ($("#Template").val() != null) {
+                            iframeLay("矫正数据", "70%", "80%", "/Sws/Sws_Device02RunLog/QueryDataIDInfo?template=" + $("#Template").val() + "&EquipmentId=" + nodes[0].id);
+                        }
+                        else {
+                            alert("请创建模板");
+                        }
+                    }
+                    else {
+                        alert("您选中的非设备类型！请重新选中！");
+                    }
+                }
+
+            });
+            //配置模板按钮点击事件
+            $("#Btn_Template").click(function () {
+                iframe("配置模板", "900px", "80%", '/Sws/Sws_Device01RunLog/SetTemplate?type=2');
+            });
+            //数据导出
+            $("#ExportBtn_History").click(function(){
+                ExportList();
+            });
+
+            //树查询
+            $("#pumname").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    LoadZtree();
+                }
+            });
+        });
+
+        //查询数据
+        function searchData() {
+            var nodes = zTreeObj.getSelectedNodes();
+            if (nodes.length > 0) {
+                if (nodes[0].isDevice == true) {
+                    LoadData(options.pageNumber, options.pageSize, "", "",nodes[0].id);
+                    //LoadData(1, 20, "", "", nodes[0].id);
+                } else {
+                    alert("您选中的非设备类型！请重新选中！");
+                }
+            } else {
+                    layer.alert("请选择1台设备");
+            }
+        }
+
+        //加载数据
+        function LoadData(index, pagesize, sort, order,deviceid) {
+            $.post('/Sws/Sws_Device02RunLog/GetHistoryData', {
+                beginDate: $("#BeginDate").val(),
+                endDate: $("#EndDate").val(),
+                //beginDate: "2020-02-03",
+                //endDate: "2020-02-05",
+                template: $("#Template").val(),
+                equID: deviceid,
+                pageindex: index || 1,
+                pageSize: pagesize,
+                order: sort,
+                sort: order
+            }, function (res) {
+                //添加table
+                $("#tablebox").html('<table id="tabledata" data-sort-name="' + res.sortName + '" class="table table-striped" data-pagination="true" data-page-list="[10, 15,20]" data-toggle="table"  data-side-pagination="server"  ' +
+                    'data-total-rows="' + res.total + '" data-sort-order="' + res.order + '"  data-page-size="' + res.pageSize + '"   data-page-number="' + res.pageIndex + '" data-height="'+($(window).height() - 150)+'">' + res.dataTable + '</table>')
+                    $('.no-date').html("");
+                   // alert($(".bootstrap3").height - 60);
+                    $table = $('#tabledata').bootstrapTable({
+                        smartDisplay: false
+                    });
+                    options = $table.bootstrapTable('getOptions');
+                    //分页
+                    $table.on('page-change.bs.table', function (e, number, size) {
+                        LoadData(number, size, sort, order,deviceid);
+                    });
+                    //排序
+                    $table.on('sort.bs.table', function (e, field, order) {
+                        LoadData(index, pagesize, field, order,deviceid);
+                    });
+                    $('#tabledata').bootstrapTable('hideLoading');
+            });
+        }
+
+        //树点击事件
+        function zTreeOnClick(event, treeId, treeNode) {
+            if (treeNode.isDevice == true) {
+                deviceid= treeNode.id;
+            }
+            LoadTemplate(treeNode.id);
+             //LoadData(1, options.pageSize, "", "",treeNode.id);
+             ////LoadData(1, 20, "", "", treeNode.id);
+        }
+
+        function LoadTemplate(id) {
+             $.post("/Sws/Sws_Device01RunLog/LoadtempDevice",{
+                 id: id,
+                 type:2
+             }, function (data) {
+                    if (data.idt == 0) {
+                    }
+                    else {
+                        $("#Template").val(data.idt);
+                    }
+                    LoadData(1, options.pageSize, "", "",id);
+            });
+        }
+        //泵房选择
+        function LoadZtree() {
+            //查询树列表数据
+            $.post("/Sws/Sws_Device02RunLog/SelectTree",{
+                stationName:$("#pumname").val()
+            },function(data){
+                zTreeObj.destroy();    //清空树
+                var aa= JSON.parse(data);   //数据转json
+                if($("#pumname").val()!=""){
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                    zTreeObj.expandAll(true);     //初始化数列表展开
+                }else{
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                }
+            });
+        }
+
+        //导出数据
+
+        function ExportList() {
+            var nodes = zTreeObj.getSelectedNodes();
+            if (nodes.length > 0) {
+                if (nodes[0].isDevice == true) {
+                    if ($("#Template").val() != null) {
+                        //beginDate: $("#BeginDate").val(),
+                        //endDate: $("#EndDate").val(),
+                        window.location.href = "/Sws/Sws_Device02RunLog/ExportHistoryData?beginDate=" + $("#BeginDate").val() + "&endDate=" + $("#EndDate").val() + "&templateID=" + $("#Template").val() +"&equID="+nodes[0].id+"";
+                    }
+                    else {
+                        layer.alert("请创建模板");
+                    }
+                } else {
+                    layer.alert("您选中的非设备类型！请重新选中！");
+                }
+            } else {
+                layer.alert("请选择一台设备");
+            }
+        }
+       //定义layer层
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+                    window.frames[0].saveForm();
+                },
+                btn2: function(){
+                    searchData();
+                },
+                cancel: function (index) {
+                    searchData();
+                }
+            });
+        }
+
+        function iframeLay(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["关闭"],
+                end: function () {
+                }
+            });
+        }
+    </script>
+</body>
+</html>

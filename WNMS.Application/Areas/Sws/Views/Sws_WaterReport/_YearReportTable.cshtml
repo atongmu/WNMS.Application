@@ -1,0 +1,207 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Model.CustomizedClass;
+@using WNMS.Model.DataModels;
+@model IEnumerable<WebWaterQuality>
+<thead>
+    <tr>
+        <th data-width="120px" data-rowspan="2">时间</th>
+        @{
+            List<SwsStation> station = ViewBag.Station as List<SwsStation>;
+            foreach (var item in station)
+            {
+                <th data-colspan="7" data-width="700px">@item.StationName</th>
+            }
+        }
+    </tr>
+    <tr>
+        @foreach (var item in station)
+        {
+            <th data-width="100px">余氯(mg/L)</th>
+            <th data-width="100px">浊度(NTU)</th>
+            <th data-width="70px">PH</th>
+            <th data-width="100px">ORP(MV)</th>
+            <th data-width="100px">盐度(ppm)</th>
+            <th data-width="130px">溶解氧(mg/L)</th>
+            <th data-width="100px">电导率</th>
+        }
+    </tr>
+</thead>
+@*//IGrouping<DateTime?, WebWaterQuality>*@
+<tbody>
+    @{
+        if (Model.Count() > 0)
+        {
+            List<IGrouping<DateTime?, WebWaterQuality>> data = Model.GroupBy(r => r.UpdateTime).ToList();
+            foreach (var item in data)
+            {
+                <tr>
+                    <td>@Convert.ToDateTime(item.Key).ToString("yyyy-MM")</td>
+                    @foreach (var st in station)
+                    {
+                        WebWaterQuality sdata = item.Where(r => r.StationId == st.StationId).FirstOrDefault();
+                        if (sdata == null)
+                        {
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                        }
+                        else
+                        {
+                            <td>@sdata.ClAver</td>
+                            <td>@sdata.TurbidityAver</td>
+                            <td>@sdata.PhAver</td>
+                            <td>@sdata.OrpAver</td>
+                            <td>@sdata.SalinityAver</td>
+                            <td>@sdata.OxygenAver</td>
+                            <td>@sdata.ConductivityAver</td>
+                        }
+                    }
+                </tr>
+            }
+            List<IGrouping<int?, WebWaterQuality>> stationData = Model.GroupBy(r => r.StationId).ToList();
+            <tr>
+                <td>平均值</td>
+                @foreach (var item in station)
+                {
+                    IGrouping<int?, WebWaterQuality> sdata = stationData.Where(r => r.Key == item.StationId).FirstOrDefault();
+                    if (sdata == null)
+                    {
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    }
+                    else
+                    {
+                        <td>@Math.Round((double)sdata.Average(r => r.ClAver),2)</td>
+                        <td>@Math.Round((double)sdata.Average(r => r.TurbidityAver),2)</td>
+                        <td>@Math.Round((double)sdata.Average(r => r.PhAver),2)</td>
+                        <td>@Math.Round((double)sdata.Average(r => r.OrpAver),2)</td>
+                        <td>@Math.Round((double)sdata.Average(r => r.SalinityAver),2)</td>
+                        <td>@Math.Round((double)sdata.Average(r => r.OxygenAver),2)</td>
+                        <td>@Math.Round((double)sdata.Average(r => r.ConductivityAver),2)</td>
+
+                    }
+
+                }
+            </tr>
+            <tr>
+                <td>最大值</td>
+                @foreach (var item in station)
+                {
+                    IGrouping<int?, WebWaterQuality> sdata = stationData.Where(r => r.Key == item.StationId).FirstOrDefault();
+                    if (sdata == null)
+                    {
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    }
+                    else
+                    {
+                        <td>@sdata.Max(r => r.ClAver)</td>
+                        <td>@sdata.Max(r => r.TurbidityAver)</td>
+                        <td>@sdata.Max(r => r.PhAver)</td>
+                        <td>@sdata.Max(r => r.OrpAver)</td>
+                        <td>@sdata.Max(r => r.SalinityAver)</td>
+                        <td>@sdata.Max(r => r.OxygenAver)</td>
+                        <td>@sdata.Max(r => r.ConductivityAver)</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>最大值时间</td>
+                @foreach (var item in station)
+                {
+                    IGrouping<int?, WebWaterQuality> sdata = stationData.Where(r => r.Key == item.StationId).FirstOrDefault();
+                    if (sdata == null)
+                    {
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    }
+                    else
+                    {
+                        <td>@(((DateTime)sdata.Where(r => r.ClAver == sdata.Max(r => r.ClAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.TurbidityAver == sdata.Max(r => r.TurbidityAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.PhAver == sdata.Max(r => r.PhAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.OrpAver == sdata.Max(r => r.OrpAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.SalinityAver == sdata.Max(r => r.SalinityAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.OxygenAver == sdata.Max(r => r.OxygenAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.ConductivityAver == sdata.Max(r => r.ConductivityAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>最小值</td>
+                @foreach (var item in station)
+                {
+                    IGrouping<int?, WebWaterQuality> sdata = stationData.Where(r => r.Key == item.StationId).FirstOrDefault();
+                    if (sdata == null)
+                    {
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    }
+                    else
+                    {
+                        <td>@sdata.Min(r => r.ClAver)</td>
+                        <td>@sdata.Min(r => r.TurbidityAver)</td>
+                        <td>@sdata.Min(r => r.PhAver)</td>
+                        <td>@sdata.Min(r => r.OrpAver)</td>
+                        <td>@sdata.Min(r => r.SalinityAver)</td>
+                        <td>@sdata.Min(r => r.OxygenAver)</td>
+                        <td>@sdata.Min(r => r.ConductivityAver)</td>
+                    }
+                }
+            </tr>
+            <tr>
+                <td>最小值时间</td>
+                @foreach (var item in station)
+                {
+                    IGrouping<int?, WebWaterQuality> sdata = stationData.Where(r => r.Key == item.StationId).FirstOrDefault();
+                    if (sdata == null)
+                    {
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                    }
+                    else
+                    {
+                        <td>@(((DateTime)sdata.Where(r => r.ClAver == sdata.Min(r => r.ClAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.TurbidityAver == sdata.Min(r => r.TurbidityAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.PhAver == sdata.Min(r => r.PhAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.OrpAver == sdata.Min(r => r.OrpAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.SalinityAver == sdata.Min(r => r.SalinityAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.OxygenAver == sdata.Min(r => r.OxygenAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                        <td>@(((DateTime)sdata.Where(r => r.ConductivityAver == sdata.Min(r => r.ConductivityAver))?.Select(r => r.UpdateTime).FirstOrDefault()).ToString("yyyy-MM"))</td>
+                    }
+                }
+            </tr>
+        }
+    }
+</tbody>

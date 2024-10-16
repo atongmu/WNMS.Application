@@ -1,0 +1,653 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="zh">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+            content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="keywords" content="智慧供水平台">
+    <meta name="description" content="智慧供水平台">
+    <title></title>
+    <link href="~/Swslxl/css/reset.css" rel="stylesheet" />
+    <link href="~/Swslxl/css/common.css" rel="stylesheet" />
+    <link href="~/Swslxl/fonts/iconfont.css" rel="stylesheet" />
+    <link href="~/Swslxl/css/theme1.css" rel="stylesheet" />
+
+    <style>
+        .name-text {display: inline-block}
+    </style>
+
+    <script src="~/Swslxl/js/plugins/adaption.js"></script>
+</head>
+<body>
+    <div class="page-filter">
+        <form class="layui-form form-singleline">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">统计方式：</label>
+                    <div class="layui-input-inline" style="width: 1rem">
+                        <select name="dateType" id="dateType" lay-filter="dateTypeChange">
+                            <option value="date">日</option>
+                            <option value="month">月</option>
+                            <option value="year">年</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">查询时间段：</label>
+                    <div class="layui-input-inline" id="timeIntervalContent">
+                        <input type="text" name="timeInterval" autocomplete="off" placeholder="开始时间 ~ 结束时间" class="layui-input advanceDate time-d-range">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="btn btn-submit" lay-submit lay-filter="formSearch">
+                        <i class="layui-icon layui-icon-search"></i>查询
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="window-height pb-10" data-negative=".72">
+        <div class="container container-lg simple full-height">
+            <div class="row full-height">
+                <div class="height-6">
+                    <div class="col-4 full-height">
+                        <div class="box-border-container">
+                            <div class="box-border">
+                                <div class="title">
+                                    <h3>报警厂商分析<span id="scs1"></span></h3>
+                                </div>
+                                <div class="wrap overflow position-relative">
+                                    <div id="echarts1" class="echarts"></div>
+
+                                    <div class="nothing absolute">
+                                        <div class="nothing-content">
+                                            <div class="icon"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 full-height">
+                        <div class="box-border-container">
+                            <div class="box-border">
+                                <div class="title">
+                                    <h3>报警设备类型分析</h3>
+                                </div>
+                                <div class="wrap position-relative">
+                                    <div id="alarmtypeList" class="list-alarmtype">
+
+                                    </div>
+
+                                    <div class="nothing absolute">
+                                        <div class="nothing-content">
+                                            <div class="icon"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 full-height">
+                        <div class="box-border-container">
+                            <div class="box-border pt-108 pb-62">
+                                <div class="title">
+                                    <h3>泵房报警次数排名</h3>
+                                    <!-- <div class="btn-group">
+                                        <button type="button" class="btn btn-primary iconfont icon-calendar"></button>
+                                    </div> -->
+                                </div>
+                                <div class="wrap">
+                                    <table class="layui-hide" id="tableAlarmsNumber" lay-filter="tableAlarmsNumber"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="height-6">
+                    <div class="col-4 full-height">
+                        <div class="box-border-container">
+                            <div class="box-border pt-108 pb-62">
+                                <div class="title">
+                                    <h3>报警频度排名</h3>
+                                </div>
+                                <div class="wrap">
+                                    <table class="layui-hide" id="tableAlarmsFrequency" lay-filter="tableAlarmsFrequency"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8 full-height">
+                        <div class="box-border-container">
+                            <div class="box-border pt-108 pb-62">
+                                <div class="title">
+                                    <h3>报警详情</h3>
+                                </div>
+                                <div class="wrap">
+                                    <table class="layui-hide" id="tableAlarmsDetail" lay-filter="tableAlarmsDetail"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 仅供占位使用 -->
+    <div class="time-value-content time-width-dhms-range">2021-01-01 00:00:00 ~ 2021-07-05 21:00:34</div>
+    <div class="time-value-content time-width-d-range">2021-01-01 ~ 2021-07-05</div>
+
+    <script src="~/Swslxl/js/libs/jquery-1.12.4/jquery-1.12.4.min.js"></script>
+    <link rel="stylesheet" href="~/Swslxl/js/libs/layui/css/layui.css">
+    <script src="~/Swslxl/js/libs/layui/layui.js"></script>
+    <script src="~/Swslxl/js/common.js"></script>
+    <script src="~/Swslxl/js/plugins/echarts/echarts.js"></script>
+    <script src="~/Swslxl/js/plugins/echarts/customed.js"></script>
+    <script>
+        var originalBeginDate = beginDate = '@ViewBag.BeginDate',	// 默认开始时间
+            originalEndDate = endDate = '@ViewBag.EndDate';		// 默认结束时间
+
+        /*设置时间框宽度*/
+        var timeWidthDRange = $('.time-width-d-range').outerWidth() + .1 * baseSize;
+        $('.time-d-range').width(timeWidthDRange);
+
+        var echartsApp = [],
+            // 1、报警厂商分析
+            options1 = {
+                color: ['#a85dff'],
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        var html = params[0].name + '<br />';
+                        for (var i = 0; i < params.length; i++) {
+                            html += params[i].seriesName + '：' + params[i].value + '次<br>'
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    top: 10,
+                    left: 0,
+                    right: 30,
+                    bottom: 0,
+                    containLabel: true
+                },
+                xAxis: [{
+                    type: 'category',
+                    boundaryGap: false,
+                    data: [],
+                }],
+                yAxis: [{
+                    type: 'value',
+                    scale: true,
+                }],
+                series: [{
+                    name: '报警数量',
+                    type: 'bar', 
+                    barWidth: 18,
+                    barGap: 0,
+                    itemStyle: {
+                        normal: {
+                            show: true,
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                offset: 0,
+                                color: 'rgba(0, 111, 255, 1)'
+                            }, {
+                                offset: 1,
+                                color: 'rgba(0, 111, 255, .1)'
+                            }]),
+                            barBorderRadius: [30, 30, 0, 0],
+                            borderWidth: 0,
+                        }
+                    },
+                    data: [],
+                }]
+            },
+            options1DataMin = 9999999, 	// 数据最大值
+            options1DataMax = 0;		// 数据最小值
+
+
+        layui.use(['form', 'laydate', 'table'], function () {
+            var form = layui.form,
+                laydate = layui.laydate,
+                table = layui.table,
+                $ = layui.$;
+
+            /**
+                * 日期选择器
+                */
+            lay('.advanceDate').each(function () {
+                laydate.render({
+                    elem: this,
+                    trigger: 'click',
+                    range: '~',
+                    type: 'date',
+                    max: 0,
+                    value: beginDate + ' ~ ' + endDate
+                });
+            });
+
+            /**
+                * 统计方式切换
+                */
+            form.on('select(dateTypeChange)', function (data) {
+                var dataType = data.value;
+                $('#timeIntervalContent').html('<input type="text" name="timeInterval" autocomplete="off" placeholder="开始时间 ~ 结束时间" class="layui-input advanceDate time-d-range">');
+
+                switch (dataType) {
+                    case 'date':
+                        beginDate = formatTime(originalBeginDate, 'd', '-', null, -3);
+                        endDate = formatTime(originalEndDate, 'd');
+                        break;
+                    case 'month':
+                        beginDate = formatTime(originalBeginDate, 'm', '-', null, -1);
+                        endDate = formatTime(originalEndDate, 'm');
+                        break;
+                    case 'year':
+                        beginDate = formatTime(originalBeginDate, 'y', '-', null, -1);
+                        endDate = formatTime(originalEndDate, 'y');
+                        break;
+                }
+
+                lay('.advanceDate').each(function () {
+                    laydate.render({
+                        elem: this,
+                        trigger: 'click',
+                        range: '~',
+                        type: dataType,
+                        max: 0,
+                        value: beginDate + ' ~ ' + endDate
+                    });
+                });
+            });
+
+            /**
+                * 搜索表单提交
+                */
+            form.on('submit(formSearch)', function (data) {
+                // 将input的值设置到全局变量便于查询
+                var timeIntervalArr = data.field.timeInterval.split(' ~ ');
+                beginDate = timeIntervalArr[0];
+                endDate = timeIntervalArr[1];
+
+                // 刷新数据
+                initData();
+
+                // 3、报警次数排名
+                table.reload('tableAlarmsNumber', {
+                    url: "/Sws/Sws_EventAnalysis/GetRankingData",
+                    where: {
+                        beginDate: beginDate,
+                        endDate: endDate,
+                        type: $("#dateType").val()
+                    }});
+
+                // 4、报警频度排名
+                table.reload('tableAlarmsFrequency', {
+                    url: "/Sws/Sws_EventAnalysis/GetEventMessageData",
+                    where: {
+                        beginDate: beginDate,
+                        endDate: endDate,
+                        type: $("#dateType").val()
+                    }
+                });
+
+                // 5、报警详情
+                table.reload('tableAlarmsDetail', {
+                    url: "/Sws/Sws_EventAnalysis/GetEventTableData",
+                    where: {
+                        beginDate: beginDate,
+                        endDate: endDate,
+                        type: $("#dateType").val()
+                    }
+                });
+
+                return false;
+            });
+
+            // 1、报警厂商分析
+            echartsApp[1] = echarts.init($('#echarts1')[0], 'customed');
+            echartsApp[1].setOption(options1);
+
+            /**
+                * 初始化数据
+                */
+            initData();
+
+            /**
+                * 3、报警次数排名tableAlarmsNumber
+                */
+            table.render({
+                elem: '#tableAlarmsNumber',
+                url: "/Sws/Sws_EventAnalysis/GetRankingData",
+                method: 'post',
+                where: {
+                    beginDate: beginDate,
+                    endDate: endDate,
+                    type: $("#dateType").val()
+                },
+                even: true,
+                page:true,
+                cols: [
+                    [
+                        {
+                            field: 'stationName',
+                            title: '泵房',
+                        },
+                        {
+                            field: 'count',
+                            title: '报警总数',
+                            width: 1.2 * baseSize
+                        },
+                        {
+                            title: '排名',
+                            width: 1 * baseSize,
+                            templet: function (d) {
+                                var className = 'rank-cube';
+                                switch (d.LAY_INDEX) {
+                                    case 1:
+                                        className += ' first';
+                                        break;
+                                    case 2:
+                                        className += ' second';
+                                        break;
+                                    case 3:
+                                        className += ' third';
+                                        break;
+                                }
+                                d.LAY_INDEX = (d.LAY_INDEX < 10) ? '0' + d.LAY_INDEX : d.LAY_INDEX;
+                                var html = '<span class="' + className + '">' + d.LAY_INDEX + '</span>';
+                                return html;
+                            }
+                        },
+                        {
+                            field: '',
+                            title: '详情查看',
+                            width: 1.2 * baseSize,
+                            templet: function (d) {
+                                var html = '<a class="btn btn-primary" lay-event="detail">查看</a>';
+                                return html;
+                            }
+                        }
+                    ]
+                ]
+            });
+
+            /**
+                * 4、报警频度排名tableAlarmsFrequency
+                */
+            table.render({
+                elem: '#tableAlarmsFrequency',
+                url: "/Sws/Sws_EventAnalysis/GetEventMessageData",
+                method: 'post',
+                where: {
+                    beginDate: beginDate,
+                    endDate: endDate,
+                    type: $("#dateType").val()
+                },
+                even: true,
+                page: true,
+                cols: [
+                    [
+                        {
+                            title: '排名',
+                            width: 1 * baseSize,
+                            templet: function (d) {
+                                var className = 'rank-circle';
+                                switch (d.LAY_INDEX) {
+                                    case 1:
+                                        className += ' first';
+                                        break;
+                                    case 2:
+                                        className += ' second';
+                                        break;
+                                    case 3:
+                                        className += ' third';
+                                        break;
+                                }
+                                d.LAY_INDEX = (d.LAY_INDEX < 10) ? '0' + d.LAY_INDEX : d.LAY_INDEX;
+                                var html = '<span class="' + className + '">' + d.LAY_INDEX + '</span>';
+                                return html;
+                            }
+                        },
+                        {
+                            field: 'name',
+                            title: '报警内容',
+                        },
+                        {
+                            field: 'count',
+                            title: '报警总数',
+                            width: 1.2 * baseSize
+                        },
+                        {
+                            field: '',
+                            title: '详情查看',
+                            width: 1.2 * baseSize,
+                            templet: function (d) {
+                                var html = '<a class="btn btn-danger" lay-event="detail">查看</a>';
+                                return html;
+                            }
+                        }
+                    ]
+                ]
+            });
+
+            /**
+                * 5、报警详情tableAlarmsDetail
+                */
+            table.render({
+                elem: '#tableAlarmsDetail',
+                url: "/Sws/Sws_EventAnalysis/GetEventTableData",
+                method: 'post',
+                where: {
+                    beginDate: beginDate,
+                    endDate: endDate,
+                    type: $("#dateType").val()
+                },
+                even: true,
+                page: true,
+                cols: [
+                    [
+                        {
+                            field: 'manufacturer',
+                            title: '报警厂商',
+                        },
+                        {
+                            field: 'stationName',
+                            title: '报警泵房',
+                        },
+                        {
+                            field: 'deviceType',
+                            title: '设备类型',
+                        },
+                        {
+                            field: 'eventTime',
+                            title: '报警时间',
+                            width: 2 * baseSize,
+                        },
+                        {
+                            field: 'eventMessage',
+                            title: '报警内容',
+                        },
+                        //{
+                        //    field: 'currentValue',
+                        //    title: '当前值',
+                        //    width: 1.5 * baseSize,
+                        //},
+                        {
+                            field: 'state',
+                            title: '报警状态',
+                            width: 1.2 * baseSize,
+                            templet: function (d) {
+                                var color = '#333';
+                                var name = '';
+                                switch (d.state) {
+                                    case 1:
+                                        color = '#f00';
+                                        name = '发生';
+                                        break;
+                                    case 0:
+                                        color = '#28a506';
+                                        name = '解除';
+                                        break;
+                                    default:
+                                        color = '#28a506';
+                                        name = '解除';
+                                        break;
+                                }
+                                return '<span style="color: ' + color + '">' + name + '</span>';
+                            }
+                        },
+                        {
+                            field: 'duration',
+                            title: '持续时间',
+                        },
+                    ]
+                ]
+            });
+
+            /**
+                * 监听table行工具事件
+                */
+            // 报警次数排名
+            table.on('tool(tableAlarmsNumber)', function (obj) {
+                var rtuid = obj.data.rtuid,
+                    stationName = obj.data.stationName;
+                switch (obj.event) {
+                    case 'detail':
+                        // 查看详情
+                        openDetailPage(stationName + '报警详情', beginDate, endDate, 2, rtuid);
+                        break;
+                }
+            });
+            // 报警频度排名
+            table.on('tool(tableAlarmsFrequency)', function (obj) {
+                var id = obj.data.id,
+                    name = obj.data.name;
+                switch (obj.event) {
+                    case 'detail':
+                        // 查看详情
+                        openDetailPage(name + '报警详情', beginDate, endDate, 1, name);
+                        break;
+                }
+            });
+        });
+
+        /**
+            * 初始化数据
+            */
+        function initData() {
+            // 1、获取报警厂商分析数据
+            vendorData();
+
+            // 2、获取设备类型分析数据
+            alarmtypeData();
+        }
+
+        // 1、获取报警厂商分析数据
+        function vendorData() {
+            $.post("/Sws/Sws_EventAnalysis/GetAlarmPinPaiData", { beginDate: beginDate, endDate: endDate, type: $("#dateType").val() }, function (data) {
+                var res = JSON.parse(data);
+                if (res.data.length > 0) {
+                    $('#echarts1').show().next().hide();
+
+                    echartsApp[1].clear();
+                    options1.xAxis[0].data = res.xAxis;
+                    options1.series[0].data = res.data;
+                    echartsApp[1].setOption(options1, true);
+                }
+                else {
+                    // 空数据提示
+                    $('#echarts1').hide().next().show();
+                }
+            });
+        }
+
+        // 2、获取设备类型分析数据
+        function alarmtypeData() {
+            $.post("/Sws/Sws_EventAnalysis/GetAlarmDeviceTypeData", { beginDate: beginDate, endDate: endDate, type: $("#dateType").val() }, function (data) {
+                var alarmtypeData = JSON.parse(data);
+
+                if (alarmtypeData.length > 0) {
+                    $('#alarmtypeList').show().next().hide();
+
+                    // 循环获取最大值数据项
+                    var alarmtypeMaxValue = 0;
+                    alarmtypeData.forEach(function (item) {
+                        if (item.value > alarmtypeMaxValue) alarmtypeMaxValue = item.value;
+                    });
+
+                    var alarmtypeHtml = '';
+                    alarmtypeData.forEach(function (item, index) {
+                        // 设置百分比
+                        var percentage = item.value / alarmtypeMaxValue;
+                        percentage = Number(percentage * 100).toFixed(2) + '%';
+
+                        alarmtypeHtml += '<div class="item" title="' + item.name + '">';
+                        alarmtypeHtml += '<div class="name">';
+                        alarmtypeHtml += '<div class="name-text">' + item.name + '</div>';
+                        alarmtypeHtml += '</div>';
+                        alarmtypeHtml += '<div class="progressbar">';
+                        alarmtypeHtml += '<span class="bar" style="width: ' + percentage + ';">';
+                        alarmtypeHtml += '<div class="value">' + item.value + '</div>';
+                        alarmtypeHtml += '</span>';
+                        alarmtypeHtml += '</div>';
+                        alarmtypeHtml += '</div>';
+                    });
+                    $('#alarmtypeList').html(alarmtypeHtml);
+
+                    // 动态调整name宽度
+                    var nameTextMaxWidth = 0;
+                    $('#alarmtypeList .item').each(function () {
+                        var thisNameTextWidth = $(this).find('.name-text').width();
+                        if (thisNameTextWidth > nameTextMaxWidth) {
+                            nameTextMaxWidth = thisNameTextWidth;
+                        }
+                    });
+                    $('.list-alarmtype .item').css('padding-left', nameTextMaxWidth + 10);
+                    $('.list-alarmtype .name').width(nameTextMaxWidth);
+                }
+                else {
+                    // 空数据提示
+                    $('#alarmtypeList').hide().next().show();
+                }
+            });
+        }
+
+            /**
+        * 打开详情页面
+        */
+        function openDetailPage(pageName, beginDate, endDate, detailType, content) {
+            if (detailType==1&&content.indexOf("#") > 0) {
+                content = content.replace('#', '%23');
+            }
+            console.log({
+                pageName: pageName,
+                beginDate: beginDate,
+                endDate: endDate,
+                detailType: detailType,
+                content: content
+            });
+            layer.open({
+                type: 2,
+                title: pageName,
+                content: "/Sws/Sws_EventAnalysis/detailPage?beginDate=" + beginDate + "&endDate=" + endDate + "&detailType=" + detailType + "&content='" + content+"'",
+                maxmin: true,
+                shadeClose: false,
+                area: ['85%', '550px'],
+                skin: 'layui-layer-page'
+            });
+        }
+
+       // $(window).off('resize');
+    </script>
+    </body>
+</html>

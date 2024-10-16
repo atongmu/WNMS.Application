@@ -1,0 +1,426 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels
+@model SwsAccessoriesEqu
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_setAccessEqu</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+        <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <style>
+        .star {
+            font-size: 25px;
+            color: red;
+            position: absolute;
+            top: -4px;
+            left: 60px
+        }
+
+        .form-group {
+            position: relative
+        }
+
+
+
+        .zlw_gs label {
+            /*line-height: 35px;*/
+            margin-bottom: 2px;
+        }
+
+            .zlw_gs label span {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                padding-top: 5px;
+                float: left;
+                margin-left: 5px;
+            }
+
+            .zlw_gs label i {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                float: left;
+                font-weight: bold;
+            }
+        .displayNo {
+            display:none;
+        }
+
+        .form-control {text-align: left;}
+    </style>
+</head>
+<body>
+    <div class="xiugai" style="padding:20px 30px">
+        <form action="/Com/AccessoriesEqu/SetAccessEqu" data-ajax="true" data-ajax-method="post"  data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body zlw_gs">
+                <input id="Id" name="Id" type="hidden" value="@Model.Id" />
+                <input id="MaintenanceDate" name="MaintenanceDate" type="hidden" value="@Model.MaintenanceDate" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>器件名称 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="ComponentName" name="ComponentName" value="@ViewBag.ComponentName" autocomplete="off" onclick="SelectConponent()">
+                                        <input id="AccessoriesId" type="hidden" name="AccessoriesId" value="@Model.AccessoriesId" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>器件编号<em id="acc_no" class="star displayNo">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="AccessoriesNo" name="AccessoriesNo" value="@Model.AccessoriesNo" autocomplete="off">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>数量<em class="star" style="left: 30px">*</em></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Quantity" name="Quantity" value="@Model.Quantity" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>所属设备<em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="button" class="form-control" id="DeviceName" name="DeviceName" value="@ViewBag.deviceName" onclick="SelectDevice()">
+                                        <input id="EquipmentId" type="hidden" name="EquipmentId" value="@Model.EquipmentId" />
+                                        <input id="EquType" type="hidden" name="EquType" value="@Model.EquType" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+
+
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>机械安装日期 <em class="star" style="left: 90px">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="MchanicalDate" name="MchanicalDate" value="@Model.MchanicalDate" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>电气安装日期 <em class="star" style="left: 90px">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="ElectricalDate" name="ElectricalDate" value="@Model.ElectricalDate" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+
+
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>调试日期 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="CommissioningDate" name="CommissioningDate" value="@Model.CommissioningDate" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>交付日期 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="DeliveryDate" name="DeliveryDate" value="@Model.DeliveryDate" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+
+
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>质保日期 </label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="GuaranteePeriod" name="GuaranteePeriod" value="@Model.GuaranteePeriod" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+
+                                    <label>花费金额(￥) </label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Cost" name="Cost" value="@Model.Cost" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="end_date">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group relative">
+                                    <label>停止使用日期 </label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="EndDate" name="EndDate" value="@Model.EndDate" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>更换原因</label>
+                                    <textarea id="Reason" name="Reason" rows="2" cols="20" class="form-control">@Model.Reason</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script type="text/javascript">
+        var isConsumable = "@ViewBag.IsConsumable";
+        var index = parent.layer.getFrameIndex(window.name);
+        function saveForm() {
+
+            validateForm();
+            $("form").submit();
+            
+        }
+        $(function () {
+            if (isConsumable == "True") {
+                $("#acc_no").addClass("displayNo");
+                
+            }
+            else {
+                $("#acc_no").removeClass("displayNo");
+                $("#Quantity").attr("readonly","readonly");
+            }
+            if (@Model.Id== 0) {
+                $("#MchanicalDate").val("");
+                $("#ElectricalDate").val("");
+                $("#CommissioningDate").val("");
+                $("#DeliveryDate").val("");
+                $("#end_date").css("display","none");
+               
+            }
+            else {
+                 $("#ComponentName").attr("disabled", "disabled");
+            }
+        })
+        
+
+        function validateForm() {
+             $("#MFForm").validate({
+                    ignore: "",
+                    rules: {
+                        ComponentName: "required",
+                       
+                         Quantity: {
+                            required: true,
+                            digits:true,
+                            min: 1
+                        },
+                         DeviceName:"required",
+                        Cost: {
+                            
+                            number: true,
+                            min: 0
+                        },
+                        MchanicalDate: "required",
+                        ElectricalDate: "required",
+                        CommissioningDate: "required",
+                        DeliveryDate:"required"
+
+                    },
+                    messages: {
+                        ComponentName: "请选择器件",
+                       
+                         Quantity: {
+                            required:"请输入器件数量",
+                            digits: "请输入整数",
+                            min: "输入的值应大于0"
+                        },
+                         DeviceName:"请选择设备",
+                        Cost: {
+                           
+                            number: "请输入数字",
+                            min: "输入的值应大于等于0"
+                        },
+                        MchanicalDate: "请输入机械安装日期",
+                        ElectricalDate: "请输入电气安装日期",
+                        CommissioningDate: "请输入调试日期",
+                        DeliveryDate:"请输入交付日期"
+                    }
+                });
+            if (isConsumable == "True") {
+               $("#AccessoriesNo").rules('remove');
+            }
+            else {
+             $("#AccessoriesNo").rules('add', {
+              required:true,
+               messages:{
+              required:"请输入器件编号"
+                         }
+                });
+                
+            }
+           
+        }
+        function _addFun(data) {
+            if (data == "ok") {
+                layer.msg("操作成功");
+                parent.layer.close(index);
+                parent.refreshTable();
+
+            }
+            else {
+                if (data == "no") {
+                    layer.msg("操作失败");
+                }
+                else {
+                    layer.msg(data);
+                }
+            }
+        }
+           //选择设备
+        function SelectDevice() {
+            parent.iframeWithBtns("设备选择", "800px", "700px", "/Com/AccessoriesEqu/SelectDevice", false, function (formIndex, formLayer) {
+                    var currentIframe =parent.window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm1(function (equipmentid,equipmentname,equtype) {
+                        $("#EquipmentId").val(equipmentid);
+                        $("#DeviceName").val(equipmentname);
+                        $("#EquType").val(equtype);
+                        parent.layer.close(formIndex);
+
+
+                    });
+                });
+
+        }
+        function SelectConponent() {
+             parent.iframeWithBtns("器件选择", "800px", "700px", "/Com/AccessoriesEqu/SelectAccessory", false, function (formIndex, formLayer) {
+                    var currentIframe =parent.window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm1(function (com_id,com_name,IsConsumable) {
+                        $("#AccessoriesId").val(com_id);
+                        $("#ComponentName").val(com_name);
+                        isConsumable = IsConsumable==true?"True":"False";
+                        if (isConsumable == "True") {
+                            $("#Quantity").removeAttr("readonly", "readonly");
+                            $("#acc_no").addClass("displayNo");
+                            $("#Quantity").text(1);
+                            $("#AccessoriesNo").removeClass("error");
+                            $("#AccessoriesNo-error").remove();
+                            if ($(":input").hasClass("error")) {
+                                validateForm();
+                                
+                            }
+                        }
+                        else {
+                            $("#acc_no").removeClass("displayNo");
+                            $("#Quantity").text(1);
+                            $("#Quantity").attr("readonly", "readonly");
+                        }
+
+                        parent.layer.close(formIndex);
+                    });
+                });
+        }
+
+    </script>
+</body>
+</html>

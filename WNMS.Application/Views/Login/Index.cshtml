@@ -1,0 +1,117 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>二次供水 - 登录</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <link rel="Shortcut Icon" href="~/UploadImg/Logo/logo.png" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="~/lib/zlwlogin/css/login.css">
+    <link rel="stylesheet" href="~/lib/zlwlogin/css/waves.min.css">
+    <!-- 气泡上升 -->
+    <link rel="stylesheet" href="~/lib/zlwlogin/css/normalize.css">
+
+</head>
+<body style="overflow:hidden;">
+    <!-- 背景 -->
+    <div class="loginback"></div>
+    <!-- 内容 -->
+    <div class="zlw-loginztk-con right">
+        <div class="zlw-loginztk-conyi">
+            @*<span>三利集团智慧水务管理平台</span>
+                <p>Sanli group smart water system platform</p>*@
+            <span>@ViewBag.SystemName</span>
+            <p>@ViewBag.SystenEName</p>
+        </div>
+        <div class="zlw-loginztk-coner">
+            <!-- 四个角 -->
+            <div class="zlw-lftop"></div>
+            <div class="zlw-rgtop"></div>
+            <div class="zlw-lfbot"></div>
+            <div class="zlw-rgbot"></div>
+            <div class="zlw-loginztk-conertitle">
+                <p>用户登录</p>
+            </div>
+            <div class="zlw-loginztk-conercon">
+                <form id="loginForm" action="/Login/CheckLogin" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_loginFun">
+                    <ul>
+                        <li>
+                            <span></span>
+                            <input type="text" id="userName" name="userName" value="" class="form-control" placeholder="请输入用户名" <input name="test" type="text" id="test" autocomplete="off">
+                        </li>
+                        <li>
+                            <span></span>
+                            <input type="password" id="passWord" name="passWord" value="" class="form-control" placeholder="请输入密码">
+                        </li>
+                        <li class="clearfloat">
+                            <span></span>
+                            <input type="text" placeholder="Verification / 验证码" name="code" id="code" autocomplete="off">
+                            <img alt="点我换一张" id="img" onclick="changeCheckCode();return false;" src="/Login/ShowValidateCode/?id=1">
+                        </li>
+
+                        <li class="denglu">
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+                        </li>
+                    </ul>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    @*<script src="~/lib/zlwlogin/js/activate-power-mode.js"></script>*@
+    <span class="container"></span>
+    <script>
+        var _loading = null;
+        function validateForm() {
+            var userName = $("#userName").val();
+            var passWord = $("#passWord").val();
+
+            if (userName == "" || passWord == "") {
+                layer.msg("请完整填写帐号信息", {
+                    offset: 't'
+                });
+                return false;
+            }
+             _loading = layer.load(1, { shade: false });
+        }
+        function _loginFun(data) {
+            layer.close(_loading);
+            if (data == "ok") {
+                window.location.href = "/Home/Index";
+            }
+            else if (data == "lock") {
+                layer.msg("该帐号已被锁定，请联系管理员解锁", {
+                    offset: 't'
+                });
+            }
+            else {
+                if (data == "code") {
+                    layer.msg("验证码错误，请重新输入", {
+                        offset: 't'
+                    });
+                    changeCheckCode();
+                } else {
+                    layer.msg("帐号、密码错误或该帐号已被禁用", {
+                        offset: 't'
+                    });
+                    changeCheckCode();
+                }
+            }
+        }
+
+        function changeCheckCode() {
+            $("#img").attr("src", $("#img").attr("src") + 1);
+        }
+    </script>
+</body>
+</html>
+

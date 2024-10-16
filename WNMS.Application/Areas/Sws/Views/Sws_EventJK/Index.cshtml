@@ -1,0 +1,374 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link rel="stylesheet" href="/css/sl.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/zlw.css">
+    <link rel="stylesheet" href="/css/hyl.css">
+    <link rel="stylesheet" href="/css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="/css/iconfont.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.js"></script>
+    <script src="/js/bootstrap-table.min.js"></script>
+    <script src="/js/bootstrap-table-zh-CN.min.js"></script>
+    @*<script src="/js/sl_main.js"></script>*@
+    <script src="~/lib/laypage/laypage.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            color: #636366;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+        }
+
+        .form-control {
+            box-shadow: none;
+        }
+
+        .pagination > li > a {
+            color: #636366;
+        }
+
+        .nav-tabs li a:hover {
+            color: #333333;
+        }
+
+        .sl_warning_block_item > div {
+            position: relative;
+        }
+
+        .col2 {
+            position: absolute;
+            top: 0;
+            right: 10px
+        }
+
+        .redcolor {
+            color: #f00
+        }
+        .redcolor_line
+        {
+            border-top-color:#f00!important;
+        }
+        .orangecolor_line {
+            border-top-color:#ff8800!important;
+        }
+        .orangecolor {
+            color: #ff8800;
+        }
+        .bluecolor {
+            color: #00bfe2;
+        }
+        .bluecolor_line {
+            border-top-color: #00bfe2!important;
+        }
+   .sl_jj {
+    content: "";
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    position: relative;
+    background: #f00;
+    border-radius: 65px;
+       }
+   .sl_gj {
+    content: "";
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    position: relative;
+    background: #ffc107;
+    border-radius: 65px;
+}
+   .sl_pt {
+    content: "";
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    position: relative;
+    background: #00bfe2; 
+    border-radius: 65px;
+}
+    </style>
+</head>
+<body>
+    <div class="sl_warning_main">
+        <div class="overflow bgWhite">
+            <div class="sl_warning_top_l left">
+                <p>
+                    <var class="pl15px pr15px">报警级别:</var>
+                    <label for="ptCheck"><input id="ptCheck" type="checkbox" name="alarmLevel" value="3" /><span style="color:#636366">&nbsp;提示性(<span class="sl_pt"></span>)&nbsp;&nbsp;&nbsp;</span></label>
+                    <label for="gjCheck"><input id="gjCheck" type="checkbox" name="alarmLevel" value="2" /><span style="color:#636366">&nbsp;一般(<span class="sl_gj"></span>)&nbsp;&nbsp;&nbsp;</span></label>
+                    <label for="jjCheck"><input id="jjCheck" type="checkbox" name="alarmLevel" value="1" /><span style="color: #636366 ">&nbsp;紧急(<span class="sl_jj"></span>)&nbsp;&nbsp;&nbsp;</span></label>
+                    <var style="margin-right: 20px;margin-left: 40px;">站点类型:</var>
+                    @{
+                        var stypeList = ViewBag.stationTypeList as IEnumerable<SysDataItemDetail>;
+                        foreach (var item in stypeList)
+                        {
+                            var idname = "type" + item.ItemValue;
+                            <label for="@idname"><input id="@idname" type="checkbox" name="StationType" value="@item.ItemValue" /><span style="color:#636366">&nbsp;@item.ItemName&nbsp;&nbsp;&nbsp;</span></label>
+                        }
+
+                    }
+                    <input type="text" id="searchtext" class="hyl_input" placeholder="泵房名称、报警内容" autocomplete="off"/>
+                    <button class="hyl_btn" id="searchbtn"> <i class="fa fa-search"></i> 查询</button>
+                </p>
+            </div>
+            <div class="sl_warning_top_r right">
+                @*<p><span class="sl_jj">紧急</span><span class="sl_gj">一般</span><span class="sl_pt">提示性</span></p>*@
+                <div class="zlw_home_yi_rg_time left" style="margin-right: 10px;">
+                    <span>刷新频率：</span>
+                    <select class="sx-select" id="refreshtime">
+                        <option value="10">10秒</option>
+                        <option value="60">1分钟</option>
+                        <option value="300" selected="selected">5分钟</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+     
+        <ul class="nav nav-tabs" style="background:#fff;">
+            <li class="active" id="all"><a data-toggle="tab">全部(<span id="allNum"></span>)</a></li>
+            <li id="attend"><a data-toggle="tab"><i class=" fa fa-star" style="color: #ffc107;"></i>&nbsp;我的关注(<span id="attendNum">3</span>)</a></li>
+            <li id="valueAlarm"><a data-toggle="tab"><i class=" fa fa-bell" style="color: #f00;"></i>&nbsp;阈值报警(<span id="vAlarmNum">1</span>)</a></li>
+            <li id="commAlarm"><a data-toggle="tab"><i class=" fa fa-bolt" style="color: #f00;font-size: large;"></i>&nbsp;通讯警报(<span id="communitNum">1</span>)</a></li>
+            @*<li><a href="" data-toggle="tab"><i class=" fa fa-bolt" style="color: #f00;font-size: large;"></i>&nbsp;硬件警报(1)</a></li>
+            <li><a href="" data-toggle="tab"><i class=" fa fa-exclamation-triangle" style="color: #f00"></i>&nbsp;突变警报(1)</a></li>
+            <li><a href="" data-toggle="tab"><i class=" fa fa-history" style=" color: #f00; font-size: large;"></i>&nbsp;超时警报(1)</a></li>*@
+        </ul>
+        <div id="mytab-content" class="tab-content">
+
+        </div>
+        <div class="overflow pt10px" style="position: fixed; left: 0; bottom: 0; background: #fff; width: 100% ">
+            <div class="left">
+                <span class="pl10px pr10px">每页显示</span>
+                <select class="mr10px" style="height:26px;line-height:26px;border-radius:2px" id="pagesize">
+                    <option value="10">10</option>
+                    <option value="15" selected="selected">15</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                    <option value="30">30</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <span class="pr10px">条记录</span>
+            </div>
+            <div class="left" id="page_JK" style="height:30px"></div>
+        </div>
+    </div>
+
+    
+    <script type="text/javascript">
+        var tabtype = "all";
+        var pageindex = 1;
+         var myVar;
+        $(function () {
+            //$('#myTab a').click(function () {
+            //    $(this).tab('show')
+            //})
+            $(".nav-tabs li").click(function () {
+
+               tabtype= $(this)[0].id;
+                QueryEventJkList(1);
+                 clearInterval(myVar);
+                myVar = setInterval(function () { QueryEventJkList(pageindex); }, $("#refreshtime").val() * 1000);
+            })
+            QueryEventJkList();
+             clearInterval(myVar);
+                myVar = setInterval(function () { QueryEventJkList(pageindex); }, $("#refreshtime").val() * 1000);
+        })
+        $("#searchbtn").click(function () {
+
+             QueryEventJkList(1);
+        })
+          
+        $("#searchtext").keydown(function(e) {  
+           if (e.keyCode == 13) {  
+               QueryEventJkList(1);
+               return false;
+           }  
+        });  
+        //数据查询
+        function QueryEventJkList(curr) {
+            var alarmLevel = GetAlarmLevel();
+            var stationType = GetStationType();
+
+            $.post("/Sws/Sws_EventJK/QueryEventJKInfo", {
+                alarmLevel: alarmLevel,
+                stationType: stationType,
+                searchTpe: tabtype,
+                pageindex: curr || 1,
+                pagesize: $("#pagesize").val(),
+                searchtext:$("#searchtext").val()
+            }, function (data) {
+                    $("#mytab-content").html(data.dataTable);
+                    $("#allNum").text(data.totalCount);
+                    $("#attendNum").text(data.attendNum);
+                    $("#vAlarmNum").text(data.valueAlarmNum);
+                    $("#communitNum").text(data.commiNum);
+
+                    if (data.totalPage < pageindex&&data.totalPage!=0) {
+                        pageindex = 1;
+                        QueryEventJkList(pageindex);
+                    }
+                  laypage({
+                    skin: 'molv',
+                    cont: 'page_JK',
+                    pages: data.totalPage,
+                    skip: true,
+                    curr: curr || 1,
+                    jump: function (obj, first) {
+                        if (!first) {
+                            
+                                 QueryEventJkList(obj.curr);
+                               pageindex = obj.curr;
+                           
+                           
+                        }
+                    }
+                });
+            })
+        }
+        function GetAlarmLevel() {
+            var levels = "";
+            $("input[name=alarmLevel]:checked").each(function () {
+                levels += $(this).val() + ",";
+            })
+            if (levels != "") {
+                levels = levels.substring(0, levels.length-1);
+            }
+            return levels;
+        }
+        function GetStationType() {
+            var stypes = "";
+              $("input[name=StationType]:checked").each(function () {
+                stypes += $(this).val() + ",";
+            })
+            if (stypes != "") {
+                stypes = stypes.substring(0, stypes.length-1);
+            }
+            return stypes;
+        }
+        //checkbox 改变事件
+        $("input[type=checkbox]").change(function () {
+            QueryEventJkList(1);
+             clearInterval(myVar);
+                myVar = setInterval(function () { QueryEventJkList(pageindex); }, $("#refreshtime").val() * 1000);
+        })
+
+        //报警处理
+        function HandleEvent(ishandle,alarmMessage,eventtime,rtuid,eventsouce) {
+            if (ishandle == true) {//已处理
+                iframe1("报警处理", "500px", "500px","/Sws/Sws_EventJK/HandleEventPage?"+
+                    "ishandle=true&isrefresh=true&alarmMessage="+encodeURIComponent(alarmMessage)+"&eventtime="+eventtime+"&rtuid="+rtuid+"&eventsouce="+eventsouce+"");
+            }
+            else {//未处理
+               iframe("报警处理", "500px", "500px", "/Sws/Sws_EventJK/HandleEventPage?"+
+                    "ishandle=false&isrefresh=true&alarmMessage="+encodeURIComponent(alarmMessage)+"&eventtime="+eventtime+"&rtuid="+rtuid+"&eventsouce="+eventsouce+" ");
+            }
+            
+        }
+        //关注操作
+        function OperateAttend(operate,datasrouce) {
+            $.post("/Sws/Sws_EventJK/OperateAttend", {
+                operate: operate,
+                datasrouce:datasrouce
+            }, function (data) {
+                    if (data == "ok") {
+                        QueryEventJkList(pageindex);
+
+                    }
+                    else {
+                        if (operate == true) {
+                            layer.msg("关注失败");
+                        }
+                        else {
+                             layer.msg("取消关注失败");
+                        }
+                    }
+            });
+        }
+        //删除报警
+        function DeleteEvents(eventtime, rtuid, eventsource,eventid) {
+            $.post("/Sws/Sws_EventJK/DeleteEvents", {
+                eventtime: eventtime,
+                rtuid: rtuid,
+                eventsouce: eventsource,
+                eventid:eventid
+            }, function (data) {
+                    if (data == "ok") {
+                        layer.msg("删除报警成功");
+                    QueryEventJkList(1);
+                }
+                else {
+                    if (data == "false") {
+                        layer.msg("报警消失，请刷新页面");
+                    }
+                    else {
+                        layer.msg("删除失败");
+                    }
+                }
+            });
+        }
+
+         function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+
+                    window.frames[0].saveForm();
+                },
+                cancel: function (index) {
+
+                }
+            });
+        }
+         function iframe1(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                
+            });
+        }
+          $("#refreshtime").change(function () {
+           
+                clearInterval(myVar);
+                myVar = setInterval(function () { QueryEventJkList(pageindex); }, $("#refreshtime").val() * 1000);
+          })
+        $("#pagesize").change(function () {
+
+            QueryEventJkList(1);
+        })
+    </script>
+</body>
+</html>

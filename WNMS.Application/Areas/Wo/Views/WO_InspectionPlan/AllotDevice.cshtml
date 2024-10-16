@@ -1,0 +1,444 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AllotDevice</title>
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/AllotRtu_User.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/zlw.css">
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .r_right1 ul li {
+            left: 5px
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden
+        }
+
+        .zlw_datamain_lfconsea {
+            padding: 10px;
+            border-bottom: solid 1px #ddd;
+            position: relative !important;
+            width: 297px;
+            top: 0px;
+            left: 0;
+            box-sizing: border-box;
+            background: #fff;
+        }
+
+        .boxs {
+            height: 100%;
+        }
+
+        .r_left, .r_right1 {
+            height: 100%
+        }
+         .ztree .iconfont {
+            padding-right: 5px;
+        }
+    </style>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul, li {
+            list-style: none
+        }
+
+
+
+        .ml5px {
+            margin-left: 7px;
+        }
+
+        .ml15px {
+            margin-left: 15px;
+        }
+
+
+
+        .overflow {
+            overflow: hidden;
+            zoom: 1;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .tc-child {
+            border: 1px solid #dedede;
+            margin-top: 3px;
+            border-radius: 2px;
+            /*background: #f4f6f8;*/
+            width: 100%;
+            height: 460px;
+            padding: 10px 0;
+            overflow: auto
+        }
+
+
+            .tc-child li {
+                border: 1px solid #ccc !important;
+                border-radius: 2px !important;
+                height: 36px !important;
+                line-height: 36px !important;
+                box-sizing: border-box !important;
+                background: #d7edec !important;
+                box-shadow: 3px 3px 5px #ccc !important;
+                position: relative !important;
+                width: calc(33.3% - 20px) !important;
+                float: left !important;
+                margin-left: 15px !important;
+                margin-top: 10px !important;
+            }
+
+                .tc-child li .left {
+                    margin-left: 5px !important;
+                }
+
+                .tc-child li .right {
+                    padding-right: 10px !important;
+                    position: relative !important;
+                }
+
+        .name {
+            height: 36px;
+            line-height: 36px;
+            cursor: pointer;
+            display: block;
+            width: calc(100% - 40px);
+            text-align: center;
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            top: 0;
+            font-size: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+
+
+        .fa-close {
+            cursor: pointer
+        }
+
+        .fa-lg {
+            color: #0CB0B0;
+           
+        }
+
+        .border {
+            margin: 0px;
+            border-top: 1px solid #ccc;
+            position: absolute;
+            left: 10px;
+            right: 10px;
+        }
+   
+       
+        .r_right1 ul {
+    position: relative;
+    list-style: none;
+}
+
+    .r_right1 ul li {
+        float: left;
+        display: inline-block;
+        margin: 10px 10px 0 0;
+        position: relative;
+    }
+
+        .r_right1 ul li a {
+            white-space: nowrap;
+            -ms-text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 120px;
+        }
+
+        .r_right1 ul li i {
+            position: relative !important;
+            width: 10px;
+            height: 10px;
+            
+            /*line-height: 0;*/
+            right: 0;
+            bottom: 0;
+           z-index: 99;
+        }
+        .r_right1 {
+    position: absolute;
+    right: 0px;
+    /*width: 100%;*/
+    /*border: 1px solid green;*/
+    left: 302px;
+    border-left: 1px solid #bbb;
+    /*height: 403px;*/
+    overflow-y: auto;
+}
+
+    </style>
+</head>
+<body>
+    @*<div class="tc-box" style="background: #fff;">
+        <div class="tc-left mr5px">
+            <p>选择：</p>
+            <div class="tc-right relative">
+                <input type="text" placeholder="search..." id="searchtext" class="form-control txt-search" style="display:inline-block;width:242px" />
+                <button id="SearchBtn_Tree" class="btn-search" style="margin-bottom:10px">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+                <div class="border"></div>
+                <ul id="treeDemo" class="ztree" style="border:none"></ul>
+
+            </div>
+        </div>
+        <div class="tc-left2 ml5px">
+            <p>已选</p>
+            <ul class="tc-child " id="devicelist">
+                @{
+                    if (ViewBag.allotDevice != null)
+                    {
+                        IEnumerable<dynamic> devicelist = ViewBag.allotDevice as IEnumerable<dynamic>;
+                        if (devicelist.Count() > 0)
+                        {
+                            foreach (var item in devicelist)
+                            {
+                                <li class="ml15px overflow" data-value="@item.DeviceID,@item.StationID" id="@item.DeviceID@item.StationID">
+                                    <span class="left">
+                                        <i class="fa fa-cog fa-lg"></i>
+                                        <span class="name" title="@item.DeviceName">@item.DeviceName</span>
+                                    </span>
+                                    <span class="right"><i class="fa fa-close"></i></span>
+                                </li>
+                            }
+                        }
+                    }
+
+                }
+
+            </ul>
+        </div>
+      
+
+    </div>*@
+    <div class="boxs">
+        @*<div class="prompt" style="margin: 5px 5px 4px">
+            <p style="float:left">温馨提示：选中复选框并提交即可授予相应设备，取消选中并提交则回收相应设备。</p>  <p style="margin-right:5px;float:right"><em class='iconfont icon-bengfang' style='color:blue;'></em> 二供泵房 <em class='iconfont icon-bengfang' style='color:green'></em> 直饮水泵房<p>
+        </div>*@
+
+        <div class="r_layout" style="border:none;border-top: 1px solid #bbb;border-bottom:1px solid #ddd;height:calc(100% - 50px) !important">
+            <div class="r_left">
+                @*<header>
+                    <span id="identifyname">泵房和设备</span>
+                </header>*@
+                <section style="height: calc(100% - 26px); overflow: hidden">
+                    <div class="zlw_datamain_lfconsea ">
+                        <form action="">
+                            <i class="glyphicon glyphicon-search"></i>
+                            <input type="text" id="SearchBtn_Tree" class="form-control" placeholder="搜索&quot;泵房&quot;名称" autocomplete="off" />
+                        </form>
+                    </div>
+                    <ul id="treeDemo" class="ztree" style="height:calc(100% - 50px);overflow:auto"></ul>
+                </section>
+            </div>
+            <div class="r_right1">
+                <header>
+                    <span>已选设备</span>
+                   
+                </header>
+                <section style="height: calc(100% - 30px); overflow: hidden">
+                    <ul id="devicelist" class="tc-child">
+
+                        @{
+                            if (ViewBag.allotDevice != null)
+                            {
+                                IEnumerable<dynamic> devicelist = ViewBag.allotDevice as IEnumerable<dynamic>;
+                                if (devicelist.Count() > 0)
+                                {
+                                    foreach (var item in devicelist)
+                                    {
+                                        <li class="ml15px overflow" data-value="@item.DeviceID,@item.StationID" data-name="@item.DeviceName" id="@item.DeviceID@item.StationID">
+                                            <span class="left">
+                                                <i class="fa fa-cog fa-lg"></i>
+                                                <span class="name" title="@item.DeviceName">@item.DeviceName</span>
+                                            </span>
+                                            <span class="right"><i class="fa fa-close"></i></span>
+                                        </li>
+                                    }
+                                }
+                            }
+
+                        }
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var zTreeObj;
+
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }, callback: {
+                onCheck: zTreeOnCheck
+            },
+            check: {
+                enable: true,
+                chkboxType: { 'Y': 's', 'N': 's' }
+
+            },
+            view: {
+               showTitle:false,
+                showLine: true,
+                nameIsHTML: true,
+                showIcon: false
+            },
+
+        };
+        var zNodes = @ViewBag.ztreenode;
+        $(function () {
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+
+            zTreeObj.expandAll(true);     //初始化数列表展开
+
+        })
+        function zTreeOnCheck(event, treeId, treeNode) {
+            var stringappend = "";
+            if (treeNode.isDevice == true) {
+                var treeid = treeNode.id + "" + treeNode.pId;
+                var DSId=treeNode.id + "," + treeNode.pId;
+                if (treeNode.checked == true) {
+
+                    stringappend = '<li class="mar15px overflow" data-value="'+DSId+'" id="' + treeid + '" data-name="'+treeNode.name+'">' +
+                        '<span class="left">' +
+                        '<i class="fa fa-cog fa-lg"></i>' +
+                        '<span class="name">' + treeNode.name + '</span>' +
+                        '</span>' +
+                        '<span class="right"><i class="fa fa-close"></i></span>' +
+                        '</li>';
+                }
+                else {
+
+                    $("#" + treeid + "").remove();
+                }
+            }
+
+            if (stringappend != "") {
+                $("#devicelist").append(stringappend);
+            }
+        }
+          //删除已选设备
+        $(document).on("click", '#devicelist .right', function () {
+
+
+            var iddata = $(this).parent()[0].getAttribute("data-value").split(',');
+            var parentnodes=zTreeObj.getNodeByParam("id", iddata[1], null);
+            var node = zTreeObj.getNodeByParam("id", iddata[0], parentnodes);
+            if (node != null) {
+                zTreeObj.checkNode(node, false, false);
+                $(this).parent()[0].remove();
+            }
+            else {
+                $(this).parent()[0].remove();
+            }
+        })
+         //树查询
+            $("#SearchBtn_Tree").bind("keypress", function (event) {
+                if (event.keyCode != 13) {
+                    if (event.keyCode < 48 || event.keyCode > 57) {
+                        console.log("1");
+                    }
+                } else {
+                    event.preventDefault();
+                    LoadZtree();
+                }
+            });
+
+         //树查询
+        function LoadZtree() {
+            var deviceids = GetSelectDevice();
+            $.post("/Wo/WO_InspectionPlan/GetTreeNodes", {
+                searchtxt: $("#SearchBtn_Tree").val(), areaid: parent.$("#Dmaid").val(),
+                devicelist_Sel:deviceids
+            }, function (data) {
+                zTreeObj.destroy();    //清空树
+                var aa = JSON.parse(data);   //数据转json8
+
+                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                zTreeObj.expandAll(true);     //初始化数列表展开
+            })
+        }
+       
+        function saveForm(func) {
+            var ulist = $("#devicelist li");
+            var deviceids = "";
+            var deviceName = "";
+            for (var i = 0; i < ulist.length; i++) {
+
+                deviceids += ulist[i].getAttribute("data-value") + ';';
+                deviceName+=ulist[i].getAttribute("data-name") + ';';
+            }
+            if (deviceids != "") {
+                deviceids = deviceids.substring(0, deviceids.length - 1);
+                deviceName = deviceName.substring(0, deviceName.length-1);
+            }
+            if (deviceids != "") {
+                func(deviceids,deviceName);
+            }
+            else {
+                layer.alert("至少选一个设备");
+            }
+
+        }
+        function GetSelectDevice() {
+             var ulist = $("#devicelist li");
+              var deviceids = "";
+
+              for (var i = 0; i < ulist.length; i++) {
+
+                    deviceids += ulist[i].getAttribute("data-value") + ';';
+                }
+            if (deviceids != "") {
+                deviceids = deviceids.substring(0, deviceids.length - 1);
+
+            }
+            return deviceids;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+﻿@using Model;
+@using Newtonsoft.Json;
+@model IEnumerable<dynamic>
+
+
+
+
+
+<div>
+    <table lay-filter="demo">
+        <thead>
+            <tr>
+                @*<th>@Html.CheckBox("ckTop", false) </th>*@
+                <th lay-data="{field:'DeviceID',fixed:'center',width:100}">序号</th>
+                <th lay-data="{field:'DeviceName',fixed:'center'}">设备名称</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+
+                var i = ViewBag.initnum;
+                foreach (var item in Model)
+                {
+                    var ss = JsonConvert.SerializeObject(item);
+                    var json = JsonConvert.DeserializeObject(ss);
+                    <tr style="padding:5px;">
+                        <td>@i</td>
+
+                        <td><a href="javascript:void(0);" onclick='DisPlayOneRtu(@json["Lng"],@json["Lat"])' style="text-decoration:underline;cursor:pointer;">@json["DeviceName"]</a></td>
+                    </tr>
+                    i = i + 1;
+                }
+
+
+            }
+        </tbody>
+    </table>
+</div>

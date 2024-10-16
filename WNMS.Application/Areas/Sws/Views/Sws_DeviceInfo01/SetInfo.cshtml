@@ -1,0 +1,632 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>tab切换</title>
+    <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/lib/webuploader/webuploader.css" rel="stylesheet" />
+
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <!--图片上传-->
+    <script src="~/lib/webuploader/webuploader.min.js"></script>
+    <style>
+        #filePicker div:nth-child(2) {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden
+        }
+
+        .form-horizontal .form-group {
+            margin: 0
+        }
+
+        .nav-tabs-custom > .nav-tabs > li {
+            margin-right: 0
+        }
+
+        .nav-tabs-custom {
+            box-shadow: none
+        }
+
+        label.error {
+            top: 60px;
+        }
+    </style>
+</head>
+<body>
+    @model WNMS.Model.DataModels.SwsDeviceInfo01
+    <!-- Custom Tabs -->
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1" data-toggle="tab">基本信息</a></li>
+            <li><a href="#tab_2" data-toggle="tab">设备信息</a></li>
+            <li><a href="#tab_3" data-toggle="tab">图片信息</a></li>
+            <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+        </ul>
+        <div class="tab-content" style="padding:20px 20px 0">
+            <div class="tab-pane active" id="tab_1" style="overflow:hidden">
+                <div>
+                    <form id="basefrom" class="">
+                        <input id="Rtuid" name="Rtuid" type="text" style="display:none" value="@Model.Rtuid" />
+                        <input id="CreateTime" name="CreateTime" type="text" style="display:none" value="@Model.CreateTime" />
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group mr15px">
+                                                <label for="DeviceNum">设备编号</label>
+                                                <input type="text" class="form-control" id="DeviceNum" name="DeviceNum" placeholder="请输入设备编号" value="@Model.DeviceNum">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group ml15px">
+                                                <label for="DeviceName">设备名称</label>
+                                                <input type="text" class="form-control" id="DeviceName" name="DeviceName" placeholder="请输入设备名称" value="@Model.DeviceName">
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="Partition">分&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp    区</label>
+                                                <select id="Partition" name="Partition" class="form-control">
+                                                    @{
+                                                        var Partitionfo = ViewBag.Partitionfo as List<WNMS.Model.DataModels.SysDataItemDetail>;
+                                                        if (Partitionfo != null)
+                                                        {
+                                                            foreach (var dt in Partitionfo)
+                                                            {
+                                                                if (Model.Partition == int.Parse(dt.ItemValue))
+                                                                {
+                                                                    <option value="@dt.ItemValue" selected="selected">@dt.ItemName</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@dt.ItemValue">@dt.ItemName</option>
+                                                                }
+                                                            }
+
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="StationID">所属泵房</label>
+                                                <input type="text" placeholder="选择泵房" class=" form-control" value="@ViewBag.StationName" name="StationName" onclick="SelectPumpSation()" id="StationName">
+                                                <input id="StationId" type="hidden" value="@Model.StationId" name="StationId" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-sm-4">
+                        </div>
+                    </div>
+                </div>*@
+
+                                <div class="col-sm-12">
+                                    <div class="row">
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="DeviceType">设备类型</label>
+                                                <select id="DeviceType" name="DeviceType" class="form-control">
+                                                    @{
+                                                        var deviceType = ViewBag.deviceType as List<WNMS.Model.DataModels.SysDataItemDetail>;
+                                                        if (deviceType != null)
+                                                        {
+                                                            foreach (var dt in deviceType)
+                                                            {
+                                                                if (Model.DeviceType == int.Parse(dt.ItemValue))
+                                                                {
+                                                                    <option value="@dt.ItemValue" selected="selected">@dt.ItemName</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@dt.ItemValue">@dt.ItemName</option>
+                                                                }
+                                                            }
+
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="Manufacturer">设备品牌</label>
+                                                <select id="Manufacturer" name="Manufacturer" class="form-control">
+                                                    @{
+                                                        var Manufacturerinfo = ViewBag.Manufacturerinfo as List<WNMS.Model.DataModels.SysDataItemDetail>;
+                                                        if (Manufacturerinfo != null)
+                                                        {
+                                                            foreach (var dt in Manufacturerinfo)
+                                                            {
+                                                                if (Model.Manufacturer == int.Parse(dt.ItemValue))
+                                                                {
+                                                                    <option value="@dt.ItemValue" selected="selected">@dt.ItemName</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@dt.ItemValue">@dt.ItemName</option>
+                                                                }
+                                                            }
+
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="ImportDN">进口 DN</label>
+                                                <input type="text" class="form-control" id="ImportDN" name="ImportDN" placeholder="请输入进口DN" value="@Model.ImportDn">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="ExportDN">出口 DN</label>
+                                                <input type="text" class="form-control" id="ExportDN" name="ExportDN" placeholder="请输入出口DN" value="@Model.ExportDn">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="ManufactureDate">出厂日期</label>
+                                                <input type="text" class="form-control" name="ManufactureDate" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' })" value="@Model.ManufactureDate" placeholder="请选择出厂日期">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_2">
+                <div>
+                    <form id="deviceTypefrom" class="">
+                        <div class="box-body ">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="PumpNum">泵数量</label>
+                                            <select id="PumpNum" name="PumpNum" class="form-control">
+                                                @{
+                                                    for (var i = 2; i < 8; i++)
+                                                    {
+                                                        if (Model.PumpNum == i)
+                                                        {
+                                                            <option value="@i" selected="selected">@i</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@i">@i</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                            @*<input type="text" class="form-control" id="PumpNum" name="PumpNum" placeholder="请输入泵数量" value="@Model.PumpNum">*@
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="Frequency">变频类型</label>
+                                            <select id="Frequency" name="Frequency" class="form-control">
+                                                @{
+                                                    var frequencytype = ViewBag.frequencytype as List<WNMS.Model.DataModels.SysDataItemDetail>;
+                                                    if (frequencytype != null)
+                                                    {
+                                                        foreach (var dt in frequencytype)
+                                                        {
+                                                            if (Model.Frequency == int.Parse(dt.ItemValue))
+                                                            {
+                                                                <option value="@dt.ItemValue" selected="selected">@dt.ItemName</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@dt.ItemValue">@dt.ItemName</option>
+                                                            }
+                                                        }
+
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="Gui">工艺图</label>
+                                            <select id="Gui" name="Gui" class="form-control">
+                                                @{
+                                                    var guiinfo = ViewBag.guiinfo as List<WNMS.Model.DataModels.SwsGuiinfo>;
+                                                    //guiinfo = guiinfo.Where(r=>r.)
+                                                    if (guiinfo != null)
+                                                    {
+                                                        foreach (var dt in guiinfo)
+                                                        {
+                                                            if (Model.Gui == dt.Num)
+                                                            {
+                                                                <option value="@dt.Num" selected="selected">@dt.Guiname</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@dt.Num">@dt.Guiname</option>
+                                                            }
+                                                        }
+
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12" style="display:none">
+                                        <div class="form-group">
+                                            <label for="PumpType">泵类型</label>
+                                            <input type="text" class="form-control" id="PumpType" name="PumpType" placeholder="请输入泵类型" value="@Model.PumpType">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <input id="ImageURL" name="ImageURL" type="hidden" value="@Model.ImageUrl" />
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_3">
+                <div class="form-group" style="padding:1em">
+                    <div class="mb10px">设备图片：</div>
+                    <div class="ml15px">
+                        @if (string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <h3 class="gray" style="width:150px;height:150px;text-align:center;line-height:150px;background:#eee">暂无设备图片</h3>
+                        }
+                        else
+                        {
+                            <img width="150" height="150" src="@Url.Content(Model.ImageUrl)" alt="images" />
+                        }
+                    </div>
+                    <div style="margin-top:10px;margin-bottom:10px;">修改设备图片：</div>
+                    <div id="fileList" class="uploader-list"></div>
+                    <div id="filePicker">选择图片</div>
+                    <input type="button" class="uploadBtn" value="开始上传" id="btnUpload" style="margin-left:15px;padding:4px 12px;border-radius:3px;border:none;background:#0094ff;color:#fff" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/adminlte.lite.js"></script>
+    <script>
+        var $h = $(window).height() - 70;
+        $(".tab-pane").height($h)
+
+        var _loading = null;
+        var index = parent.layer.getFrameIndex(window.name);
+        var deviceid =@Model.DeviceId;
+        var idflag = @ViewBag.idflag;
+        var name = "@ViewBag.imageurl";
+        $(function () {
+    //          $('#ManufactureDate').datepicker({
+    //              autoclose: true,
+    //              language: "zh-CN"
+    //})
+               //图片上传
+            var $list = $('#fileList'),
+               ratio = window.devicePixelRatio || 1,
+
+               // 缩略图大小
+               thumbnailWidth = 100 * ratio,
+               thumbnailHeight = 100 * ratio,
+
+               // Web Uploader实例
+               uploader;
+
+            // 初始化Web Uploader
+            uploader = WebUploader.create({
+                formData: {
+                    deviceid: idflag,
+                },
+                // 自动上传。
+                auto: false,
+
+                // swf文件路径
+                swf: '~/Content/webuploader-0.1.5/Uploader.sw',
+
+                // 文件接收服务端。
+                server: '/Sws/Sws_DeviceInfo01/UpLoadImg/1111',
+
+                // 选择文件的按钮。可选。
+                // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                pick: '#filePicker',
+
+                // 只允许选择文件，可选。
+                accept: {
+                    title: 'Images',
+                    extensions: 'gif,jpg,jpeg,bmp,png',
+                    mimeTypes: 'image/*'
+                }
+            });
+
+            // 当有文件添加进来的时候
+            uploader.on('fileQueued', function (file) {
+                var $li = $(
+                        '<div id="' + file.id + '" class="file-item thumbnail">' +
+                            '<img>' +
+                            '<div class="info">' + file.name + '</div>' +
+                        '</div>'
+                        ),
+                    $img = $li.find('img');
+
+                $list.append($li);
+
+                // 创建缩略图
+                uploader.makeThumb(file, function (error, src) {
+                    if (error) {
+                        $img.replaceWith('<span>不能预览</span>');
+                        return;
+                    }
+
+                    $img.attr('src', src);
+                }, thumbnailWidth, thumbnailHeight);
+            });
+
+            // 文件上传过程中创建进度条实时显示。
+            uploader.on('uploadProgress', function (file, percentage) {
+                var $li = $('#' + file.id),
+                    $percent = $li.find('.progress span');
+
+                // 避免重复创建
+                if (!$percent.length) {
+                    $percent = $('<p class="progress"><span></span></p>')
+                            .appendTo($li)
+                            .find('span');
+                }
+
+                $percent.css('width', percentage * 100 + '%');
+            });
+
+            // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+            uploader.on('uploadSuccess', function (file, response) {
+                $('#' + file.id).addClass('upload-state-done');
+                name = response._raw;
+                $("#ImageURL").val(name);
+                layer.msg("上传成功", {
+                    offset: 't',
+                    anim: 6
+                });
+            });
+
+            // 文件上传失败，现实上传出错。
+            uploader.on('uploadError', function (file) {
+                var $li = $('#' + file.id),
+                    $error = $li.find('div.error');
+
+                // 避免重复创建
+                if (!$error.length) {
+                    $error = $('<div class="error"></div>').appendTo($li);
+                }
+
+                $error.text('上传失败');
+            });
+
+            // 完成上传完了，成功或者失败，先删除进度条。
+            uploader.on('uploadComplete', function (file) {
+                $('#' + file.id).find('.progress').remove();
+            });
+
+            $("#btnUpload").click(function () {
+                uploader.upload();
+            });
+        })
+        //function saveForm1() {
+
+        // $("#imageurl").val(name);
+        //    //parent.layer.close(index);
+        //}
+        function execute() {
+            if ($("input.error").length > 0) {
+                return;
+            }
+            var baseinfo = JSON.stringify($("#basefrom").serializeObject());
+            var requinfo = JSON.stringify($("#deviceTypefrom").serializeObject());
+
+            if ($("input.error").length == 0) {
+                _loading = layer.load(1, { shade: false });
+                console.time('Calculation Time');
+                $.post("/Sws/Sws_DeviceInfo01/SetInfo", {
+                    baseinfo: baseinfo, requinfo: requinfo,
+                    deviceid:deviceid,idflag:idflag
+                }, function (data) {
+                    console.timeEnd('Calculation Time');
+                    layer.close(_loading);
+                    if (data == "ok") {
+                        parent.layer.msg("操作成功");
+                        parent.layer.close(index);
+                        parent.Refresh();
+                            // window.parent.Refresh();
+                        } else if (data == "has") {
+                            layer.alert("该泵房已存在分区");
+                        } else {
+                            layer.alert("添加失败");
+                        }
+
+                })
+            }
+        }
+        function validateForm() {
+            $("#basefrom").validate({
+                submitHandler: function (form) {
+                    execute();
+                },
+                ignore: "",
+                rules: {
+                    DeviceNum: {
+                        required: true
+                        //minlength: 3,
+                        //maxlength: 15,
+                        //digits: true
+                    },
+                    StationName: { required: true }
+
+                },
+                messages: {
+                    DeviceNum: {
+                        required: "请输入设备编号"
+                        //minlength:"请输入3位数字",
+                        //maxlength: "请输入3位数字",
+                        //digits: "请输入整数"
+                    },
+                     StationName:"请选择泵房",
+
+                }
+            });
+             $("#deviceTypefrom").validate({
+                submitHandler: function (form) {
+                    //execute();
+                },
+                ignore: "",
+                rules: {
+                    PumpNum: {
+                        required: true,
+                        //minlength: 3,
+                        //maxlength: 15,
+                        digits: true
+                    },
+                },
+                messages: {
+                    PumpNum: {
+                        required: "请选择泵数量",
+                        //minlength:"请输入3位数字",
+                        //maxlength: "请输入3位数字",
+                        digits: "请输入整数"
+                    },
+                }
+            });
+        }
+         //表单提交
+        function saveForm() {
+            validateForm();
+            $("#basefrom").submit();
+
+        }
+        $("#PumpNum").change(function () {
+            GetGUI();
+        })
+         $("#DeviceType").change(function () {
+            GetGUI();
+        })
+        function GetGUI() { 
+            $.post("/Sws/Sws_DeviceInfo01/GetGUI", {
+                DeviceType: $("#DeviceType").val(),
+                PumpNum: $("#PumpNum").val()
+            }, function (data) {
+                    var strhtml = "";
+                    $("#Gui").empty();
+                    if (data.gui != "") {
+                        for (var i = 0; i < data.gui.length; i++) {
+
+                            strhtml += "<option value=" + data.gui[i].num + ">" + data.gui[i].guiname + "</option>";
+                        }
+                        $("#Gui").append(strhtml);
+                    }
+            });
+        }
+        //选中泵房
+        function SelectPumpSation() {
+            iframe1("二供泵房", "60%", "70%", "/Sws/Sws_DeviceInfo01/StationInfo?type=1");
+        }
+        function iframe1(title, width, height, url, func) {
+            window.parent.layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+                    parent.window.frames[1].saveForm();
+                    //$(parent.$('iframe')[1]).saveForm();
+                },
+                cancel: function (index) {
+                }
+            })
+        };
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+        function isNumber(obj) {
+            var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+            var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+            if (regPos.test(obj) || regNeg.test(obj)) {
+                return true;
+            } else {
+                return false;
+
+            }
+        }
+    </script>
+</body>
+
+</html>

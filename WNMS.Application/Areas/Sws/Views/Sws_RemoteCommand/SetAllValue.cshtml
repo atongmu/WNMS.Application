@@ -1,0 +1,88 @@
+﻿@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>设定值</title>
+
+    <link href="../../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+</head>
+<body>
+    <form id="setpressureform">
+        <div style="padding:1em;margin-top:30px;">
+            <div id="pressure">
+                <span><label>请输入设定值：</label></span>
+                <input type="text" id="setpressure" name="setpressure" style="width:40px;" />
+            </div> 
+        </div>
+    </form>
+
+     <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script type="text/javascript">
+        var sid = @ViewBag.sid;
+        var paid = @ViewBag.paid;
+        var cmtype = '@ViewBag.cmtype' 
+        var index = parent.layer.getFrameIndex(window.name);
+         function MyForm() { }
+ 
+        $(function () { 
+        });
+
+        function saveForm(func) {
+             MyForm.Success = func;
+            $.post("/Sws/Sws_RemoteCommand/LoadSetValue", { sid: sid,paid:paid,cmtype:cmtype, Pressure: $("#setpressure").val() }, function (data) {
+                if (data.indexOf("权限") > -1) {
+                    layer.alert("权限验证不通过！");
+                } else {
+                    //layer.alert("通过");
+                    var aa = eval(data);
+                    var json = JSON.parse(aa);
+                    layer.alert(json["Message"]);
+                    parent.layer.close(index);
+                    //layer.open({
+                    //    content: json["Message"],
+                    //    //btn: ['按钮一', '按钮二', '按钮三'] ,
+                    //    yes: function (index1, layero) {
+                    //        parent.layer.close(index);
+                    //    }
+                    //})
+                }
+            })
+        }
+
+
+        function validateForm() {
+            $("#setpressureform").validate({
+                rules: {
+                    setflow: "required"
+
+                },
+                messages: {
+                    setflow: "请输入设定流量"
+                }
+            });
+        }
+        function validateForm1() {
+            $("#setpressureform").validate({
+                rules: {
+                    setpressure: "required"
+                },
+                messages: {
+                    setpressure: "请输入设定压力"
+                }
+            });
+        }
+    </script>
+</body>
+</html>

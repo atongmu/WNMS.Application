@@ -1,0 +1,189 @@
+﻿@{
+    /**/
+
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link href="../../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <title>用户名确认</title>
+    <style>
+        .button-jumbo {
+            border-radius: 200px;
+            color: #666;
+            background-color: #EEE;
+            border-color: #EEE;
+            font-weight: 300;
+            font-size: 16px;
+            font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            text-decoration: none;
+            text-align: center;
+            line-height: 40px;
+            height: 40px;
+            padding: 0 40px;
+            margin: 0;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            box-sizing: border-box;
+            transition-property: all;
+            transition-duration: .3s;
+            margin-left: 30%;
+        }
+    </style>
+</head>
+<body>
+    <article class="page-container">
+
+        <form id="CheckUserForm" method="get" action="">
+
+            <div class="form-group" style="padding:1em">
+                <label for="UserID">用户名:</label>
+                <div>
+                    <input id="UserName" name="UserName" type="text" placeholder="请输入用户名" class="form-control">
+                </div>
+
+                <label for="UserName">密码:</label>
+
+                <div>
+                    <input id="password" name="password" type="password" placeholder="请输入密码" class="form-control">
+                </div>
+            </div>
+
+
+        </form>
+        <input placeholder="请输入短信验证码" class="form-control" style="width:200px;margin-left:30%;margin-bottom:5%;" id="Message" />
+        <button class="button-jumbo" style="width:200px" id="Short">获取短信验证码</button>
+    </article>
+
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script type="text/javascript">
+        var Down = 300;
+        var index = parent.layer.getFrameIndex(window.name); 
+        function MyForm() { }
+
+        function saveForm(func) {
+            MyForm.Success = func;
+            $("form").submit();
+        }
+        $(function () {
+            validateForm();
+            @*var t='@ViewBag.Short';*@
+            var t='123';
+            if (t != "") {
+                $("#Message").val(t);
+                $("#Short").html("");
+                $("#Message").hide();
+                $("#Short").hide();
+            }
+        });
+        $.validator.setDefaults({
+            submitHandler: function () {
+                saveForm();
+            }
+        });
+        equID = $("#hidgui", window.parent.document).val();
+        $("#Equid").val(equID);
+        $.validator.setDefaults({
+            submitHandler: function () { 
+                 $.post("/Sws/Sws_RemoteCommand/CheckUsername", { username: $("#UserName").val(), password: $("#password").val(), Short: $("#Message").val() }, function (data) {
+                        if (data == "ok") {
+                            window.parent.functionselect();
+                            window.parent.startTime = new Date();
+                            parent.layer.close(index);
+                        } else if (data == "Short") {
+                            layer.alert("<span style='color:black;'>验证码错误</span>", { icon: 2 })
+                        } else if (data == "noAuthority") {
+                            layer.alert("<span style='color:black;'>暂无权限！</span>", { icon: 2 })
+                        }
+                        else {
+                            layer.alert("<span style='color:black;'>用户名不正确！</span>", { icon: 2 })
+                        }
+                    })
+
+                //if ($("#Message").val() == "") {
+                //    layer.alert("<span style='color:black;'>短信验证码为空，请重新输入！</span>", { icon: 2 })
+                //} else if ($("#Short").html() == "获取短信验证码") {
+                //    layer.alert("<span style='color:black;'>请获取短信验证码</span>", { icon: 6 })
+                //} else {
+                //    $.post("/DeviceNetwork/CheckUsername", { username: $("#UserName").val(), password: $("#password").val(), Short: $("#Message").val() }, function (data) {
+                //        if (data == "ok") {
+                //            window.parent.functionselect();
+                //            parent.layer.close(index);
+                //        } else if (data == "Short") {
+                //            layer.alert("<span style='color:black;'>验证码错误</span>", { icon: 2 })
+                //        }
+                //        else {
+                //            layer.alert("<span style='color:black;'>用户名不正确！</span>", { icon: 2 })
+                //        }
+                //    })
+                //}
+
+            }
+        });
+        //function saveForm() {
+        //    $("form").submit();
+        //}
+        $("#Short").click(function () {
+            if (Down == 300) {
+                if ($("#UserName").val() == "" || $("#password").val() == "") {
+                    layer.alert("<span style='color:black;'>请输入用户名和密码</span>", { icon: 2 })
+                } else {
+                    $.post("/DeviceNetwork/ShortMessage", { username: $("#UserName").val(), password: $("#password").val() }, function (data) {
+                        var aa = eval(data);
+                        var json = JSON.parse(aa);
+                        if (json["Message"] == "发送成功") {
+                            $("#Short").html("重新获取(300)");
+                            layer.alert(json["Message"]);
+                            CountDown();
+                        }
+                        else {
+                            layer.alert(json["Message"]);
+                        }
+
+                    })
+                }
+
+            }
+
+        })
+        function CountDown() {
+            Down--;
+            $("#Short").html("重新获取(" + Down + ")");
+            if (Down < 0) {
+                $("#Short").html("获取短信验证码");
+                Down = 300;
+            }
+            else {
+                setTimeout("CountDown()", 1000)
+            }
+        }
+        function validateForm() {
+            $("#CheckUserForm").validate({
+                rules: {
+                    UserName: "required",
+                    password: "required"
+
+                },
+                messages: {
+                    UserName: "请输入用户名",
+                    password: "请输入密码"
+                }
+            });
+        }
+    </script>
+</body>
+</html>

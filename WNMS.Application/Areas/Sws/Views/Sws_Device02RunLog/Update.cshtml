@@ -1,0 +1,99 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />
+
+    <title></title>
+
+
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <style>
+        .arrow {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            top: 0;
+            background: url(images/arrow-left-right.png) no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <form id="setpressureform">
+        <div style="padding:1em 1em 10px;">
+            <div class="form-group">
+                <label>当前值：</label>
+                <div class="input-group" id="pressure">
+                    <div class="input-group-addon">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </div>
+                    <input type="text" class="form-control" id="setpressure" name="setpressure" style="background:#fff" readonly="readonly" value="@(ViewBag.Value)" />
+                </div>
+                <!-- /.input group -->
+            </div>
+
+            <div class="form-group">
+                <label>矫正值：</label>
+                <div class="input-group relative" id="flow">
+                    <div class="input-group-addon">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </div>
+                    <input type="text" class="form-control" id="setflow" name="setflow" />
+                    <label id="setflowtext" style="position:absolute;top:40px;left:40px;font-size:12px;color:red"></label>
+                </div>
+                <!-- /.input group -->
+            </div>
+
+        </div>
+        <p class="textCenter">
+            <button id="correct" type="button" class="zlw_bmcx">矫正</button>
+        </p>
+
+    </form>
+
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+
+    <script type="text/javascript">
+
+        var index = parent.layer.getFrameIndex(window.name);
+
+        $(function () {
+            $("#correct").click(function () {
+                 if ($("#setflow").val() == "") {
+                        $("#setflowtext").text("请输入矫正值！");
+                    }
+                    else {
+                     $.post("/Sws/Sws_Device02RunLog/UpdateData", { Time: "@(ViewBag.Time)", Value: $("#setflow").val(), EquipmentID: "@(ViewBag.EquipmentID)", DataID: "@(ViewBag.DataID)", id: "@(ViewBag.id)" }, function (data) {
+                         if (data == "ok") {
+                             layer.alert("矫正成功！");
+                             parent.layer.close(index);
+                             parent.LoadData(1, 10000, "", "", 2)
+                         }
+                         else {
+                             parent.layer.alert("矫正失败,请重新矫正！");
+                             layer.close(index);
+                         }
+                     });
+                 }
+            });
+        });
+
+    </script>
+</body>
+</html>

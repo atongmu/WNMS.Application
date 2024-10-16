@@ -1,0 +1,100 @@
+﻿@using WNMS.Model.CustomizedClass
+@model IEnumerable<ConsumpInfo>
+<style>
+    table tbody {
+        display: block;
+        overflow-y: scroll;
+    }
+
+    table thead, tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        table thead th {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+</style>
+<table id="tabledata">
+    <thead>
+        <tr>
+            <th>日期</th>
+            <th>用水量(m³)</th>
+            <th>用电量(kW·h)</th>
+            <th>吨水电耗(kW·h/m³)</th>
+        </tr>
+        <tr>
+            <th>最大值</th>
+            @{
+                var maxflow = Model.Max(r => r.FlowCon);
+                var maxenergy = Model.Max(r => r.EnergyCon);
+                var maxconsump = Model.Max(r => r.consump);
+                <th>@(maxflow == null ? "--" : Math.Round((double)maxflow, 2).ToString())</th>
+                <th>@(maxenergy == null ? "--" : Math.Round((double)maxenergy, 2).ToString())</th>
+                <th>@(maxconsump == null ? "--" : Math.Round((double)maxconsump, 2).ToString())</th>
+
+            }
+        </tr>
+        <tr>
+            <th>最大时间</th>
+            @{
+                <th>@Model.Where(r => r.FlowCon == maxflow).FirstOrDefault().UpdateTime.ToString("yyyy-MM-dd HH:mm")</th>
+                <th>@Model.Where(r => r.EnergyCon == maxenergy).FirstOrDefault().UpdateTime.ToString("yyyy-MM-dd HH:mm")</th>
+                <th>@Model.Where(r => r.consump == maxconsump).FirstOrDefault().UpdateTime.ToString("yyyy-MM-dd HH:mm")</th>
+            }
+        </tr>
+        <tr>
+            <th>最小值</th>
+            @{
+                var minflow = Model.Min(r => r.FlowCon);
+                var minenergy = Model.Min(r => r.EnergyCon);
+                var minconsump = Model.Min(r => r.consump);
+                <th>@(minflow == null ? "--" : Math.Round((double)minflow, 2).ToString())</th>
+                <th>@(minenergy == null ? "--" : Math.Round((double)minenergy, 2).ToString())</th>
+                <th>@(minconsump == null ? "--" : Math.Round((double)minconsump, 2).ToString())</th>
+
+            }
+        </tr>
+        <tr>
+            <th>最小时间</th>
+            @{
+                <th>@Model.Where(r => r.FlowCon == minflow).FirstOrDefault().UpdateTime.ToString("yyyy-MM-dd HH:mm")</th>
+                <th>@Model.Where(r => r.EnergyCon == minenergy).FirstOrDefault().UpdateTime.ToString("yyyy-MM-dd HH:mm")</th>
+                <th>@Model.Where(r => r.consump == minconsump).FirstOrDefault().UpdateTime.ToString("yyyy-MM-dd HH:mm")</th>
+            }
+        </tr>
+        <tr>
+            <th>平均值</th>
+            @{
+                var aveF = Model.Average(r => r.FlowCon);
+                var aveE = Model.Average(r => r.EnergyCon);
+                var aveC = Model.Average(r => r.consump);
+                <th>@(aveF == null ? "--" : Math.Round((double)aveF, 2).ToString())</th>
+                <th>@(aveE == null ? "--" : Math.Round((double)aveE, 2).ToString())</th>
+                <th>@(aveC == null ? "--" : Math.Round((double)aveC, 2).ToString())</th>
+            }
+        </tr>
+    </thead>
+    <tbody >
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.UpdateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@(item.FlowCon == null ? "--" : Math.Round((double)item.FlowCon, 2).ToString())</td>
+                <td>@(item.EnergyCon == null ? "--" : Math.Round((double)item.EnergyCon, 2).ToString())</td>
+                <td>@(item.consump == null ? "--" : Math.Round((double)item.consump, 2).ToString())</td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+<script>
+     if ($("thead tr").length > 2) {
+         $("table tbody").css("height", $("#tablebox").height() - 325);
+         $("thead").css("width","calc(100% - 8px)")
+    } else {
+        $("table tbody").css("height", $("#tablebox").height() - 40);
+    }
+</script>

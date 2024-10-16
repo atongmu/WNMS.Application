@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define("exports ../../symbols ../../core/Error ../../core/maybe ../Symbol3D ./symbolConversion ../WebStyleSymbol".split(" "),function(e,g,f,h,k,l,m){function n(a,c,b){if(!a)return null;if(!(!b||"web-scene"!==b.origin||a instanceof k||a instanceof m)){const d=l.to3D(a,{retainCIM:!0});if(h.isSome(d.symbol))return d.symbol.write(c,b);b.messages&&b.messages.push(new f("symbol:unsupported",`Symbols of type '${a.declaredClass}' are not supported in scenes. Use 3D symbology instead when working with WebScene and SceneView`,
+{symbol:a,context:b,error:d.error}));return null}return b&&"web-map"===b.origin&&"web-style"===a.type?(b.messages&&b.messages.push(new f("symbol:unsupported",`Symbols of type '${a.declaredClass}' are not supported in webmaps. Use CIMSymbol instead when working with WebMap in MapView.`,{symbol:a,context:b})),null):a.write(c,b)}e.fromJSON=function(a,c){return g.readSymbol(a,null,c)};e.write=function(a,c,b,d){(a=n(a,{},d))&&(c[b]=a)};Object.defineProperty(e,"__esModule",{value:!0})});

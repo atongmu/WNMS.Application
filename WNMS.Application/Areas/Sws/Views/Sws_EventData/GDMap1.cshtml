@@ -1,0 +1,384 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GDMap</title>
+    <link rel="stylesheet" href="//a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <link href="~/Swslxl/css_event/gdmap.css" rel="stylesheet" />
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=19f27b47f69a7be7890be2210d59ff6f"></script>
+    <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+    <style>
+        html,
+        body,
+        #container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .content-window-card {
+            position: relative;
+            box-shadow: none;
+            bottom: 0;
+            left: 0;
+            width: auto;
+            padding: 0;
+        }
+
+            .content-window-card p {
+                height: 2rem;
+            }
+
+        .custom-info {
+            border: solid 1px silver;
+        }
+
+        div.info-top {
+            position: relative;
+            background: none repeat scroll 0 0 #F9F9F9;
+            border-bottom: 1px solid #CCC;
+            border-radius: 5px 5px 0 0;
+        }
+
+            div.info-top div {
+                display: inline-block;
+                color: #333333;
+                font-size: 14px;
+                font-weight: bold;
+                line-height: 31px;
+                padding: 0 10px;
+            }
+
+            div.info-top img {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                transition-duration: 0.25s;
+            }
+
+                div.info-top img:hover {
+                    box-shadow: 0px 0px 5px #000;
+                }
+
+        div.info-middle {
+            font-size: 12px;
+            padding: 10px 6px;
+            line-height: 20px;
+        }
+
+        div.info-bottom {
+            height: 0px;
+            width: 100%;
+            clear: both;
+            text-align: center;
+        }
+
+            div.info-bottom img {
+                position: relative;
+                z-index: 104;
+            }
+
+        span {
+            margin-left: 5px;
+            font-size: 11px;
+        }
+
+        .amap-icon img {
+            width: 40px
+        }
+
+        .info-middle img {
+            float: left;
+            margin-right: 6px;
+        }
+
+        .door {
+            line-height: 20px;
+            padding: 5px 0
+        }
+
+        .amap-info-close {
+            right: 6px !important
+        }
+
+        .amap-marker-label {
+            padding: 5px 10px;
+            border-radius: 3px;
+            border: 1px solid #fff;
+            top: 35px !important;
+            left: 0px !important;
+            background: #78ADE5
+        }
+
+        .infoBoxa {
+            border-radius: 20px;
+            background: rgba(37,154,170,0.8) !important;
+            color: white;
+            border: 1px solid white;
+            padding: 20px;
+        }
+
+        .infobox {
+            width: 150px;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: rgba(255,255,255,0.8);
+            padding: 10px;
+        }
+
+            .infobox:hover {
+                z-index: 9999;
+                position: relative;
+            }
+
+
+        .ulinfobox {
+            list-style: none;
+            font-size: 10px;
+            color: #003831;
+        }
+
+
+
+            .ulinfobox li {
+                padding: 2px 0;
+                text-decoration: underline;
+            }
+
+                .ulinfobox li a {
+                    padding-left: 2px;
+                    cursor: pointer;
+                }
+
+                    .ulinfobox li a:hover {
+                        background-color: #69c260;
+                    }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/DataV/layer/layer.js"></script>
+    <script src="//a.amap.com/jsapi_demos/static/china.js"></script>
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=19f27b47f69a7be7890be2210d59ff6f&plugin=AMap.DistrictSearch,AMap.MarkerClusterer"></script>
+    <script>
+        var map;
+        var rtustate = "正常,离线,故障";
+        var sitetypes = "";
+        var markers = [];
+        var marker = null;
+        var markerClusterer;
+        var adcode = '@ViewBag.adcode';
+        var lng =  @ViewBag.lng;
+        var lat =  @ViewBag.lat;
+        var zoom =  @ViewBag.zoom;
+        $(function () {
+            initMap();
+            LoadMapRtu();
+        })
+        function initMap() {
+            map = new AMap.Map('container', {
+                resizeEnable: true,
+                zoom: zoom,
+                center: [lng,lat],
+                mapStyle: 'amap://styles/d363428cd7ab3d540fc2e80d22c5ea80', //设置地图的显示样式
+                layers: [
+                    new AMap.TileLayer({
+                        zIndex: 6,
+                        opacity: 1,
+                    })]
+            });
+            new AMap.DistrictSearch({
+                extensions: 'all',
+                subdistrict: 0
+            }).search(adcode, function (status, result) {
+                // 外多边形坐标数组和内多边形坐标数组
+                var outer = [
+                    new AMap.LngLat(-360, 90, true),
+                    new AMap.LngLat(-360, -90, true),
+                    new AMap.LngLat(360, -90, true),
+                    new AMap.LngLat(360, 90, true),
+                ];
+                var holes = result.districtList[0].boundaries
+
+                var pathArray = [
+                    outer
+                ];
+                pathArray.push.apply(pathArray, holes)
+                var polygon = new AMap.Polygon({
+                    pathL: pathArray,
+                    strokeColor: '#1965E7',
+                    strokeWeight: 5,
+                    fillColor: '#07092E',
+                    fillOpacity: 0.8
+                });
+                polygon.setPath(pathArray);
+                map.add(polygon)
+                })
+
+        }
+        //自定义marker点
+        var markericon = '' +
+            '<div class="custom-content-marker bjzt">' +
+                '<img class="zhuangtai-er" src="/DataV/images/zt2.png">' +
+            '</div>';
+        //maker点弹窗内容
+        var markerContent = '' +
+            '<div style="width:500px;height:300px">'+
+                '<p style="color:#fff"><span>设备名称</span><span>设备名称</span><span>设备名称</span><span>设备名称</span></p>' +
+                '<ul><li>1</li><li>2</li><li>3</li><li>4</li></ul>'+
+            '</div> '
+        function LoadMapRtu() {
+            $.post("/Sws/Sws_EventData/LoadGZrtu", {}, function (data) {
+                if (data != "[]" && data != "") {
+                    
+                    var json = JSON.parse(data);
+                     console.log(json);
+                    var jsonLength = json.length;
+                    if (jsonLength > 0) {
+                        for (var i = 0; i < jsonLength; i++) {
+                            var myIcon;
+                            myIcon = new AMap.Icon({
+                                size: new AMap.Size(40, 50),    // 图标尺寸
+                                image: '/Content/newself/img/lixian032.png',  // Icon的图像
+                                imageOffset: new AMap.Pixel(1, 1),  // 图像相对展示区域的偏移量，适于雪碧图等
+                                /*  imageSize: new AMap.Size(40, 50) */  // 根据所设置的大小拉伸或压缩图片
+                            });
+                            //var gps = [json[i].Lng, json[i].Lat];
+                            var stid = json[i].StationId;;
+                            var devicename = json[i].StationId; 
+                            var gdPoint = bd_decrypt(json[i].Lng, json[i].Lat);
+
+
+                            var marker = new AMap.Marker({
+                                icon: myIcon,
+                                content: markericon,     //自定义marker点
+                                position: [gdPoint.lng, gdPoint.lat],
+                                title: json[i].StationName
+                            });
+                            marker.id = stid;
+                            var infoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30) });  //信息窗
+                            map.add(marker);
+                            marker.on('click', function (e) {
+                               
+                                $.post('/Sws/Sws_EventData/LoadEventMap', { id: e.target.id }, function (data) {
+                                    var jsondata = JSON.parse(data);
+                                   
+                                      var html = "";
+                                    html += "<div class='info-boxs' style='margin-top:10px;width:500px;height:120px;color:#fff'>";
+                                     html += "<p class='gdinfo-title'><span>设备名称</span><span>报警名称</span><span>报警时间</span><span>级别</span></p>";
+                                    html += "<ul class='gdinfo-list'>"
+                                    if (jsondata.length > 0) {
+                                        for (var i = 0; i < jsondata.length; i++) {
+
+                                            html += "<li><span title=" + jsondata[i].DeviceName + ">" + jsondata[i].DeviceName + "</span><span>" + jsondata[i].EventMessage + "</span><span>" + jsondata[i].EventTime.replace("T", " ") + "</span><span>"
+                                            if (jsondata[i].EventLevel == 1) {
+                                                 html += "<i class='bgRed'></i></span></li>";
+                                            } else if (jsondata[i].EventLevel == 2) {
+                                                 html += "<i class='bgOrange'></i></span></li>";
+                                            } else {
+                                                 html += "<i class='bgBlue'></i></span></li>"
+
+                                            }
+
+                                        }
+                                    }
+                                    html += "</ul>"
+                                    html += "</div>";
+                                    markerContent = html;
+                                    infoWindow.setContent(html);
+                                    infoWindow.open(map, e.target.getPosition());
+                                });
+
+                            })
+
+                        }
+                    }
+                }
+            })
+        }
+        function bd_decrypt(bd_lng, bd_lat) {
+            var X_PI = Math.PI * 3000.0 / 180.0;
+            var x = bd_lng - 0.0065;
+            var y = bd_lat - 0.006;
+            var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * X_PI);
+            var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * X_PI);
+            var gg_lng = z * Math.cos(theta);
+            var gg_lat = z * Math.sin(theta);
+            return { lng: gg_lng, lat: gg_lat }
+        }
+
+        function addInfoWindow(id) {
+            var html = ""
+            $.post('/BigData/LoadEventMap', { id: id }, function (data) {
+                var jsondata = JSON.parse(data);
+                //var html = "<div style='overflow:auto;'>" +
+                //    "<p><span>【DTU编号】：<a style='color:#ff6a00;padding-left:5px'>" + jsondata.DeviceName + "</a> </span></p>";
+
+                if (jsondata.length > 0) {
+                    for (var i = 0; i < jsondata.length; i++) {
+                        html += "<div class='info-boxs' style='margin-top:10px;width:500px;height:120px;'>";
+
+                        // html += "<li><span title="+ jsondata[i].DeviceName +">【设备名称】：<a style='color:#ff6a00;padding-left:5px'>" + jsondata[i].DeviceName + "</a> </span><span>【预警信息】：<a style='color:#0da4c6;padding-left:5px'>"+ jsondata[i].EventMessage +"</a></span><span>【预警时间】：<a style='color:#0da4c6;padding-left:5px'>"+ jsondata[i].EventTime +"</a></span><span>【预警级别】：<a style='color:#0da4c6;padding-left:5px'>"+ jsondata[i].EventLevel +"</a></span></p>";
+                        html += "<p><span>设备名称</span><span>预警名称</span><span>预警时间</span><span>级别</span></p>";
+                        html += "<ul>"
+                        html += "<li><span title=" + jsondata[i].DeviceName + ">" + jsondata[i].DeviceName + "</span><span>" + jsondata[i].EventMessage + "</span><span>" + jsondata[i].EventTime + "</span><span>"
+                        if (jsondata[i].EventLevel == 1) {
+                            html += jsondata[i].EventLevel + "级</span></li>";
+                        } else if (jsondata[i].EventLevel == 2) {
+                            html += jsondata[i].EventLevel + "级</span></li>";
+                        } else {
+                            html += jsondata[i].EventLevel + "级</span></li>";
+                        }
+
+                        html += "</ul>"
+                    }
+                }
+                html += "</div>";
+                markerContent = html;
+
+                //var markerpoint = new BMap.Point(e.point.lng, e.point.lat);
+                //var infowindow = new BMap.InfoWindow(html, { width: 500, height: 135 });
+                //map.openInfoWindow(infowindow, markerpoint);
+            });
+        }
+        function convertFrom(lnglat, type) {
+            AMap.convertFrom(lnglat, type, function (status, result) {
+                if (result.info === 'ok') {
+                    var resLnglat = result.locations[0];
+                    return resLnglat;
+                }
+            });
+        }
+        function BmapToAmap(lng, lat) {
+            var bpoint = [lng,lat];
+            AMap.convertFrom(bpoint, 'baidu', function (status, result) {
+                if (result.info === 'ok') {
+                    return result.locations[0].lng;
+                }
+            });
+        }
+        function BmapToAmap1(lng, lat) {
+            var bpoint = [lng, lat];
+            AMap.convertFrom(bpoint, 'baidu', function (status, result) {
+                if (result.info === 'ok') {
+                    return result.locations[0].lat;
+                }
+            });
+        }
+
+
+
+
+        //关闭信息窗体
+        function closeInfoWindow() {
+            map.clearInfoWindow();
+        }
+    </script>
+</body>
+</html>

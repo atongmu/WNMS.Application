@@ -1,0 +1,5 @@
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+*/
+function e(e){return e&&"base-tile"===e.type||"tile"===e.type||"elevation"===e.type||"imagery-tile"===e.type||"base-elevation"===e.type||"open-street-map"===e.type||"wcs"===e.type||"web-tile"===e.type||"wmts"===e.type||"vector-tile"===e.type}function t(e){return e.parent&&"esri.Basemap"===e.parent.declaredClass&&e.parent.baseLayers.indexOf(e)>-1}function n(e){const t=/[:;]/,n=[];let i=!1;if(e&&(e.forEach((function(e,r){n.push([r,e]),!i&&t.test(e)&&(i=!0)})),n.length>0)){let e;if(i){const t={};n.forEach((e=>{t[e[0]]=e[1]})),e=JSON.stringify(t)}else{const t=[];n.forEach((e=>{t.push(e[0]+":"+e[1])})),e=t.join(";")}return e}return null}function i(e){if(!e)return;const t=[];return e.forEach((function(e,n){t.push('"'+n+'":'+JSON.stringify(e))})),t.length?"{"+t.join(",")+"}":void 0}function r(e){return!0===e.labelsVisible&&null!=e.labelingInfo&&e.labelingInfo.length>0}export{i as a,r as b,t as c,e as i,n as s};

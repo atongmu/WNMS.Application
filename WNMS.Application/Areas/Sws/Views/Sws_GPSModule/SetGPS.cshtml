@@ -1,0 +1,144 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@using WNMS.Model.DataModels
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>添加GPS模块</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    @*<link hrkef="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <style>
+    </style>
+</head>
+<body>
+    <div class="box box-danger">
+        <div class="box-body">
+            <div class="pad20px">
+                @model SwsGpsmodule  
+                <form class="" autocomplete="off">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Gpsid)
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="GpsName">模块名称</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                            @Html.TextBoxFor(model => model.GpsName, new { id = "GpsName", name = "GpsName", placeholder = "模块名称", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="GpSnumber">模块编号</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-globe"></i>
+                                            </div>
+                                            @Html.TextBoxFor(model => model.GpSnumber, new { id = "GpSnumber", name = "GpSnumber", placeholder = "GPS设备编号", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="ModelNumber">型号</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-phone"></i>
+                                            </div>
+                                            @Html.TextBoxFor(model => model.ModelNumber, new { id = "ModelNumber", name = "ModelNumber", placeholder = "GPS设备型号", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Manufacture">厂商</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-phone"></i>
+                                            </div>
+                                            @Html.TextBoxFor(model => model.Manufacture, new { id = "Manufacture", name = "Manufacture", placeholder = "GPS设备厂商", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="Remark">备注</label>
+                                        <div>
+                                            @Html.TextAreaFor(model => model.Remark, new { id = "Remark", name = "Remark", placeholder = "描述", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            if ("@Model.GpSnumber"!= "") {
+                $("#GpSnumber").attr("readonly", "readonly");
+            }
+                validateForm();
+        });
+
+        function validateForm() {
+            $("form").validate({
+                debug: true,
+                ignore: "",
+                rules: {
+                    GpSnumber: "required",
+                    GpsName: "required"
+                },
+                messages: {
+                    GpSnumber: "请输入模块编号",
+                    GpsName: "请输入模块名称"
+                }
+            });
+        }
+
+        function saveForm(func) {
+            if ($("form").valid()) {
+                $.ajax({
+                    url: '/Sws/Sws_GPSModule/SetGpsInfo',
+                    type: 'post',
+
+                    data: $("form").serializeArray(),
+                    success: function (data) {
+                        func(data);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

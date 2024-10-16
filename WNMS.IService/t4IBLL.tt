@@ -1,0 +1,50 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data"#>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.Common" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.IO" #>
+
+<#@ output extension=".cs" #>
+using System;
+using System.Collections.Generic;
+using System.Text;
+using WNMS.IService;
+<#
+
+
+          
+	  string conectionstring = "Data Source=47.104.187.1; Initial Catalog=WNMS_SS2021;UID=wnms;PWD=wnmswnmswnmswnms;";
+            SqlConnection con = new SqlConnection(conectionstring);
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT NAME FROM SYSOBJECTS WHERE TYPE='U'", con);
+            var reader = cmd.ExecuteReader();
+            List<string> TableList = new List<string>() { };
+            while (reader.Read())
+            {
+                var tablename = reader.GetValue(0).ToString();
+                TableList.Add(tablename);
+            }
+            con.Close();
+#>
+namespace WNMS.IService
+{
+   
+<#
+
+
+foreach (var item in TableList)
+{
+#>	
+	public partial interface I<#=item#>Service :IBaseService
+    {
+      
+    }
+<#}#>
+	
+}
+

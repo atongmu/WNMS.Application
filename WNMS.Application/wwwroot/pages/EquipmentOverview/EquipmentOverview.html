@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../css/sl.css">
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/ziti.css">
+    <style>
+        html{
+            height: 100%;
+        }
+        body{
+            height: 100%;
+            color: #636366;
+        }
+        .sl_control_main{
+            background-color: #eeeeee;
+        }
+    </style>
+</head>
+<body>
+    <div class="sl_control_main">
+        <!-- 情况统计 -->
+        <div class="sl_control_top">
+            <div class="sl_col_top_itemBf zlw_sbzlbd">
+                <p><i class="fa fa-home" style="margin-right: 8px;color: #25cfe9;"></i>泵房情况</p>
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <h6>泵房总数</h6>
+                    <span><i style="font-size: 30px;">36</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-2">
+                    <div class="sl_fgx"></div>
+                </div>
+                <div class="col-md-4">
+                    <h6>机组总数</h6>
+                    <span><i style="font-size: 30px;">66</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <div class="sl_col_top_itemAf  zlw_sbzlbd">
+                <p><i class="fa fa-shield" style="margin-right: 8px;color: #25cfe9;"></i>安防情况</p>
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <h6>门禁安装率</h6>
+                    <span><i style="font-size: 30px;">36</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-2">
+                    <div class="sl_fgx"></div>
+                </div>
+                <div class="col-md-4">
+                    <h6>视频安装率</h6>
+                    <span><i style="font-size: 30px;">66</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <div class="sl_col_top_itemSx  zlw_sbzlbd">
+                <p><i class="fa fa-bath" style="margin-right: 8px;color: #25cfe9;"></i>水箱情况</p>
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <h6>水箱总数</h6>
+                    <span><i style="font-size: 30px;">36</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-2">
+                    <div class="sl_fgx"></div>
+                </div>
+                <div class="col-md-4">
+                    <h6>已消毒占比</h6>
+                    <span><i style="font-size: 30px;">66</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <div class="sl_col_top_itemSz  zlw_sbzlbd">
+                <p><i class="fa fa-dashboard" style="margin-right: 8px;color: #25cfe9;"></i>水质情况</p>
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <h6>监测仪个数</h6>
+                    <span><i style="font-size: 30px;">36</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-2">
+                    <div class="sl_fgx"></div>
+                </div>
+                <div class="col-md-4">
+                    <h6>监测仪安装率</h6>
+                    <span><i style="font-size: 30px;">66</i>&nbsp;个</span>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+        <!-- 泵房图表 -->
+        <div class="sl_control_mid">
+            <div class="sl_control_mainItem left" style="margin-left: 0px;">
+                <div style="position: relative;">
+                    <p class="sl_item_title">泵房类型统计</p>
+                </div>
+                <!-- 泵房类型统计图表 -->
+                <div id="sl_ech_type">
+                </div>
+            </div>
+            <div class="sl_control_mainItem left">
+                <div style="position: relative;">
+                    <p class="sl_item_title">泵房类使用年限统计</p>
+                </div>
+                <!-- 泵房类使用年限统计图表 -->
+                <div id="sl_ech_time">
+                </div>
+            </div>
+            <div class="sl_control_mainItem left">
+                <div style="position: relative;">
+                    <p class="sl_item_title">机组水泵品牌统计</p>
+                </div>
+                <!-- 泵房类使用年限统计图表 -->
+                <div id="sl_ech_brand">
+                </div>
+            </div>
+            <div class="sl_control_mainItem left" style="margin-left: 0px;">
+                <div style="position: relative;">
+                    <p class="sl_item_title">泵房厂家统计</p>
+                </div>
+                <!-- 泵房厂家统计图表 -->
+                <div id="sl_ech_business">
+                </div>
+            </div>
+            <div class="sl_control_mainItem left">
+                <div style="position: relative;">
+                    <p class="sl_item_title">泵房质保情况统计</p>
+                </div>
+                <!-- 泵房质保情况统计图表 -->
+                <div id="sl_ech_quality">
+                </div>
+            </div>
+            <div class="sl_control_mainItem left">
+                <div style="position: relative;">
+                    <p class="sl_item_title">机组设备类型情况统计</p>
+                </div>
+                <!-- 机组设备类型情况统计图表 -->
+                <div id="sl_ech_equipment">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <script src="../../js/echarts.min.js"></script>
+    <script src="../../js/sl_main.js"></script>
+
+</body>
+</html>

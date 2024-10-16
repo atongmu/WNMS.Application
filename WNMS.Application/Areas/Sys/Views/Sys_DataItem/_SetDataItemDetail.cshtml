@@ -1,0 +1,181 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+@model SysDataItemDetail;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_SetDataItemDetail</title>
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
+    @*<link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <style>
+        .star {
+            position: absolute;
+            left: 58px;
+            top: -4px;
+            font-size: 25px;
+            color: red
+        }
+       
+       
+    </style>
+</head>
+<body>
+    <div style="padding:20px" class="xiugai">
+        <form   action="/Sys/Sys_DataItem/SetDataDetail" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body">
+                <input id="ItemDetailId" name="ItemDetailId" type="hidden" value="@Model.ItemDetailId" />
+                <input id="FItemId" name="FItemId" type="hidden" value="@Model.FItemId" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>字典名称 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="ItemName" name="ItemName" value="@Model.ItemName" autocomplete="off">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>字典值 <span class="star" style=" left: 45px;">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="ItemValue" name="ItemValue" value="@Model.ItemValue" autocomplete="off">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>字典排序 <span class="star">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-sort-amount-asc"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="Sort" name="Sort" value="@Model.Sort" autocomplete="off">
+                                    </div>
+                                    <!-- /.input group -->
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>是否启动</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-unlock-alt"></i>
+                                        </div>
+                                        <select class="form-control" id="IsEnable" name="IsEnable">
+                                            @{
+                                                if (Model.IsEnable == false)
+                                                {
+                                                    <option value="True">是</option>
+                                                    <option value="False" selected="selected">否</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="True" selected="selected">是</option>
+                                                    <option value="False">否</option>
+                                                }
+                                            }
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        
+                            <div class="form-group">
+                                <label>备注</label>
+                                <textarea id="Remark" style="height:100px" name="Remark" rows="2" cols="20" class="form-control">@Model.Remark</textarea>
+                            </div>
+                       
+                    </div>
+
+                </div>
+                
+                
+               
+                
+            </div>
+        </form>
+    </div>
+    <script>
+       var index = parent.layer.getFrameIndex(window.name);
+        function saveForm() {
+
+            $("form").submit();
+        }
+
+
+
+        $(function () {
+           validateForm();
+        });
+
+        function validateForm() {
+            $("#MFForm").validate({
+                debug: true,
+                ignore: "",
+                rules: {
+                    ItemName: "required",
+                    Sort: {
+                        required: true,
+                        
+                        digits: true
+                    },
+                    ItemValue:"required"
+                   
+                },
+                messages: {
+                    ItemName: "请输入字典名称",
+                    Sort: "请输入排序",
+                    ItemValue:"请输入值"
+                }
+            });
+        }
+        function _addFun(data) {
+            if (data == "ok") {
+
+                parent.layer.close(index);
+                parent.refreshData();
+            }
+            else {
+                if (data == "have") {
+                    layer.msg("请修改字典值，已存在相同的值");
+                }
+                else {
+                    layer.msg("操作失败");
+                }
+            }
+        }
+        </script>
+</body>
+</html>

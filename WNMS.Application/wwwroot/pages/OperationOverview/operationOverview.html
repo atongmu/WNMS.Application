@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>运行概况</title>
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/hyl.css">
+    <link href="../../css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- 日历 -->
+    <script src="../../lib/My97DatePicker/WdatePicker.js"></script>
+    <!-- echart -->
+    <script src="https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js"></script>
+</head>
+<body>
+    <div class="pad10px ">
+        <div class="overflow">
+            <div class="left">
+                <label class="hyl_label">统计方式：</label>
+                <select class="hyl_select" id="selectDate">
+                    <option value="1">日</option>
+                    <option value="2">月</option>
+                    <option value="3">年</option>
+                </select>
+            </div>
+            <div class="left">
+                <label class="hyl_label ml15px">查询时段：</label>
+                <input type="text" class="hyl_input hyl_input-sm day-js" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd', isShowToday: false, isShowClear: false });" />
+                <input type="text" class="hyl_input hyl_input-sm hidden month-js" onclick="WdatePicker({ dateFmt: 'yyyy-MM', isShowToday: false, isShowClear: false });" />
+                <input type="text" class="hyl_input hyl_input-sm hidden year-js" onclick="WdatePicker({ dateFmt: 'yyyy', isShowToday: false, isShowClear: false });" />
+
+            </div>
+        </div>
+        <div class="overflow mt10px">
+            <div class="left">
+                <label class="hyl_label">设备类型：</label>
+                <select class="hyl_select">
+                    <option value="value">全部</option>
+                    <option value="value">111</option>
+                    <option>222</option>
+                </select>
+            </div>
+            <div class="left">
+                <label class="hyl_label ml15px">泵房名称：</label>
+                <input type="text" class="hyl_input" placeholder="请输入泵房名称" />
+                <button class="hyl_btn"><i class="fa fa-search mr5px"></i>查询</button>
+                <button class="hyl_btn"><i class="fa fa-download mr5px"></i>导出</button>
+            </div>
+        </div>
+    </div>
+
+    <!--table-->
+    <div class="ml10px mr10px mb10px">
+        <table id="bootstrapTable">
+            
+        </table>
+    </div>
+
+    <script>
+    $("#selectDate").change(function () {
+        var selectban = $("#selectDate").val();
+        if (selectban == 1) {
+            $(".day-js").removeClass("hidden");
+            $(".month-js").addClass("hidden");
+            $(".year-js").addClass("hidden");
+        } else if (selectban == 2) {
+            $(".day-js").addClass("hidden");
+            $(".month-js").removeClass("hidden");
+            $(".year-js").addClass("hidden");           
+        } else if (selectban == 3) {
+            $(".day-js").addClass("hidden");
+            $(".month-js").addClass("hidden");
+            $(".year-js").removeClass("hidden");
+        }
+    })    
+
+  $('#bootstrapTable').bootstrapTable({
+            // url: '/json/data.json',        // 表格数据来源
+            // showColumns:true,
+            columns: [{
+                field: 'id',
+                title: '序号',
+                align: 'center',
+                backgroundColor:'#449d44'
+            }, {
+                field: 'name',
+                title: '泵房名称'
+            }, {
+                field: 'price',
+                title: '机组名称'
+            },{
+                field: 'column1',
+                title: '用水量（m³）',
+                
+                //formatter:paramsMatter,
+                formatter: function (value, row, index) {
+                    var c = '<div id="echart1">1111==>id:'+ row.id +'</div>';
+                    return c;
+                }
+            },{
+                field: 'column2',
+                title: '用电量（kWh）',
+                width:'200',
+                //formatter:paramsMatter1,
+                 formatter: function (value, row, index) {
+                    var c = '<div id="echart2" style="width:200px;height:100px">1221==>id:'+ row.id +'</div>';
+                    return c;
+                }
+            },{
+                field: 'column3',
+                title: '吨水能耗'
+            },{
+                field: 'column4',
+                title: '报警次数'
+            },{
+                field: 'column5',
+                title: '维修次数'
+            },{
+                field: 'column6',
+                title: '水泵品牌'
+            },{
+                field: 'column7',
+                title: '设备类型'
+            }  ],
+            data:[
+            {
+                id:1,
+                name:'测试泵房',
+                price:'0.33',
+                //column1:'0.54',
+               // column2:'0.45',
+                column3:'0.55',
+                column4:'0',
+                column5:'0.6',
+                column6:'0.45',
+                column7:'200',
+
+            },
+            {
+                id:2,
+                name:'测试泵房2',
+                price:'0.43',
+                //column1:'0.44',
+               // column2:'0.45',
+                column3:'0.55',
+                column4:'0',
+                column5:'0.26',
+                column6:'0.55',
+                column7:'180',
+
+            },
+            {
+                id:3,
+                name:'测试泵房3',
+                price:'0.33',
+               // column1:'0.44',
+               // column2:'0.25',
+                column3:'0.65',
+                column4:'0.2',
+                column5:'0.26',
+                column6:'0.55',
+                column7:'180',
+
+            }
+          ],
+        onLoadSuccess: function () {
+          
+         }
+       
+     });
+        $('.fixed-table-loading').hide();
+
+    var myChart = echarts.init(document.getElementById("echart2"));
+        var option = {   
+            grid: {
+            top: '0',
+            left: '0',
+            right: '0',
+            bottom: '0',
+            //containLabel: true
+        },
+        //x轴
+            
+            tooltip : {
+					trigger : 'axis',
+					axisPointer : {
+						type : 'cross',
+						label : {
+							backgroundColor : '#6a7985'
+						}
+					}
+				},
+            xAxis: {
+                show: false,
+                data: ["1", "2", "3", "4", "5", "6"],
+              "splitLine": {
+              "show": false
+                },
+               "axisLine":{       
+                "show":false
+                },
+                "axisTick":{       //y轴刻度线
+                "show":false
+                }
+        },
+        //y轴没有显式设置，根据值自动生成y轴
+            yAxis: {
+                show: false,
+                "axisLine":{       //y轴
+                "show":false
+                },
+                "axisTick":{       //y轴刻度线
+                "show":false
+                },
+                "splitLine": {     //网格线
+                "show": false
+                }
+            },
+        //数据-data是最终要显示的数据
+        series:[{
+            name:'用电量',
+            type: 'line',
+            areaStyle: {},
+            data:[40,20,35,60,55,10]
+        }]
+    };
+    //使用刚刚指定的配置项和数据项显示图表
+    myChart.setOption(option);
+    </script>
+</body>
+</html>

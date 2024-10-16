@@ -1,0 +1,20 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Application.Areas.Sws.Controllers
+@model IEnumerable<JKWaterData>
+@{
+    foreach (var item in Model)
+    {
+        <li class="clearfloat">
+            <span title="@item.DeviceName">@item.DeviceName</span>
+            <span title="@item.ClAver">@item.ClAver</span>
+            <span title="@item.TurbidityAver">@item.TurbidityAver</span>
+            <span title="@item.PhAver">@item.PhAver</span>
+            <span title="@item.OrpAver">@item.OrpAver</span>
+            <span title="@item.OxygenAver">@item.OxygenAver</span>
+            <span title="@item.ConductivityAver">@item.ConductivityAver</span>
+            <span title="@item.SalinityAver">@item.SalinityAver</span>
+        </li>
+    }
+}

@@ -1,0 +1,428 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    @*<script src="~/js/bootstrap-table.min.js"></script>
+        <script src="~/js/bootstrap-table-zh-CN.min.js"></script>*@
+    <script src="~/js/echarts.min.js"></script>
+    <script src="~/js/sl_main.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/laypage/laypage.js"></script>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            color: #636366;
+        }
+        .drop1{width:25%;float:left;line-height:70px;text-align:right}
+        .drop1 i{background-color: #2c7afa;color:#fff;width:30px;height:30px;font-size:19px;line-height:27px;border-radius:50%;text-align:center}
+        .drop2{float:left;margin-left:5%}
+        .drop2 p{margin-top:6px;line-height:30px;margin-bottom:0}
+        .mores{cursor:pointer;position:absolute;right:10px;top:8px;z-index:99;}
+        .pos-nb{position:absolute;right:10px;bottom:8px}
+        .pros{height:5px;width:70%}
+        .dropdown-menu>li>a {padding:0 20px}
+        .sl_alarmAnalysis {
+            background-color: #f5f5f5;
+        }
+        .zlwccxz{
+
+        }
+        .zlwccxz::-webkit-scrollbar {
+             width: 8px;
+            }
+             .zlwccxz::-webkit-scrollbar-track {
+             background-color:#eee;
+             -webkit-border-radius: 2em;
+             -moz-border-radius: 2em;
+             border-radius:2em;
+            }
+             .zlwccxz::-webkit-scrollbar-thumb {
+             background-color:#dadada;
+             -webkit-border-radius: 2em;
+             -moz-border-radius: 2em;
+             border-radius:2em;
+            }
+    </style>
+</head>
+<body>
+    <div class="sl_alarmAnalysis" style="height:100%">
+        <!-- 总览 -->
+        <!-- 搜索 -->
+        <div class="sl_Aa_search pt10px">
+            <span class="hyl_label pl15px">统计方式：</span>
+            <select class="hyl_select" id="selectDate">
+                <option value="1">日</option>
+                <option value="2">月</option>
+                <option value="3">年</option>
+            </select>
+            <span class="hyl_label pl10px">查询时段：</span>
+            <input type="text" class="hyl_input hyl_input-sm day-js" autocomplete="off" id="dateTime" onfocus="createTime()" value="@ViewBag.DateTime" />
+            <button type="button" class="hyl_btn" id="searchBtn"><i class="fa fa-search mr5px"></i>查询</button>
+
+        </div>
+
+        <div class="sl_Aa_top clearfloat " id="AlarmCount">
+            @*<div class="sl_Aa_top_item">
+                <div class="sl_Aa_top_item_l">
+                    <i class="fa fa-tachometer"></i>
+                </div>
+                <div class="sl_Aa_top_item_r">
+                    <p>报警总数   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="total">404</span></p>
+                    <div class="Aa_jindutiao1"></div><span>&nbsp;&nbsp;&nbsp;&nbsp;10%</span>
+                    <div class="Aa_jindutiao2"></div>
+                </div>
+            </div>
+            <div class="sl_Aa_top_item">
+                <div class="sl_Aa_top_item_l">
+                    <i class="fa fa-tachometer"></i>
+                </div>
+                <div class="sl_Aa_top_item_r">
+                    <p>硬件报警   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 40</p>
+                    <div class="Aa_jindutiao1"></div><span>&nbsp;&nbsp;&nbsp;&nbsp;10%</span>
+                    <div class="Aa_jindutiao2"></div>
+                </div>
+            </div>
+            <div class="sl_Aa_top_item">
+                <div class="sl_Aa_top_item_l">
+                    <i class="fa fa-tachometer"></i>
+                </div>
+                <div class="sl_Aa_top_item_r">
+                    <p>阈值报警   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 200</p>
+                    <div class="Aa_jindutiao1"></div><span>&nbsp;&nbsp;&nbsp;&nbsp;10%</span>
+                    <div class="Aa_jindutiao2"></div>
+                </div>
+            </div>
+            <div class="sl_Aa_top_item">
+                <div class="sl_Aa_top_item_l">
+                    <i class="fa fa-tachometer"></i>
+                </div>
+                <div class="sl_Aa_top_item_r">
+                    <p>突变报警   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 40</p>
+                    <div class="Aa_jindutiao1"></div><span>&nbsp;&nbsp;&nbsp;&nbsp;10%</span>
+                    <div class="Aa_jindutiao2"></div>
+                </div>
+            </div>
+            <div class="sl_Aa_top_item">
+                <div class="sl_Aa_top_item_l">
+                    <i class="fa fa-tachometer"></i>
+                </div>
+                <div class="sl_Aa_top_item_r">
+                    <p>超时报警&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 40</p>
+                    <div class="Aa_jindutiao1"></div><span>&nbsp;&nbsp;&nbsp;&nbsp;10%</span>
+                    <div class="Aa_jindutiao2"></div>
+                </div>
+            </div>*@
+
+        </div>
+
+        <div class="sl_Aa_main" style="padding-top:120px">
+            <div class="sl_Aa_main_t">
+                <!-- 报警总数分析 -->
+                <div class="al_Aa_main_bjzs_all">
+                    <p>报警总数分析</p>
+                    <div class="al_Aa_main_bjzs" id="al_Aa_main_bjzs"></div>
+                </div>
+                <!-- 报警等级分析 -->
+                <div class="al_Aa_main_bjdj_all">
+                    <p>报警等级统计</p>
+                    <div class="al_Aa_main_bjdj">
+                        <div id="al_Aa_main_bjdj"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="sl_Aa_main_b">
+                <!-- 表格分析 -->
+                <div class="sl_Aa_main_table">
+                    <p class="overflow" style="color: #333;">
+                        <span class="left f18px">报警详情</span>   
+                        <span class="right f18px" id="total"></span>    
+                    </p>
+                    <table class="table table-striped" id="tablebox">
+                    </table>
+
+                    <div class="overflow pt10px" style="position:fixed;left:0;bottom:0;background:#fff;width:100%">
+                        @*<div class="left">
+                            <span class="pl10px pr10px">每页显示</span>
+                            <select class="mr10px" style="height:26px;line-height:26px;border-radius:2px" id="pagesize">
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="25">25</option>
+                                <option value="30">30</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            <span class="pr10px">条记录</span>
+                        </div>*@
+                        <div class="left" id="page_JK" style="height:30px"></div>
+                    </div>
+                </div>
+                <!-- 报警频度分析 -->
+                <div class="sl_Aa_main_bjpd_all">
+                    <p>报警频度排名</p>
+                    <div class="sl_Aa_main_bjpd " id="pretablebox">
+                        @*<ul>
+                            <li class="sl_Aa_main_bjpd_itle"><span>排名</span><span>报警泵房</span><span>报警次数</span></li>
+                            <li><span><var>1</var></span><span>重庆智能动力</span><span>10</span></li>
+                            <li></li>
+                        </ul>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var myDateFMT = 'yyyy-MM-dd';
+            //日期控件选择
+            function createTime() {
+                WdatePicker({ dateFmt: myDateFMT });
+            }
+            $(function () {
+                //年月日选择
+                $("#selectDate").change(function () {
+                    var selectban = $("#selectDate").val();
+                    if (selectban == 2) {
+                        $("#dateTime").val("@ViewBag.DateTime.ToString().Substring(0,7)");
+                        myDateFMT = 'yyyy-MM';
+                    } else {
+                        if (selectban == 3) {
+                            $("#dateTime").val("@ViewBag.DateTime.ToString().Substring(0,4)")
+                            myDateFMT = 'yyyy';
+                        } else {
+                            $("#dateTime").val("@ViewBag.DateTime")
+                            myDateFMT = 'yyyy-MM-dd';
+                        }
+                    }
+                });
+
+                //更多点击事件
+                $(".mores").click(function () {
+                    $(".sl_Aa_top_item").removeClass("hidden");
+                });
+
+                //查询按钮点击事件
+                $("#searchBtn").click(function () {
+                    //获取报警类型总数饼状图
+                    getPieChartData();
+                    //获取报警总数曲线
+                    getLineChartData();
+                    //获取报警表格
+                    getTableData(1);
+                    //获取排行
+                    getRankingData();
+                });
+                //获取报警类型总数饼状图
+                getPieChartData();
+                //获取报警总数曲线
+                getLineChartData();
+                //获取报警表格
+                getTableData(1);
+                //获取排行
+                getRankingData();
+            });
+
+             //  echarts 报警总数分析
+            var al_Aa_main_bjzs = echarts.init(document.getElementById('al_Aa_main_bjzs'));
+            var lineoption={
+                grid: {
+                    left: '5%',    //左上角x轴距盒子边框的距离
+                    right: '5%',    //左上角Y轴距盒子边框的距离
+                    top: '40px',    //右下角x轴距盒子边框的距离
+                    bottom: '40px',     //右下角Y轴距盒子边框的距离
+                    borderWidth: 1
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: []
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    name:"报警总数",
+                    smooth: true,
+                    data: [],
+                    type: 'line',
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#25cfe9'
+                        }, {
+                            offset: 1,
+                            color: '#fff'
+                        }])
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#8cd5c2', //改变折线点的颜色
+                            lineStyle: {
+                                color: '#8cd5c2' //改变折线颜色
+                            }
+                        }
+                    },
+                }]
+            }
+
+            // echarts 报警等级统计
+            var al_Aa_main_bjdj = echarts.init(document.getElementById('al_Aa_main_bjdj'));
+            var pieoption = {
+                legend: {
+                    left: 'center',
+                    top: 'bottom',
+                    data: ['一般报警','提示报警',"紧急报警"]
+                },
+                grid: {
+                    left: '5%',    //左上角x轴距盒子边框的距离
+                    right: '5%',    //左上角Y轴距盒子边框的距离
+                    top: '30px',    //右下角x轴距盒子边框的距离
+                    bottom: '30px',     //右下角Y轴距盒子边框的距离
+                    borderWidth: 1
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                toolbox: {
+                    show: false,
+                },
+                calculable: true,
+                color: ['#2c7afa', '#FFC125', '#FF4500'],//自己设置扇形图颜色
+                series: [
+                    {
+                        name: '报警占比',
+                        type: 'pie',
+                        radius: [20, 70],
+                        center: ['60%', '50%'],
+                        roseType: 'radius',
+                        max: 40,                // for funnel
+                        sort: 'ascending',     // for funnel
+                        data: [],
+                        //标线的属性设置，以及显示的文字
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,
+                                    formatter: '{c}次',
+                                    textStyle: {
+                                        color: '#ccc',
+                                        fontSize: 12,
+                                        fontWeight: '100'
+                                    }
+
+                                },
+                                //标线长度，宽度
+                                labelLine: {
+                                    show: true,
+                                    length: 1,
+                                    lineStyle: {
+                                        width: 1
+                                    }
+                                }
+                            },
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        },
+                    }
+                ]
+            };
+
+            //报警总数曲线
+            function getLineChartData() {
+                $.post("/Sws/Sws_AlarmAnalysis/GetAlarmLineData", { dateTime: $("#dateTime").val(), dateType: $("#selectDate").val() }, function (data) {
+                    var res = JSON.parse(data);
+                    al_Aa_main_bjzs.clear();
+                    lineoption.xAxis.data = res.xAxis;
+                    lineoption.series[0].data = res.data;
+                    al_Aa_main_bjzs.setOption(lineoption);
+                });
+            }
+
+           //报警饼图曲线
+            function getPieChartData() {
+                $.post("/Sws/Sws_AlarmAnalysis/GetpieData", { dateTime: $("#dateTime").val(), dateType: $("#selectDate").val() }, function (data) {
+
+                    var res = JSON.parse(data);
+                    $("#AlarmCount").html(res.dataTable);
+                    //$("#total").html(res.totalCount);
+                    al_Aa_main_bjdj.clear();
+                    pieoption.series[0].data = res.data;
+                    al_Aa_main_bjdj.setOption(pieoption);
+                });
+            }
+
+            //报警table
+            function getTableData(curr) {
+
+                $.post("/Sws/Sws_AlarmAnalysis/GetEventTableData", {
+                    dateTime: $("#dateTime").val(),
+                    dateType: $("#selectDate").val(),
+                    pageindex: curr || 1,
+                    pagesize: 6,
+                }, function (res) {
+                        $("#tablebox").html(res.dataTable);
+                        $("#total").text("共"+res.total+"条")
+                    laypage({
+                        skin: 'molv',
+                        cont: 'page_JK',
+                        pages: res.totalPage,
+                        skip: true,
+                        curr: curr || 1,
+                        jump: function (obj, first) {
+                            if (!first) {
+                                getTableData(obj.curr);
+                            }
+                        }
+                    });
+                    //    $("#tablebox").html('<p style="font-size: 18px;color: #333;">报警详情</p> <table id="tabledata"  class="table table-striped" data-pagination="true" data-toggle="table"  data-side-pagination="server"  ' +
+                    //        'data-total-rows="' + res.total + '"   data-page-size="' + res.pageSize + '"   data-page-number="' + res.pageIndex + '" data-height="' + ($(window).height() - 150) + '">' + res.dataTable + '</table>');
+                    //$table = $('#tabledata').bootstrapTable();
+                    ////分页
+                    //$table.on('page-change.bs.table', function (e, number, size) {
+                    //    getTableData(number, size);
+                    //});
+                    //$('#tabledata').bootstrapTable('hideLoading');
+                });
+            }
+
+            //获取排行榜数据
+            function getRankingData() {
+                $.post("/Sws/Sws_AlarmAnalysis/GetRankingData", { dateTime: $("#dateTime").val(), dateType: $("#selectDate").val() }, function (res) {
+                    //添加table
+                    $("#pretablebox").html(res.dataTable);
+                });
+            }
+
+
+            window.onresize = function () {
+                al_Aa_main_bjzs.resize();
+                al_Aa_main_bjdj.resize();
+            }
+        </script>
+    </div>
+</body>
+</html>

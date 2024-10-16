@@ -1,0 +1,375 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>规则配置</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/Ionicons/css/ionicons.min.css" rel="stylesheet" />
+    <link href="~/css/pumpstationindex.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <style>
+        .con6 .con6_con .con6_right .con6_text label {
+            float: left;
+            overflow: hidden;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            text-align: right;
+            padding: 0
+        }
+
+        .con6 .con6_con .con6_right .con6_text select {
+            float: left;
+            overflow: hidden;
+            height: 30px;
+            line-height: 30px
+        }
+
+        .con6_text input {
+            float: left;
+            overflow: hidden;
+            height: 30px;
+            line-height: 30px;
+            margin-left: 8px;
+        }
+
+        .table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+            border-bottom-width: 1px;
+            text-align: center
+        }
+
+        .con6_text {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .con6 .con6_con .con6_right {
+            width: 300px
+        }
+
+        .table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td {
+            border: 0;
+            border-left: 0;
+            border-right: 1px solid #ccc
+        }
+
+            .table-bordered > thead > tr > td:last-child {
+                border-right: 0
+            }
+
+        .con6 .con6_con .con6_left table td {
+            text-align: center;
+        }
+        label.error {
+    
+    position: relative;
+    top: 0px;
+    margin-left: 80px;
+}
+    </style>
+</head>
+
+<body style="background:#fff;">
+    @{ 
+        var DataItemDetail = ViewBag.DataItemDetail as IEnumerable<SysDataItemDetail>;
+    }
+    <div class="con6">
+        <div class="con6_con">
+            <div class="con6_left" id="RuleTable">
+                <table class="table table-striped table-bordered" style="border-top:0;border-left:0; border-right:0">
+                    <thead style="border:0">
+                        <tr style="border:0">
+                            <td>@Html.CheckBox("ckTop", false)</td>
+                            <td>规则编号</td>
+                            <td>模拟量</td>
+                            <td>比较符号</td>
+                            <td>设定值</td>
+                            @*<td>关系符号</td>*@
+                            <td>操作</td>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyContent">
+                        @{if (ViewBag.datalist != null)
+                            {
+                                var datalist = ViewBag.datalist as IEnumerable<dynamic>;
+                                foreach (var item in datalist)
+                                {
+                                    var jsondata = Newtonsoft.Json.JsonConvert.SerializeObject(item);
+                                    <tr>
+                                        <td><input type="radio" name="radio" onclick="QueryRuleForm(jsondata)" /></td>
+                                        <td>@item.Num</td>
+                                        <td>@item.CNName</td>
+                                        <td>@item.CompareSName</td>
+                                        <td>@item.Value</td>
+                                        @*<td>@item.RelateSName</td>*@
+                                        <td><button onclick="DeleteRule(@item.ID)"><i class='ion-close-circled'></i> 删除</button></td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div>
+                <form id="RuleForm">
+                    <div class="con6_right" style="width:330px;">
+
+                        <input id="Id" name="Id" type="hidden" value="0" />
+                        <input id="ParentId" name="ParentId" type="hidden" value="0" />
+                        <div class="con6_text">
+                            <label for="ValveName" class="valveLabel">模拟量:</label>
+                            <input id="DataName" name="DataName" type="text" value="" autocomplete="off" onclick="SelectAnalog()" />
+                            <input id="DataId" name="DataId" type="hidden" value="" />
+                        </div>
+                        <div class="con6_text">
+                            <label for="Num" class="Num">规则编号:</label>
+
+                            <input id="Num" type="text" name="Num" autocomplete="off" />
+                        </div>
+                        <div class="con6_text">
+                            <label for="CompareSymbol" class="valveLabel">比较符号:</label>
+
+                            <select id="CompareSymbol" name="CompareSymbol" style="margin-left:8px;width:160px">
+                                @{
+                                    var compareDetail = DataItemDetail.Where(r => r.FItemId == 27);
+                                    foreach (var item in compareDetail)
+                                    {
+                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+                        <div class="con6_text">
+                            <label for="Value" class="valveLabel">设定值:</label>
+                            <input id="Value" type="text" name="Value" autocomplete="off" />
+
+                        </div>
+                        <div class="con6_text" style="display:none">
+                            <label for="RelateSymbol" class="valveLabel">关系符号:</label>
+
+                            <select id="RelateSymbol" name="RelateSymbol" style="margin-left:8px;width:160px;display:none">
+                                @{
+                                    var relateDetail = DataItemDetail.Where(r => r.FItemId == 28);
+                                    foreach (var item in relateDetail)
+                                    {
+                                        if (item.ItemValue == "and")
+                                        {
+                                            <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+
+                                        }
+                                        else
+                                        {
+
+                                            <option value="@item.ItemValue">@item.ItemName</option>
+                                        }
+
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <input type="button" class="btn" id="submit" value="提交">
+                        <input type="button" class="btn" id="btncancel" value="重置">
+                    </div>
+                </form>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script src="~/lib/layer/layer.js"></script>
+<script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+
+<script type="text/javascript">
+    var RuleId = @ViewBag.ruleid;
+    var partition = @ViewBag.partition;
+    var partition_temp=@ViewBag.partition;//记录选择模拟量后的分区
+    $(function () {
+        var ww = $(window).width()
+        var wh = $(window).height()
+        $('.con6_con').height(wh - 85)
+        $('.con6_left').width(ww - 360)
+        GetRuleData();
+        //GetRuleForm(0);
+    });
+
+    //修改子规则
+    function QueryRuleForm(detailid) {
+        $.post("/Sws/WarnRule/EditeRuleDetail", {detailID:detailid}, function (res) {
+            $("#Id").val(res.data.ID);//待写
+            $("#ParentId").val(res.data.ParentID);
+            $("#DataName").val(res.data.CNName);
+            $("#DataId").val(res.data.DataID);
+            $("#Num").val(res.data.Num);
+            $("#CompareSymbol").val(res.data.CompareSymbol);
+            $("#RelateSymbol").val(res.data.RelateSymbol);
+            $("#Value").val(res.data.Value);
+        })
+        
+       
+
+    }
+
+    //获取列表数据
+    function GetRuleData() {
+        $.post("/Sws/WarnRule/GetRuleDetailData", { RuleId: RuleId }, function (res) {
+            $("#tbodyContent").empty();
+            if (res.datalist.length > 0) {
+                var appendstr = "";
+                for (var i = 0; i < res.datalist.length; i++) {
+                    //var jsondata = JSON.stringify(res.datalist[i]);
+
+                    appendstr += '<tr>' +
+                        '<td><input type="radio" name="radio" onclick="QueryRuleForm(' + res.datalist[i].ID + ')" /></td>' +
+                        '<td>' + res.datalist[i].Num + '</td>' +
+                        '<td>' + res.datalist[i].CNName + '</td>' +
+                        '<td>' + res.datalist[i].CompareSName + '</td>' +
+                        '<td>' + res.datalist[i].Value + '</td>' +
+                        
+                        '<td><button onclick="DeleteRule(' + res.datalist[i].ID + ')"><i class="ion-close-circled"></i> 删除</button></td>' +
+                        '</tr>';
+                }
+                $("#tbodyContent").append(appendstr);
+            }
+            else {
+                RuleId = 0;
+                partition = 0;
+                partition_temp = 0;
+            }
+        });
+    }
+
+   
+
+    //删除子规则
+    function DeleteRule(id) {
+        $.post("/Sws/WarnRule/DeleteDetailRule", {detailID:id,ruleID:RuleId}, function (res) {
+            if (res == "ok") {
+                layer.msg("删除成功");
+                GetRuleData();
+                parent.RefreshTable();
+            }
+            else {
+                 layer.alert("删除失败");
+            }
+
+        });
+    }
+    $("#submit").click(function () {
+        validateForm();
+        $("#RuleForm").submit();
+     })
+    $("#btncancel").click(function () {
+        ResetForm();
+    });
+    function ResetForm() {
+            $("#Id").val(0);
+            $("#ParentId").val(0);
+            $("#DataName").val("");
+            $("#DataId").val(0);
+            $("#Num").val("");
+            $("#CompareSymbol").val("");
+            //$("#RelateSymbol").val("");
+            $("#Value").val("");
+    }
+    function execute() {
+         $.post("/Sws/WarnRule/SetRule", {info:JSON.stringify($("#RuleForm").serializeObject()),RuleId:RuleId,partition:partition_temp}, function (res) {
+            if (res.str == "ok") {
+                layer.msg("操作成功");
+                if (res.idIsChange == true) {
+                    RuleId = res.ruleId;
+                   
+                }
+                if (partition == 0) {
+                    partition = partition_temp;//提交表单后，分区id被确定
+                }
+                GetRuleData();
+                parent.RefreshTable();
+                ResetForm();
+            }
+            else if (res.str == "no") {
+                layer.alert("操作失败");
+            }
+            else {
+                layer.alert(res.str);
+            }
+        });
+    }
+    function SelectAnalog() {
+         parent.iframeWithBtns("选择模拟量", "900px", "600px", "/Sws/WarnRule/SelectAnalog?id="+$("#DataId").val()+"&partition="+partition+"", false, function (formIndex, formLayer) {
+                var currentIframe =parent.window[formLayer.find('iframe')[0]['name']];
+             currentIframe.saveForm(function (sDataid, sDataName,region) {
+                 $("#DataId").val(sDataid);
+                 $("#DataName").val(sDataName);
+                 if (partition == 0) {
+                     partition_temp = region;
+                 }
+                    parent.layer.close(formIndex);
+                });
+            });
+    }
+    function validateForm() {
+        $("#RuleForm").validate({
+                 submitHandler: function (form) {
+                    execute();
+                },
+                    ignore: "",
+                    rules: {
+                        DataName: "required",
+                        Num:{
+                         required:true,
+                         digits: true,
+                         min: 1,
+                    },
+                    CompareSymbol: "required",
+                     Value: {
+                         number: true,
+                       
+                        required:true,
+                        },
+                        //RelateSymbol:"required"
+                    },
+                    messages: {
+                        DataName: "请选择模拟量",
+                        Num:"请输入编号",
+                        CompareSymbol: "请选择比较符号",
+                        Value: "请输入设定值",
+                        //RelateSymbol:"请选择关系符号"
+                    }
+                });
+        }
+     $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+</script>

@@ -1,0 +1,180 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GDMap</title>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/DataV/layer/layer.js"></script>
+    <link href="~/Swslxl/css_event/gdmap.css" rel="stylesheet" />
+    <!-- 地图 -->
+    <link href="~/leafletmap/css/leaflet.1.3.1.css" rel="stylesheet" />
+    <link href="~/leafletmap/plugins/Leaflet.MousePosition-master/L.Control.MousePosition.css" rel="stylesheet" />
+    <script src="~/leafletmap/1.3.1/leaflet.js"></script>
+    <script src="~/leafletmap/lib/esri-leaflet-v3.0.4/esri-leaflet.js"></script>
+    <script src="~/leafletmap/plugins/Leaflet.MousePosition-master/L.Control.MousePosition.js"></script>
+    <script src="~/leafletmap/plugins/Proj4Leaflet-master/proj4.js"></script>
+    <script src="~/leafletmap/plugins/Proj4Leaflet-master/proj4leaflet.js"></script>
+    <script src="~/leafletmap/plugins/leaflet.mapcache.js"></script>
+    <style>
+        html,
+        body,
+        #container {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+        .leaflet-popup-content {width: 400px!important;}
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script>
+        var map;
+        var rtustate = "正常,离线,故障";
+        var sitetypes = "";
+        var layers = [];
+        var myGroup;
+
+        var lng =  @ViewBag.lng;
+        var lat =  @ViewBag.lat;
+        var zoom =  @ViewBag.zoom;
+        var ArcgisUrl = '@ViewBag.ArcgisUrl';
+        var PipeUrl = '@ViewBag.PipeUrl';
+        $(function () {
+            initMap();
+            LoadMapRtu();
+        })
+
+        //地图初始化
+        function initMap() {
+            //proj4.defs("EPSG:2436", "+proj=tmerc +lat_0=0 +lon_0=117 +k=1 +x_0=500000 +y_0=0 +ellps=krass +towgs84=15.8,-154.4,-82.3,0,0,0,0 +units=m +no_defs");
+
+            //var r = proj4("EPSG:2436", "EPSG:4326", [520061.79607555206, 2737925.6849408206]);
+            /* var centerPoint = new L.LatLng(r[1], r[0]);*/
+            var centerPoint = new L.LatLng(lat,lng);
+
+            var crs1 = new L.Proj.CRS("EPSG:2436", "+proj=tmerc +lat_0=0 +lon_0=117 +k=1 +x_0=500000 +y_0=0 +ellps=krass +towgs84=15.8,-154.4,-82.3,0,0,0,0 +units=m +no_defs",
+                {
+                    origin: [-5123300.0, 10002300],  // 将刚刚的 Origin 复制到这里
+                    resolutions: [                 // 所有的分辨率复制到这里
+                        76.43695495724326,
+                        38.21834518669038,
+                        19.109040301413938,
+                        9.554387858775717,
+                        4.777061637456608,
+                        2.3883985267970536,
+                        1.1940669714672763,
+                        0.5969011938023876,
+                        0.2984505969011938
+                    ]
+                    /*bounds: L.bounds([516911.9087096499, 2739564.213902506], [522879.9046456418, 2744911.94059796])*/
+                });
+
+
+            var num = 6;
+             map = L.map('container', { crs: crs1 }).setView(centerPoint, 0).setZoom(zoom);
+            var tileMapLayer = L.esri.tiledMapLayer({
+                minzoom: 0,
+                maxzoom: 6,
+                url: ArcgisUrl
+            });
+
+            map.addLayer(tileMapLayer);
+
+            var tileMapLayer1 = L.esri.dynamicMapLayer({
+                url: PipeUrl
+            });
+
+            map.addLayer(tileMapLayer1);
+            myGroup = L.layerGroup();
+        }
+        //加载数据
+        function LoadMapRtu() {
+            $.post("/Sws/Sws_EventData/LoadGZrtu", {}, function (data) {
+                if (data != "[]" && data != "") {
+                    var json = JSON.parse(data);
+                    var jsonLength = json.length;
+                    if (jsonLength > 0) {
+                        for (var i = 0; i < jsonLength; i++) {
+
+                            var markericon = '' +
+                                '<div class="custom-content-marker bjzt">' +
+                                '<img class="zhuangtai-er" src="/DataV/images/zt2.png">' +
+                                '</div>';
+
+                            var icon = L.divIcon({
+                                html: markericon,
+                                iconSize: [80, 80],
+                                className: 'map-circle'
+                            });
+                            var maker = L.marker([json[i].Lat, json[i].Lng], {
+                                icon: icon
+                            }).addTo(map)
+                            var aa = json[i].StationId
+                            Object.defineProperties(maker, {
+                                id: {
+                                    value: aa
+                                }
+                            });
+
+                            maker.on("click", function (e) {
+                                //var html = '<div class="makercon overflow clearfloat pad10px"><div class="maptitle"><i class="iconfont f24px icon-bengfang green"></i><p><span class="fb f16px" > 碧水绿洲（BTG）</span ></p ></div ><ul class="maplist"><li class="maplistnr1"><span>分区</span><span>进压力</span><span>出压力</span><span>出瞬时</span></li><li><span>低区</span><span>0</span><span>0.75</span><span>11</span></li><li><span>中区</span><span>0</span><span>1.1</span><span>8.8</span></li><li><span>高区</span><span>0</span><span>1.3</span><span>10.3</span></li></ul><div class="sj"></div></div >'
+                                //maker.bindPopup(html).openPopup()
+                                LoadStationJkData(e);
+                            });
+                        }
+                    }
+                }
+            })
+        }
+        //弹出框
+        function LoadStationJkData(e) {
+            $.post('/Sws/Sws_EventData/LoadEventMap', { id: e.target.id }, function (data) {
+                var jsondata = JSON.parse(data);
+
+                var html = "";
+                html += "<div class='info-boxs' style='margin-top:10px;width:400px;height:120px;color:#080808'>";
+                html += "<p class='gdinfo-title'><span>设备名称</span><span>报警名称</span><span>报警时间</span><span>级别</span></p>";
+                html += "<ul class='gdinfo-list'>"
+                if (jsondata.length > 0) {
+                    for (var i = 0; i < jsondata.length; i++) {
+
+                        html += "<li><span title=" + jsondata[i].DeviceName + ">" + jsondata[i].DeviceName + "</span><span>" + jsondata[i].EventMessage + "</span><span>" + jsondata[i].EventTime.replace("T", " ") + "</span><span>"
+                        if (jsondata[i].EventLevel == 1) {
+                            html += "<i class='bgRed'></i></span></li>";
+                        } else if (jsondata[i].EventLevel == 2) {
+                            html += "<i class='bgOrange'></i></span></li>";
+                        } else {
+                            html += "<i class='bgBlue'></i></span></li>"
+
+                        }
+
+                    }
+                }
+                html += "</ul>"
+                html += "</div>";
+                markerContent = html; 
+                var popup = L.popup({
+                    offset: [-10, -20]
+                })
+                    .setLatLng(e.latlng)
+                    .setContent(markerContent)
+                    .openOn(map);
+
+
+            });
+        }
+
+    </script>
+</body>
+</html>

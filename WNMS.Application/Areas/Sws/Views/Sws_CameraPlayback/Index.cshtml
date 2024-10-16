@@ -1,0 +1,234 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>视频录像</title>
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/sl.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/css/bootstrap-table.min.css" rel="stylesheet" />
+
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <link href="~/lib/bootstrap-table1.16.0/bootstrap-table-fixed-columns.min.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap-table1.16.0/bootstrap-table-fixed-columns.min.js"></script>
+
+    <!-- 树 -->
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <link href="~/css/iconfont.css" rel="stylesheet" />
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    @*<link rel="stylesheet" href="~/lib/ztree/zTreeStyle.css">*@
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/video/demos1/jsencrypt.min.js"></script>
+    <script src="~/video/demos1/jsWebControl-1.0.0.min.js"></script>
+    <style>
+        .cont {
+            height: calc(100% - 50px);
+            position: relative
+        }
+
+        .no-date {
+            position: absolute;
+            left: 0;
+            top: 45%;
+            width: 100%;
+            transform: translateY(-50%)
+        }
+
+        #tablebox > p {
+            text-align: center;
+            padding-top: 10px;
+            font-size: 16px
+        }
+
+        .ztree .iconfont {
+            padding-right: 5px;
+        }
+
+        .table {
+            table-layout: fixed;
+        }
+    </style>
+</head>
+<body>
+    <div class="sl_maing">
+        <div class="sl_maingcon">
+            <div class="sl_lf">
+                <!-- 搜索框 -->
+                <div class="zlw_datamain_lfconsea">
+                    <form action="">
+                        <i class="glyphicon glyphicon-search" onclick="LoadZtree()"></i>
+                        <input type="text" id="cameraname" class="form-control" placeholder="搜索&quot;泵房&quot;名称" autocomplete="off" />
+                    </form>
+                </div>
+                <div id="treeDemo" class="ztree" style="height:100%;overflow:auto">
+                    <!-- tree渲染区域 -->
+                </div>
+            </div>
+            <div class="sl_rg">
+                <div style="border-bottom:1px solid #ddd;height:51px">
+                    <nav aria-label="Page navigation" style="width:100%">
+                        <div class="overflow pad10px" style="width:100%">
+                            <div class="left" id="searchcontent">
+                                <label class="hyl_label ml15px" style="float: left;">查询时段：</label>
+                                <div id="custometime" style="float:left">
+                                    <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" placeholder="开始时间" id="BeginDate" class=" hyl_input hyl_input-sm" value="@ViewBag.BeginTime">
+                                    <span class="pl10px pr10px">至</span>
+                                    <input type="text" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" placeholder="结束时间" id="EndDate" class=" hyl_input hyl_input-sm" value="@ViewBag.EndTime">
+                                </div>
+
+                                <button class="hyl_btn" type="button" id="search_btn">
+                                    <i class="fa fa-search mr5px"></i>查询
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+                <div class="cont">
+
+                    <div class="zlw_manageconrgconsan" id="tablebox" style="height:100%;position:relative">
+                    </div>
+                    <div class="no-date textCenter" style="display:none">
+                        <img src="/images/null.png" width="150" />
+                        <p>暂无数据</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+         var begintime="", endtime="";
+         var cameraId = 0;
+         var cameraname = "";
+         var zTreeObj;
+           var setting = {
+                data:{
+                    simpleData: {
+                        enable: true
+                    }
+                },callback:{
+                    onClick: zTreeOnClick
+                },view: {
+                    showTitle:false,
+                    showLine: true,
+                    nameIsHTML: true,
+                    showIcon: false
+                }
+            };
+            var zNodes = @ViewBag.treenodes;
+         $(function () {
+             zTreeObj=$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+         })
+         //树查询
+         function LoadZtree() {
+             zTreeObj.destroy();    //清空树
+
+             if ($("#cameraname").val() != "") {
+                 //查询树列表数据
+                 $.post("/Sws/Sws_CameraPlayback/SearchTree", {
+                     name: $("#cameraname").val()
+                 }, function (data) {
+                     var aa= JSON.parse(data);   //数据转json
+                         zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, aa);   //重新初始化树
+                         zTreeObj.expandAll(true);     //初始化数列表展开
+                 });
+             }
+             else {
+                 zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);   //重新初始化树
+             }
+         }
+          //左侧树查询回车事件
+            $("#cameraname").keydown(function(e) {
+               if (e.keyCode == 13) {
+                   LoadZtree();
+                   return false;
+               }
+            });
+
+           //树点击事件
+        function zTreeOnClick(event, treeId, treeNode) {
+            if (treeNode.isDevice == true) {
+                cameraId = treeNode.id;
+                cameraname = treeNode.name;
+                GetTableData();
+            }
+         };
+         //查询按钮
+         $("#search_btn").click(function () {
+             GetTableData();
+         })
+         //获取表格数据
+         function GetTableData() {
+             $.post("/Sws/Sws_CameraPlayback/GetPlayBackTable", {
+                 cameraId: cameraId,
+                 beginTime: $("#BeginDate").val(),
+                 endTime: $("#EndDate").val()
+             }, function (res) {
+                if (res.dataTable != "") {
+                    if (res.dataTable == "error") {
+                        layer.alert("仅能查询三天内数据，请重新选择时间");
+                    } else {
+                        $(".no-date").css("display", "none");
+                        $("#tablebox").css("display", "block");
+                        $("#tablebox").empty();
+                        $("#tablebox").append('<p>' + cameraname + ' ' + $("#BeginDate").val() + '至' + $("#EndDate").val() + '录像记录</p>');
+                        $("#tablebox").append('<table id="tabledata"  class="table table-striped" data-pagination="false" data-toggle="table" data-fixed-number="1" data-height="' + ($(window).height() - 56) + '"  data-fixed-columns="true"  ' +
+                            '>' + res.dataTable + '</table > ');
+                        //$("#tablebox").append(res.dataTable);
+                        $("#tabledata").bootstrapTable();
+                    }
+
+                 }
+                 else {                     
+                     $(".no-date").css("display", "block");
+                     $("#tablebox").css("display", "none");
+                 }
+             });
+
+        }
+
+        /*-------------------------------------   视频播放 ------------------------------------------*/
+        var offsetLeft = 0, offsetTop = 0, height=0;
+        function videoPlay(beginTime, endTime) {
+            window.parent.layer.open({
+                type: 2,
+                title: '视频播放',
+                shadeClose: true,
+                shade: false,
+                resize: false,
+                scrollbar: false,
+                move: false,
+                maxmin: true, //开启最大化最小化按钮
+                area: ['902px', '644px'],
+                content: '/Sws/Sws_CameraPlayback/videoplay?cameraId=' + cameraId + '&beginTime=' + beginTime + '&endTime=' + endTime + '',
+                success: function (layero, index) {
+                    window.parent.offsetLeft = layero[0].offsetLeft;
+                    window.parent.offsetTop = layero[0].offsetTop;
+                    window.parent.height = window.parent.$(".layui-layer-title")[0].clientHeight;
+                }
+                //moveEnd: function () {
+                //    var aa = window.frames[0];
+                //    window.parent.offsetLeft = layero[0].offsetLeft;
+                //    window.parent.offsetTop = layero[0].offsetTop;
+                //    layero[0].moveEnd;
+                //}
+            });
+        }
+    </script>
+</body>
+</html>

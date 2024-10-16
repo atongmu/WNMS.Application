@@ -1,0 +1,75 @@
+﻿<thead class="thead">
+    <tr>
+        <th data-field="rownumber" data-width="50px">排名</th>
+        <th data-field="DeviceName">设备名称</th>
+        <th data-sortable="true" data-field="tonwater">吨水电耗(kW·h/m³)</th>
+        <th data-sortable="true" data-field="EnergyCon">用电量(kW·h)</th>
+        <th data-sortable="true" data-field="FlowCon">供水量(m³)</th>
+    </tr>
+</thead>
+<tbody class="tbody">
+    @{
+        foreach (var item in Model)
+        {
+        <tr>
+            @{
+                if (item.rownumber == 1)
+                {
+                    <td class="textCenter"><span class="top1">@item.rownumber</span></td>
+                }
+                else if (item.rownumber == 2)
+                {
+                    <td class="textCenter"><span class="top2">@item.rownumber</span></td>
+                }
+                else if (item.rownumber == 3)
+                {
+                    <td class="textCenter"><span class="top3">@item.rownumber</span></td>
+                }
+                else
+                {
+                    <td class="textCenter"><span class="top-c">@item.rownumber</span></td>
+                }
+            }
+
+            <td>@item.DeviceName</td>
+            <td>@(Math.Round((double)(item.tonwater == null ? 0.0 : item.tonwater), 2))</td>
+            <td class="form-inline trPad gsl">
+                <div class="progress">
+                    @{
+                        if (item.EnergyCon == 0)
+                        {
+                            <div class="progress-bar" style="width:0%"></div>
+                            <span>@item.EnergyCon</span>
+                        }
+                        else
+                        {
+                            //var pre = (item.EnergyCon / 200000) * 100;
+                            <div class="progress-bar" style="width:0%"></div>
+                            <span>@(Math.Round((double)(item.EnergyCon == null ? 0.0 : item.EnergyCon), 2))</span>
+                            @*<span>@(Math.Round((double)(item.EnergyCon == null ? 0.0 : item.EnergyCon), 2))</span>*@
+                        }
+                    }
+                </div>
+            </td>
+            <td class="form-inline trPad ydl">
+                <div class="progress">
+                    @{
+                        if (item.FlowCon == 0)
+                        {
+                            <div class="progress-bar" style="width:0%"></div>
+                            <span> @(Math.Round((double)(item.FlowCon == null ? 0.0 : item.FlowCon), 2))</span>
+                        }
+                        else
+                        {
+                            //var pre = (item.FlowCon / 500000) * 100;
+                            <div class="progress-bar" style="width:0%"></div>
+                            <span> @(Math.Round((double)(item.FlowCon == null ? 0.0 : item.FlowCon), 2))</span>
+                        }
+                    }
+
+                </div>
+            </td>
+        </tr>
+        }
+    }
+</tbody>

@@ -1,0 +1,199 @@
+﻿
+@using WNMS.Model.CustomizedClass;
+@using WNMS.Model.DataModels;
+@model IEnumerable<dynamic>
+<thead>
+    <tr>
+        <th data-width="120px" data-rowspan="2">时间</th>
+        @{
+            IEnumerable<dynamic> deviceids = ViewBag.deviceidList as IEnumerable<dynamic>;
+            foreach (var item in deviceids)
+            {
+                <th data-colspan="3" data-width="300px">@item.deviceName</th>
+            }
+        }
+    </tr>
+    <tr>
+        @foreach (var item in deviceids)
+        {
+            <th data-width="100px">用水量(m³)</th>
+            <th data-width="100px">用电量(kW·h)</th>
+            <th data-width="100px">吨水电耗(kW·h/m³)</th>
+          
+        }
+    </tr>
+</thead>
+
+<tbody>
+    @{
+        if (Model.Count() > 0)
+        {
+            var DeviceData_Head = Model.GroupBy(r => r.DeviceID).ToList();
+        <tr>
+            <td>最大值</td>
+            @foreach (var item in deviceids)
+            {
+                var sdata = DeviceData_Head.Where(r => r.Key == item.DeviceID).FirstOrDefault();
+                if (sdata == null)
+                {
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+
+                }
+                else
+                {
+                    var maxflow = sdata.Max(r => r.FlowCon);
+                    var maxenergy = sdata.Max(r => r.EnergyCon);
+                    var maxconsump = sdata.Where(r=>r.consump.ToString()!="")?.Max(r => r.consump);
+                    <th>@(maxflow == null ? "--" : Math.Round((double)maxflow, 2).ToString())</th>
+                    <th>@(maxenergy == null ? "--" : Math.Round((double)maxenergy, 2).ToString())</th>
+                    <th>@(maxconsump == null ? "--" : Math.Round((double)maxconsump, 2).ToString())</th>
+                }
+            }
+        </tr>
+        <tr>
+            <td>最大值时间</td>
+            @foreach (var item in deviceids)
+            {
+                var sdata = DeviceData_Head.Where(r => r.Key == item.DeviceID).FirstOrDefault();
+                if (sdata == null)
+                {
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+
+                }
+                else
+                {
+                    var maxflow = sdata.Max(r => r.FlowCon);
+                    var maxenergy = sdata.Max(r => r.EnergyCon);
+                    var maxconsump = sdata.Where(r=>r.consump.ToString()!="")?.Max(r => r.consump);
+                    <th>@sdata.Where(r => r.FlowCon == maxflow).FirstOrDefault().UpdateTime.ToString(ViewBag.timeformate)</th>
+                    <th>@sdata.Where(r => r.EnergyCon == maxenergy).FirstOrDefault().UpdateTime.ToString(ViewBag.timeformate)</th>
+                    if (maxconsump != null)
+                    {
+                    <th>@sdata.Where(r =>r.consump.ToString()!=""&& r.consump == maxconsump).FirstOrDefault().UpdateTime.ToString(ViewBag.timeformate)</th>
+                    }
+                    else
+                    { 
+                       <th>--</th>
+                     }
+
+            }
+            }
+          </tr>
+        <tr>
+            <td>最小值</td>
+            @foreach (var item in deviceids)
+            {
+                var sdata = DeviceData_Head.Where(r => r.Key == item.DeviceID).FirstOrDefault();
+                if (sdata == null)
+                {
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+
+                }
+                else
+                {
+                    var minflow = sdata.Min(r => r.FlowCon);
+                    var minenergy = sdata.Min(r => r.EnergyCon);
+                    var minconsump = sdata.Where(r=>r.consump.ToString()!="")?.Min(r => r.consump);
+                    <th>@(minflow == null ? "--" : Math.Round((double)minflow, 2).ToString())</th>
+                    <th>@(minenergy == null ? "--" : Math.Round((double)minenergy, 2).ToString())</th>
+                    <th>@(minconsump == null ? "--" : Math.Round((double)minconsump, 2).ToString())</th>
+                }
+            }
+        </tr>
+        <tr>
+            <td>最小值时间</td>
+            @foreach (var item in deviceids)
+            {
+                var sdata = DeviceData_Head.Where(r => r.Key == item.DeviceID).FirstOrDefault();
+                if (sdata == null)
+                {
+                    <td>--</td>
+                    <td>--</td>
+                    <td>--</td>
+
+                }
+                else
+                {
+                    var minflow = sdata.Min(r => r.FlowCon);
+                    var minenergy = sdata.Min(r => r.EnergyCon);
+                    var minconsump = sdata.Where(r=>r.consump.ToString()!="")?.Min(r => r.consump);
+                    <th>@Model.Where(r => r.FlowCon == minflow).FirstOrDefault().UpdateTime.ToString(ViewBag.timeformate)</th>
+                    <th>@Model.Where(r => r.EnergyCon == minenergy).FirstOrDefault().UpdateTime.ToString(ViewBag.timeformate)</th>
+                    if (minconsump != null)
+                    {
+                    <th>@Model.Where(r =>r.consump.ToString()!=""&& r.consump == minconsump).FirstOrDefault().UpdateTime.ToString(ViewBag.timeformate)</th>
+                    }
+                    else
+                    { 
+               <th>--</th>
+            }
+            }
+            }
+</tr>
+            <tr>
+                <td>平均值</td>
+                @foreach (var item in deviceids)
+                {
+                    var sdata =  DeviceData_Head.Where(r => r.Key == item.DeviceID).FirstOrDefault();
+                    if (sdata==null)
+                    {
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+
+                    }
+                    else
+                    {
+                       
+                      
+                        
+                        var aveFlist = sdata.Where(r => r.FlowCon.ToString() != "");
+                        var aveElist = sdata.Where(r => r.EnergyCon.ToString() != "");
+                        var aveClist = sdata.Where(r => r.consump.ToString() != "");
+
+                        <th>@(aveFlist.Count() == 0 ? "--" :Math.Round((double)aveFlist.Average(r => (double)r.FlowCon), 2).ToString())</th>
+                        <th>@(aveElist.Count() == 0 ? "--" : Math.Round((double)aveElist.Average(r => (double)r.EnergyCon), 2).ToString())</th>
+                        <th>@(aveClist.Count() == 0 ? "--" : Math.Round((double)aveClist.Average(r => (double)r.consump), 2).ToString())</th>
+                    }
+
+                }
+            </tr>
+
+
+
+            var data = Model.GroupBy(r => r.UpdateTime).OrderBy(r=>r.Key).ToList();
+            foreach (var item in data)
+            {
+                    <tr>
+                            <td>@Convert.ToDateTime(item.Key).ToString(ViewBag.timeformate)</td>
+                      @foreach (var st in deviceids)
+                         {
+                               var sdata = item.Where(r => r.DeviceID == st.DeviceID).FirstOrDefault();
+                               if (sdata == null)
+                               {
+                                  <td>--</td>
+                                  <td>--</td>
+                                  <td>--</td>
+
+                               }
+                                else
+                                {
+           
+                               <td>@(sdata.FlowCon.ToString() == "" ? "--" : Math.Round((double)sdata.FlowCon, 2).ToString())</td>
+                               <td>@(sdata.EnergyCon.ToString() == "" ? "--" : Math.Round((double)sdata.EnergyCon, 2).ToString())</td>
+                               <td>@(sdata.consump.ToString() == "" ? "--" : Math.Round((double)sdata.consump, 2).ToString())</td>
+                                  }
+                         }
+                   </tr>
+            }
+
+
+        }
+    }
+</tbody>

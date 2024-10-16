@@ -1,0 +1,1196 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>地图监测</title>
+    <link rel="stylesheet" href="../../css/hyl.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link rel="stylesheet" href="../../css/font-awesome.css">
+    <link rel="stylesheet" href="../../css/iconfont.css">
+    <link rel="stylesheet" href="../../css/ziti.css">
+    @*<link href="//at.alicdn.com/t/font_1545052_hvghkazl5sa.css" rel="stylesheet" />*@
+    <link href="~/css/ztreefont.css" rel="stylesheet" />
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <link rel="stylesheet" href="../../css/gdmap.css">
+    <!-- 高德地图 -->
+    <script src="//a.amap.com/jsapi_demos/static/china.js"></script>
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=28068084e71b4dac1344e8d5c9451629&plugin=AMap.DistrictSearch,AMap.MarkerClusterer"></script>
+
+    <style>
+
+
+        .custom-input-card {
+            width: 18rem;
+        }
+
+            .custom-input-card .btn:last-child {
+                margin-left: 1rem;
+            }
+
+        .content-window-card {
+            position: relative;
+            width: 23rem;
+            padding: 0.75rem 0 0 1.25rem;
+            box-shadow: none;
+            bottom: 0;
+            left: 0;
+        }
+
+        .chaochu {
+            text-align: left !important
+        }
+
+            .chaochu i {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 10px;
+                margin-right: 6px;
+                background: #0fd10a
+            }
+
+        .ls {
+            background: #0fd10a !important
+        }
+
+        .hs {
+            background: #ff0202 !important
+        }
+
+        .huis {
+            background: #666 !important
+        }
+
+        .content-window-card p {
+            height: 2rem;
+        }
+
+        .clearfloat:after {
+            content: "";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+
+        .clearfloat {
+            zoom: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="zlw_map">
+        <!-- star 地图层 -->
+        <div class="zlw_map_layer">
+            <div id="map_monitor"></div>
+        </div>
+        <!-- 地图层 end -->
+        <!-- star 数据层 -->
+        <div class="data_layer">
+            <div class="data_layercon">
+                <div class="data_layeryi">
+                    <div class="data_layeryitop">
+                        <ul class="clearfloat">
+                            <li>
+                                <div class="data_layeryitopyi clearfloat">
+                                    <img src="~/images/泵房.png" alt="">
+                                    <i>泵房数量</i>
+                                </div>
+                                <div class="data_layeryitoper">
+                                    <p><span id="stationNum"></span>个</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="data_layeryitopyi clearfloat">
+                                    <img src="~/images/泵房1.png" alt="">
+                                    <i>机组数量</i>
+                                </div>
+                                <div class="data_layeryitoper">
+                                    <p><span id="deviceName"></span>个</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="data_layerer">
+                    <ul>
+                        <li class="clearfloat">
+                            <div class="zlw_tj_yi">
+                                <i></i>正常运行
+                            </div>
+                            <div class="zlw_tj_er">
+                                <p> <i id="okNum"></i>个</p>
+                            </div>
+                        </li>
+                        <li class="clearfloat">
+                            <div class="zlw_tj_yi">
+                                <i></i>报警
+                            </div>
+                            <div class="zlw_tj_er">
+                                <p> <i id="alerNum"></i>个</p>
+                            </div>
+                        </li>
+                        <li class="clearfloat">
+                            <div class="zlw_tj_yi">
+                                <i></i>离线
+                            </div>
+                            <div class="zlw_tj_er">
+                                <p> <i id="outNum"></i>个</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="data_layersan">
+                    <div class="data_layersancon">
+                        <div class="data_layersan_title">
+                            <p>实时监测数据</p>
+                        </div>
+                        <div class="data_layersan_nr">
+                            <div class="data_layersan_nrbt clearfloat">
+                                <span>二供泵房</span>
+                                <span>采集时间</span>
+                                <span>操作</span>
+                            </div>
+                            <div class="data_layersan_nrcon">
+                                <div id="stationData">
+
+                                </div>
+                                <div id="zstationData">
+
+                                </div>
+                            </div>
+                            @*<div class="data_layersan_nrcon" id="zstationData">
+
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 数据层 end  -->
+        <!-- star 筛选层 -->
+        <div class="shuai_layui">
+            <div class="shuai_layui_yi clearfloat">
+                <!-- 搜索框 -->
+                <div class="shuai_layui_sea left">
+                    <input id="stationName" type="text" placeholder="搜索">
+                </div>
+                <!-- 复选 -->
+                <div class="shuai_layui_fux left">
+                    <ul class="clearfloat">
+                        <li>
+                            <input name="state" onclick="resh()" type="checkbox" data-value="正常" checked><i></i>正常
+                        </li>
+                        <li>
+                            <input name="state" onclick="resh()" type="checkbox" data-value="故障" checked><i></i>报警
+                        </li>
+                        <li>
+                            <input name="state" onclick="resh()" type="checkbox" data-value="离线" checked><i></i>离线
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="shuai_layui_er">
+            <span>单位说明</span>
+            <p>压力：MPa</p>
+            <p>瞬流：m³/h</p>
+        </div>
+    </div>
+    <!-- 收缩按钮 -->
+    <div class="zlw_ss"></div>
+
+    <!-- 筛选层 end -->
+    </div>
+    <script>
+        var map;
+        var markers = [];
+        var markerClusterer;
+        var mapselect;
+        var infoWindow;
+        var clusters;
+        var markericon = '' +
+            '<div>' +
+            '<img src="../../images/main.png">' +
+            '</div>';
+        var markerContent = '' +
+            '<div class="makercon overflow pad10px">' +
+            '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang blue"></i><p class="mt5px">二供泵房</p></div>' +
+            '<div class="makercon-right">' +
+            '<p class="f18px ellipsis1">万象新城</p>' +
+            '<div class="green f16px fb tb-f"><span>4.31</span><span>0.85</span><span>0.81</span></div>' +
+            '<div class="tb-f f12px"><span>出瞬流</span><span>低区</span><span>中区</span></div>' +
+            '</div > ' +
+            '</div>' +
+            '<div class="sj"></div>';
+        $(function () {
+            var layui_yi = $('.data_layeryi').height();
+            var layui_er = $('.data_layerer').height();
+            var layuisanpadding = (layui_yi + layui_er + 30) + 'px';
+            $('.data_layersan').css('padding-top', layuisanpadding)
+            // 搜索框点击变长
+            $(".shuai_layui_sea input").focus(function () {
+                $('.shuai_layui_sea input').css('width', '200px')
+            });
+            $(".shuai_layui_sea input").blur(function () {
+                $('.shuai_layui_sea input').css('width', '60px')
+            });
+            // 点击收缩
+            $('.zlw_ss').click(function () {
+                if ($(".zlw_ss").hasClass("ss_active")) {
+                    $('.data_layer').css('right', '0px');
+                    $('.shuai_layui').css('right', '385px');
+                    $('.zlw_ss').css('right', '378px').removeClass('ss_active');
+                    $('.zlw_ss').css('background-image', 'url(../../images/收缩-触发-白色.svg)')
+                } else {
+                    $('.data_layer').css('right', '-380px');
+                    $('.shuai_layui').css('right', '0px');
+                    $('.zlw_ss').css('right', '0px').addClass('ss_active');
+                    $('.zlw_ss').css('background-image', 'url(../../images/展开-未触发-白色.svg)')
+                }
+            });
+            LoadNum();
+            LoadPumState();
+            initMap();
+
+            document.onkeydown = keyDownSearch;
+            function keyDownSearch(e) {
+                // 兼容FF和IE和Opera    
+                var theEvent = e || window.event;
+                var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                // 13 代表 回车键
+                if (code == 13) {
+                    // 要执行的函数 或者点击事件
+                    LoadZoom();
+                }
+                return true;
+            }
+        })
+        function resh() {
+            //LoadPumState();
+            LoadZoom();
+        }
+        function checkedType() {
+            var typecheck = "";
+            $("input:checkbox[name='state']:checked").each(function () {
+                typecheck += $(this).data("value") + ",";
+            })
+            if (typecheck != "") {
+                typecheck = typecheck.substring(0, typecheck.length - 1);
+            }
+            else {
+                typecheck = "故障,在线,离线";
+            }
+            return typecheck;
+        }
+        function LoadNum() {
+            $.post("/Sws/Sws_Map/QueryStationNum", {}, function (data) {
+                $("#stationNum").html(data.allNum);
+                $("#deviceName").html(data.deviceNum);
+                $("#okNum").html(data.onlineNum);
+                $("#alerNum").html(data.alarmNum);
+                $("#outNum").html(data.offLineNum);
+            })
+        }
+        //地图初始化
+        function initMap() {
+            map = new AMap.Map('map_monitor', {
+                resizeEnable: true,
+                zoom: 11,
+                //mapStyle: 'amap://styles/4f2af56fcd0a88c79ca4c2063fcab18a', //设置地图的显示样式
+                mapStyle: 'amap://styles/d363428cd7ab3d540fc2e80d22c5ea80', //设置地图的显示样式
+                center: ["118.281892", "34.988249"],
+                layers: [//使用多个图层
+                    //  new AMap.TileLayer.Satellite(),
+                    //  new AMap.TileLayer.RoadNet()
+                ],
+                zooms: [6, 14],//设置地图级别范围
+            });
+            mapselect = new AMap.DistrictSearch({
+                extensions: 'all',
+                subdistrict: 0
+            }).search("临沂市", function (status, result) {
+                // 外多边形坐标数组和内多边形坐标数组
+                var outer = [
+                    new AMap.LngLat(-360, 90, true),
+                    new AMap.LngLat(-360, -90, true),
+                    new AMap.LngLat(360, -90, true),
+                    new AMap.LngLat(360, 90, true),
+                ];
+                var holes = result.districtList[0].boundaries
+
+                var pathArray = [
+                    outer
+                ];
+                pathArray.push.apply(pathArray, holes)
+                var polygon = new AMap.Polygon({
+                    pathL: pathArray,
+                    strokeColor: '#1965E7',
+                    strokeWeight: 5,
+                    fillColor: '#07092E',
+                    fillOpacity: 0.8
+                });
+                polygon.setPath(pathArray);
+                map.add(polygon)
+            })
+
+            //拖动获取设备信息
+            AMap.event.addListener(map, "zoomchange", function (e) {
+                map.clearInfoWindow();
+                LoadZoom();
+            });
+            //拖动获取设备信息
+            AMap.event.addListener(map, "moveend", function (e) {
+                map.clearInfoWindow();
+            });
+            clusters = new AMap.MarkerClusterer(map, markers, {
+
+            });
+        }
+        //右侧table加载 $("#roleName").val()
+        function LoadPumState() {
+            $.post("/Sws/Map/QueryTableData", { typecheck: checkedType(), stationName: "" }, function (data) {
+                $("#stationData").empty();
+                //map.remove(markers);
+                //markers = [];
+                var html = "";
+                for (var i = 0; i < data.dataTable.length; i++) {
+                    html += '<div class="data_layersan_item clearfloat">'
+                    if (data.dataTable[i].state == "故障") {
+                        html += '<span class="chaochu"><i class="hs"></i>' + data.dataTable[i].stationName + '</span>'
+                    } else if (data.dataTable[i].state == "正常") {
+                        html += '<span class="chaochu"><i></i>' + data.dataTable[i].stationName + '</span>'
+                    } else {
+                        html += '<span class="chaochu"><i class="huis"></i>' + data.dataTable[i].stationName + '</span>'
+                    }
+
+
+                    html += '<span>' + data.dataTable[i].updateTime + '</span>'
+                    // html += ' <span><a href="javascript:void(0);" onClick="window.top.homeAddTab("sta'+data.dataTable[i].stationID+'","'+data.dataTable[i].stationName+'","/Sws/Sws_Detail/Index/'+data.dataTable[i].stationID+'")">详情</a></span>'
+                    html += "<span><a href='javascript:void(0);' onClick=" + '"' + "window.top.homeAddTab('sta" + data.dataTable[i].stationID + "','" + data.dataTable[i].stationName + "','/Sws/Sws_Detail/Index/" + data.dataTable[i].stationID + "')" + '"' + "'>详情</a></span> </div>"
+                    html += ' </div>'
+
+                    //var marker;
+                    if (data.dataTable[i].state == "故障") {
+                        var markericon1 = '' +
+                            '<div>' +
+                            '<div class="round">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            name: data.dataTable[i].stationName,
+                            content: markericon1
+
+                        });
+                    } else if (data.dataTable[i].state == "正常") {
+                        var markericon2 = '' +
+                            '<div>' +
+                            '<div class="zhengchang">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            name: data.dataTable[i].stationName,
+                            content: markericon2
+
+                        });
+                    } else {
+                        var markericon3 = '' +
+                            '<div>' +
+                            '<div class="xiaxian">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            name: data.dataTable[i].stationName,
+                            content: markericon3
+
+                        });
+                    }
+
+                    marker.id = data.dataTable[i].stationID;
+                    marker.on('mouseover', function (e) {
+                        var id = this.id;
+                        LoadStationJkData(id, e);
+                    })
+                    marker.on('mouseout', function (e) {
+                        var id = this.id;
+                        map.clearInfoWindow();
+                    })
+                    map.add(marker);
+                    markers.push(marker);
+                }
+                $("#stationData").append(html);
+            })
+            LoadZPumState();
+        }
+
+        //根据不同的地图级别获取方法
+        function LoadZoom() {
+            map.remove(markers);
+            if (map.getZoom() > 10) {
+                LoadZoomData(map.getZoom());
+            } else {
+                var markericon1 = '' +
+                    '<div>' +
+                    '<div class="round">  ' +
+                    '<div class="circle">' +
+                    '<img src="../../images/bftb.png">' +
+                    '</div> ' +
+                    '<div class="circle_bottom animation "></div>' +
+                    '<div class="circle_bottom2 animation2 "></div>' +
+                    '</div>' +
+                    '</div>';
+                var markericon2 = '' +
+                    '<div>' +
+                    '<div class="zhengchang">  ' +
+                    '<div class="circle">' +
+                    '<img src="../../images/bftb.png">' +
+                    '</div> ' +
+                    '<div class="circle_bottom animation "></div>' +
+                    '<div class="circle_bottom2 animation2 "></div>' +
+                    '</div>' +
+                    '</div>';
+                var markericon3 = '' +
+                    '<div>' +
+                    '<div class="xiaxian">  ' +
+                    '<div class="circle">' +
+                    '<img src="../../images/bftb.png">' +
+                    '</div> ' +
+                    '<div class="circle_bottom animation "></div>' +
+                    '<div class="circle_bottom2 animation2 "></div>' +
+                    '</div>' +
+                    '</div>';
+                $.post("/Sws/Map/QueryTableData", { typecheck: checkedType(), stationName: $("#stationName").val() }, function (data) {
+                    map.remove(markers);
+                    if (markers.length > 0) {
+                        for (var i = 0; i < markers.length; i++) {
+                            clusters.removeMarker(markers[i]);
+                            map.remove(markers[i]);
+                        }
+                    }
+                    markers = [];
+                    for (var i = 0; i < data.dataTable.length; i++) {
+                        if (data.dataTable[i].state == "故障") {
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon1
+                            });
+                        } else if (data.dataTable[i].state == "正常") {
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon2
+                            });
+                        } else {
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon3
+                            });
+                        }
+
+                        marker.id = data.dataTable[i].stationID;
+                        markers.push(marker);
+                    }
+
+
+                    $.post("/Sws/Map/QueryZTableData", { typecheck: checkedType(), stationName: $("#stationName").val() }, function (data1) {
+                        for (var i = 0; i < data1.dataTable.length; i++) {
+                            if (data1.dataTable[i].state == "故障") {
+                                marker = new AMap.Marker({
+                                    position: [data1.dataTable[i].lng, data1.dataTable[i].lat],
+                                    name: data1.dataTable[i].stationName,
+                                    content: markericon1
+
+                                });
+                            } else if (data1.dataTable[i].state == "正常") {
+                                marker = new AMap.Marker({
+                                    position: [data1.dataTable[i].lng, data1.dataTable[i].lat],
+                                    name: data1.dataTable[i].stationName,
+                                    content: markericon2
+
+                                });
+                            } else {
+                                marker = new AMap.Marker({
+                                    position: [data1.dataTable[i].lng, data1.dataTable[i].lat],
+                                    name: data1.dataTable[i].stationName,
+                                    content: markericon3
+
+                                });
+                            }
+                            marker.id = data1.dataTable[i].stationID;
+                            markers.push(marker);
+                        }
+                        var count = markers.length;
+                        var _renderClusterMarker = function (context) {
+                            var factor = Math.pow(context.count / count, 1 / 18)
+                            var div = document.createElement('div');
+                            var Hue = 180 - factor * 180;
+                            var bgColor = 'hsla(' + Hue + ',100%,50%,0.7)';
+                            var fontColor = 'hsla(' + Hue + ',100%,20%,1)';
+                            var borderColor = 'hsla(' + Hue + ',100%,40%,1)';
+                            var shadowColor = 'hsla(' + Hue + ',100%,50%,1)';
+                            div.style.backgroundColor = bgColor
+                            var size = Math.round(30 + Math.pow(context.count / count, 1 / 5) * 20);
+                            div.style.width = div.style.height = size + 'px';
+                            div.style.border = 'solid 1px ' + borderColor;
+                            div.style.borderRadius = size / 2 + 'px';
+                            div.style.boxShadow = '0 0 1px ' + shadowColor;
+                            div.innerHTML = context.count;
+                            div.style.lineHeight = size + 'px';
+                            div.style.color = fontColor;
+                            div.style.fontSize = '14px';
+                            div.style.textAlign = 'center';
+                            context.marker.setOffset(new AMap.Pixel(-size / 2, -size / 2));
+                            context.marker.setContent(div)
+                        }
+                        map.plugin('AMap.MarkerClusterer', function () {
+                            clusters = new AMap.MarkerClusterer(map, markers, {
+                                gridSize: 80,
+                                renderClusterMarker: _renderClusterMarker,
+                                maxZoom: 10
+                            });
+                        });
+                    })
+                })
+
+
+            }
+        }
+        function LoadZoomData(zoomlevel) {
+            $.post("/Sws/Map/QueryTableData", { typecheck: checkedType(), stationName: $("#stationName").val() }, function (data) {
+                //map.remove(markers);
+                if (markers.length > 0) {
+                    for (var i = 0; i < markers.length; i++) {
+                        clusters.removeMarker(markers[i]);
+                        map.remove(markers[i]);
+                    }
+                }
+                markers = [];
+                for (var i = 0; i < data.dataTable.length; i++) {
+                    if (zoomlevel == 11) {
+                        //var marker;
+                        if (data.dataTable[i].state == "故障") {
+                            var markericon1 = '' +
+                                '<div>' +
+                                '<div class="round">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon1
+
+                            });
+                        } else if (data.dataTable[i].state == "正常") {
+                            var markericon2 = '' +
+                                '<div>' +
+                                '<div class="zhengchang">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon2
+
+                            });
+                        } else {
+                            var markericon3 = '' +
+                                '<div>' +
+                                '<div class="xiaxian">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon3
+
+                            });
+                        }
+
+                        marker.id = data.dataTable[i].stationID;
+                        marker.on('mouseover', function (e) {
+                            var id = this.id;
+                            LoadStationJkData(id, e);
+                        })
+                        marker.on('mouseout', function (e) {
+                            var id = this.id;
+                            map.clearInfoWindow();
+                        })
+                        map.add(marker);
+                        markers.push(marker);
+                    }
+                    else if (zoomlevel == 12) {
+                        //var marker;
+                        var markericon4 = '' +
+                            //报警 替换下面bgGreen 为 bgRed
+                            '<div class="mapiconbox overflow  clearfloat bgGreen zlwdb">' +
+                            '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p class="left">出瞬流 0.70</p>' +
+                            '</div>';
+
+                        if (data.dataTable[i].state == "故障") {
+                            markericon4 = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow  clearfloat  bgRed zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p>出瞬流 ' + data.dataTable[i].allInFlow + '</p>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon4
+
+                            });
+                        } else if (data.dataTable[i].state == "正常") {
+                            markericon4 = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow clearfloat bgGreen zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p>出瞬流 ' + data.dataTable[i].allInFlow + '</p>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon4
+
+                            });
+                        } else {
+                            markericon4 = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow clearfloat bgGray zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p>出瞬流 ' + data.dataTable[i].allInFlow + '</p>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon4
+
+                            });
+                        }
+                        marker.id = data.dataTable[i].stationID;
+                        marker.on('mouseover', function (e) {
+                            var id = this.id;
+                            LoadStationJkData(id, e);
+                        })
+                        marker.on('mouseout', function (e) {
+                            var id = this.id;
+                            map.clearInfoWindow();
+                        })
+                        map.add(marker);
+                        markers.push(marker);
+                    }
+                    else if (zoomlevel > 12) {
+                        var markerContent = '';
+                        if (data.dataTable[i].state == "故障") {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang red"></i><p class="mt5px">二供泵房</p></div>';
+
+                        } else if (data.dataTable[i].state == "正常") {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang green"></i><p class="mt5px">二供泵房</p></div>';
+                        } else {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang gray"></i><p class="mt5px">二供泵房</p></div>';
+                        }
+                        markerContent += '<div class="makercon-right">';
+                        markerContent += '<p class="f16px fb ellipsis1">' + data.dataTable[i].stationName + '</p>';
+                        markerContent += '<div class="green f16px fb tb-f">';
+                        var szstr = '';//各区数值
+                        var fqstr = '<div class="tb-f f12px">';//各区名称
+                        if (data.dataTable[i].deviceJKs.length > 0) {
+                            for (var j = 0; j < data.dataTable[i].deviceJKs.length; j++) {
+                                if (data.dataTable[i].deviceJKs[j].pressOut.Value == true) {
+                                    szstr += '<span class="red">' + data.dataTable[i].deviceJKs[j].pressOut.Key + '</span>'
+                                } else {
+                                    szstr += '<span>' + data.dataTable[i].deviceJKs[j].pressOut.Key + '</span>'
+                                }
+                                if (data.dataTable[i].deviceJKs[j].partition == 1) {
+                                    fqstr += '<span>低区</span>'
+                                } else if (data.dataTable[i].deviceJKs[j].partition == 2) {
+                                    fqstr += '<span>中区</span>'
+                                }
+                                else if (data.dataTable[i].deviceJKs[j].partition == 3) {
+                                    fqstr += '<span>高区</span>'
+                                }
+                                else if (data.dataTable[i].deviceJKs[j].partition == 4) {
+                                    fqstr += '<span>超高区</span>'
+                                }
+                            }
+                            fqstr += '</div>';
+                            szstr += '</div>';
+                            markerContent += szstr + fqstr;
+                        }
+                        markerContent += '</div></div><div class="sj">'
+                        //设置宽度
+                        var div = document.createElement('div');
+                        if (data.dataTable[i].deviceJKs.length == 1) {
+                            div.style.width = (data.dataTable[i].deviceJKs.length * 50 + 200) + 'px';
+                        }
+                        else if (data.dataTable[i].deviceJKs.length == 0) {
+                            div.style.width = '300px';
+                        }
+                        else {
+                            div.style.width = (data.dataTable[i].deviceJKs.length * 50 + 125) + 'px';
+                        }
+                        div.setAttribute("class", "makercon overflow pad10px");
+
+                        div.innerHTML = markerContent;
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            name: data.dataTable[i].stationName,
+                            content: div,
+                            offset: new AMap.Pixel(-135, -100), //相对于基点的偏移位置
+                        });
+                        marker.id = data.dataTable[i].stationID;
+                        marker.on('mouseover', function (e) {
+                            var id = this.id;
+                            LoadStationJkData(id, e);
+                        })
+                        marker.on('mouseout', function (e) {
+                            var id = this.id;
+                            map.clearInfoWindow();
+                        })
+                        map.add(marker);
+                        markers.push(marker);
+                    }
+                    else if (zoomlevel < 10) {
+
+                    }
+                }
+                LoadZZoomData(map.getZoom());
+            })
+
+        }
+        //弹出框数据加载
+        function LoadStationJkData(id, e) {
+            $.post("/Sws/Map/LoadDataByStationID", { id: id }, function (data) {
+                if (data != null) {
+                    var clore = '';
+                    if (data.jk.state == "故障") {
+                        clore = 'red';
+                    } else if (data.jk.state == "正常") {
+                        clore = 'green';
+                    } else {
+                        clore = 'gray';
+                    }
+                    var table = '<div class="makercon overflow clearfloat pad10px">';
+                    table += '<div class="maptitle"><i class="iconfont f24px icon-bengfang ' + clore + '"></i><p><span class="fb f16px">' + data.jk.stationName + '</span></p></div>';
+
+                    table += '<ul class="maplist">';
+                    table += '<li class="maplistnr1" ><span>分区</span><span>进水压力</span><span>出水压力</span><span>出水瞬时</span></li>';
+                    if (data.jk.deviceJKs.length > 0) {
+                        for (var i = 0; i < data.jk.deviceJKs.length; i++) {
+                            var pin = data.jk.deviceJKs[i].pressIN;
+                            var pout = data.jk.deviceJKs[i].pressOut;
+                            if (data.jk.deviceJKs[i].partition == "1") {
+                                table += '<li><span>低区</span>';
+                            } else if (data.jk.deviceJKs[i].partition == "2") {
+                                table += '<li><span>中区</span>';
+                            }
+                            else if (data.jk.deviceJKs[i].partition == "3") {
+                                table += '<li><span>高区</span>';
+                            }
+                            else if (data.jk.deviceJKs[i].partition == "4") {
+                                table += '<li><span>超高区</span>';
+                            }
+                            if (pin.Value == true) {
+                                table += '<span class="red">' + pin.Key + '</span>'
+                            } else {
+                                table += '<span>' + pin.Key + '</span>'
+                            }
+                            if (pout.Value == true) {
+                                table += '<span class="red">' + pout.Key + '</span>'
+                            } else {
+                                table += '<span>' + pout.Key + '</span>'
+                            }
+                            table += '<span>' + data.jk.deviceJKs[i].inflow + '</span>'
+                            table += '</li>'
+                        }
+                    }
+                    table += '</ul><div class="sj"></div>';
+                    infoWindow = new AMap.InfoWindow({
+                        content: table  //使用默认信息窗体框样式，显示信息内容e.target.getPosition()
+                    });
+                    //infoWindow.open(map, [data.jk.lng, data.jk.lat]);
+                    infoWindow.open(map, e.target.getPosition());
+                }
+            })
+        }
+        //===================直饮水数据加载===================//
+        function LoadZPumState() {
+            $.post("/Sws/Map/QueryZTableData", { typecheck: checkedType(), stationName: "" }, function (data) {
+                var html = "";
+                for (var i = 0; i < data.dataTable.length; i++) {
+                    html += '<div class="data_layersan_item clearfloat">'
+                    if (data.dataTable[i].state == "故障") {
+                        html += '<span class="chaochu"><i class="hs"></i>' + data.dataTable[i].stationName + '</span>'
+                    } else if (data.dataTable[i].state == "正常") {
+                        html += '<span class="chaochu"><i></i>' + data.dataTable[i].stationName + '</span>'
+                    } else {
+                        html += '<span class="chaochu"><i class="huis"></i>' + data.dataTable[i].stationName + '</span>'
+                    }
+                    html += '<span>' + data.dataTable[i].updateTime + '</span>'
+                    //html += '<span><a href="javascript:void(0);" onClick="window.top.homeAddTab("sta' + data.dataTable[i].stationID + ',"' + data.dataTable[i].stationName + '","/Sws/Sws_Detail/Index/' + data.dataTable[i].stationID + '");">详情</a></span>';
+                    html += "<span><a href='javascript:void(0);' onClick=" + '"' + "window.top.homeAddTab('sta" + data.dataTable[i].stationID + "','" + data.dataTable[i].stationName + "','/Sws/Sws_Detail/Index/" + data.dataTable[i].stationID + "')" + '"' + "'>详情</a></span> </div>"
+                    html += ' </div>'
+                    if (data.dataTable[i].state == "故障") {
+                        var markericon1 = '' +
+                            '<div>' +
+                            '<div class="round">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            name: data.dataTable[i].stationName,
+                            content: markericon1,
+                            offset: new AMap.Pixel(-100, -40),
+
+                        });
+                    } else if (data.dataTable[i].state == "正常") {
+                        var markericon2 = '' +
+                            '<div>' +
+                            '<div class="zhengchang">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            name: data.dataTable[i].stationName,
+                            content: markericon2
+
+                        });
+                    } else {
+                        var markericon3 = '' +
+                            '<div>' +
+                            '<div class="xiaxian">  ' +
+                            '<div class="circle">' +
+                            '<img src="../../images/bftb.png">' +
+                            '</div> ' +
+                            '<div class="circle_bottom animation "></div>' +
+                            '<div class="circle_bottom2 animation2 "></div>' +
+                            '</div>' +
+                            '</div>';
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            name: data.dataTable[i].stationName,
+                            content: markericon3
+
+                        });
+                    }
+
+                    marker.id = data.dataTable[i].stationID;
+                    marker.on('mouseover', function (e) {
+                        var id = this.id;
+                        LoadZStationJkData(id, e);
+                    })
+                    marker.on('mouseout', function (e) {
+                        var id = this.id;
+                        map.clearInfoWindow();
+                    })
+                    map.add(marker);
+                    markers.push(marker);
+                }
+                $("#zstationData").append(html);
+            })
+        }
+        function LoadZZoomData(zoomlevel) {
+            $.post("/Sws/Map/QueryZTableData", { typecheck: checkedType(), stationName: $("#stationName").val() }, function (data) {
+                for (var i = 0; i < data.dataTable.length; i++) {
+                    if (zoomlevel == 11) {
+                        if (data.dataTable[i].state == "故障") {
+                            var markericon1 = '' +
+                                '<div>' +
+                                '<div class="round">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon1,
+                                //offset: new AMap.Pixel(-100, -40), //相对于基点的偏移位置
+
+                            });
+                        } else if (data.dataTable[i].state == "正常") {
+                            var markericon2 = '' +
+                                '<div>' +
+                                '<div class="zhengchang">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon2,
+                                //offset: new AMap.Pixel(-100, -40), //相对于基点的偏移位置
+
+                            });
+                        } else {
+                            var markericon3 = '' +
+                                '<div>' +
+                                '<div class="xiaxian">  ' +
+                                '<div class="circle">' +
+                                '<img src="../../images/bftb.png">' +
+                                '</div> ' +
+                                '<div class="circle_bottom animation "></div>' +
+                                '<div class="circle_bottom2 animation2 "></div>' +
+                                '</div>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon3,
+                                //offset: new AMap.Pixel(-100, -40), //相对于基点的偏移位置
+
+                            });
+                        }
+                        marker.id = data.dataTable[i].stationID;
+                        marker.on('mouseover', function (e) {
+                            var id = this.id;
+                            LoadZStationJkData(id, e);
+                        })
+                        marker.on('mouseout', function (e) {
+                            var id = this.id;
+                            map.clearInfoWindow();
+                        })
+                        map.add(marker);
+                        markers.push(marker);
+                    }
+                    else if (zoomlevel == 12) {
+                        //var marker;
+                        var markericon4 = '' +
+                            //报警 替换下面bgGreen 为 bgRed
+                            '<div class="mapiconbox overflow clearfloat bgGreen zlwdb">' +
+                            '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p>净出压 0.70</p>' +
+                            '</div>';
+
+                        if (data.dataTable[i].state == "故障") {
+                            markericon4 = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow  clearfloat bgRed zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p> ' + data.dataTable[i].stationName + '</p>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon4,
+                                //offset: new AMap.Pixel(-100, -40), //相对于基点的偏移位置
+
+                            });
+                        } else if (data.dataTable[i].state == "正常") {
+                            markericon4 = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow clearfloat bgGreen zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p> ' + data.dataTable[i].stationName + '</p>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon4,
+                                //offset: new AMap.Pixel(-100, -40), //相对于基点的偏移位置
+
+                            });
+                        } else {
+                            markericon4 = '' +
+                                //报警 替换下面bgGreen 为 bgRed
+                                '<div class="mapiconbox overflow clearfloat bgGray zlwdb">' +
+                                '<span class="left"><i class="iconfont f18px icon-bengfang white pl5px pr5px"></i></span><p> ' + data.dataTable[i].stationName + '</p>' +
+                                '</div>';
+                            marker = new AMap.Marker({
+                                position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                                name: data.dataTable[i].stationName,
+                                content: markericon4,
+                                //offset: new AMap.Pixel(-100, -40), //相对于基点的偏移位置
+                            });
+                        }
+                        marker.id = data.dataTable[i].stationID;
+                        marker.on('mouseover', function (e) {
+                            var id = this.id;
+                            LoadZStationJkData(id, e);
+                        })
+                        marker.on('mouseout', function (e) {
+                            var id = this.id;
+                            map.clearInfoWindow();
+                        })
+                        map.add(marker);
+                        markers.push(marker);
+                    }
+                    else if (zoomlevel > 12) {
+                        var markerContent = '';
+                        if (data.dataTable[i].state == "故障") {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang red"></i><p class="mt5px">直饮水泵房</p></div>';
+
+                        } else if (data.dataTable[i].state == "正常") {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang green"></i><p class="mt5px">直饮水泵房</p></div>';
+                        } else {
+                            markerContent += '<div class="textCenter makercon-left"><i class="iconfont f24px icon-bengfang gray"></i><p class="mt5px">直饮水泵房</p></div>';
+                        }
+                        markerContent += '<div class="makercon-right">';
+                        markerContent += '<p class="f16px fb ellipsis1">' + data.dataTable[i].stationName + '</p>';
+                        markerContent += '<div class="green f16px fb tb-f">';
+                        var szstr = '';//各区数值
+                        var fqstr = '<div class="tb-f f12px">';//各区名称
+                        if (data.dataTable[i].deviceJKs.length > 0) {
+                            for (var j = 0; j < data.dataTable[i].deviceJKs.length; j++) {
+                                if (data.dataTable[i].deviceJKs[j].jPressOut.Value == true) {
+                                    szstr += '<span class="red">' + data.dataTable[i].deviceJKs[j].jPressOut.Key + '</span>'
+                                } else {
+                                    szstr += '<span>' + data.dataTable[i].deviceJKs[j].jPressOut.Key + '</span>'
+                                }
+                                if (data.dataTable[i].deviceJKs[j].partition == 1) {
+                                    fqstr += '<span>低区</span>'
+                                } else if (data.dataTable[i].deviceJKs[j].partition == 2) {
+                                    fqstr += '<span>中区</span>'
+                                }
+                                else if (data.dataTable[i].deviceJKs[j].partition == 3) {
+                                    fqstr += '<span>高区</span>'
+                                }
+                                else if (data.dataTable[i].deviceJKs[j].partition == 4) {
+                                    fqstr += '<span>超高区</span>'
+                                }
+                            }
+                            fqstr += '</div>';
+                            szstr += '</div>';
+                            markerContent += szstr + fqstr;
+                        }
+                        markerContent += '</div></div><div class="sj">'
+                        //设置宽度
+                        var div = document.createElement('div');
+                        if (data.dataTable[i].deviceJKs.length == 1) {
+                            div.style.width = (data.dataTable[i].deviceJKs.length * 50 + 200) + 'px';
+                        }
+                        else if (data.dataTable[i].deviceJKs.length == 0) {
+                            div.style.width = '300px';
+                        }
+                        else {
+                            div.style.width = (data.dataTable[i].deviceJKs.length * 50 + 125) + 'px';
+                        }
+                        div.setAttribute("class", "makercon overflow pad10px");
+
+                        div.innerHTML = markerContent;
+                        marker = new AMap.Marker({
+                            position: [data.dataTable[i].lng, data.dataTable[i].lat],
+                            name: data.dataTable[i].stationName,
+                            content: div,
+                            offset: new AMap.Pixel(-130, -80), //相对于基点的偏移位置
+                        });
+                        marker.id = data.dataTable[i].stationID;
+                        marker.on('mouseover', function (e) {
+                            var id = this.id;
+                            LoadZStationJkData(id, e);
+                        })
+                        marker.on('mouseout', function (e) {
+                            var id = this.id;
+                            map.clearInfoWindow();
+                        })
+                        map.add(marker);
+                        markers.push(marker);
+                    }
+                    else if (zoomlevel < 10) {
+
+                    }
+                }
+            })
+        }
+        //弹出框数据加载
+        function LoadZStationJkData(id, e) {
+            $.post("/Sws/Map/LoadDataByZStationID", { id: id }, function (data) {
+                if (data != null) {
+                    var clore = '';
+                    if (data.jk.state == "故障") {
+                        clore = 'red';
+                    } else if (data.jk.state == "正常") {
+                        clore = 'green';
+                    } else {
+                        clore = 'gray';
+                    }
+                    var table = '<div class="makercon overflow pad10px">';
+                    table += '<div class="maptitle"><i class="iconfont f24px icon-bengfang ' + clore + '"></i><p><span class="fb f16px">' + data.jk.stationName + '</span></p></div>';
+
+                    table += '<ul class="maplist">';
+                    table += '<li><span>分区</span><span>PH</span><span>浊度</span><span>余氯</span></li>';
+                    if (data.jk.deviceJKs.length > 0) {
+                        for (var i = 0; i < data.jk.deviceJKs.length; i++) {
+                            if (data.jk.deviceJKs[i].partition == "1") {
+                                table += '<li><span>低区</span>';
+                            } else if (data.jk.deviceJKs[i].partition == "2") {
+                                table += '<li><span>中区</span>';
+                            }
+                            else if (data.jk.deviceJKs[i].partition == "3") {
+                                table += '<li><span>高区</span>';
+                            }
+                            else if (data.jk.deviceJKs[i].partition == "4") {
+                                table += '<li><span>超高区</span>';
+                            }
+                            table += '<span>' + data.jk.deviceJKs[i].ph + '</span>'
+                            table += '<span>' + data.jk.deviceJKs[i].turbidity + '</span>'
+                            table += '<span>' + data.jk.deviceJKs[i].cl + '</span>'
+                            table += '</li>'
+                        }
+                    }
+                    table += '</ul><div class="sj"></div>';
+                    infoWindow = new AMap.InfoWindow({
+                        content: table  //使用默认信息窗体框样式，显示信息内容
+                    });
+                    //infoWindow.open(map, [data.jk.lng, data.jk.lat]);
+                    infoWindow.open(map, e.target.getPosition());
+                }
+            })
+        }
+    </script>
+</body>
+</html>

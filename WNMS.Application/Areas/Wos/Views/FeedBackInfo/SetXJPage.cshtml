@@ -1,0 +1,765 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+@model GdInspection
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SetXJPage</title>
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <link href="~/lib/ztree/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/lib/ztree/jquery.ztree.core-3.5.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.excheck-3.5.js"></script>
+    <style>
+        .star {
+            font-size: 25px;
+            color: red;
+            position: absolute;
+            top: -4px;
+            left: 60px
+        }
+
+        .form-group {
+            position: relative
+        }
+
+
+
+        .zlw_gs label {
+            /*line-height: 35px;*/
+            margin-bottom: 2px;
+        }
+
+            .zlw_gs label span {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                padding-top: 5px;
+                float: left;
+                margin-left: 5px;
+            }
+
+            .zlw_gs label i {
+                display: inline-block;
+                line-height: 35px;
+                height: 35px;
+                box-sizing: border-box;
+                float: left;
+                font-weight: bold;
+            }
+               .z-indx .col-sm-6 {
+            position: relative;
+            z-index: 1
+        }
+        .rowself {
+            background-color: #eee;
+            line-height: 30px;
+            margin-left:-20px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="xiugai" style="padding:20px 30px">
+        <form action="/Wos/FeedBackInfo/SetXJInfo" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun" id="MFForm">
+            <div class="box-body zlw_gs">
+                <div class="rowself">
+                    <span style="vertical-align: middle;padding-left: 10px;">基本信息</span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group relative">
+                                    <label>泵房名称 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="button" class="form-control" id="StationName" name="StationName" value="@ViewBag.StationName" autocomplete="off">
+                                        <input type="hidden" class="form-control" id="StationId" name="StationId" value="@Model.StationId">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group relative">
+                                    <label>巡检编号 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="hidden" class="form-control" id="Edite_Num" name="Edite_Num" value="@Model.Num">
+                                        <input type="text" class="form-control" id="Num" name="Num" value="@Model.Num" autocomplete="off">
+                                        <div class="treeslide opacity0">
+                                            <div id="treeXJNum" class="ztree">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group relative">
+                                    <label>巡检人员 <em class="star">*</em></label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <input type="text" class="form-control" id="InspectionUserName" name="InspectionUserName" value="@ViewBag.inspectUserName" autocomplete="off">
+                                        <input type="hidden" class="form-control" id="InspectionUser" name="InspectionUser" value="@Model.InspectionUser" autocomplete="off">
+                                        <div class="treeslide opacity0">
+                                            <div id="treeXJUser" class="ztree">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+                <div class="rowself">
+                    <span style="vertical-align: middle;padding-left: 10px;">泵房信息</span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group relative">
+                                    <label>门禁状态 </label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="DoorState" name="DoorState">
+                                            @{
+                                                var stateList = ViewBag.stateList as IEnumerable<SysDataItemDetail>;
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.DoorState == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>渗透状态</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="Penetration" name="Penetration">
+                                            @{
+
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.Penetration == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group relative">
+                                    <label>噪音状态 </label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="Noise" name="Noise">
+                                            @{
+
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.Noise == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group relative">
+                                    <label>温度状态 </label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="Temperature" name="Temperature">
+                                            @{
+
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.Temperature == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>卫生状态</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="Health" name="Health">
+                                            @{
+                                                var healthstate = ViewBag.healthSate as IEnumerable<SysDataItemDetail>;
+                                                foreach (var item in healthstate)
+                                                {
+                                                    if (Model != null && Model.Health == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+                <div class="rowself">
+                    <span style="vertical-align: middle;padding-left: 10px;">设备信息</span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group relative">
+                                    <label>泵运行状态 </label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="PumpState" name="PumpState">
+                                            @{
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.PumpState == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>控制柜状态</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="ControlCabinet" name="ControlCabinet">
+                                            @{
+
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.ControlCabinet == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group relative">
+                                    <label>管道状态 </label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="PipeState" name="PipeState">
+                                            @{
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.PipeState == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>阀件状态</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="ValveParts" name="ValveParts">
+                                            @{
+
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.ValveParts == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group relative">
+                                    <label>进出水压力状态 </label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="Pressure" name="Pressure">
+                                            @{
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.Pressure == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>电流状态</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="Electricity" name="Electricity">
+                                            @{
+
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.Electricity == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group relative">
+                                    <label>电量状态 </label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="ElectricQuantity" name="ElectricQuantity">
+                                            @{
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.ElectricQuantity == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>电压状态</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="Voltage" name="Voltage">
+                                            @{
+
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.Voltage == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group relative">
+                                    <label>频率状态 </label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="Frequency" name="Frequency">
+                                            @{
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.Frequency == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                          
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>液位状态</label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil-square-o"></i>
+                                        </div>
+                                        <select class="form-control" id="LiquidLevel" name="LiquidLevel">
+                                            @{
+
+                                                foreach (var item in stateList)
+                                                {
+                                                    if (Model != null && Model.Voltage == int.Parse(item.ItemValue))
+                                                    {
+                                                        <option value="@item.ItemValue" selected="selected">@item.ItemName</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.ItemValue">@item.ItemName</option>
+                                                    }
+                                                }
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rowself">
+                    <span style="vertical-align: middle;padding-left: 10px;">反馈信息</span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 z-indx">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="FeedbackMsg">反馈信息</label>
+                                    <textarea id="FeedbackMsg" name="FeedbackMsg" rows="2" cols="20" class="form-control">@Model.FeedbackMsg</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script type="text/javascript">
+          var setting_Num = {
+            data:{
+                simpleData: {
+                    enable: true
+                    
+                }
+            },callback:{
+                onClick: zTreeOnClick_Num
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: false
+                
+            }
+        };
+        var zNodes_Num;
+        var treeObj_Num;
+
+        var setting_User = {
+            check: {
+		      enable: true,
+                   chkStyle: "radio",
+                radioType: "all"
+	        },
+			data: {
+				simpleData: {
+					enable: true
+				}
+            }
+            , callback: {
+                onCheck: zTreeOnCheck_User
+            },view: {
+                showTitle:false,
+                showLine: true,
+                nameIsHTML: false
+                
+            }
+        };
+        var zNodes_User = @ViewBag.treenodes;
+        var treeObj_User;
+        $(function () {
+            $(".treeslide").click(function (e) {
+                e.stopPropagation();
+            })
+
+            $(document).click(function () {
+                $(".treeslide").addClass("opacity0").css("z-index", "99");;
+            })
+            treeObj_User = $.fn.zTree.init($("#treeXJUser"), setting_User, zNodes_User);
+            if (@Model.InspectionId!= 0) {//编辑页面
+                $("#StationName").attr("disabled", "disabled");
+                $("#Num").attr("disabled","disabled");
+            }
+            validateForm();
+        })
+        function zTreeOnClick_Num(event, treeId, treeNode) {
+            $("#Num").val(treeNode.name);
+        }
+        function zTreeOnCheck_User(event, treeId, treeNode) {
+            if (treeNode.checked == true) {
+                $("#InspectionUserName").val(treeNode.name);
+                $("#InspectionUser").val(treeNode.iddata);
+            }
+            else {
+                 treeNode.checked == true
+                 treeObj_User.checkNode(treeNode, true, true);
+            }
+        }
+        $("#InspectionUserName").click(function (e) {
+
+             $(this).siblings(".treeslide").removeClass("opacity0").parents(".col-sm-6").css("z-index", "1000");
+               e.stopPropagation();
+
+             //var pid = $("#Pid").val();
+             //if (pid != 0) {
+             //    var node = treeObj.getNodeByParam("id", pid, null);
+             //    treeObj.selectNode(node);
+             //}
+         });
+        $("#StationName").click(function () {
+              parent.iframeWithBtns("泵房选择", "80%", "70%", "/Wos/FeedBackInfo/SelectStationInfo", false, function (formIndex, formLayer) {
+                    var currentIframe =parent.window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm1(function (stationid,stationname) {
+                        $("#StationId").val(stationid);
+                        $("#StationName").val(stationname);
+                        $("#Edite_Num").val("");
+                        $("#Num").val("");
+                        parent.layer.close(formIndex);
+                        if ($('#StationName-error').length > 0) {
+
+                            $('#StationName-error').css("display", "none");
+                            $('#StationName').removeClass("error");
+                        }
+                       
+                    });
+                });
+        })
+        $("#Num").click(function (e) {
+            if ($("#StationName").val() == "") {
+                layer.msg("请先选择泵房");
+            }
+            else {
+                $.post("/Wos/FeedBackInfo/GetXJNumListByStationid", { id: $("#StationId").val() }, function (res) {
+                    zNodes_Num = JSON.parse(res);
+                    treeObj_Num = $.fn.zTree.init($("#treeXJNum"), setting_Num, zNodes_Num);   //重新初始化树
+                    $("#Num").siblings(".treeslide").removeClass("opacity0").parents(".col-sm-6").css("z-index", "1000");
+                    e.stopPropagation();
+                })
+            }
+
+        })
+        function validateForm() {
+              $("#MFForm").validate({
+                 ignore: "",
+                 rules: {
+                     StationName: "required",
+                     Num:"required",
+                     InspectionUserName:"required"
+                },
+                messages: {
+                    StationName: "请选择泵房",
+                    Num: "请选择巡检编号",
+                    InspectionUserName:"请选择巡检人员"
+                }
+            });
+        }
+        var myfunc;
+        function saveForm(func) {
+            $("form").submit();
+            myfunc = func;
+        }
+        function _addFun(data) {
+            myfunc(data);
+        }
+    </script>
+</body>
+</html>

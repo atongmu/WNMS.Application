@@ -1,0 +1,5 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define("exports ../../../../chunks/_rollupPluginBabelHelpers ../../../../chunks/tslib.es6 ../../../../core/Accessor ../../../../core/accessorSupport/decorators/property ../../../../core/arrayUtils ../../../../core/has ../../../../core/accessorSupport/ensureType ../../../../core/accessorSupport/decorators/subclass".split(" "),function(a,f,b,g,h,l,m,n,k){a.SliceViewData=function(c){function d(){var e=c.apply(this,arguments)||this;e.plane=null;return e}f._inheritsLoose(d,c);return d}(g);b.__decorate([h.property()],
+a.SliceViewData.prototype,"plane",void 0);a.SliceViewData=b.__decorate([k.subclass("esri.views.3d.analysis.Slice.SliceViewData")],a.SliceViewData);Object.defineProperty(a,"__esModule",{value:!0})});

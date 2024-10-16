@@ -1,0 +1,143 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>更多数据</title>
+    <link href="~/css/AdminLTE.lite.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link href="~/css/zlw.css" rel="stylesheet" />
+    <link href="~/lib/webuploader/webuploader.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap-table.min.css">
+
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+    <!-- bootstrap -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <!--图片上传-->
+    <script src="~/lib/webuploader/webuploader.min.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+    <!-- Custom Tabs -->
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            @{
+                var parNmae = ViewBag.partitionName as List<string>;
+                for (var ie = 0; ie < parNmae.Count; ie++)
+                {
+                    var b = ie + 1;
+                    if (b == 1)
+                    {
+                        <li class="active"><a href="#tab_@b" data-toggle="tab">@parNmae[ie]</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="#tab_@b" data-toggle="tab">@parNmae[ie]</a></li>
+                    }
+
+
+
+                }
+            }
+        </ul>
+        <div class="tab-content" style="padding:20px 20px 0;height:100%">
+            @{
+                var datalist = ViewBag.data;
+                for (var i = 0; i < datalist.Count; i++)
+                {
+                    var a = i + 1;
+                    if (a == 1)
+                    {
+                        <div class="tab-pane active" id="tab_@a">
+                            <table class="table table-bordered table-hover">
+                                <thead style="background:#eee">
+                                    <tr>
+                                        <th>名称</th>
+                                        <th>值</th>
+                                        <th>单位</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (var j = 0; j < datalist[i].partitionDatdids.Count; j++)
+                                    {
+                                        <tr>
+                                            <td>@datalist[i].partitionDatdids[j].Cnname</td>
+                                            <td> @datalist[i].partitionDatdids[j].keyValue  </td>
+                                            <td>@datalist[i].partitionDatdids[j].Unit</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                            @*<ul>
+                                    <li> 名称   值   单位</li>
+                                    @for (var j = 0; j < datalist[i].partitionDatdids.Count; j++)
+                                    {
+                                        <li>@datalist[i].partitionDatdids[j].Cnname     @datalist[i].partitionDatdids[j].keyValue        @datalist[i].partitionDatdids[j].Unit  </li>
+                                    }
+                                </ul>*@
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="tab-pane" id="tab_@a" style="overflow:hidden">
+                            <table class="table table-bordered table-hover">
+                                <thead style="background:#eee">
+                                    <tr>
+                                        <th>名称</th>
+                                        <th>值</th>
+                                        <th>单位</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (var j = 0; j < datalist[i].partitionDatdids.Count; j++)
+                                    {
+                                        <tr>
+                                            <td>@datalist[i].partitionDatdids[j].Cnname</td>
+                                            <td> @datalist[i].partitionDatdids[j].keyValue  </td>
+                                            <td>@datalist[i].partitionDatdids[j].Unit</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                            @*<ul>
+                                    <li> 名称   值   单位</li>
+                                    @for (var j = 0; j < datalist[i].partitionDatdids.Count; j++)
+                                    {
+                                        <li>@datalist[i].partitionDatdids[j].Cnname     @datalist[i].partitionDatdids[j].keyValue        @datalist[i].partitionDatdids[j].Unit </li>
+                                    }
+                                </ul>*@
+                        </div>
+                    }
+
+                }
+            }
+        </div>
+    </div>
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/adminlte.lite.js"></script>
+    <script>
+
+    </script>
+</body>
+
+</html>

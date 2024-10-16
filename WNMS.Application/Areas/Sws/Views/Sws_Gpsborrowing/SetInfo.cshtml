@@ -1,0 +1,207 @@
+﻿
+@{
+    Layout = null;
+}
+@using WNMS.Model.DataModels;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>设备借出一览</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/zlw.css">
+    <link rel="stylesheet" href="~/css/hyl.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap-table.min.css">
+    @*<link href="~/css/AdminLTE.lite.css" rel="stylesheet" />*@
+    <link href="~/lib/jquery-validation/dist/validation.css" rel="stylesheet" />
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="~/css/anniu.css">
+    <!-- bootstrap -->
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-table.min.js"></script>
+    <script src="~/js/bootstrap-table-zh-CN.min.js"></script>
+    <!-- layer -->
+    <link href="~/lib/layer/layer.css" rel="stylesheet" />
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/My97DatePicker/WdatePicker.js"></script>
+
+</head>
+<body>
+    @model SwsGpsborrowing
+    <div style="padding:20px" class="xiugai">
+        <form id="FormGpsborrowing" class="" action="/Sws/Sws_Gpsborrowing/SetInfo" data-ajax="true" data-ajax-method="post" data-ajax-begin="validateForm" data-ajax-success="_addFun">
+            <div class="box-body">
+                <input name="id_M" for="id_M" value="@Model.Id" style="display:none;" />
+                <div class="">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="UserId">借用人</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-user"></i>
+                                            </div>
+                                            <select id="UserId" name="UserId" class="form-control">
+                                                <option value="">==请选择==</option>
+                                                @{
+                                                    IEnumerable<dynamic> userinfo = ViewBag.UserInfo as IEnumerable<dynamic>;
+                                                    foreach (var us in userinfo)
+                                                    {
+                                                        if (Model.UserId == us.UserID)
+                                                        {
+                                                            <option value="@us.UserID" selected="selected">@us.NickName</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@us.UserID">@us.NickName</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="SerialNumber">设备编号</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-globe"></i>
+                                            </div>
+                                            <select id="SerialNumber" name="SerialNumber" class="form-control">
+                                                <option value="">==请选择==</option>
+                                                @{
+                                                    IEnumerable<SwsGpsmodule> gpsInfo = ViewBag.GpsInfo as IEnumerable<SwsGpsmodule>;
+                                                    foreach (var gp in gpsInfo)
+                                                    {
+                                                        if (Model.SerialNumber == gp.GpSnumber)
+                                                        {
+                                                            <option value="@gp.GpSnumber" selected="selected">@gp.GpsName</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@gp.GpSnumber">@gp.GpsName</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="BorrowTime">借出时间</label>
+                                        <input id="BorrowTime" type="text" class="form-control" name="BorrowTime" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" value="@ViewBag.BorrowTime" placeholder="请选择借出时间">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="RemandTime">归还时间</label>
+                                        <div class="form-group ml15px">
+                                            <input id="RemandTime" type="text" class="form-control" name="RemandTime" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm:ss' })" value="@ViewBag.RemandTime" placeholder="请选择归还时间">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="Remark">备注</label>
+                                <div class="form-group ml15px">
+                                    <textarea id="Remark" style="height:180px" name="Remark" class="form-control" placeholder="">@Model.Remark</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <script>
+        var index = parent.layer.getFrameIndex(window.name);
+        $(function () {
+            validateForm();
+        });
+        function saveForm() { 
+            if ($("#BorrowTime").val() > $("#RemandTime").val()) { 
+                layer.msg("开始日期不能大于结束日期");
+                return;
+            } else {
+                $("form").submit();
+            }
+
+        }
+
+        function validateForm() {
+            $("#FormGpsborrowing").validate({
+                rules: {
+                    UserId: {
+                        required: true,
+                    },
+                    SerialNumber: {
+                        required: true,
+                    },
+                    BorrowTime: {
+                        required: true,
+                    },
+                    RemandTime: "required",
+                },
+                messages: {
+                    UserId: "请选择借用人",
+                    SerialNumber: "请选择借用设备",
+                    BorrowTime: {
+                        required: "请选择借用时间"
+                    },
+                    RemandTime: {
+                        required: "请选择归还时间"
+                    },
+                }
+            });
+        }
+        function _addFun(data) {
+            if (data == "ok") {
+                window.parent.refreshTable();
+                parent.layer.close(index);
+            } else {
+                layer.alert("提交失败！");
+            }
+        }
+
+
+        function iframe1(title, width, height, url, func) {
+            window.parent.layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+                    parent.window.frames[1].saveForm();
+                    //$(parent.$('iframe')[1]).saveForm();
+                },
+                cancel: function (index) {
+                }
+            })
+        };
+    </script>
+</body>
+</html>

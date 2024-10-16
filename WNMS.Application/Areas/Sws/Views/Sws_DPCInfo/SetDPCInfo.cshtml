@@ -1,0 +1,481 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/lib/EasyUI/easyui.css" rel="stylesheet" />
+    <!-- 树 -->
+    <link href="~/lib/ztree/diy/zTreeStyle01.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.12.4.min.js"></script>
+    <script src="~/lib/ztree/jquery.ztree.all.min.js"></script>
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/lib/EasyUI/jquery.easyui.min.js"></script>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        section {
+            width: 100%;
+            padding: 0px;
+            margin: 0px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+            section > div {
+                margin-top: 10px;
+            }
+
+        .ztree li span.button {
+            width: 16px;
+            height: 16px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .ztree li span.button.add {
+            margin-left: 2px;
+            margin-right: -1px;
+            background-position: -144px 0;
+            vertical-align: top;
+            *vertical-align: middle
+        }
+
+        .datagrid-group {
+            display: none;
+        }
+
+        #rtutext {
+            border: 1px solid rgb(224, 236, 255);
+            width: 350px;
+            display: none;
+            font-size: 10px;
+            clear: both;
+        }
+
+        #treeDemo li span {
+            line-height: 16px;
+            line-height: 20px;
+            margin-right: 2px;
+            color: #333;
+        }
+    </style>
+    <script type="text/javascript">
+        var EquipmentID = '@ViewBag.id';
+
+        var initAna = {
+            "total": 17, "rows": [{ "name": "StartIndex", "value": "0", "group": "属性", "editor": "numberbox" },
+                { "name": "Length", "value": "0", "group": "属性", "editor": "numberbox" },
+                { "name": "Mode", "value": "0", "group": "属性", "editor": "numberbox"},
+                { "name": "Value", "value": "0", "group": "属性", "editor": "numberbox" },
+                { "name": "DigitsNumber", "value": "0", "group": "属性", "editor": "numberbox" },
+                { "name": "DataProcessMode", "value": "0", "group": "属性", "editor": "numberbox" },
+                { "name": "Range", "value": "0", "group ": "属性", "editor": "numberbox" },
+                { "name": "IsValidValueArea", "value": "False", "group": "属性", "editor": { "type": "combobox", "options": { "data": [{ "value": "True", "text": "True" }, { "value": "False", "text": "False" }], "panelHeight": "auto" } } },
+                { "name": "HighestLimit", "value": "0", "group": "属性", "editor": "numberbox" },
+                { "name": "HighLimit", "value": "0", "group": "属性", "editor": "numberbox" },
+                { "name": "LowestLimit", "value": "0", "group": "属性", "editor": "numberbox" },
+                { "name": "LowLimit", "value": "0 ", "group": "属性", "editor": "numberbox" },
+                { "name": "Address", "value": "-1", "group": "属性", "editor": "numberbox" },
+                { "name": "Key", "value": "0", "group": "属性", "editor": "text" },
+                { "name": "Enable", "value": "True", "group": "属性", "editor": { "type": "combobox", "options": { "data": [{ "value": "True", "text": "True" }, { "value": "False", "text": "False" }], "panelHeight": "auto" } } },
+                { "name": "EventLevel", "value": "0", "group": "属性", "editor": "numberbox" },
+                { "name": "Name", "value": "", "group": "属性", "editor": "text" }]
+        };
+
+        var initDig = {
+            "total": 13,
+            "rows": [{"name": "DataIndex","value": "0","group": "属性","editor": "numberbox"
+            }, { "name": "DigitalIndex", "value": "0", "group": "属性", "editor": "numberbox" },
+            { "name": "Trigger", "value": "True", "group": "属性", "editor": { "type": "combobox", "options": { "data": [{ "value": "True", "text": "True" }, { "value": "False", "text": "False" }], "panelHeight": "auto" } } },
+            {
+                "name": "NeedShow",
+                "value": "False",
+                "group": "属性",
+                "editor": {
+                    "type": "combobox",
+                    "options": {
+                        "data": [{
+                            "value": "True",
+                            "text": "True"
+                        }, {
+                            "value": "False",
+                            "text": "False"
+                        }],
+                        "panelHeight": "auto"
+                    }
+                }
+            }, {
+                "name": "Caption",
+                "value": "",
+                "group": "属性",
+                "editor": "text"
+            }, {
+                "name": "TrueValue",
+                "value": "1",
+                "group": "属性",
+                "editor": "numberbox"
+            }, {
+                "name": "FalseValue",
+                "value": "0",
+                "group": "属性",
+                "editor": "numberbox"
+            }, {
+                "name": "ReversalValue",
+                "value": "False",
+                "group": "属性",
+                "editor": {
+                    "type": "combobox",
+                    "options": {
+                        "data": [{
+                            "value": "True",
+                            "text": "True"
+                        }, {
+                            "value": "False",
+                            "text": "False"
+                        }],
+                        "panelHeight": "auto"
+                    }
+                }
+            }, {
+                "name": "IsAlert",
+                "value": "True",
+                "group": "属性",
+                "editor": {
+                    "type": "combobox",
+                    "options": {
+                        "data": [{
+                            "value": "True",
+                            "text": "True"
+                        }, {
+                            "value": "False",
+                            "text": "False"
+                        }],
+                        "panelHeight": "auto"
+                    }
+                }
+            }, {
+                "name": "Key",
+                "value": "0",
+                "group": "属性",
+                "editor": "text"
+            }, {
+                "name": "Enable",
+                "value": "False",
+                "group": "属性",
+                "editor": {
+                    "type": "combobox",
+                    "options": {
+                        "data": [{
+                            "value": "True",
+                            "text": "True"
+                        }, {
+                            "value": "False",
+                            "text": "False"
+                        }],
+                        "panelHeight": "auto"
+                    }
+                }
+            }, {
+                "name": "EventLevel",
+                "value": "0",
+                "group": "属性",
+                "editor": "numberbox"
+            }, {
+                "name": "Name",
+                "value": "",
+                "group": "属性",
+                "editor": "text"
+            }]
+        };
+
+
+        var setting = {
+            view: {
+                showTitle:false,
+                showLine: true,
+                showIcon: false,
+                addHoverDom: addHoverDom,
+                removeHoverDom: removeHoverDom
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                onClick: zTreeOnClick,
+                beforeRemove: zTreeBeforeRemove
+            },
+            edit:{
+                enable: true,
+                showRemoveBtn: showRemoveBtn,
+                showRenameBtn:false
+            }
+        };
+
+        var zNodes = @ViewBag.treeNodes;
+        //标记改变的属性是否为mode
+        var ismode = false;
+        //标记是否删除以往监控数据
+        var begindate='';
+        var enddate = '';
+        $(document).ready(function () {
+            $("#treeDemo").height($(document).height()-40);
+
+            var treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            treeObj.expandAll(true);
+            $('#pg').propertygrid({
+                width: 350,
+                height: 'auto',
+                showGroup: true,
+                scrollbarSize: 0,
+                columns: [[
+                    { field: 'name', title: 'Name', width: 100, resizable: true },
+                    { field: 'value', title: 'Value', width: 100, resizable: false }
+                ]]
+            });
+            $("#btnGet").click(function () {
+                var property = $('#pg').propertygrid('getData');
+                var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+                var selectnodes = treeObj.getSelectedNodes();
+                var node = treeObj.getNodeByParam("id", selectnodes[0].id, null);
+                var getchangeproperty = getChanges();
+                if (getchangeproperty.indexOf('Mode') != -1) {
+                    ismode = true;
+                }
+                if (node.id == 1) {
+                    for (var i = 0; i < property.rows.length; i++) {
+                        if (property.rows[i].name == "Controller") {
+                            node.name = property.rows[i].value;
+                        }
+                    }
+                } else {
+                    for (var i = 0; i < property.rows.length; i++) {
+                        if (property.rows[i].name == "Name") {
+                            node.name = property.rows[i].value;
+                        }
+                    }
+                }
+
+                if (typeof property == "string") {
+                    node.property = property;
+                } else {
+                    node.property = JSON.stringify(property);
+                }
+                treeObj.updateNode(node);
+            });
+        });
+
+        function saveForm() {
+            if (ismode) {
+                $.messager.defaults = { ok: "是", cancel: "否" };
+
+                $.messager.confirm("操作提示", "Mode(数据处理方式)发生改变，是否要删除以往存储监控数据？", function (data) {
+                    if (data) {
+                       // iframe("选择时间段", "400px", "60%", "/RTUInfo/DelTimespan");
+                    }
+                    else {
+                        ExecuteUpdate();
+                    }
+
+                });
+            }
+            else {
+                ExecuteUpdate();
+            }
+        }
+
+        function ExecuteUpdate() {
+            var array = setPara();
+            begindate = $("#BeginDate").val();
+            enddate = $("#EndDate").val();
+            $.post("/Sws/Sws_DPCInfo/Sws_Setting", { strnodes: JSON.stringify(array), id: EquipmentID, begindate: begindate, enddate: enddate }, function (data) {
+                if (data == "ok") {
+                    parent.layer.closeAll();
+                     window.parent.Refresh();
+                } else if (data == "no") {
+                    parent.layer.alert("指令集为空或保存失败");
+                }
+                else if(data=="error"){
+                    alert("通知失败");
+                    parent.layer.closeAll();
+
+                } else {
+                    parent.layer.alert(data);
+                }
+            });
+        }
+
+        function setPara() {
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            var nodes = treeObj.getNodes();
+            var nodes_array = treeObj.transformToArray(nodes);
+
+            for (var i = 0; i < nodes_array.length; i++) {
+                var txt = nodes_array[i].property;
+                if (txt != null && txt != "") {
+                    nodes_array[i].property = xulie(nodes_array[i].property);
+                }
+            }
+
+            return nodes_array;
+        }
+
+        function xulie(property) {
+            var info = "";
+            var json;
+            if (!isJson(property)) {
+                json = JSON.parse(property);
+            } else {
+                json = property;
+            }
+            var total = json.total
+            for (var i = 0; i < total; i++) {
+                info += '"' + json.rows[i].name + '":"' + json.rows[i].value + '",';
+            }
+            info = info.substring(0, info.length - 1);
+
+            return "{" + info + "}";
+        }
+
+        function zTreeOnClick(event, treeId, treeNode) {
+
+            var nodeKey = 0;
+            var parentNode = treeNode.getParentNode();
+            if (parentNode != null) {
+                nodeKey = parentNode.key;
+            }
+
+            if (nodeKey == 1 && treeNode.property == "") {
+                $('#pg').propertygrid('loadData', initAna);
+            } else if (nodeKey == 2 && treeNode.property == "") {
+                $('#pg').propertygrid('loadData', initDig);
+            } else {
+                if (treeNode.property == null || treeNode.property == "") {
+                    $('#pg').propertygrid('loadData', { total: 0, rows: [] });
+
+                } else {
+                    var property = JSON.parse(treeNode.property);
+
+                    for (var i = 0; i < property.rows.length; i++) {
+                        if (property.rows[i].name == "Name") {
+                            property.rows[i].value = treeNode.name;
+                        }
+                    }
+                    $('#pg').propertygrid('loadData', property);
+                }
+            }
+
+        };
+
+        function getChanges() {
+            var s = '';
+            var rows = $('#pg').propertygrid('getChanges');
+            for (var i = 0; i < rows.length; i++) {
+                s += rows[i].name + ':' + rows[i].value + ',';
+            }
+            return s;
+        }
+
+        function zTreeBeforeRemove(treeId, treeNode) {
+            if (treeNode.id < 10000) {
+                return false;
+            }
+        }
+
+        var newCount = 1;
+        function addHoverDom(treeId, treeNode) {
+            if (treeNode.id < 10000 && treeNode.id > 1000) {
+                var sObj = $("#" + treeNode.tId + "_span");
+                if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
+                var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+                    + "' title='add node' onfocus='this.blur();'></span>";
+                sObj.after(addStr);
+                var btn = $("#addBtn_" + treeNode.tId);
+                if (btn) btn.bind("click", function () {
+                    var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                    zTree.addNodes(treeNode, { id: (10000 + newCount), pId: treeNode.id, name: "new node" + (newCount++), property:"" });
+                    return false;
+                });
+            }
+        };
+
+        function showRemoveBtn(treeId, treeNode) {
+            return treeNode.id>10000;
+        }
+
+
+        function removeHoverDom(treeId, treeNode) {
+            if (treeNode.id < 10000 && treeNode.id > 1000) {
+                $("#addBtn_" + treeNode.tId).unbind().remove();
+            }
+        };
+
+        isJson = function (obj) {
+            var isjson = typeof (obj) == "object" && Object.prototype.toString.call(obj).toLowerCase() == "[object object]" && !obj.length;
+            return isjson;
+        }
+
+        $(document).on("mousemove", ".datagrid-btable",function () {
+            $("#rtutext").empty();
+            $('#rtutext').css('cssText', 'display:block;');
+            var text = $(this).prev().text();
+            var name = $(this).find('td').eq(0).text();
+            var value = "<div style='font-weight:bold;'>" + name + "</div>" + "<br/>" + text
+            $("#rtutext").append(value);
+        });
+        $(document).on("mouseleave", ".datagrid-btable", function () {
+            $("#rtutext").text();
+            $('#rtutext').css('cssText', ' display:none;');
+        })
+
+        //定义layer层
+        function iframe(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url
+            });
+        }
+
+    </script>
+</head>
+<body>
+    <section>
+        <div>
+            <ul id="treeDemo" class="ztree" style="height:500px; overflow-y:auto; width:350px; padding:0; margin: 0;"></ul>
+        </div>
+        <div>
+            <table id="pg" class="easyui-propertygrid" style="width:300px"></table>
+            <input id="btnGet" type="button" value="保存当前项" class="easyui-linkbutton" style="margin:10px 0;float:right;padding:5px" />
+            <input type="text" id="BeginDate" style="display:none;">
+            <input type="text" id="EndDate" style="display:none;">
+            <div id="rtutext"></div>
+        </div>
+    </section>
+    <script language="Javascript">
+        function changeconfirm(str) {
+            execScript("n = (msgbox('" + str + "',vbYesNo, '提示')=vbYes)", "vbscript");
+            return (n);
+        }
+    </script>
+
+</body>
+
+</html>

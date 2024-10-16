@@ -1,0 +1,6 @@
+// All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+// See https://js.arcgis.com/4.22/esri/copyright.txt for details.
+//>>built
+define(["exports","../../../chunks/_rollupPluginBabelHelpers","../../../geometry/geometryEngine","../../../geometry/Polyline","../../../geometry/projection"],function(g,m,d,n,e){let l=function(){function k(){}var h=k.prototype;h.getPercentageAlong=function(b,a,c){let f=b;b=this._createPolyline(b.paths,c.wkid);if("point"===a.type)return f=this._createPolyline([[a.x-50,a.y-50],[a.x+50,a.y+50]],a.spatialReference.wkid),f=e.project(f,c),a=d.cut(b,f),0<a.length?(c=d.planarLength(b,"feet"),[(a[0].paths[0][0][0]===
+b.paths[0][0][0]?d.planarLength(a[0],"feet"):d.planarLength(a[1],"feet"))/c]):[.5];a=e.project(a,c);a=d.cut(b,a);return 0<a.length?(b=d.planarLength(b,"feet"),[d.planarLength(a[0],"feet")/b]):[.5]};h.projectGeometry=function(){var b=m._asyncToGenerator(function*(a,c){yield e.load();return e.project(a,c)});return function(a,c){return b.apply(this,arguments)}}();h._createPolyline=function(b,a){return new n({hasZ:!1,hasM:!0,paths:b,spatialReference:{wkid:a}})};return k}();g.GeometryHandler=l;g.default=
+l;Object.defineProperty(g,"__esModule",{value:!0})});

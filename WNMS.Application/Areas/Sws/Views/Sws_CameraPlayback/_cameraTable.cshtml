@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using WNMS.Application.Areas.Sws;
+@model IEnumerable<Cdata>
+<thead>
+    <tr>
+        <th data-sortable="true" data-field="beginTime">录像开始时间</th>
+        <th data-field="endTime">录像结束时间</th>
+        <th data-field="CameraType">录像大小</th>
+        <th data-field="IP">播放</th>
+    </tr>
+</thead>
+<tbody>
+    @{
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.beginTime</td>
+                <td>@item.endTime</td>
+                @*<td>@(System.Enum.GetName(typeof(CameraType), item.CameraType))</td>*@
+                <td>@item.size MB</td>
+                <td>
+                    <span onclick="videoPlay('@item.beginTime', '@item.endTime')"><img src="~/images/播放.png" /></span>
+                </td>
+                @*<td>@item.ChannelNum</td>*@
+            </tr>
+        }
+    }
+</tbody> 

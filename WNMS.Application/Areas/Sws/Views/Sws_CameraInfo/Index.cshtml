@@ -1,0 +1,275 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>视频接入</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/zlw.css">
+    <link href="~/css/hyl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap-table.min.css">
+    <!-- 按钮 -->
+    <link rel="stylesheet" href="../../css/anniu.css">
+    <script src="../../js/jquery-1.12.4.min.js"></script>
+    <script src="../../lib/layer/layer.css"></script>
+    <!-- bootstrap -->
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap-table.min.js"></script>
+    <script src="../../js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../lib/layer/layer.js"></script>
+    <style>
+        .selct select {
+            height: 30px;
+            width: 150px;
+            line-height: 30px;
+            border: 1px #999 solid;
+            border-radius: 5px;
+            margin-right: 15px;
+            outline: none
+        }
+
+        .zlw_manageconrgconyi {
+            position: absolute;
+            left: 10px;
+            top: 0;
+            height: 100%;
+            margin-top: 7px;
+        }
+
+        .zlw_manageconrgconsan .bootstrap3 {
+            height: calc(100% - 50px)
+        }
+
+        .fixed-table-container {
+            height: calc(100% - 115px);
+            overflow: auto
+        }
+    </style>
+</head>
+
+<body>
+    <div class="zlw_manage">
+        <!-- star right -->
+        <div class="zlw_manageconrg">
+            <div class="zlw_manageconrgcon">
+                <!-- star 查询 -->
+                <div class="mt10px ml10px left">
+                    <ul class="clearfloat">
+                        <li>
+                            <input type="text" id="CameraName" class="hyl_input" placeholder="输入摄像头信息名称">
+                            <button class="hyl_btn" id="cameraSearch_Btn"> <i class="fa fa-search"></i> 查询</button>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- 查询 end -->
+                <div class="zlw_manageconrgconer" style="height:51px;border-bottom:1px solid #ddd">
+                    <div class="btn-group mar10px pull-right">
+                        @await Component.InvokeAsync("ModuleButtons")
+
+                        @*<button type="button" id="camera_AddBtn" class="btn btn-default"><i class="fa fa-plus mr5px"></i>添加</button>
+                            <button type="button" id="camera_EditBtn" class="btn btn-default"><i class="fa fa-edit mr5px"></i>修改</button>
+                            <button type="button" id="camera_DelBtn" class="btn btn-default"><i class="fa fa-trash-o mr5px"></i>删除</button>*@
+                    </div>
+                </div>
+                <!-- 表格 -->
+                <div class="zlw_manageconrgconsan" id="tablebox" style="height:100%;margin-top:10px">
+                    <table id="tabledata" data-toggle="table" data-pagination="true" data-side-pagination="server" data-page-list="[10, 25, 50, 100]" data-page-size="10" class="table-striped">
+                        <tr></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- right end -->
+    </div>
+    <script>
+        $table = $("#tabledata");
+        var options = $table.bootstrapTable('getOptions');
+        $(function () {
+            // 按钮切换样式
+            $(".zlw_time_con li").click(function () {
+                $(this).siblings('.zlw_time_con li').removeClass('zlw_bgact');  // 删除其他兄弟元素的样式
+                $(this).addClass('zlw_bgact');                            // 添加当前元素的样式
+            });
+
+            //初次加载数据
+            LoadData(options.pageNumber, options.pageSize, "", "desc");
+
+            //查询列表
+            $("#cameraSearch_Btn").click(function () {
+                LoadData(1, options.pageSize, "", "desc");
+            });
+            $("#CameraName").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    LoadData(1, options.pageSize, "", "desc");
+                }
+            });
+
+            //添加摄像头信息
+            $("#camera_AddBtn").click(function () {
+                iframeWithBtns("添加摄像头信息", "800px", "650px", "/Sws/Sws_CameraInfo/AddCameraPage", false, function (formIndex, formLayer) {
+                    var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                    currentIframe.saveForm(function (data) {
+                        if (data == "ok") {
+                            layer.close(formIndex);
+                            LoadData(options.pageNumber, options.pageSize, "", "desc");
+                        } else {
+                            layer.alert("添加失败，刷新页面后重试。")
+                        }
+                    });
+                });
+            });
+
+            //编辑摄像头信息
+            $("#camera_EditBtn").click(function () {
+                var selects = $table.bootstrapTable('getSelections');
+                if (selects.length != 1) {
+                    layer.msg("请选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    iframeWithBtns("编辑摄像头信息", "800px", "650px", "/Sws/Sws_CameraInfo/EditCameraPage/" + selects[0].CameraID, false, function (formIndex, formLayer) {
+                        var currentIframe = window[formLayer.find('iframe')[0]['name']];
+                        currentIframe.saveForm(function (data) {
+                            if (data == "ok") {
+                                layer.close(formIndex);
+                                LoadData(options.pageNumber, options.pageSize, "", "desc");
+                            } else {
+                                layer.alert("编辑失败，刷新页面后重试。");
+                            }
+                        });
+                    });
+                }
+            });
+
+            //删除摄像头信息
+            $("#camera_DelBtn").click(function () {
+                var selects = $table.bootstrapTable('getAllSelections');
+                if (selects.length < 1) {
+                    layer.msg("请至少选中一行", {
+                        offset: 't',
+                        anim: 6
+                    });
+                } else {
+                    var id = "";
+                    for (i = 0; i < selects.length; i++) {
+                        id += selects[i].CameraID + ",";
+                    }
+                    id = id.substring(0, id.length - 1);
+                    layer.confirm("确定要删除摄像头信息？",
+                        {
+                            btn: ["确定", "取消"]
+                        },
+                        function () {
+                            DeleteCameraInfo(id);
+                        },
+                        function () { }
+                    );
+                }
+            });
+
+            $('.fixed-table-loading').hide()
+        });
+
+        //加载数据
+        function LoadData(index, pagesize, sort, order) {
+            $.post('/Sws/Sws_CameraInfo/LoadCameraInfo', {
+                cameraName: $("#CameraName").val(),
+                pageindex: index || 1,
+                pagesize: pagesize,
+                sortName: sort,
+                sortOrder: order
+            }, function (res) {
+                //添加table
+                $("#tablebox").html('<table id="tabledata" data-sort-name="' + res.sortName + '" class="table table-striped" data-pagination="true" data-page-list="[10, 15,20]" data-toggle="table"  data-side-pagination="server"  ' +
+                    'data-total-rows="' + res.total + '" data-sort-order="' + res.order + '"  data-page-size="' + res.pageSize + '"   data-page-number="' + res.pageIndex + '">' + res.dataTable + '</table>')
+                $table = $("#tabledata").bootstrapTable({
+                        smartDisplay: false
+                    });
+                options = $table.bootstrapTable('getOptions');
+                //分页
+                $table.on('page-change.bs.table', function (e, number, size) {
+                    LoadData(number, size, sort, order)
+                });
+
+                //排序
+                $table.on('sort.bs.table', function (e, field, order) {
+                    LoadData(index, pagesize, field, order)
+                });
+            });
+        }
+
+        //删除数据
+        function DeleteCameraInfo(id) {
+            $.post("/Sws/Sws_CameraInfo/DeleteCamera", { cameraId: id }, function (res) {
+                if (res == "ok") {
+                    layer.alert("删除摄像头信息成功。");
+                    var option = $table.bootstrapTable('getOptions');
+                    LoadData(option.pageNumber, option.pageSize, "", "desc");
+                } else {
+                    layer.alert("删除摄像头信息失败。");
+                }
+            });
+        }
+
+        //刷新数据
+        function Refresh() {
+            var option = $table.bootstrapTable('getOptions');
+            LoadData(option.pageNumber, option.pageSize, "", "desc");
+        };
+
+        //弹出层
+        function iframeWithBtns(title, width, height, url, isParent, func) {
+            var options = {
+                skin: 'layui-ext-skin01',
+                type: 2,
+                title: title,
+                shadeClose: false,
+                closeBtn: 0,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ['提交', '取消'],
+                yes: function (index, layero) {
+                    func(index, layero);
+                },
+                cancel: function () { }
+            };
+            if (isParent === true) {
+                parent.layer.open(
+                    options
+                );
+            } else {
+                layer.open(options);
+            }
+        }
+
+        //定义弹出层
+        function iframe1(title, width, height, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.7,
+                area: [width, height],
+                content: url,
+                btn: ["提交", "取消"],
+                yes: function (index, layero) {
+                    window.frames[1].saveForm();
+                },
+                cancel: function (index) {
+                }
+            });
+        };
+    </script>
+</body>
+</html>

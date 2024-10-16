@@ -1,0 +1,122 @@
+﻿@using WNMS.Model.CustomizedClass;
+@model IEnumerable<warnReport>
+<style>
+    tr {
+        height:30px;
+         
+    }
+    th {
+        text-align: center;
+    }
+    table {
+        width: 100%;
+        border-color: #eee;
+        text-align: center;
+        border:1px solid #eee;
+    }
+    tr, th, td {
+        border:1px solid #eee;
+    }
+</style>
+<div class="zlw_xxzl_lb zlw_xxzl_lbxs">
+    @{ 
+        var devicelist = Model.GroupBy(r => new { r.DeviceID, r.DeviceName, r.StationID,r.UpdateTime }).OrderBy(r => r.Key.DeviceName);
+
+    }
+
+    @foreach (var item in devicelist)
+    {
+
+
+        <div class="zlw_list" >
+            <div class="zlw_listyi clearfloat">
+                <div class="zlw_listyilfyi clearfloat left">
+                    @*<img src="/adminlte/images/main.png" alt="">*@
+                   
+                        <em class="iconfont red icon-bengfang"></em>
+                      
+                  
+                    <p>@item.Key.DeviceName</p>
+                </div>
+                <div class="zlw_listyilf clearfloat left">
+                    <div class="zlw_listyilfcon">
+                        <div class="zlw_listyilfer left">
+                            <p>更新时间：@item.Key.UpdateTime</p>
+                        </div>
+                        <div class="elembox" id="">
+                            <ul>
+                                
+
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
+               
+            </div>
+            <div class="zlw_lister">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:50%">预警规则</th>
+                            <th>模拟量</th>
+                            <th>实际值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var rulelist = Model.Where(r => r.DeviceID == item.Key.DeviceID && r.StationID == item.Key.StationID);
+                            foreach (var it in rulelist)
+                            {
+                                var datalist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<WarnRealData>>(it.Data);
+                                var dataNum = datalist.Count;
+                                if (dataNum == 1)
+                                {
+                                    <tr>
+                                        <td>@it.RuleText</td>
+                                        <td>@datalist[0].DataName</td>
+                                        <td>@datalist[0].DataValue</td>
+                                        
+                                    </tr>
+
+                                }
+                                else if (dataNum > 1)
+                                {
+                                    for (var i = 0; i < dataNum; i++)
+                                    {
+                                        if (i == 0)
+                                        {
+                                            <tr>
+                                                <td rowspan="@dataNum">@it.RuleText</td>
+                                                <td>@datalist[0].DataName</td>
+                                                <td>@datalist[0].DataValue</td>
+                                                
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                               
+                                                <td>@datalist[0].DataName</td>
+                                                <td>@datalist[0].DataValue</td>
+                                                
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    </tbody>
+                 </table>
+               
+                    
+
+                 
+              
+            </div>
+        </div>
+       
+    }
+</div>
